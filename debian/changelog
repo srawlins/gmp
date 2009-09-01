@@ -1,0 +1,5 @@
+libgmp-ruby (1.0) unstable; urgency=low
+
+  * packaged into .deb.
+
+ -- Tomasz Wegrzanowski <taw@users.sf.net>  Fri, 22 Aug 2003 02:12:12 +0200

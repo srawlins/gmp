@@ -1,0 +1,12 @@
+Precision can be explicitely set as second argument for GMP::F.new().
+
+If there is no explicit precision, highest precision of all GMP::F arguments is used.
+That doesn't ensure that result will be exact. For details, consult any
+paper about floating point arithmetics.
+
+Default precision can be explicitely set by passing 0 to GMP::F.new().
+In particular, you can set precision of copy of GMP::F object by:
+    new_obj = GMP::F.new(old_obj, 0)
+
+Precision argument, and default_precision will be rounded up to whatever
+GMP thinks is appropriate.

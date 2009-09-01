@@ -1,0 +1,1 @@
+shlibs:Depends=libc6 (>= 2.3.2-1), libgmp3, libruby (>= 1.6.8-5)

@@ -1,0 +1,128 @@
+ruby-gmp is library providing Ruby bindings to GMP library.
+Only GMP 4 or newer is supported.
+
+It provides module GMP with following classes:
+        GMP::Z - infitite precision integer numbers
+        GMP::Q - infitite precision rational numbers
+	GMP::F - arbitrary precision floating point numbers
+
+Numbers are created by using new().
+Constructors can take following arguments:
+
+        GMP::Z.new()
+        GMP::Z.new(GMP::Z)
+	GMP::Z.new(FixNum)
+        GMP::Z.new(BigNum)
+	GMP::Z.new(String)
+        GMP::Q.new()
+        GMP::Q.new(GMP::Q)
+	GMP::Q.new(String)
+        GMP::Q.new(any GMP::Z initializer)
+	GMP::Q.new(any GMP::Z initializer, any GMP::Z initializer)
+	GMP::F.new()
+	GMP::F.new(GMP::Z, precision=0)
+	GMP::F.new(GMP::Q, precision=0)
+	GMP::F.new(GMP::F)
+	GMP::F.new(GMP::F, precision)
+	GMP::F.new(String, precision=0)
+        GMP::F.new(FixNum, precision=0)
+	GMP::F.new(BigNum, precision=0)
+	GMP::F.new(Float,  precision=0)
+
+You can also call them as:
+        GMP.Z(args)
+	GMP.Q(args)
+todo	GMP.F(args)
+
+Provided methods;
+    GMP::Z, GMP::Q ani GMP::F
+	+			addition
+	-			substraction
+	*			multiplication
+	to_s			make string from object
+	-@			negation
+	neg!			change object into its negation
+	abs			absolute value
+	asb!			change object into its absolute value
+	coerce			promotion of arguments
+	==			equality test
+	<=>,>=,>,<=,<		comparisions
+    class methods of GMP::Z
+	fac(n)			factorial of n
+	fib(n)			nth fibonacci number
+	pow(n,m)		n to mth power
+    GMP::Z and GMP::Q
+	swap			efficiently swap contents of two objects,
+				there is no GMP::F.swap because various GMP::F
+				objects may have different precisions,
+				what would make them unswapable
+    GMP::Z
+	add!			addition and addition to self
+	sub!			substraction and substraction from self
+	tdiv,fdiv,cdiv		truncate, floor and ceil division
+	tmod,fmod,cmod		truncate, floor and ceil modulo
+	[],[]=			testing and seting bits (as booleans)
+	scan0,scan1		(check GMP manual)
+	com			2-complementation
+	com!			change object into its 2-complementation
+	&,|,^			logical operations - and, or, xor
+	**			power
+	powmod			power modulo
+	even?			is even
+	odd?			is odd
+	<<			shift left
+	>>			shift right, floor
+	tshr			shift right, truncate
+	lastbits_pos(n)		last n bits of object, modulo if negative
+	lastbits_sgn(n)		last n bits of object, preserve sign
+	power?			is perfect power
+	square?			is perfect square
+	sqrt			square root
+	sqrt!			change the object into its square root
+	root(n)			nth root
+	jacobi			jacobi symbol
+	legendre		legendre symbol
+	nextprime		next *probable* prime
+	nextprime!		change the object into its next *probable* prime
+	to_i			convert to FixNum or BigNum
+	remove(n)		remove all occurences of factor n			
+    GMP::Q and GMP::F
+	/			division
+    GMP::Q
+	num			numerator
+	den			denominator
+	inv			inversion
+	inv!			change object into its inversion
+	floor,ceil,trunc	nearest integer
+    class methods of GMP::F
+	default_prec		get default precision
+	default_prec=		set default precision
+    GMP::F
+	prec			get precision
+	floor,ceil,trunc	nearest integer, GMP::F is returned, not GMP::Z
+	floor!,ceil!,trunc!	change object into its nearest integer
+    GMP::F (only if MPFR is available)
+	exp			e^object
+	expm1			the same as (object.exp) - 1, except for better precision
+	log			natural logarithm of object
+	log2			binary logarithm of object
+	log10			decimal logarithm of object
+	log1p			the same as (object + 1).log, except for better precision
+	sqrt			square root of the object
+	cos			\
+	sin			|
+	tan			|
+	acos			|
+	asin			|
+	atan			| trigonometric functions
+	cosh			| of the object
+	sinh			|
+	tanh			|
+	aconh			|
+	asinh			|
+	atanh			/
+	nan?			\
+	infinite?		| type of floating point number
+	finite?			|
+	number?			/
+	**			power

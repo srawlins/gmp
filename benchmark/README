@@ -1,0 +1,13 @@
+Ruby-GMP is significantly faster than Ruby BigNum,
+and not much slower than direct C GMP,
+but only on big numbers.
+
+BigNum performs better on small numbers, but that's
+mostly due to overhead of Ruby-GMP, not libGMP.
+You can test where switch is reasonable using benchmarks 3 and 4.
+
+Provided benchmarks check:
+    benchmark 1		multiplication of big numbers
+    benchmark 2		addition of big numbers
+    benchmark 3		addition on various sizes
+    benchmark 4		multiplication on various sizes

@@ -1,0 +1,6 @@
+Copyright 2001-2003 by Tomasz Wegrzanowski <taw@users.sf.net>
+MPFR support based on code contributed by Steven E Lumos
+
+May be distributed under GPL.
+
+Using Ruby-GMP from Ruby program doesn't make such program derived work.

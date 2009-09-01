@@ -1,0 +1,32 @@
+* mpz_fits_* and 31 vs. 32 integer variables
+* all apropriate module and class methods if there are any to add
+* fix all sign issues
+* floats with precision control
+* random numbers
+* to_s vs. inspect ?
+* to_s_hex()
+* check if mpz_addmul_ui would optimize some statements
+* some system that allow using denref and numref as normal ruby objects
+* should we allocate global temporary variables like Perl GMP do ?
+* takeover code that replaces all Bignums with GMP::Z
+* better bignum parser
+* zero-copy method for strings generation
+* what should be ancestors of GMP::* classes ?
+* division and modulo
+* check if it installs, add deb/rpm/whatever
+* put it on some website
+* put rb_raise into nice macros
+* benchmarks against Python GMP and Perl GMP
+* dup methods
+* integrate F into system
+* should Z.[] bits be 0/1 or true/false, 0 is true, what might badly surprise users
+* seriously investigate Ruby Makefile-making system
+* any2small_integer()
+* autoindent code
+* check asm output, especially local memory efficiency
+* it might be better to use `register' for some local variables
+* powm with negative exponents
+* check if different sorting of operatations gives better cache usage,
+* GMP::* op RubyFloat and RubyFloat op GMP::*
+* sort checks
+* check all new GMP4 operations

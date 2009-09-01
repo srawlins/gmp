@@ -1,0 +1,41 @@
+TODO: Port everything to Test::Unit framework
+Test files 1-6 ported.
+
+Current version passes:
+    1-23
+Current version fails on these tests because:
+    none
+Tests:
+    1		initializations and to_s
+    2		basic integer arithmetics and coertion to Z
+    3		integer logical operators
+    4		comparisions between Z, Q, FixNum and BigNum
+    5		basic rational arithmetics and coertion to Q
+    6		bit operations, scan0, scan1
+    7		exponentiation and exponentiation modulo
+    8		divide by zero exceptions
+    9		sgn, neg, abs
+    10		fibonacci, factorial, nextprime
+    11		swap
+    12		floor, ceil, truncate
+    13		to_i, to_d
+    14		shifts, last_bits
+    15		logical tests, roots
+    16	        floating point init with and without explicit precision
+    17		basic floating point arithmetics and coercion to F
+    18		default_prec and default_prec=
+    19		integer division methods
+    20		mpfr - exp and log
+    21		mpfr - trigonometry
+    22		mpfr - type tests
+    23		mpfr - sqrt and power
+TODO:
+		jacobi, legendre, remove
+		gcd, lcm
+		cmpabs
+		integer and integer->rational division, modulo
+		more number theoretic functions
+		random numbers
+		range error exceptions
+		others ?
+		full coverage ?

@@ -1,0 +1,13 @@
+Source: libgmp-ruby
+Section: interpreters
+Priority: optional
+Maintainer: Tomasz Wegrzanowski <taw@users.sf.net>
+Build-Depends: debhelper, libgmp3-dev, ruby (>= 1.6.4), ruby-dev (>= 1.6.4)
+Standards-Version: 3.2.1
+
+Package: libgmp-ruby
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Ruby module providing an interface to GMP
+ Provides Ruby interface to very fast library for computations
+ on arbitrary precision integer and floating point numbers.
