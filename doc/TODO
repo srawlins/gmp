@@ -1,5 +1,5 @@
 * mpz_fits_* and 31 vs. 32 integer variables
-* all apropriate module and class methods if there are any to add
+* all appropriate module and class methods if there are any to add
 * fix all sign issues
 * floats with precision control
 * random numbers

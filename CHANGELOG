@@ -1,14 +1,23 @@
+1.1.0:
+* Attempting to revitalize through GitHub
+* no changes to code yet
+* modernizing files, eg with new ruby standards, towards a gem
+
 1.0:
 * MPFR support
 * better string conversion
 * Debian package
+
 alpha9:
 * more GMP::F code
 * GMP::Z division
+
 alpha8:
 * various minor changes
+
 alpha7:
 * more GMP::F code
+
 alpha6:
 * basic support for GMP::F
 * various minor changes
