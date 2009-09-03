@@ -40,12 +40,12 @@ typedef __mpf_struct MP_FLOAT;
 #define mpz_make_struct_init(ruby_var,c_var) { mpz_make_struct(ruby_var,c_var); mpz_init (c_var); }
 #define mpq_make_struct_init(ruby_var,c_var) { mpq_make_struct(ruby_var,c_var); mpq_init (c_var); }
 #define mpf_make_struct_init(ruby_var,c_var,prec) { mpf_make_struct(ruby_var,c_var); mpf_init2 (c_var,prec); }
-#define BIGNUM_P(value)	(TYPE(value) == T_BIGNUM)
-#define FLOAT_P(value)	(TYPE(value) == T_FLOAT)
-#define STRING_P(value)	(TYPE(value) == T_STRING)
-#define GMPZ_P(value)	(rb_obj_is_instance_of(value, cGMP_Z) == Qtrue)
-#define GMPQ_P(value)	(rb_obj_is_instance_of(value, cGMP_Q) == Qtrue)
-#define GMPF_P(value)	(rb_obj_is_instance_of(value, cGMP_F) == Qtrue)
+#define BIGNUM_P(value) (TYPE(value) == T_BIGNUM)
+#define FLOAT_P(value)  (TYPE(value) == T_FLOAT)
+#define STRING_P(value) (TYPE(value) == T_STRING)
+#define GMPZ_P(value)   (rb_obj_is_instance_of(value, cGMP_Z) == Qtrue)
+#define GMPQ_P(value)   (rb_obj_is_instance_of(value, cGMP_Q) == Qtrue)
+#define GMPF_P(value)   (rb_obj_is_instance_of(value, cGMP_F) == Qtrue)
 #define mpz_set_bignum(var_mpz,var_bignum) \
   mpz_set_str (var_mpz, STR2CSTR (rb_funcall (var_bignum, rb_intern ("to_s"), 0)), 0);
 #define mpz_temp_alloc(var) { var=malloc(sizeof(MP_INT)); }
@@ -127,7 +127,7 @@ static VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
   return res;
 }
 
-static void mpz_set_value (MP_INT *target, VALUE source)
+static void mpz_set_value(MP_INT *target, VALUE source)
 {
   MP_INT *source_val;
 
@@ -156,7 +156,7 @@ static VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
   return Qnil;
 }
 
-static void mpq_str_set (MP_RAT *ROP, char *str)
+static void mpq_str_set(MP_RAT *ROP, char *str)
 {
   int i=0;
 
@@ -378,7 +378,7 @@ void Init_gmp () {
   rb_define_module_function(mGMP, "Q", r_gmpmod_q, -1);
   rb_define_module_function(mGMP, "F", r_gmpmod_f, -1);
 
-  cGMP_Z = rb_define_class_under (mGMP, "Z", rb_cInteger);
+  cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
   rb_define_singleton_method(cGMP_Z, "new", r_gmpzsg_new, -1);
   rb_define_singleton_method(cGMP_Z, "fib", r_gmpzsg_fib, 1);
   rb_define_singleton_method(cGMP_Z, "fac", r_gmpzsg_fac, 1);
