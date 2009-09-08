@@ -547,6 +547,7 @@ DEFUN_INT2INT(neg, mpz_neg)
 DEFUN_INT2INT(com, mpz_com)
 DEFUN_INT2INT(sqrt, mpz_sqrt)
 DEFUN_INT2INT(nextprime, mpz_nextprime)
+DEFUN_INT2INT(popcount, mpz_popcount)
 
 static VALUE r_gmpz_jacobi(VALUE self)
 {

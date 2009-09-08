@@ -438,6 +438,7 @@ void Init_gmp () {
   rb_define_method(cGMP_Z, "legendre",  r_gmpz_legendre, 0);
   rb_define_method(cGMP_Z, "nextprime",  r_gmpz_nextprime, 0);
   rb_define_method(cGMP_Z, "nextprime!",  r_gmpz_nextprime_self, 0);
+  rb_define_method(cGMP_Z, "popcount",  r_gmpz_popcount, 0);
   rb_define_method(cGMP_Z, "to_d",  r_gmpz_to_d, 0);
   rb_define_method(cGMP_Z, "root",  r_gmpz_root, 1);
   rb_define_method(cGMP_Z, "remove",  r_gmpz_remove, 1);
