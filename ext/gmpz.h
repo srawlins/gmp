@@ -523,23 +523,23 @@ DEFUN_INT_DIV(fmod, mpz_fdiv_r)
 DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
 DEFUN_INT_DIV(cmod, mpz_cdiv_r)
 
-#define DEFUN_INT2INT(fname,mpz_fname) \
-static VALUE r_gmpz_##fname(VALUE self) \
-{\
-  MP_INT *self_val, *res_val; \
-  VALUE res; \
-  mpz_get_struct(self, self_val); \
-  mpz_make_struct_init(res, res_val); \
-  mpz_fname(res_val, self_val); \
-  return res; \
-}\
-\
+#define DEFUN_INT2INT(fname,mpz_fname)         \
+static VALUE r_gmpz_##fname(VALUE self)        \
+{                                              \
+  MP_INT *self_val, *res_val;                  \
+  VALUE res;                                   \
+  mpz_get_struct(self, self_val);              \
+  mpz_make_struct_init(res, res_val);          \
+  mpz_fname(res_val, self_val);                \
+  return res;                                  \
+}                                              \
+                                               \
 static VALUE r_gmpz_##fname##_self(VALUE self) \
-{\
-  MP_INT *self_val; \
-  mpz_get_struct(self, self_val); \
-  mpz_fname(self_val, self_val); \
-  return Qnil; \
+{                                              \
+  MP_INT *self_val;                            \
+  mpz_get_struct(self, self_val);              \
+  mpz_fname(self_val, self_val);               \
+  return Qnil;                                 \
 }
 
 DEFUN_INT2INT(abs, mpz_abs)
@@ -547,7 +547,13 @@ DEFUN_INT2INT(neg, mpz_neg)
 DEFUN_INT2INT(com, mpz_com)
 DEFUN_INT2INT(sqrt, mpz_sqrt)
 DEFUN_INT2INT(nextprime, mpz_nextprime)
-DEFUN_INT2INT(popcount, mpz_popcount)
+
+static VALUE r_gmpz_popcount(VALUE self)
+{
+  MP_INT *self_val;
+  mpz_get_struct(self, self_val);
+  return INT2FIX(mpz_popcount(self_val));
+}
 
 static VALUE r_gmpz_jacobi(VALUE self)
 {
@@ -710,7 +716,7 @@ static VALUE r_gmpz_remove(VALUE self, VALUE arg)
   return res;
 }
 
-static VALUE r_gmpz_to_i (VALUE self)
+static VALUE r_gmpz_to_i(VALUE self)
 {
   MP_INT *self_val;
   char *str;
@@ -725,7 +731,7 @@ static VALUE r_gmpz_to_i (VALUE self)
   return res;
 }
 
-static VALUE r_gmpz_cmpabs (VALUE self, VALUE arg)
+static VALUE r_gmpz_cmpabs(VALUE self, VALUE arg)
 {
   MP_INT *arg_val_z, *self_val;
   MP_RAT *arg_val_q;
