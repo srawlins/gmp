@@ -86,6 +86,7 @@ Provided methods;
     legendre                 legendre symbol
     nextprime                next *probable* prime
     nextprime!               change the object into its next *probable* prime
+    popcount                 the number of bits equal to 1
     to_i                     convert to FixNum or BigNum
     remove(n)                remove all occurences of factor n
   GMP::Q and GMP::F
