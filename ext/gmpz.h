@@ -1,3 +1,19 @@
+/*
+ * gmpz.h
+ *
+ * This file contains GMP::Z method definitions.
+ */
+
+/*
+ * call-seq: +(other)
+ *
+ * Adds this GMP::Z to other. Other can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 static VALUE r_gmpz_add(VALUE self, VALUE arg)
 {
   MP_INT *self_val, *arg_val, *res_val;
@@ -547,6 +563,41 @@ DEFUN_INT2INT(neg, mpz_neg)
 DEFUN_INT2INT(com, mpz_com)
 DEFUN_INT2INT(sqrt, mpz_sqrt)
 DEFUN_INT2INT(nextprime, mpz_nextprime)
+
+/*
+ * call-seq: probab_prime_p(reps)
+ *
+ * Determine whether n is prime. Return 2 if n is definitely prime, return 1 if
+ * n is probably prime (without being certain), or return 0 if n is definitely
+ * composite. 
+ *
+ * This function does some trial divisions, then some Miller-Rabin
+ * probabilistic primality tests. reps controls how many such tests are done, 5
+ * to 10 is a reasonable number, more will reduce the chances of a composite
+ * being returned as “probably prime”.
+ *
+ * Miller-Rabin and similar tests can be more properly called compositeness
+ * tests. Numbers which fail are known to be composite but those which pass
+ * might be prime or might be composite. Only a few composites pass, hence
+ * those which pass are considered probably prime. 
+ */
+static VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
+{
+  MP_INT *self_val;
+  int reps_val;
+  VALUE reps;
+  mpz_get_struct(self, self_val);
+  rb_scan_args(argc, argv, "01", &reps);
+  if(NIL_P(reps)){
+    reps = INT2FIX(5);
+  }
+  if (FIXNUM_P(reps)) {
+    reps_val = FIX2INT (reps);
+  } else {
+    typeerror_as(X, "reps");
+  }
+  return INT2FIX(mpz_probab_prime_p(self_val, reps_val));
+}
 
 static VALUE r_gmpz_popcount(VALUE self)
 {

@@ -1,10 +1,69 @@
-ruby-gmp is library providing Ruby bindings to GMP library.
-Only GMP 4 or newer is supported.
+=gmp
+
+gmp is library providing Ruby bindings to GMP library. Here is the introduction
+paragraph at http://gmplib.org/#WHAT :
+
+* "GMP is a free library for arbitrary precision arithmetic, operating on
+  signed integers, rational numbers, and floating point numbers. There is no
+  practical limit to the precision except the ones implied by the available
+  memory in the machine GMP runs on. GMP has a rich set of functions, and the
+  functions have a regular interface.
+
+* The main target applications for GMP are cryptography applications and
+  research, Internet security applications, algebra systems, computational
+  algebra research, etc.
+
+* GMP is carefully designed to be as fast as possible, both for small operands
+  and for huge operands. The speed is achieved by using fullwords as the basic
+  arithmetic type, by using fast algorithms, with highly optimised assembly
+  code for the most common inner loops for a lot of CPUs, and by a general
+  emphasis on speed.
+
+* GMP is faster than any other bignum library. The advantage for GMP increases
+  with the operand sizes for many operations, since GMP uses asymptotically
+  faster algorithms.
+
+* The first GMP release was made in 1991. It is continually developed and
+  maintained, with a new release about once a year.
+
+* GMP is distributed under the GNU LGPL. This license makes the library free to
+  use, share, and improve, and allows you to pass on the result. The license
+  gives freedoms, but also sets firm restrictions on the use with non-free
+  programs.
+
+* GMP is part of the GNU project. For more information about the GNU project,
+  please see the official GNU web site.
+
+* GMP's main target platforms are Unix-type systems, such as GNU/Linux,
+  Solaris, HP-UX, Mac OS X/Darwin, BSD, AIX, etc. It also is known to work on
+  Windoze in 32-bit mode.
+
+* GMP is brought to you by a team listed in the manual.
+
+* GMP is carefully developed and maintained, both technically and legally. We
+  of course inspect and test contributed code carefully, but equally
+  importantly we make sure we have the legal right to distribute the
+  contributions, meaning users can safely use GMP. To achieve this, we will ask
+  contributors to sign paperwork where they allow us to distribute their work."
+
+Only GMP 4 or newer is supported. It has been officially tested with:
+  |-------------------------------------|
+  |   Platform    |  Ruby   |    GMP    |
+  |---------------|---------|-----------|
+  | Cygwin on x86 |  1.8.6  | GMP 4.3.1 |
+  |-------------------------------------|
+
+=Authors
+
+* Tomasz Wegrzanowski
+* srawlins
+
+=Classes
 
 It provides module GMP with following classes:
-  GMP::Z - infitite precision integer numbers
-  GMP::Q - infitite precision rational numbers
-  GMP::F - arbitrary precision floating point numbers
+* GMP::Z - infitite precision integer numbers
+* GMP::Q - infitite precision rational numbers
+* GMP::F - arbitrary precision floating point numbers
 
 Numbers are created by using new().
 Constructors can take following arguments:
@@ -30,11 +89,12 @@ Constructors can take following arguments:
   GMP::F.new(Float,  precision=0)
 
 You can also call them as:
-      GMP.Z(args)
-      GMP.Q(args)
-todo  GMP.F(args)
+        GMP.Z(args)
+        GMP.Q(args)
+  todo  GMP.F(args)
 
-Provided methods;
+=Methods
+
   GMP::Z, GMP::Q and GMP::F
     +                        addition
     -                        substraction
@@ -84,6 +144,8 @@ Provided methods;
     root(n)                  nth root
     jacobi                   jacobi symbol
     legendre                 legendre symbol
+    probab_prime_p           0 if composite, 1 if probably prime, 2 if
+                             certainly prime
     nextprime                next *probable* prime
     nextprime!               change the object into its next *probable* prime
     popcount                 the number of bits equal to 1
@@ -129,3 +191,53 @@ Provided methods;
     finite?                  |
     number?                  /
     **                       power
+
+=Precision
+
+Precision can be explicitely set as second argument for GMP::F.new().
+
+If there is no explicit precision, highest precision of all GMP::F arguments is
+used. That doesn't ensure that result will be exact. For details, consult any
+paper about floating point arithmetics.
+
+Default precision can be explicitely set by passing 0 to GMP::F.new(). In
+particular, you can set precision of copy of GMP::F object by:
+  new_obj = GMP::F.new(old_obj, 0)
+
+Precision argument, and default_precision will be rounded up to whatever GMP
+thinks is appropriate.
+
+=Todo
+
+These are inherited from Tomasz. I will go through these and see which are
+still relevant.
+
+* mpz_fits_* and 31 vs. 32 integer variables
+* all appropriate module and class methods if there are any to add
+* fix all sign issues
+* floats with precision control
+* random numbers
+* to_s vs. inspect ?
+* to_s_hex()
+* check if mpz_addmul_ui would optimize some statements
+* some system that allow using denref and numref as normal ruby objects
+* should we allocate global temporary variables like Perl GMP do ?
+* takeover code that replaces all Bignums with GMP::Z
+* better bignum parser
+* zero-copy method for strings generation
+* what should be ancestors of GMP::* classes ?
+* division and modulo
+* put rb_raise into nice macros
+* benchmarks against Python GMP and Perl GMP
+* dup methods
+* integrate F into system
+* should Z.[] bits be 0/1 or true/false, 0 is true, what might badly surprise users
+* seriously investigate Ruby Makefile-making system
+* any2small_integer()
+* check asm output, especially local memory efficiency
+* it might be better to use `register' for some local variables
+* powm with negative exponents
+* check if different sorting of operatations gives better cache usage,
+* GMP::* op RubyFloat and RubyFloat op GMP::*
+* sort checks
+* check all new GMP4 operations

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>to_s (GMP::Q)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre>/*
+ * call-seq: to_s()
+ * 
+ * Converts this mpq_t object to a Ruby string.
+ */
+static VALUE r_gmpq_to_s(VALUE self)
+{
+  MP_RAT *self_val;
+  MP_INT *self_val_num, *self_val_den;
+  char *str;
+  VALUE res;
+  int sizeinbase;
+  int offset;
+
+  Data_Get_Struct(self, MP_RAT, self_val);
+
+  if (mpz_cmp_ui(mpq_denref(self_val), 1) == 0) {
+    str = mpz_get_str(NULL, 10, mpq_numref (self_val));
+    res = rb_str_new2(str);
+    free (str);
+    return res;
+  }
+
+  self_val_num = mpq_numref(self_val);
+  self_val_den = mpq_denref(self_val);
+
+  sizeinbase = mpz_sizeinbase (self_val_num, 10) + mpz_sizeinbase (self_val_den, 10) + 3;
+  str = malloc (sizeinbase);
+
+  mpz_get_str (str, 10, self_val_num);
+  offset = strlen (str);
+  str[offset] = '/';
+  mpz_get_str (str + offset + 1, 10, self_val_den);
+  res = rb_str_new2(str);
+  free (str);
+
+  return res;
+}</pre>
+</body>
+</html>

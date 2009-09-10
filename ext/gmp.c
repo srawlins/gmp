@@ -1,3 +1,9 @@
+/*
+ * gmp.c
+ *
+ * This file contains everything you would expect from a C extension.
+ */
+
 #define _GNU_SOURCE
 #include <stdio.h>
 
@@ -274,6 +280,11 @@ static VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   return Qnil;
 }
 
+/*
+ * call-seq: to_s()
+ * 
+ * Converts this mpq_t object to a Ruby string.
+ */
 static VALUE r_gmpq_to_s(VALUE self)
 {
   MP_RAT *self_val;
@@ -436,6 +447,7 @@ void Init_gmp () {
   rb_define_method(cGMP_Z, "sqrtrem",  r_gmpz_sqrtrem, 0);
   rb_define_method(cGMP_Z, "jacobi",  r_gmpz_jacobi, 0);
   rb_define_method(cGMP_Z, "legendre",  r_gmpz_legendre, 0);
+  rb_define_method(cGMP_Z, "probab_prime?",  r_gmpz_is_probab_prime, -1);
   rb_define_method(cGMP_Z, "nextprime",  r_gmpz_nextprime, 0);
   rb_define_method(cGMP_Z, "nextprime!",  r_gmpz_nextprime_self, 0);
   rb_define_method(cGMP_Z, "popcount",  r_gmpz_popcount, 0);

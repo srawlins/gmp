@@ -32,6 +32,7 @@ files:
 - ext/gmpz.h
 - ext/takeover.h
 - test/README
+- test/tc_cmp.rb
 - test/tc_q.rb
 - test/tc_z.rb
 - test/tc_z_basic.rb

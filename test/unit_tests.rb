@@ -46,3 +46,20 @@ class TC_Q_Basic < Test::Unit::TestCase
     assert_equal(@d * @a, GMP::Q(429496729600, 11),"Bignum should multiply GMP::Q correctly")
   end
 end
+
+class TC_Z_Exponentiation < Test::Unit::TestCase
+  def setup
+    @a=GMP::Z.new(100)
+    @b=GMP::Z.new(16)
+  end
+  
+  def test_exponentiation
+    assert_equal(@a**5, GMP::Z(10000000000),                          "GMP::Z should **(Fixnum) correctly")
+    assert_equal(@a**@@b, GMP::Z("100000000000000000000000000000000"),"GMP::Z should **(GMP::Z) correctly")
+    assert_equal(2**@@b, GMP::Z(65536),                               "Fixnum should **(GMP::Z) correctly")
+  end
+  
+  def test_powmod
+  
+  end
+end
