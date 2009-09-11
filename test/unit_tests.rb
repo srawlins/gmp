@@ -6,60 +6,24 @@ require 'tc_z_basic'
 require 'tc_z_logic'
 require 'tc_q'
 require 'tc_cmp'
+require 'tc_q_basic'
+require 'tc_z_exponentiation'
 
-# [Q op Q, Q op Z, Z op Q, Q op FixNum, Q op BigNum, FixNum op Q, BigNum op Q]
-class TC_Q_Basic < Test::Unit::TestCase
+
+class TC_ZeroDivisionExceptions < Test::Unit::TestCase
   def setup
-    @a=GMP::Q.new(100,11)
-    @b=GMP::Q.new(200,17)
-    @c=GMP::Z.new(40)
-    @d=2**32
-  end
-
-  def test_add
-    assert_equal(@a + @b, GMP::Q(3900, 187),       "GMP::Q should add GMP::Q correctly")
-    assert_equal(@a + @c, GMP::Q(540,  11),        "GMP::Q should add GMP::Z correctly")
-    assert_equal(@c + @a, GMP::Q(540,  11),        "GMP::Z should add GMP::Q correctly")
-    assert_equal(@a +  2, GMP::Q(122,  11),        "GMP::Z should add Fixnum correctly")
-    assert_equal(@a + @d, GMP::Q(47244640356, 11), "GMP::Z should add Bignum correctly")
-    assert_equal( 2 + @a, GMP::Q(122,  11),        "Fixnum should add GMP::Q correctly")
-    assert_equal(@d + @a, GMP::Q(47244640356, 11), "Bignum should add GMP::Q correctly")
-  end
-
-  def test_sub
-    assert_equal(@a - @b, GMP::Q(-500, 187),       "GMP::Q should subtract GMP::Q correctly")
-    assert_equal(@a - @c, GMP::Q(-340, 11),        "GMP::Q should subtract GMP::Z correctly")
-    assert_equal(@c - @a, GMP::Q(340,  11),        "GMP::Z should subtract GMP::Q correctly")
-    assert_equal(@a -  2, GMP::Q(78,  11),         "GMP::Z should subtract Fixnum correctly")
-    assert_equal(@a - @d, GMP::Q(-47244640156, 11),"GMP::Z should subtract Bignum correctly")
-    assert_equal( 2 - @a, GMP::Q(-78,  11),        "Fixnum should subtract GMP::Q correctly")
-    assert_equal(@d - @a, GMP::Q(47244640156, 11), "Bignum should subtract GMP::Q correctly")
-  end
-
-  def test_mul
-    assert_equal(@a * @b, GMP::Q(20000, 187),      "GMP::Q should multiply GMP::Q correctly")
-    assert_equal(@a * @c, GMP::Q(4000,  11),       "GMP::Q should multiply GMP::Z correctly")
-    assert_equal(@c * @a, GMP::Q(4000,  11),       "GMP::Z should multiply GMP::Q correctly")
-    assert_equal(@a *  2, GMP::Q(200,  11),        "GMP::Z should multiply Fixnum correctly")
-    assert_equal(@a * @d, GMP::Q(429496729600, 11),"GMP::Z should multiply Bignum correctly")
-    assert_equal( 2 * @a, GMP::Q(200,  11),        "Fixnum should multiply GMP::Q correctly")
-    assert_equal(@d * @a, GMP::Q(429496729600, 11),"Bignum should multiply GMP::Q correctly")
-  end
-end
-
-class TC_Z_Exponentiation < Test::Unit::TestCase
-  def setup
-    @a=GMP::Z.new(100)
-    @b=GMP::Z.new(16)
+    @a = GMP::Z.new(10)
+    @b = GMP::Z.new()
+    @c = GMP::Q.new(1)
+    @d = GMP::Q.new()
   end
   
-  def test_exponentiation
-    assert_equal(@a**5, GMP::Z(10000000000),                          "GMP::Z should **(Fixnum) correctly")
-    assert_equal(@a**@@b, GMP::Z("100000000000000000000000000000000"),"GMP::Z should **(GMP::Z) correctly")
-    assert_equal(2**@@b, GMP::Z(65536),                               "Fixnum should **(GMP::Z) correctly")
-  end
-  
-  def test_powmod
-  
+  def test_division_by_zero
+    assert_raise(ZeroDivisionError) { @a.tdiv(0) }
+    assert_raise(ZeroDivisionError) { @a.tdiv(@b) }
+    assert_raise(ZeroDivisionError) { @d.inv }
+    assert_raise(ZeroDivisionError) { @d.inv! }
+    assert_raise(ZeroDivisionError) { @c/0 }
+    assert_raise(ZeroDivisionError) { @c/@d }
   end
 end
