@@ -4,83 +4,13 @@
  * This file contains everything you would expect from a C extension.
  */
 
-#define _GNU_SOURCE
-#include <stdio.h>
-
-#include <ruby.h>
-#include <gmp.h>
-
-#ifdef MPFR
-
-#ifdef HAVE_MPFR_H
-#include <mpfr.h>
-#endif /* HAVE_MPFR_H */
-
-#ifdef HAVE_MPF2MPFR_H
-#include <mpf2mpfr.h>
-#endif /* HAVE_MPF2MPFR_H */
-
-#endif /* MPFR */
-
-#include <stdlib.h>
-
-/*
-  MP_INT*, MP_RAT* and MP_FLOAT* are used because they don't have side-effects
-  of single-element arrays mp*_t
-
-  MP_FLOAT is defined here, as it's commented out in gmp.h
-*/
-#if defined(MPFR) && defined(HAVE_MPFR_H)
-typedef __mpfr_struct MP_FLOAT;
-#else
-typedef __mpf_struct MP_FLOAT;
-#endif /* HAVE_MPF2MPFR_H */
-
-#define mpz_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_INT, c_var); }
-#define mpq_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_RAT, c_var); }
-#define mpf_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_FLOAT, c_var); }
-#define mpf_get_struct_prec(ruby_var,c_var,prec) { mpf_get_struct(ruby_var,c_var); prec = mpf_get_prec(c_var); }
-#define mpz_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_Z, MP_INT, 0, r_gmpz_free, c_var); }
-#define mpq_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_Q, MP_RAT, 0, r_gmpq_free, c_var); }
-#define mpf_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_F, MP_FLOAT, 0, r_gmpf_free, c_var); }
-#define mpz_make_struct_init(ruby_var,c_var) { mpz_make_struct(ruby_var,c_var); mpz_init (c_var); }
-#define mpq_make_struct_init(ruby_var,c_var) { mpq_make_struct(ruby_var,c_var); mpq_init (c_var); }
-#define mpf_make_struct_init(ruby_var,c_var,prec) { mpf_make_struct(ruby_var,c_var); mpf_init2 (c_var,prec); }
-#define BIGNUM_P(value) (TYPE(value) == T_BIGNUM)
-#define FLOAT_P(value)  (TYPE(value) == T_FLOAT)
-#define STRING_P(value) (TYPE(value) == T_STRING)
-#define GMPZ_P(value)   (rb_obj_is_instance_of(value, cGMP_Z) == Qtrue)
-#define GMPQ_P(value)   (rb_obj_is_instance_of(value, cGMP_Q) == Qtrue)
-#define GMPF_P(value)   (rb_obj_is_instance_of(value, cGMP_F) == Qtrue)
-#define mpz_set_bignum(var_mpz,var_bignum) \
-  mpz_set_str (var_mpz, STR2CSTR (rb_funcall (var_bignum, rb_intern ("to_s"), 0)), 0);
-#define mpz_temp_alloc(var) { var=malloc(sizeof(MP_INT)); }
-#define mpz_temp_init(var) { mpz_temp_alloc(var); mpz_init(var); }
-#define mpz_temp_from_bignum(var,var_bignum)  \
-  { mpz_temp_alloc(var); mpz_init_set_str (var, STR2CSTR (rb_funcall (var_bignum, rb_intern ("to_s"), 0)), 0); }
-#define mpz_temp_free(var) { mpz_clear(var); free(var); }
-#define mpf_temp_alloc(var) { var=malloc(sizeof(MP_FLOAT)); }
-#define mpf_temp_init(var,prec) { mpf_temp_alloc(var); mpf_init2(var,prec); }
-#define mpf_temp_free(var) { mpf_clear(var); free(var); }
-#define FLT2DBL(var) (RFLOAT(var)->value)
-#define prec_max(prec,var) {if(mpf_get_prec(var) > prec) prec = mpf_get_prec(var); }
-
-#define EXPECTED_ZQFXBD "Expected GMP::Z, GMP::Q, GMP::F, FixNum, BigNum or Float"
-#define EXPECTED_ZQFXB "Expected GMP::Z, GMP::Q, GMP::F, FixNum or BigNum"
-#define EXPECTED_ZXB "Expected GMP::Z, FixNum or BigNum"
-#define EXPECTED_ZX "Expected GMP::Z or FixNum"
-#define EXPECTED_X "Expected FixNum"
-#define typeerror(expected) rb_raise(rb_eTypeError, EXPECTED_##expected)
-#define typeerror_as(expected, argname) rb_raise(rb_eTypeError, EXPECTED_##expected " as " argname)
-
-//should change exception type
-#define not_yet rb_raise(rb_eTypeError,"Not implemented yet")
+#include <ruby_gmp.h>
 
 VALUE mGMP, cGMP_Z, cGMP_Q, cGMP_F;
 
-static void r_gmpz_free(void *ptr) { mpz_clear (ptr); free (ptr); }
-static void r_gmpq_free(void *ptr) { mpq_clear (ptr); free (ptr); }
-static void r_gmpf_free(void *ptr) { mpf_clear (ptr); free (ptr); }
+void r_gmpz_free(void *ptr) { mpz_clear (ptr); free (ptr); }
+void r_gmpq_free(void *ptr) { mpq_clear (ptr); free (ptr); }
+void r_gmpf_free(void *ptr) { mpf_clear (ptr); free (ptr); }
 
 static VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
 {
@@ -374,7 +304,7 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
 
 #include "gmpf.h"
 #include "gmpq.h"
-#include "gmpz.h"
+/* #include "gmpz.h" */
 #include "takeover.h"
 
 #define REGISTER_TAKEOVER(fname, ruby_fname, old_fname) \
@@ -383,7 +313,7 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
   rb_define_alias(rb_cBignum, old_fname, ruby_fname); \
   rb_define_method(rb_cBignum, ruby_fname, takeover_bignum_##fname, -1);
 
-void Init_gmp () {
+void Init_gmp() {
   mGMP = rb_define_module("GMP");
   rb_define_module_function(mGMP, "Z", r_gmpmod_z, -1);
   rb_define_module_function(mGMP, "Q", r_gmpmod_q, -1);

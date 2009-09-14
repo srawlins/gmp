@@ -1,3 +1,11 @@
+/*
+ * gmpq.h
+ *
+ * This file contains GMP::Q stuff.
+ */
+
+#include <ruby_gmp.h>
+
 static VALUE r_gmpq_add(VALUE self, VALUE arg)
 {
   MP_RAT *self_val, *arg_val_q, *res_val;
