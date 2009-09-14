@@ -23,8 +23,6 @@ extensions: []
 extra_rdoc_files: []
 
 files: 
-- doc/PRECISION
-- doc/TODO
 - ext/extconf.rb
 - ext/gmp.c
 - ext/gmpf.h
@@ -34,14 +32,16 @@ files:
 - test/README
 - test/tc_cmp.rb
 - test/tc_q.rb
+- test/tc_q_basic.rb
 - test/tc_z.rb
 - test/tc_z_basic.rb
+- test/tc_z_exponentiation.rb
 - test/tc_z_logic.rb
 - test/test_helper.rb
 - test/unit_tests.rb
 - CHANGELOG
 - INSTALL
-- README
+- README.rdoc
 has_rdoc: false
 homepage: http://github.com/srawlins/gmp/tree/master
 post_install_message: 

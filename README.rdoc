@@ -53,6 +53,10 @@ Only GMP 4 or newer is supported. It has been officially tested with:
   | Cygwin on x86 |  1.8.6  | GMP 4.3.1 |
   |-------------------------------------|
 
+I have not tested one wit on Ruby 1.9.x, but my educated guess is, no, it
+does not behave. If only because of rubyio.h replacing ruby/io.h. This is on my
+todo list. I intend to use RMagick as a guide.
+
 =Authors
 
 * Tomasz Wegrzanowski
@@ -144,7 +148,7 @@ You can also call them as:
     root(n)                  nth root
     jacobi                   jacobi symbol
     legendre                 legendre symbol
-    probab_prime_p           0 if composite, 1 if probably prime, 2 if
+    probab_prime?            0 if composite, 1 if probably prime, 2 if
                              certainly prime
     nextprime                next *probable* prime
     nextprime!               change the object into its next *probable* prime
@@ -212,13 +216,14 @@ thinks is appropriate.
 These are inherited from Tomasz. I will go through these and see which are
 still relevant.
 
+* ruby 1.9.x
 * mpz_fits_* and 31 vs. 32 integer variables
 * all appropriate module and class methods if there are any to add
 * fix all sign issues
 * floats with precision control
 * random numbers
 * to_s vs. inspect ?
-* to_s_hex()
+* to_s_hex(), or more-ruby-ish, to_s(:hex)
 * check if mpz_addmul_ui would optimize some statements
 * some system that allow using denref and numref as normal ruby objects
 * should we allocate global temporary variables like Perl GMP do ?

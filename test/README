@@ -13,8 +13,8 @@ Tests:
    5*   basic rational arithmetics and coertion to Q
    6    bit operations, scan0, scan1
    7*   exponentiation and exponentiation modulo
-   8*    divide by zero exceptions
-   9    sgn, neg, abs
+   8*   divide by zero exceptions
+   9*   sgn, neg, abs
   10    fibonacci, factorial, nextprime
   11    swap
   12    floor, ceil, truncate
