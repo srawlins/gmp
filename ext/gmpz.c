@@ -1,7 +1,14 @@
 #include <gmpz.h>
 
 /*
- * call-seq: +(other)
+ * Document-class: GMP::Z
+ *
+ * GMP Integer.
+ */
+
+/*
+ * call-seq:
+ *   +(other)
  *
  * Adds this GMP::Z to other. Other can be
  * * GMP::Z
@@ -42,6 +49,18 @@ VALUE r_gmpz_add(VALUE self, VALUE arg)
   return res;
 }
 
+/*
+ * call-seq:
+ *   add!(other)
+ *
+ * Adds this GMP::Z to other, and sets this GMP::Z's value to the result. Other
+ * can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 VALUE r_gmpz_add_self(VALUE self, VALUE arg)
 {
   MP_INT *self_val, *arg_val;
@@ -50,22 +69,33 @@ VALUE r_gmpz_add_self(VALUE self, VALUE arg)
 
   if (GMPZ_P(arg)) {
     mpz_get_struct(arg,arg_val);
-    mpz_add (self_val, self_val, arg_val);
+    mpz_add(self_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
     if (FIX2INT(arg) > 0)
-      mpz_add_ui (self_val, self_val, FIX2INT(arg));
+      mpz_add_ui(self_val, self_val, FIX2INT(arg));
     else
-      mpz_sub_ui (self_val, self_val, -FIX2INT(arg));
+      mpz_sub_ui(self_val, self_val, -FIX2INT(arg));
   } else if (BIGNUM_P(arg)) {
-    mpz_temp_from_bignum (arg_val, arg);
-    mpz_add (self_val, self_val, arg_val);
-    mpz_temp_free (arg_val);
+    mpz_temp_from_bignum(arg_val, arg);
+    mpz_add(self_val, self_val, arg_val);
+    mpz_temp_free(arg_val);
   } else {
-    typeerror (ZXB);
+    typeerror(ZXB);
   }
   return Qnil;
 }
 
+/*
+ * call-seq:
+ *   -(other)
+ *
+ * Subtracts other from this GMP::Z. Other can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 static VALUE r_gmpz_sub(VALUE self, VALUE arg)
 {
   MP_RAT *res_val_q, *arg_val_q;
@@ -107,6 +137,18 @@ static VALUE r_gmpz_sub(VALUE self, VALUE arg)
   return res;
 }
 
+/*
+ * call-seq:
+ *   sub!(other)
+ *
+ * Subtracts other from this GMP::Z, and sets this GMP::Z's value to the
+ * result. Other can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 static VALUE r_gmpz_sub_self(VALUE self, VALUE arg)
 {
   MP_INT *self_val, *arg_val;
@@ -131,6 +173,17 @@ static VALUE r_gmpz_sub_self(VALUE self, VALUE arg)
   return Qnil;
 }
 
+/*
+ * call-seq:
+ *   *(other)
+ *
+ * Multiplies this GMP::Z with other. Other can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 static VALUE r_gmpz_mul(VALUE self, VALUE arg)
 {
   MP_INT *self_val, *arg_val, *res_val;
@@ -141,20 +194,20 @@ static VALUE r_gmpz_mul(VALUE self, VALUE arg)
   if (GMPZ_P(arg)) {
     mpz_make_struct_init(res, res_val);
     mpz_get_struct(arg,arg_val);
-    mpz_mul (res_val, self_val, arg_val);
+    mpz_mul(res_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
-    mpz_mul_si (res_val, self_val, FIX2INT(arg));
+    mpz_mul_si(res_val, self_val, FIX2INT(arg));
   } else if (GMPQ_P(arg)) {
     return r_gmpq_mul(arg, self);
   } else if (GMPF_P(arg)) {
     return r_gmpf_mul(arg, self);
   } else if (BIGNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
-    mpz_set_bignum (res_val, arg);
-    mpz_mul (res_val, res_val, self_val);
+    mpz_set_bignum(res_val, arg);
+    mpz_mul(res_val, res_val, self_val);
   } else {
-    typeerror (ZQFXB);
+    typeerror(ZQFXB);
   }
   return res;
 }
@@ -213,6 +266,39 @@ static VALUE r_gmpz_div(VALUE self, VALUE arg)
   return res;
 }
 
+VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+
+  mpz_get_struct(self, self_val);
+
+  if (FIXNUM_P(bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as(X, "index");
+  }
+  if (RTEST(set_to)) {
+    mpz_setbit (self_val, bitnr_val);
+  } else {
+    mpz_clrbit (self_val, bitnr_val);
+  }
+  return Qnil;
+}
+
+VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+  mpz_get_struct(self, self_val);
+  if (FIXNUM_P(bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as(X, "index");
+  }
+  return mpz_tstbit(self_val, bitnr_val)?Qtrue:Qfalse;
+}
+
 VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
 {
   MP_INT *res_val;
@@ -243,4 +329,23 @@ VALUE r_gmpz_to_s(VALUE self)
   free (str);
 
   return res;
+}
+
+void init_gmpz()
+{
+  mGMP = rb_define_module("GMP");
+  rb_define_module_function(mGMP, "Z", r_gmpmod_z, -1);
+  rb_define_module_function(mGMP, "Q", r_gmpmod_q, -1);
+  rb_define_module_function(mGMP, "F", r_gmpmod_f, -1);
+
+  cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
+
+  rb_define_method(cGMP_Z, "+", r_gmpz_add, 1);
+  rb_define_method(cGMP_Z, "add!", r_gmpz_add_self, 1);
+  rb_define_method(cGMP_Z, "-", r_gmpz_sub, 1);  
+  rb_define_method(cGMP_Z, "sub!", r_gmpz_sub_self, 1);
+  rb_define_method(cGMP_Z, "*", r_gmpz_mul, 1);
+  rb_define_method(cGMP_Z, "/", r_gmpz_div, 1);
+  rb_define_method(cGMP_Z, "[]=", r_gmpz_setbit, 2);
+  rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
 }

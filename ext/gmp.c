@@ -320,6 +320,7 @@ void Init_gmp() {
   rb_define_module_function(mGMP, "F", r_gmpmod_f, -1);
 
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
+  init_gmpz();
   rb_define_singleton_method(cGMP_Z, "new", r_gmpzsg_new, -1);
   rb_define_singleton_method(cGMP_Z, "fib", r_gmpzsg_fib, 1);
   rb_define_singleton_method(cGMP_Z, "fac", r_gmpzsg_fac, 1);
@@ -327,12 +328,6 @@ void Init_gmp() {
   rb_define_method(cGMP_Z, "initialize", r_gmpz_initialize, -1);
   rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, 0);
   rb_define_method(cGMP_Z, "coerce", r_gmpz_coerce, 1);
-  rb_define_method(cGMP_Z, "+", r_gmpz_add, 1);
-  rb_define_method(cGMP_Z, "add!", r_gmpz_add_self, 1);
-  rb_define_method(cGMP_Z, "-", r_gmpz_sub, 1);
-  rb_define_method(cGMP_Z, "sub!", r_gmpz_sub_self, 1);
-  rb_define_method(cGMP_Z, "*", r_gmpz_mul, 1);
-  rb_define_method(cGMP_Z, "/", r_gmpz_div, 1);
   rb_define_method(cGMP_Z, "tdiv", r_gmpz_tdiv, 1);
   rb_define_method(cGMP_Z, "tmod", r_gmpz_tmod, 1);
   rb_define_method(cGMP_Z, "fdiv", r_gmpz_fdiv, 1);
@@ -349,8 +344,6 @@ void Init_gmp() {
   rb_define_method(cGMP_Z, "&", r_gmpz_and, 1);
   rb_define_method(cGMP_Z, "|", r_gmpz_or, 1);
   rb_define_method(cGMP_Z, "^", r_gmpz_xor, 1);
-  rb_define_method(cGMP_Z, "[]=", r_gmpz_setbit, 2);
-  rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
   rb_define_method(cGMP_Z, "scan0", r_gmpz_scan0, 1);
   rb_define_method(cGMP_Z, "scan1", r_gmpz_scan1, 1);
   rb_define_method(cGMP_Z, "**", r_gmpz_pow, 1);
