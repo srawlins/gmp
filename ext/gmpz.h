@@ -6,6 +6,8 @@
 
 #include <ruby_gmp.h>
 
+void init_gmpz();
+
 // static VALUE r_gmpz_div(VALUE self, VALUE arg)
 // {
   // MP_INT *self_val, *arg_val_z, *tmp_z;
@@ -60,38 +62,38 @@
   // return res;
 // }
 
-static VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
-{
-  MP_INT *self_val;
-  int bitnr_val;
+// static VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
+// {
+  // MP_INT *self_val;
+  // int bitnr_val;
 
-  mpz_get_struct(self, self_val);
+  // mpz_get_struct(self, self_val);
 
-  if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
-  } else {
-    typeerror_as(X, "index");
-  }
-  if (RTEST(set_to)) {
-    mpz_setbit (self_val, bitnr_val);
-  } else {
-    mpz_clrbit (self_val, bitnr_val);
-  }
-  return Qnil;
-}
+  // if (FIXNUM_P(bitnr)) {
+    // bitnr_val = FIX2INT (bitnr);
+  // } else {
+    // typeerror_as(X, "index");
+  // }
+  // if (RTEST(set_to)) {
+    // mpz_setbit (self_val, bitnr_val);
+  // } else {
+    // mpz_clrbit (self_val, bitnr_val);
+  // }
+  // return Qnil;
+// }
 
-static VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
-{
-  MP_INT *self_val;
-  int bitnr_val;
-  mpz_get_struct(self, self_val);
-  if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
-  } else {
-    typeerror_as(X, "index");
-  }
-  return mpz_tstbit(self_val, bitnr_val)?Qtrue:Qfalse;
-}
+// static VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
+// {
+  // MP_INT *self_val;
+  // int bitnr_val;
+  // mpz_get_struct(self, self_val);
+  // if (FIXNUM_P(bitnr)) {
+    // bitnr_val = FIX2INT (bitnr);
+  // } else {
+    // typeerror_as(X, "index");
+  // }
+  // return mpz_tstbit(self_val, bitnr_val)?Qtrue:Qfalse;
+// }
 
 static VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
 {
@@ -339,73 +341,73 @@ DEFUN_INT_CMP(le,<=)
 DEFUN_INT_CMP(gt,>)
 DEFUN_INT_CMP(ge,>=)
 
-#define DEFUN_INT_DIV(fname,gmp_fname) \
-static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
-{ \
-  MP_INT *self_val, *arg_val, *res_val; \
-  VALUE res; \
-  int arg_val_i; \
-  \
-  mpz_get_struct(self, self_val); \
-  mpz_make_struct_init(res, res_val); \
-  \
-  if (GMPZ_P(arg)) { \
-    mpz_get_struct(arg,arg_val); \
-    if (mpz_cmp_ui(arg_val, 0) == 0) \
-      rb_raise (rb_eZeroDivError, "divided by 0"); \
-    gmp_fname (res_val, self_val, arg_val); \
-  } else if (FIXNUM_P(arg)) { \
-    arg_val_i = FIX2INT(arg); \
-    if (arg_val_i > 0) { \
-      gmp_fname##_ui (res_val, self_val, arg_val_i); \
-    } else if (arg_val_i == 0) { \
-      rb_raise (rb_eZeroDivError, "divided by 0"); \
-    } else { \
-      mpz_neg (res_val, self_val); \
-      gmp_fname##_ui (res_val, self_val, -arg_val_i); \
-    } \
-  } else if (BIGNUM_P(arg)) { \
-    mpz_set_bignum (res_val, arg); \
-    if (mpz_cmp_ui(res_val, 0) == 0) \
-      rb_raise (rb_eZeroDivError, "divided by 0"); \
-    gmp_fname (res_val, self_val, res_val); \
-  } else { \
-    typeerror(ZXB); \
-  } \
-  return res; \
-}
+// #define DEFUN_INT_DIV(fname,gmp_fname) \
+// static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
+// { \
+  // MP_INT *self_val, *arg_val, *res_val; \
+  // VALUE res; \
+  // int arg_val_i; \
+  // \
+  // mpz_get_struct(self, self_val); \
+  // mpz_make_struct_init(res, res_val); \
+  // \
+  // if (GMPZ_P(arg)) { \
+    // mpz_get_struct(arg,arg_val); \
+    // if (mpz_cmp_ui(arg_val, 0) == 0) \
+      // rb_raise (rb_eZeroDivError, "divided by 0"); \
+    // gmp_fname (res_val, self_val, arg_val); \
+  // } else if (FIXNUM_P(arg)) { \
+    // arg_val_i = FIX2INT(arg); \
+    // if (arg_val_i > 0) { \
+      // gmp_fname##_ui (res_val, self_val, arg_val_i); \
+    // } else if (arg_val_i == 0) { \
+      // rb_raise (rb_eZeroDivError, "divided by 0"); \
+    // } else { \
+      // mpz_neg (res_val, self_val); \
+      // gmp_fname##_ui (res_val, self_val, -arg_val_i); \
+    // } \
+  // } else if (BIGNUM_P(arg)) { \
+    // mpz_set_bignum (res_val, arg); \
+    // if (mpz_cmp_ui(res_val, 0) == 0) \
+      // rb_raise (rb_eZeroDivError, "divided by 0"); \
+    // gmp_fname (res_val, self_val, res_val); \
+  // } else { \
+    // typeerror(ZXB); \
+  // } \
+  // return res; \
+// }
 
-DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
-DEFUN_INT_DIV(tmod, mpz_tdiv_r)
-DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
-DEFUN_INT_DIV(fmod, mpz_fdiv_r)
-DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
-DEFUN_INT_DIV(cmod, mpz_cdiv_r)
+// DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
+// DEFUN_INT_DIV(tmod, mpz_tdiv_r)
+// DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
+// DEFUN_INT_DIV(fmod, mpz_fdiv_r)
+// DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
+// DEFUN_INT_DIV(cmod, mpz_cdiv_r)
 
-#define DEFUN_INT2INT(fname,mpz_fname)         \
-static VALUE r_gmpz_##fname(VALUE self)        \
-{                                              \
-  MP_INT *self_val, *res_val;                  \
-  VALUE res;                                   \
-  mpz_get_struct(self, self_val);              \
-  mpz_make_struct_init(res, res_val);          \
-  mpz_fname(res_val, self_val);                \
-  return res;                                  \
-}                                              \
-                                               \
-static VALUE r_gmpz_##fname##_self(VALUE self) \
-{                                              \
-  MP_INT *self_val;                            \
-  mpz_get_struct(self, self_val);              \
-  mpz_fname(self_val, self_val);               \
-  return Qnil;                                 \
-}
+// #define DEFUN_INT2INT(fname,mpz_fname)         \
+// static VALUE r_gmpz_##fname(VALUE self)        \
+// {                                              \
+  // MP_INT *self_val, *res_val;                  \
+  // VALUE res;                                   \
+  // mpz_get_struct(self, self_val);              \
+  // mpz_make_struct_init(res, res_val);          \
+  // mpz_fname(res_val, self_val);                \
+  // return res;                                  \
+// }                                              \
+                                               // \
+// static VALUE r_gmpz_##fname##_self(VALUE self) \
+// {                                              \
+  // MP_INT *self_val;                            \
+  // mpz_get_struct(self, self_val);              \
+  // mpz_fname(self_val, self_val);               \
+  // return Qnil;                                 \
+// }
 
-DEFUN_INT2INT(abs, mpz_abs)
-DEFUN_INT2INT(neg, mpz_neg)
-DEFUN_INT2INT(com, mpz_com)
-DEFUN_INT2INT(sqrt, mpz_sqrt)
-DEFUN_INT2INT(nextprime, mpz_nextprime)
+// DEFUN_INT2INT(abs, mpz_abs)
+// DEFUN_INT2INT(neg, mpz_neg)
+// DEFUN_INT2INT(com, mpz_com)
+// DEFUN_INT2INT(sqrt, mpz_sqrt)
+// DEFUN_INT2INT(nextprime, mpz_nextprime)
 
 /*
  * call-seq: probab_prime_p(reps)
@@ -477,35 +479,35 @@ static VALUE r_gmpz_legendre(VALUE self)
   return res;
 }
 
-#define DEFUN_INT_LOGIC(fname, mpz_fname) \
-static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
-{ \
-  MP_INT *self_val, *arg_val, *res_val; \
-  VALUE res; \
- \
-  mpz_get_struct(self, self_val); \
- \
-  mpz_make_struct(res, res_val); \
-  if (GMPZ_P(arg)) { \
-    mpz_get_struct(arg,arg_val); \
-    mpz_init (res_val); \
-    mpz_fname (res_val, self_val, arg_val); \
-  } else if (FIXNUM_P(arg)) { \
-    mpz_init_set_si (res_val, FIX2INT(arg)); \
-    mpz_fname (res_val, self_val, res_val); \
-  } else if (BIGNUM_P(arg)) { \
-    mpz_init (res_val); \
-    mpz_set_bignum (res_val, arg); \
-    mpz_fname (res_val, self_val, res_val); \
-  } else  { \
-    typeerror(ZXB); \
-  } \
-  return res; \
-}
+// #define DEFUN_INT_LOGIC(fname, mpz_fname) \
+// static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
+// { \
+  // MP_INT *self_val, *arg_val, *res_val; \
+  // VALUE res; \
+ // \
+  // mpz_get_struct(self, self_val); \
+ // \
+  // mpz_make_struct(res, res_val); \
+  // if (GMPZ_P(arg)) { \
+    // mpz_get_struct(arg,arg_val); \
+    // mpz_init (res_val); \
+    // mpz_fname (res_val, self_val, arg_val); \
+  // } else if (FIXNUM_P(arg)) { \
+    // mpz_init_set_si (res_val, FIX2INT(arg)); \
+    // mpz_fname (res_val, self_val, res_val); \
+  // } else if (BIGNUM_P(arg)) { \
+    // mpz_init (res_val); \
+    // mpz_set_bignum (res_val, arg); \
+    // mpz_fname (res_val, self_val, res_val); \
+  // } else  { \
+    // typeerror(ZXB); \
+  // } \
+  // return res; \
+// }
 
-DEFUN_INT_LOGIC(and, mpz_and)
-DEFUN_INT_LOGIC(xor, mpz_xor)
-DEFUN_INT_LOGIC(or, mpz_ior)
+// DEFUN_INT_LOGIC(and, mpz_and)
+// DEFUN_INT_LOGIC(xor, mpz_xor)
+// DEFUN_INT_LOGIC(or, mpz_ior)
 
 static VALUE r_gmpz_sqrtrem(VALUE self)
 {
