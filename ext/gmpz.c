@@ -19,8 +19,18 @@
  *   sub!         r_gmpz_sub_self       mpz_sub
  *   *            r_gmpz_mul            mpz_mul
  *   /            r_gmpz_div            ...
+ *   tdiv         r_gmpz_tdiv           mpz_tdiv_q
+ *   tmod         r_gmpz_tmod           mpz_tdiv_r
+ *   fdiv         r_gmpz_fdiv           mpz_fdiv_q
+ *   fmod         r_gmpz_fmod           mpz_fdiv_r
+ *   cdiv         r_gmpz_cdiv           mpz_cdiv_q
+ *   cmod         r_gmpz_cmod           mpz_cdiv_r
  *   []=          r_gmpz_setbit         mpz_setbit
  *   []           r_gmpz_getbit         mpz_tstbit
+ *   scan0        r_gmpz_scan0          mpz_scan0
+ *   scan1        r_gmpz_scan1          mpz_scan1
+ *   even?        r_gmpz_is_even        mpz_even
+ *   odd?         r_gmpz_is_odd         mpz_odd
  *   ...
  */
 
@@ -296,6 +306,202 @@ static VALUE r_gmpz_div(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: tdiv
+ *
+ * call-seq:
+ *   n.tdiv d
+ *
+ * From the GMP Manual:
+ * 
+ * Divides +n+ by +d+, forming a quotient +q+. tdiv rounds +q+ towards zero.
+ * The +t+ stands for "truncate".
+ *
+ * +q+ will satisfy <tt>n=q*d+r</tt>, and +r+ will satisfy
+ * <tt>0<=abs(r)<abs(d)</tt>.
+ *
+ * This function calculates only the quotient.
+ */
+DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
+/*
+ * Document-method: tmod
+ *
+ * call-seq:
+ *   n.tmod d
+ *
+ * From the GMP Manual:
+ * 
+ * Divides +n+ by +d+, forming a remainder +r+. +r+ will have the same sign as
+ * +n+. The +t+ stands for “truncate”. 
+ *
+ * +r+ will satisfy <tt>n=q*d+r</tt>, and +r+ will satisfy
+ * <tt>0<=abs(r)<abs(d)</tt>.
+ *
+ * This function calculates only the remainder.
+ *
+ * The remainder can be negative, so the return value is the absolute value of
+ * the remainder.
+ */
+DEFUN_INT_DIV(tmod, mpz_tdiv_r)
+/*
+ * Document-method: fdiv
+ *
+ * call-seq:
+ *   n.fdiv d
+ *
+ * From the GMP Manual:
+ * 
+ * Divide n by d, forming a quotient q. fdiv rounds q down towards -infinity.
+ * The f stands for “floor”.
+ *
+ * q will satisfy n=q*d+r.
+ *
+ * This function calculates only the quotient.
+ */
+DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
+/*
+ * Document-method: fmod
+ *
+ * call-seq:
+ *   n.fmod d
+ *
+ * From the GMP Manual:
+ * 
+ * Divides n by d, forming a remainder r. r will have the same sign as d. The f
+ * stands for “floor”. 
+ *
+ * r will satisfy n=q*d+r, and r will satisfy 0<=abs(r)<abs(d).
+ *
+ * This function calculates only the remainder.
+ *
+ * The remainder can be negative, so the return value is the absolute value of
+ * the remainder.
+ */
+DEFUN_INT_DIV(fmod, mpz_fdiv_r)
+DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
+DEFUN_INT_DIV(cmod, mpz_cdiv_r)
+
+/*
+ * Document-method: abs
+ *
+ * call-seq:
+ *   integer.abs
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the absolute value of +integer+.
+ */
+/*
+ * Document-method: abs!
+ *
+ * call-seq:
+ *   integer.abs!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +integer+ to its absolute value.
+ */
+DEFUN_INT2INT(abs, mpz_abs)
+/*
+ * Document-method: neg
+ *
+ * call-seq:
+ *   -integer
+ *   integer.neg
+ *
+ * From the GMP Manual:
+ * 
+ * Returns -+integer+.
+ */
+/*
+ * Document-method: neg!
+ *
+ * call-seq:
+ *   integer.neg!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +integer+ to -+integer+.
+ */
+DEFUN_INT2INT(neg, mpz_neg)
+/*
+ * Document-method: com
+ *
+ * call-seq:
+ *   integer.com
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the one's complement of +integer+.
+ */
+/*
+ * Document-method: com!
+ *
+ * call-seq:
+ *   integer.com!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +integer+ to its one's complement.
+ */
+DEFUN_INT2INT(com, mpz_com)
+/*
+ * Document-method: sqrt
+ *
+ * call-seq:
+ *   integer.sqrt
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the truncated integer part of the square root of +integer+.
+ */
+/*
+ * Document-method: sqrt!
+ *
+ * call-seq:
+ *   integer.sqrt!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +integer+ to the truncated integer part of its square root.
+ */
+DEFUN_INT2INT(sqrt, mpz_sqrt)
+DEFUN_INT2INT(nextprime, mpz_nextprime)
+
+/*
+ * Document-method: &
+ *
+ * call-seq:
+ *   integer & other
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +integer+ bitwise-and +other+.
+ */
+DEFUN_INT_LOGIC(and, mpz_and)
+/*
+ * Document-method: |
+ *
+ * call-seq:
+ *   integer | other
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +integer+ bitwise inclusive-or +other+.
+ */
+DEFUN_INT_LOGIC(or, mpz_ior)
+/*
+ * Document-method: ^
+ *
+ * call-seq:
+ *   integer ^ other
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +integer+ bitwise exclusive-or +other+.
+ */
+DEFUN_INT_LOGIC(xor, mpz_xor)
+
+/*
  * call-seq:
  *   integer[index] = x &rarr; nil
  *
@@ -397,14 +603,6 @@ VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
   }
 
   return INT2FIX(mpz_scan1(self_val, bitnr_val));
-}
-
-#define DEFUN_INT_COND_P(fname,mpz_fname) \
-static VALUE r_gmpz_##fname(VALUE self) \
-{ \
-  MP_INT *self_val; \
-  mpz_get_struct(self, self_val); \
-  return mpz_fname(self_val)?Qtrue:Qfalse; \
 }
 
 /*
@@ -602,6 +800,20 @@ DEFUN_INT_F_UL(fshrm,mpz_fdiv_r_2exp,"mark size")
 DEFUN_INT_F_UL(tshrm,mpz_tdiv_r_2exp,"mark size")
 DEFUN_INT_F_UL(root,mpz_root,"root number")
 
+VALUE r_gmpz_cmp(VALUE self, VALUE arg)
+{
+  MP_INT *self_val;
+  int res;
+  mpz_get_struct (self,self_val);
+  res = mpz_cmp_value(self_val, arg);
+  if (res > 0)
+    return INT2FIX(1);
+  else if (res == 0)
+    return INT2FIX(0);
+  else
+    return INT2FIX(-1);
+}
+
 VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
 {
   MP_INT *res_val;
@@ -649,6 +861,22 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "sub!", r_gmpz_sub_self, 1);
   rb_define_method(cGMP_Z, "*", r_gmpz_mul, 1);
   rb_define_method(cGMP_Z, "/", r_gmpz_div, 1);
+  rb_define_method(cGMP_Z, "tdiv", r_gmpz_tdiv, 1);
+  rb_define_method(cGMP_Z, "tmod", r_gmpz_tmod, 1);
+  rb_define_method(cGMP_Z, "fdiv", r_gmpz_fdiv, 1);
+  rb_define_method(cGMP_Z, "fmod", r_gmpz_fmod, 1);
+  rb_define_method(cGMP_Z, "cdiv", r_gmpz_cdiv, 1);
+  rb_define_method(cGMP_Z, "cmod", r_gmpz_cmod, 1);
+  rb_define_method(cGMP_Z, "-@", r_gmpz_neg, 0);
+  rb_define_method(cGMP_Z, "neg", r_gmpz_neg, 0);
+  rb_define_method(cGMP_Z, "neg!", r_gmpz_neg_self, 0);
+  rb_define_method(cGMP_Z, "abs", r_gmpz_abs, 0);
+  rb_define_method(cGMP_Z, "abs!", r_gmpz_abs_self, 0);
+  rb_define_method(cGMP_Z, "com", r_gmpz_com, 0);
+  rb_define_method(cGMP_Z, "com!", r_gmpz_com_self, 0);
+  rb_define_method(cGMP_Z, "&", r_gmpz_and, 1);
+  rb_define_method(cGMP_Z, "|", r_gmpz_or, 1);
+  rb_define_method(cGMP_Z, "^", r_gmpz_xor, 1);
   rb_define_method(cGMP_Z, "[]=", r_gmpz_setbit, 2);
   rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
   rb_define_method(cGMP_Z, "scan0", r_gmpz_scan0, 1);
@@ -656,6 +884,7 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
   rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
   rb_define_method(cGMP_Z, "sgn", r_gmpz_sgn, 0);
+  rb_define_method(cGMP_Z, "<=>", r_gmpz_cmp, 1);
   
   rb_define_method(cGMP_Z, "**", r_gmpz_pow, 1);
   rb_define_method(cGMP_Z, "powmod", r_gmpz_powm, 2);

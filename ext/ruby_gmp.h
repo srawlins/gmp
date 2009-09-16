@@ -94,6 +94,7 @@ extern VALUE r_gmpz_scan0(VALUE self, VALUE bitnr);
 extern VALUE r_gmpz_scan1(VALUE self, VALUE bitnr);
 extern VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod);
 extern VALUE r_gmpz_sgn(VALUE self);
+extern VALUE r_gmpz_cmp(VALUE self, VALUE arg);
 
 #define DEFUN_INT_DIV(fname,gmp_fname) \
 static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
@@ -131,13 +132,6 @@ static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
   return res; \
 }
 
-DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
-DEFUN_INT_DIV(tmod, mpz_tdiv_r)
-DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
-DEFUN_INT_DIV(fmod, mpz_fdiv_r)
-DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
-DEFUN_INT_DIV(cmod, mpz_cdiv_r)
-
 #define DEFUN_INT2INT(fname,mpz_fname)         \
 static VALUE r_gmpz_##fname(VALUE self)        \
 {                                              \
@@ -157,41 +151,31 @@ static VALUE r_gmpz_##fname##_self(VALUE self) \
   return Qnil;                                 \
 }
 
-DEFUN_INT2INT(abs, mpz_abs)
-DEFUN_INT2INT(neg, mpz_neg)
-DEFUN_INT2INT(com, mpz_com)
-DEFUN_INT2INT(sqrt, mpz_sqrt)
-DEFUN_INT2INT(nextprime, mpz_nextprime)
-
-#define DEFUN_INT_LOGIC(fname, mpz_fname) \
+#define DEFUN_INT_LOGIC(fname, mpz_fname)          \
 static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
-{ \
-  MP_INT *self_val, *arg_val, *res_val; \
-  VALUE res; \
- \
-  mpz_get_struct(self, self_val); \
- \
-  mpz_make_struct(res, res_val); \
-  if (GMPZ_P(arg)) { \
-    mpz_get_struct(arg,arg_val); \
-    mpz_init (res_val); \
-    mpz_fname (res_val, self_val, arg_val); \
-  } else if (FIXNUM_P(arg)) { \
-    mpz_init_set_si (res_val, FIX2INT(arg)); \
-    mpz_fname (res_val, self_val, res_val); \
-  } else if (BIGNUM_P(arg)) { \
-    mpz_init (res_val); \
-    mpz_set_bignum (res_val, arg); \
-    mpz_fname (res_val, self_val, res_val); \
-  } else  { \
-    typeerror(ZXB); \
-  } \
-  return res; \
+{                                                  \
+  MP_INT *self_val, *arg_val, *res_val;            \
+  VALUE res;                                       \
+                                                   \
+  mpz_get_struct(self, self_val);                  \
+                                                   \
+  mpz_make_struct(res, res_val);                   \
+  if (GMPZ_P(arg)) {                               \
+    mpz_get_struct(arg,arg_val);                   \
+    mpz_init(res_val);                             \
+    mpz_fname(res_val, self_val, arg_val);         \
+  } else if (FIXNUM_P(arg)) {                      \
+    mpz_init_set_si(res_val, FIX2INT(arg));        \
+    mpz_fname(res_val, self_val, res_val);         \
+  } else if (BIGNUM_P(arg)) {                      \
+    mpz_init(res_val);                             \
+    mpz_set_bignum(res_val, arg);                  \
+    mpz_fname(res_val, self_val, res_val);         \
+  } else  {                                        \
+    typeerror(ZXB);                                \
+  }                                                \
+  return res;                                      \
 }
-
-DEFUN_INT_LOGIC(and, mpz_and)
-DEFUN_INT_LOGIC(xor, mpz_xor)
-DEFUN_INT_LOGIC(or, mpz_ior)
 
 #define DEFUN_INT_SINGLETON_UI(fname,mpz_fname)  \
 static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg) \
