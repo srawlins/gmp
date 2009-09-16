@@ -90,6 +90,10 @@ extern VALUE r_gmpz_mul(VALUE self, VALUE arg);
 extern VALUE r_gmpz_div(VALUE self, VALUE arg);
 extern VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to);
 extern VALUE r_gmpz_getbit(VALUE self, VALUE bitnr);
+extern VALUE r_gmpz_scan0(VALUE self, VALUE bitnr);
+extern VALUE r_gmpz_scan1(VALUE self, VALUE bitnr);
+extern VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod);
+extern VALUE r_gmpz_sgn(VALUE self);
 
 #define DEFUN_INT_DIV(fname,gmp_fname) \
 static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
@@ -221,5 +225,6 @@ DEFUN_INT_SINGLETON_UI(fac,mpz_fac_ui)
 extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
 extern VALUE r_gmpz_to_s(VALUE self);
 
+extern void init_gmpz();
 
 #endif

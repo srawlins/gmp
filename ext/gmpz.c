@@ -3,7 +3,25 @@
 /*
  * Document-class: GMP::Z
  *
- * GMP Integer.
+ * GMP Multiple Precision Integer.
+ *
+ * Instances of this class can store variables of the type mpz_t. This class
+ * also contains many methods that act as the functions for mpz_t variables,
+ * as well as a few methods that attempt to make this library more Ruby-ish.
+ *
+ * The following list is just a simple checklist for me, really. A better
+ * reference should be found in the rdocs.
+ *
+ *   Ruby method  C Extension function  GMP function
+ *   +            r_gmpz_add            mpz_add
+ *   add!         r_gmpz_add_self       mpz_add
+ *   -            r_gmpz_sub            mpz_sub
+ *   sub!         r_gmpz_sub_self       mpz_sub
+ *   *            r_gmpz_mul            mpz_mul
+ *   /            r_gmpz_div            ...
+ *   []=          r_gmpz_setbit         mpz_setbit
+ *   []           r_gmpz_getbit         mpz_tstbit
+ *   ...
  */
 
 /*
@@ -27,24 +45,24 @@ VALUE r_gmpz_add(VALUE self, VALUE arg)
   if (GMPZ_P(arg)) {
     mpz_get_struct(arg,arg_val);
     mpz_make_struct_init(res, res_val);
-    mpz_add (res_val, self_val, arg_val);
+    mpz_add(res_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
     if (FIX2INT(arg) > 0)
-      mpz_add_ui (res_val, self_val, FIX2INT(arg));
+      mpz_add_ui(res_val, self_val, FIX2INT(arg));
     else
-      mpz_sub_ui (res_val, self_val, -FIX2INT(arg));
+      mpz_sub_ui(res_val, self_val, -FIX2INT(arg));
   } else if (GMPQ_P(arg)) {
     return r_gmpq_add(arg, self);
   } else if (GMPF_P(arg)) {
     return r_gmpf_add(arg, self);
   } else if (BIGNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
-    mpz_init (res_val);
+    mpz_init(res_val);
     mpz_set_bignum (res_val, arg);
-    mpz_add (res_val, res_val, self_val);
+    mpz_add(res_val, res_val, self_val);
   } else {
-    typeerror (ZQFXB);
+    typeerror(ZQFXB);
   }
   return res;
 }
@@ -212,6 +230,17 @@ static VALUE r_gmpz_mul(VALUE self, VALUE arg)
   return res;
 }
 
+/*
+ * call-seq:
+ *   /(other)
+ *
+ * Divides this GMP::Z by other. Other can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 static VALUE r_gmpz_div(VALUE self, VALUE arg)
 {
   MP_INT *self_val, *arg_val_z, *tmp_z;
@@ -225,47 +254,53 @@ static VALUE r_gmpz_div(VALUE self, VALUE arg)
   if (GMPZ_P(arg)) {
     mpz_get_struct(arg, arg_val_z);
     if (mpz_cmp_ui(arg_val_z, 0) == 0)
-      rb_raise (rb_eZeroDivError, "divided by 0");
+      rb_raise(rb_eZeroDivError, "divided by 0");
     mpq_make_struct_init(res, res_val_q);
-    mpq_set_num (res_val_q, self_val);
-    mpq_set_den (res_val_q, arg_val_z);
+    mpq_set_num(res_val_q, self_val);
+    mpq_set_den(res_val_q, arg_val_z);
     mpq_canonicalize (res_val_q);
   } else if (FIXNUM_P(arg)) {
     if (FIX2INT(arg) == 0)
-      rb_raise (rb_eZeroDivError, "divided by 0");
+      rb_raise(rb_eZeroDivError, "divided by 0");
     mpq_make_struct_init(res, res_val_q);
-    mpq_set_num (res_val_q, self_val);
-    mpz_set_ui (mpq_denref(res_val_q), FIX2INT(arg));
+    mpq_set_num(res_val_q, self_val);
+    mpz_set_ui(mpq_denref(res_val_q), FIX2INT(arg));
     mpq_canonicalize (res_val_q);
   } else if (GMPQ_P(arg)) {
     mpq_get_struct(arg, arg_val_q);
     if (mpz_cmp_ui(mpq_numref(arg_val_q), 0) == 0)
-      rb_raise (rb_eZeroDivError, "divided by 0");
+      rb_raise(rb_eZeroDivError, "divided by 0");
     mpz_temp_init(tmp_z);
     mpq_make_struct_init(res, res_val_q);
-    mpz_gcd (tmp_z, mpq_numref(arg_val_q), self_val);
-    mpz_divexact (mpq_numref(res_val_q), self_val, tmp_z);
-    mpz_divexact (mpq_denref(res_val_q), mpq_numref(arg_val_q), tmp_z);
-    mpz_mul (mpq_numref(res_val_q), mpq_numref(res_val_q), mpq_denref(arg_val_q));
+    mpz_gcd(tmp_z, mpq_numref(arg_val_q), self_val);
+    mpz_divexact(mpq_numref(res_val_q), self_val, tmp_z);
+    mpz_divexact(mpq_denref(res_val_q), mpq_numref(arg_val_q), tmp_z);
+    mpz_mul(mpq_numref(res_val_q), mpq_numref(res_val_q), mpq_denref(arg_val_q));
     mpz_temp_free(tmp_z);
   } else if (GMPF_P(arg)) {
-    mpf_get_struct_prec (arg, arg_val_f, prec);
+    mpf_get_struct_prec(arg, arg_val_f, prec);
     mpf_make_struct_init(res, res_val_f, prec);
-    mpf_set_z (res_val_f, self_val);
-    mpf_div (res_val_f, res_val_f, arg_val_f);
+    mpf_set_z(res_val_f, self_val);
+    mpf_div(res_val_f, res_val_f, arg_val_f);
   } else if (BIGNUM_P(arg)) {
     mpq_make_struct_init(res, res_val_q);
-    mpz_set_bignum (mpq_denref(res_val_q), arg);
+    mpz_set_bignum(mpq_denref(res_val_q), arg);
     if (mpz_cmp_ui(mpq_denref(res_val_q), 0) == 0)
-      rb_raise (rb_eZeroDivError, "divided by 0");
-    mpq_set_num (res_val_q, self_val);
-    mpq_canonicalize (res_val_q);
+      rb_raise(rb_eZeroDivError, "divided by 0");
+    mpq_set_num(res_val_q, self_val);
+    mpq_canonicalize(res_val_q);
   } else {
-    typeerror (ZQFXB);
+    typeerror(ZQFXB);
   }
   return res;
 }
 
+/*
+ * call-seq:
+ *   integer[index] = x &rarr; nil
+ *
+ * Sets the bit at index to x.
+ */
 VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
 {
   MP_INT *self_val;
@@ -279,13 +314,19 @@ VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
     typeerror_as(X, "index");
   }
   if (RTEST(set_to)) {
-    mpz_setbit (self_val, bitnr_val);
+    mpz_setbit(self_val, bitnr_val);
   } else {
-    mpz_clrbit (self_val, bitnr_val);
+    mpz_clrbit(self_val, bitnr_val);
   }
   return Qnil;
 }
 
+/*
+ * call-seq:
+ *   integer[index] &rarr; boolean
+ *
+ * Gets the bit at index, returned as either true or false.
+ */
 VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
 {
   MP_INT *self_val;
@@ -298,6 +339,268 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
   }
   return mpz_tstbit(self_val, bitnr_val)?Qtrue:Qfalse;
 }
+
+/*
+ * call-seq:
+ *   integer.scan0(starting_bit)
+ *
+ * From the GMP Manual:
+ * 
+ * Scan integer, starting from bit starting_bit, towards more significant bits,
+ * until the first 0 bit is found. Return the index of the found bit.
+ *
+ * If the bit at starting_bit is already what's sought, then starting_bit is
+ * returned.
+ * 
+ * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
+ * happen in scan0 past the end of a negative number.
+ */
+VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+  mpz_get_struct(self, self_val);
+  if (FIXNUM_P(bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as(X, "index");
+  }
+  return INT2FIX(mpz_scan0(self_val, bitnr_val));
+}
+
+/*
+ * call-seq:
+ *   integer.scan1(starting_bit)
+ *
+ * From the GMP Manual:
+ * 
+ * Scan integer, starting from bit starting_bit, towards more significant bits,
+ * until the first 1 bit is found. Return the index of the found bit.
+ *
+ * If the bit at starting_bit is already what's sought, then starting_bit is
+ * returned.
+ *
+ * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
+ * happen in mpz_scan1 past the end of a nonnegative number.
+ */
+VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+
+  mpz_get_struct(self, self_val);
+
+  if (FIXNUM_P(bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as(X, "index");
+  }
+
+  return INT2FIX(mpz_scan1(self_val, bitnr_val));
+}
+
+#define DEFUN_INT_COND_P(fname,mpz_fname) \
+static VALUE r_gmpz_##fname(VALUE self) \
+{ \
+  MP_INT *self_val; \
+  mpz_get_struct(self, self_val); \
+  return mpz_fname(self_val)?Qtrue:Qfalse; \
+}
+
+/*
+ * Document-method: even?
+ *
+ * call-seq:
+ *   integer.even?
+ *
+ * From the GMP Manual:
+ * 
+ * Determines whether integer is even. Returns true or false.
+ */
+DEFUN_INT_COND_P(is_even,mpz_even_p)
+/*
+ * Document-method: odd?
+ *
+ * call-seq:
+ *   integer.odd?
+ *
+ * From the GMP Manual:
+ * 
+ * Determines whether integer is odd. Returns true or false.
+ */
+DEFUN_INT_COND_P(is_odd,mpz_odd_p)
+/*
+ * Document-method: square?
+ *
+ * call-seq:
+ *   integer.square?
+ *
+ * From the GMP Manual:
+ * 
+ * Returns true if integer is a perfect square, i.e., if the square root of
+ * integer is an integer. Under this definition both 0 and 1 are considered to
+ * be perfect squares.
+ */
+DEFUN_INT_COND_P(is_square,mpz_perfect_square_p)
+/*
+ * Document-method: power?
+ *
+ * call-seq:
+ *   integer.square?
+ *
+ * From the GMP Manual:
+ * 
+ * Returns true if integer is a perfect power, i.e., if there exist integers a
+ * and b, with b>1, such that integer equals a raised to the power b.
+ *
+ * Under this definition both 0 and 1 are considered to be perfect powers.
+ * Negative values of integers are accepted, but of course can only be odd
+ * perfect powers.
+ */
+DEFUN_INT_COND_P(is_power,mpz_perfect_power_p)
+
+/*
+ * call-seq:
+ *   integer.sgn
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +1 if integer > 0, 0 if integer == 0, and -1 if integer < 0.
+ */
+VALUE r_gmpz_sgn(VALUE self)
+{
+  MP_INT *self_val;
+  mpz_get_struct(self, self_val);
+  return INT2FIX(mpz_sgn(self_val));
+}
+
+/*
+ * call-seq:
+ *   integer.powmod(exp, mod)
+ *
+ * From the GMP Manual:
+ * 
+ * Returns integer raised to exp modulo mod.
+ *
+ * Negative exp is supported if an inverse iteger^-1 mod mod exists. If an
+ * inverse doesn't exist then a divide by zero is raised.
+ */
+VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
+{
+  MP_INT *self_val, *res_val, *mod_val, *exp_val;
+  VALUE res;
+  int free_mod_val = 0;
+
+  if (GMPZ_P(mod)) {
+    mpz_get_struct(mod, mod_val);
+    if (mpz_sgn(mod_val) <= 0) {
+      rb_raise (rb_eRangeError, "modulus must be positive");
+    }
+  } else if (FIXNUM_P(mod)) {
+  if (FIX2INT(mod) <= 0) {
+    rb_raise (rb_eRangeError, "modulus must be positive");
+  }
+  mpz_temp_alloc (mod_val);
+  mpz_init_set_ui(mod_val, FIX2INT(mod));
+  free_mod_val = 1;
+  } else if (BIGNUM_P(mod)) {
+    mpz_temp_from_bignum (mod_val, mod);
+    if (mpz_sgn(mod_val) <= 0) {
+      mpz_temp_free(mod_val);
+      rb_raise (rb_eRangeError, "modulus must be positive");
+    }
+    free_mod_val = 1;
+  } else {
+    typeerror_as (ZXB, "modulus");
+  }
+  mpz_make_struct_init(res, res_val);
+  mpz_get_struct(self, self_val);
+
+  if (GMPZ_P(exp)) {
+    mpz_get_struct(exp, exp_val);
+    if (mpz_sgn(mod_val) < 0) {
+      rb_raise (rb_eRangeError, "exponent must be nonnegative");
+    }
+    mpz_powm (res_val, self_val, exp_val, mod_val);
+  } else if (FIXNUM_P(exp)) {
+    if (FIX2INT(exp) < 0)
+    {
+      if (free_mod_val)
+        mpz_temp_free(mod_val);
+      rb_raise (rb_eRangeError, "exponent must be nonnegative");
+    }
+    mpz_powm_ui (res_val, self_val, FIX2INT(exp), mod_val);
+  } else if (BIGNUM_P(exp)) {
+    mpz_temp_from_bignum (exp_val, exp);
+    mpz_powm (res_val, self_val, exp_val, mod_val);
+    mpz_temp_free (exp_val);
+  } else {
+    if (free_mod_val)
+      mpz_temp_free(mod_val);
+    typeerror_as (ZXB, "exponent");
+  }
+  if (free_mod_val)
+    mpz_temp_free(mod_val);
+  return res;
+}
+
+#define DEFUN_INT_F_UL(fname,mpz_fname,argname) \
+static VALUE r_gmpz_##fname(VALUE self, VALUE exp) \
+{ \
+  MP_INT *self_val, *res_val; \
+  VALUE res; \
+  unsigned long exp_val; \
+ \
+  if (FIXNUM_P(exp)) { \
+    if (FIX2INT(exp) < 0) \
+      rb_raise(rb_eRangeError, argname " out of range"); \
+    exp_val = FIX2INT (exp); \
+  } else if (GMPZ_P(exp)) {\
+    mpz_get_struct(exp, res_val); \
+    if (!mpz_fits_ulong_p(res_val)) \
+      rb_raise(rb_eRangeError, argname " out of range"); \
+    exp_val = mpz_get_ui (res_val); \
+    if (exp_val == 0) \
+      rb_raise(rb_eRangeError, argname " out of range"); \
+  } else { \
+    typeerror_as(ZX, argname); \
+  } \
+ \
+  mpz_make_struct_init(res, res_val); \
+  mpz_get_struct(self, self_val); \
+  mpz_fname(res_val, self_val, exp_val); \
+ \
+  return res; \
+}
+
+/*
+ * Document-method: **
+ *
+ * call-seq:
+ *   integer ** exp
+ *
+ * From the GMP Manual:
+ * 
+ * Returns integer raised to exp. The case 0^0 yields 1.
+ */
+DEFUN_INT_F_UL(pow,mpz_pow_ui,"exponent")
+/*
+ * Document-method: <<
+ *
+ * call-seq:
+ *   integer << n
+ *
+ * From the GMP Manual:
+ * 
+ * Returns integer times 2 raised to n. This operation can also be defined as a
+ * left shift by n bits.
+ */
+DEFUN_INT_F_UL(shl,mpz_mul_2exp,"shift size")
+DEFUN_INT_F_UL(fshr,mpz_fdiv_q_2exp,"shift size")
+DEFUN_INT_F_UL(tshr,mpz_tdiv_q_2exp,"shift size")
+DEFUN_INT_F_UL(fshrm,mpz_fdiv_r_2exp,"mark size")
+DEFUN_INT_F_UL(tshrm,mpz_tdiv_r_2exp,"mark size")
+DEFUN_INT_F_UL(root,mpz_root,"root number")
 
 VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
 {
@@ -348,4 +651,21 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "/", r_gmpz_div, 1);
   rb_define_method(cGMP_Z, "[]=", r_gmpz_setbit, 2);
   rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
+  rb_define_method(cGMP_Z, "scan0", r_gmpz_scan0, 1);
+  rb_define_method(cGMP_Z, "scan1", r_gmpz_scan1, 1);
+  rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
+  rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
+  rb_define_method(cGMP_Z, "sgn", r_gmpz_sgn, 0);
+  
+  rb_define_method(cGMP_Z, "**", r_gmpz_pow, 1);
+  rb_define_method(cGMP_Z, "powmod", r_gmpz_powm, 2);
+  
+  rb_define_method(cGMP_Z, ">>",  r_gmpz_fshr, 1);
+  rb_define_method(cGMP_Z, "<<",  r_gmpz_shl, 1);
+  rb_define_method(cGMP_Z, "tshr",  r_gmpz_tshr, 1);
+  rb_define_method(cGMP_Z, "lastbits_sgn",  r_gmpz_tshrm, 1);
+  rb_define_method(cGMP_Z, "lastbits_pos",  r_gmpz_fshrm, 1);
+  rb_define_method(cGMP_Z, "square?",  r_gmpz_is_square, 0);
+  rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power, 0);
+
 }
