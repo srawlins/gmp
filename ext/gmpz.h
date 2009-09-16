@@ -6,18 +6,13 @@
 
 #include <ruby_gmp.h>
 
-// #define DEFUN_INT_COND_P(fname,mpz_fname) \
-// static VALUE r_gmpz_##fname(VALUE self) \
-// { \
-  // MP_INT *self_val; \
-  // mpz_get_struct(self, self_val); \
-  // return mpz_fname(self_val)?Qtrue:Qfalse; \
-// }
-
-// DEFUN_INT_COND_P(is_even,mpz_even_p)
-// DEFUN_INT_COND_P(is_odd,mpz_odd_p)
-// DEFUN_INT_COND_P(is_square,mpz_perfect_square_p)
-// DEFUN_INT_COND_P(is_power,mpz_perfect_power_p)
+#define DEFUN_INT_COND_P(fname,mpz_fname) \
+static VALUE r_gmpz_##fname(VALUE self) \
+{ \
+  MP_INT *self_val; \
+  mpz_get_struct(self, self_val); \
+  return mpz_fname(self_val)?Qtrue:Qfalse; \
+}
 
 // static VALUE r_gmpz_sgn(VALUE self)
 // {
@@ -196,19 +191,19 @@ static VALUE r_gmpz_eq(VALUE self, VALUE arg)
   }
 }
 
-static VALUE r_gmpz_cmp(VALUE self, VALUE arg)
-{
-  MP_INT *self_val;
-  int res;
-  mpz_get_struct (self,self_val);
-  res = mpz_cmp_value(self_val, arg);
-  if (res > 0)
-    return INT2FIX(1);
-  else if (res == 0)
-    return INT2FIX(0);
-  else
-    return INT2FIX(-1);
-}
+// static VALUE r_gmpz_cmp(VALUE self, VALUE arg)
+// {
+  // MP_INT *self_val;
+  // int res;
+  // mpz_get_struct (self,self_val);
+  // res = mpz_cmp_value(self_val, arg);
+  // if (res > 0)
+    // return INT2FIX(1);
+  // else if (res == 0)
+    // return INT2FIX(0);
+  // else
+    // return INT2FIX(-1);
+// }
 
 #define DEFUN_INT_CMP(name,CMP_OP) \
 static VALUE r_gmpz_cmp_##name(VALUE self, VALUE arg) \
