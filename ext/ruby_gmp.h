@@ -82,6 +82,14 @@ extern void r_gmpf_free(void *ptr);
 
 /* FROM gmpz.h !!! */
 
+#define DEFUN_INT_CMP(name,CMP_OP) \
+static VALUE r_gmpz_cmp_##name(VALUE self, VALUE arg) \
+{ \
+  MP_INT *self_val; \
+  mpz_get_struct (self,self_val); \
+  return (mpz_cmp_value(self_val, arg) CMP_OP 0)?Qtrue:Qfalse; \
+}
+
 extern VALUE r_gmpz_add(VALUE self, VALUE arg);
 extern VALUE r_gmpz_add_self(VALUE self, VALUE arg);
 extern VALUE r_gmpz_sub(VALUE self, VALUE arg);
@@ -95,6 +103,7 @@ extern VALUE r_gmpz_scan1(VALUE self, VALUE bitnr);
 extern VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod);
 extern VALUE r_gmpz_sgn(VALUE self);
 extern VALUE r_gmpz_cmp(VALUE self, VALUE arg);
+extern int mpz_cmp_value(MP_INT *OP, VALUE arg);
 
 #define DEFUN_INT_DIV(fname,gmp_fname) \
 static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
@@ -177,30 +186,30 @@ static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
   return res;                                      \
 }
 
-#define DEFUN_INT_SINGLETON_UI(fname,mpz_fname)  \
-static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg) \
-{ \
-  MP_INT *arg_val_z, *res_val; \
-  unsigned long arg_val_ul; \
-  VALUE res; \
- \
-  (void)klass; \
- \
-  if (FIXNUM_P(arg)) { \
-    arg_val_ul = FIX2INT (arg); \
-  } else if (GMPZ_P(arg)) { \
-    mpz_get_struct (arg, arg_val_z); \
-    if (!mpz_fits_ulong_p (arg_val_z)) \
-      rb_raise (rb_eRangeError, "argument out of range"); \
-    arg_val_ul = mpz_get_ui (arg_val_z); \
-    if (arg_val_ul == 0) \
-      rb_raise (rb_eRangeError, "argument out of range"); \
-  } else { \
-    typeerror_as (ZX, "argument"); \
-  } \
-  mpz_make_struct_init(res, res_val); \
-  mpz_fname (res_val, arg_val_ul); \
-  return res; \
+#define DEFUN_INT_SINGLETON_UI(fname,mpz_fname)           \
+static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)     \
+{                                                         \
+  MP_INT *arg_val_z, *res_val;                            \
+  unsigned long arg_val_ul;                               \
+  VALUE res;                                              \
+                                                          \
+  (void)klass;                                            \
+                                                          \
+  if (FIXNUM_P(arg)) {                                    \
+    arg_val_ul = FIX2INT (arg);                           \
+  } else if (GMPZ_P(arg)) {                               \
+    mpz_get_struct(arg, arg_val_z);                       \
+    if (!mpz_fits_ulong_p (arg_val_z))                    \
+      rb_raise(rb_eRangeError, "argument out of range");  \
+    arg_val_ul = mpz_get_ui(arg_val_z);                   \
+    if (arg_val_ul == 0)                                  \
+      rb_raise(rb_eRangeError, "argument out of range");  \
+  } else {                                                \
+    typeerror_as(ZX, "argument");                         \
+  }                                                       \
+  mpz_make_struct_init(res, res_val);                     \
+  mpz_fname(res_val, arg_val_ul);                         \
+  return res;                                             \
 }
 
 DEFUN_INT_SINGLETON_UI(fib,mpz_fib_ui)

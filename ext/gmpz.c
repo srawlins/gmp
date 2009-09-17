@@ -501,6 +501,18 @@ DEFUN_INT_LOGIC(or, mpz_ior)
  */
 DEFUN_INT_LOGIC(xor, mpz_xor)
 
+static VALUE r_gmpz_sqrtrem(VALUE self)
+{
+  MP_INT *self_val, *sqrt_val, *rem_val;
+  VALUE sqrt, rem;
+
+  mpz_get_struct (self, self_val);
+  mpz_make_struct_init(sqrt, sqrt_val);
+  mpz_make_struct_init(rem, rem_val);
+  mpz_sqrtrem (sqrt_val, rem_val, self_val);
+  return rb_assoc_new(sqrt, rem);
+}
+
 /*
  * call-seq:
  *   integer[index] = x &rarr; nil
@@ -742,6 +754,18 @@ VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
   return res;
 }
 
+static VALUE r_gmpz_swap(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val;
+  if (!GMPZ_P(arg)) {
+    rb_raise(rb_eTypeError, "Can't swap GMP::Z with object of other class");
+  }
+  mpz_get_struct(self, self_val);
+  mpz_get_struct(arg, arg_val);
+  mpz_swap(self_val,arg_val);
+  return Qnil;
+}
+
 #define DEFUN_INT_F_UL(fname,mpz_fname,argname) \
 static VALUE r_gmpz_##fname(VALUE self, VALUE exp) \
 { \
@@ -800,6 +824,37 @@ DEFUN_INT_F_UL(fshrm,mpz_fdiv_r_2exp,"mark size")
 DEFUN_INT_F_UL(tshrm,mpz_tdiv_r_2exp,"mark size")
 DEFUN_INT_F_UL(root,mpz_root,"root number")
 
+int mpz_cmp_value(MP_INT *OP, VALUE arg)
+{
+  MP_RAT *arg_val_q;
+  MP_INT *arg_val_z;
+  int res;
+
+  if (GMPZ_P(arg)) {
+    mpz_get_struct(arg,arg_val_z);
+    return mpz_cmp (OP,arg_val_z);
+  } else if (FIXNUM_P(arg)) {
+    return mpz_cmp_si (OP, FIX2INT(arg));
+  } else if (GMPQ_P(arg)) {
+    mpq_get_struct(arg,arg_val_q);
+    mpz_temp_alloc (arg_val_z);
+    mpz_init(arg_val_z);
+    mpz_mul(arg_val_z, OP, mpq_denref(arg_val_q));
+    res = mpz_cmp (arg_val_z, mpq_numref(arg_val_q));
+    mpz_temp_free(arg_val_z);
+    return res;
+  } else if (GMPF_P(arg)) {
+    not_yet;
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum (arg_val_z, arg);
+    res = mpz_cmp (OP, arg_val_z);
+    mpz_temp_free(arg_val_z);
+    return res;
+  } else {
+    typeerror_as (ZQFXB, "exponent");
+  }
+}
+
 VALUE r_gmpz_cmp(VALUE self, VALUE arg)
 {
   MP_INT *self_val;
@@ -813,6 +868,43 @@ VALUE r_gmpz_cmp(VALUE self, VALUE arg)
   else
     return INT2FIX(-1);
 }
+
+/*
+ * Document-method: <
+ *
+ * call-seq:
+ *   int1 < int2
+ * 
+ * Returns whether int1 is strictly less than int2.
+ */
+DEFUN_INT_CMP(lt,<)
+/*
+ * Document-method: <=
+ *
+ * call-seq:
+ *   int1 <= int2
+ * 
+ * Returns whether int1 is less than or equal to int2.
+ */
+DEFUN_INT_CMP(le,<=)
+/*
+ * Document-method: >
+ *
+ * call-seq:
+ *   int1 > int2
+ * 
+ * Returns whether int1 is strictly greater than int2.
+ */
+DEFUN_INT_CMP(gt,>)
+/*
+ * Document-method: >=
+ *
+ * call-seq:
+ *   int1 >= int2
+ *
+ * Returns whether int1 is greater than or equal to int2.
+ */
+DEFUN_INT_CMP(ge,>=)
 
 VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
 {
@@ -884,11 +976,16 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
   rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
   rb_define_method(cGMP_Z, "sgn", r_gmpz_sgn, 0);
-  rb_define_method(cGMP_Z, "<=>", r_gmpz_cmp, 1);
   
   rb_define_method(cGMP_Z, "**", r_gmpz_pow, 1);
   rb_define_method(cGMP_Z, "powmod", r_gmpz_powm, 2);
   
+  rb_define_method(cGMP_Z, "<=>", r_gmpz_cmp, 1);
+  rb_define_method(cGMP_Z, ">",   r_gmpz_cmp_gt, 1);
+  rb_define_method(cGMP_Z, ">=",  r_gmpz_cmp_ge, 1);
+  rb_define_method(cGMP_Z, "<",   r_gmpz_cmp_lt, 1);
+  rb_define_method(cGMP_Z, "<=",  r_gmpz_cmp_le, 1);
+  rb_define_method(cGMP_Z, "==",  r_gmpz_eq, 1);
   rb_define_method(cGMP_Z, ">>",  r_gmpz_fshr, 1);
   rb_define_method(cGMP_Z, "<<",  r_gmpz_shl, 1);
   rb_define_method(cGMP_Z, "tshr",  r_gmpz_tshr, 1);
@@ -896,5 +993,12 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "lastbits_pos",  r_gmpz_fshrm, 1);
   rb_define_method(cGMP_Z, "square?",  r_gmpz_is_square, 0);
   rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power, 0);
+  rb_define_method(cGMP_Z, "swap",  r_gmpz_swap, 1);
+  rb_define_method(cGMP_Z, "sqrt",  r_gmpz_sqrt, 0);
+  rb_define_method(cGMP_Z, "sqrt!",  r_gmpz_sqrt_self, 0);
+  rb_define_method(cGMP_Z, "sqrtrem",  r_gmpz_sqrtrem, 0);
+  
+  rb_define_method(cGMP_Z, "nextprime",  r_gmpz_nextprime, 0);
+  rb_define_method(cGMP_Z, "nextprime!",  r_gmpz_nextprime_self, 0);
 
 }
