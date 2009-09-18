@@ -110,33 +110,33 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
   mpf_get_struct_prec (self, self_val, prec);
 
   if (GMPF_P(arg)) {
-    mpf_get_struct (arg, arg_val_f);
+    mpf_get_struct(arg, arg_val_f);
     prec_max(prec, arg_val_f);
     mpf_make_struct_init(res, res_val, prec);
     mpf_mul(res_val, self_val, arg_val_f);
   } else if (GMPQ_P(arg)) {
-    mpq_get_struct (arg, arg_val_q);
+    mpq_get_struct(arg, arg_val_q);
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_q (res_val, arg_val_q);
-    mpf_mul (res_val, self_val, res_val);
+    mpf_set_q(res_val, arg_val_q);
+    mpf_mul(res_val, self_val, res_val);
   } else if (GMPZ_P(arg)) {
-    mpz_get_struct (arg, arg_val_z);
+    mpz_get_struct(arg, arg_val_z);
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_z (res_val, arg_val_z);
-    mpf_mul (res_val, self_val, res_val);
+    mpf_set_z(res_val, arg_val_z);
+    mpf_mul(res_val, self_val, res_val);
   } else if (FLOAT_P(arg)) {
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_d (res_val, FLT2DBL(arg));
-    mpf_mul (res_val, self_val, res_val);
+    mpf_set_d(res_val, FLT2DBL(arg));
+    mpf_mul(res_val, self_val, res_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_si (res_val, FIX2INT(arg));
-    mpf_mul (res_val, self_val, res_val);
+    mpf_set_si(res_val, FIX2INT(arg));
+    mpf_mul(res_val, self_val, res_val);
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val_z, arg);
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_z (res_val, arg_val_z);
-    mpf_mul (res_val, res_val, self_val);
+    mpf_set_z(res_val, arg_val_z);
+    mpf_mul(res_val, res_val, self_val);
     mpz_temp_free(arg_val_z);
   } else {
     typeerror(ZQFXBD);
