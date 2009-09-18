@@ -17,6 +17,6 @@ class TC_Z_Exponentiation < Test::Unit::TestCase
     assert_equal(GMP::Z(16), @a.powmod(2,256),  "(a : GMP::Z).powmod((b : Fixnum), (c : Fixnum)) should work correctly")
     assert_equal(GMP::Z(76), @b.powmod(10,@a),  "(a : GMP::Z).powmod((b : Fixnum), (c : GMP::Z)) should work correctly")
     assert_equal(GMP::Z(0), @a.powmod(@b,256),  "(a : GMP::Z).powmod((b : GMP::Z), (c : Fixnum)) should work correctly")
-    assert_equal(GMP::Z(100), @a.powmod(@b,@c), "(a : GMP::Z).powmod((b : GMP::Z), (c : GMP::Z)) should work correctly")
+    assert_equal(GMP::Z(0), @a.powmod(@b,@c), "(a : GMP::Z).powmod((b : GMP::Z), (c : GMP::Z)) should work correctly")
   end
 end
