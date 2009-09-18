@@ -269,6 +269,19 @@ VALUE r_gmpz_to_i(VALUE self)
   return res;
 }
 
+/*
+ * call-seq:
+ *   integer.to_d
+ *
+ * Returns +integer+ as an Float if +integer+ fits in a Float.
+ *
+ * Otherwise returns the least significant part of +integer+, with the same
+ * sign as +integer+.
+ *
+ * If +integer+ is too big to fit in a Float, the returned result is probably
+ * not very useful. To find out if the value will fit, use the function
+ * mpz_fits_slong_p (<b>Unimplemented</b>).
+ */
 VALUE r_gmpz_to_d(VALUE self)
 {
   MP_INT *self_val;
