@@ -80,143 +80,80 @@ extern void r_gmpq_free(void *ptr);
 extern void r_gmpf_free(void *ptr);
 
 
-/* FROM gmpz.h !!! */
+/* from gmpz.h */
 
-#define DEFUN_INT_CMP(name,CMP_OP) \
-static VALUE r_gmpz_cmp_##name(VALUE self, VALUE arg) \
-{ \
-  MP_INT *self_val; \
-  mpz_get_struct (self,self_val); \
-  return (mpz_cmp_value(self_val, arg) CMP_OP 0)?Qtrue:Qfalse; \
-}
+// Initializing, Assigning Integers
+extern VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass);
+extern void mpz_set_value(MP_INT *target, VALUE source);
+extern VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module);
+extern VALUE r_gmpz_swap(VALUE self, VALUE arg);
 
+// Converting Integers
+extern VALUE r_gmpz_to_i(VALUE self);
+extern VALUE r_gmpz_to_d(VALUE self);
+
+// Integer Arithmetic
 extern VALUE r_gmpz_add(VALUE self, VALUE arg);
 extern VALUE r_gmpz_add_self(VALUE self, VALUE arg);
 extern VALUE r_gmpz_sub(VALUE self, VALUE arg);
 extern VALUE r_gmpz_sub_self(VALUE self, VALUE arg);
 extern VALUE r_gmpz_mul(VALUE self, VALUE arg);
+
+// Number Theoretic Functions
+extern VALUE r_gmpz_remove(VALUE self, VALUE arg);
+
+// Integer Comparisons
+extern VALUE r_gmpz_cmp(VALUE self, VALUE arg);
+extern VALUE r_gmpz_cmpabs(VALUE self, VALUE arg);
+
+// _unsorted_
 extern VALUE r_gmpz_div(VALUE self, VALUE arg);
+extern VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self);
+extern VALUE r_gmpz_popcount(VALUE self);
+extern VALUE r_gmpz_jacobi(VALUE self);
+extern VALUE r_gmpz_legendre(VALUE self);
 extern VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to);
 extern VALUE r_gmpz_getbit(VALUE self, VALUE bitnr);
 extern VALUE r_gmpz_scan0(VALUE self, VALUE bitnr);
 extern VALUE r_gmpz_scan1(VALUE self, VALUE bitnr);
 extern VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod);
 extern VALUE r_gmpz_sgn(VALUE self);
-extern VALUE r_gmpz_cmp(VALUE self, VALUE arg);
 extern int mpz_cmp_value(MP_INT *OP, VALUE arg);
-
-#define DEFUN_INT_DIV(fname,gmp_fname) \
-static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
-{ \
-  MP_INT *self_val, *arg_val, *res_val; \
-  VALUE res; \
-  int arg_val_i; \
-  \
-  mpz_get_struct(self, self_val); \
-  mpz_make_struct_init(res, res_val); \
-  \
-  if (GMPZ_P(arg)) { \
-    mpz_get_struct(arg,arg_val); \
-    if (mpz_cmp_ui(arg_val, 0) == 0) \
-      rb_raise (rb_eZeroDivError, "divided by 0"); \
-    gmp_fname (res_val, self_val, arg_val); \
-  } else if (FIXNUM_P(arg)) { \
-    arg_val_i = FIX2INT(arg); \
-    if (arg_val_i > 0) { \
-      gmp_fname##_ui (res_val, self_val, arg_val_i); \
-    } else if (arg_val_i == 0) { \
-      rb_raise (rb_eZeroDivError, "divided by 0"); \
-    } else { \
-      mpz_neg (res_val, self_val); \
-      gmp_fname##_ui (res_val, self_val, -arg_val_i); \
-    } \
-  } else if (BIGNUM_P(arg)) { \
-    mpz_set_bignum (res_val, arg); \
-    if (mpz_cmp_ui(res_val, 0) == 0) \
-      rb_raise (rb_eZeroDivError, "divided by 0"); \
-    gmp_fname (res_val, self_val, res_val); \
-  } else { \
-    typeerror(ZXB); \
-  } \
-  return res; \
-}
-
-#define DEFUN_INT2INT(fname,mpz_fname)         \
-static VALUE r_gmpz_##fname(VALUE self)        \
-{                                              \
-  MP_INT *self_val, *res_val;                  \
-  VALUE res;                                   \
-  mpz_get_struct(self, self_val);              \
-  mpz_make_struct_init(res, res_val);          \
-  mpz_fname(res_val, self_val);                \
-  return res;                                  \
-}                                              \
-                                               \
-static VALUE r_gmpz_##fname##_self(VALUE self) \
-{                                              \
-  MP_INT *self_val;                            \
-  mpz_get_struct(self, self_val);              \
-  mpz_fname(self_val, self_val);               \
-  return Qnil;                                 \
-}
-
-#define DEFUN_INT_LOGIC(fname, mpz_fname)          \
-static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
-{                                                  \
-  MP_INT *self_val, *arg_val, *res_val;            \
-  VALUE res;                                       \
-                                                   \
-  mpz_get_struct(self, self_val);                  \
-                                                   \
-  mpz_make_struct(res, res_val);                   \
-  if (GMPZ_P(arg)) {                               \
-    mpz_get_struct(arg,arg_val);                   \
-    mpz_init(res_val);                             \
-    mpz_fname(res_val, self_val, arg_val);         \
-  } else if (FIXNUM_P(arg)) {                      \
-    mpz_init_set_si(res_val, FIX2INT(arg));        \
-    mpz_fname(res_val, self_val, res_val);         \
-  } else if (BIGNUM_P(arg)) {                      \
-    mpz_init(res_val);                             \
-    mpz_set_bignum(res_val, arg);                  \
-    mpz_fname(res_val, self_val, res_val);         \
-  } else  {                                        \
-    typeerror(ZXB);                                \
-  }                                                \
-  return res;                                      \
-}
-
-#define DEFUN_INT_SINGLETON_UI(fname,mpz_fname)           \
-static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)     \
-{                                                         \
-  MP_INT *arg_val_z, *res_val;                            \
-  unsigned long arg_val_ul;                               \
-  VALUE res;                                              \
-                                                          \
-  (void)klass;                                            \
-                                                          \
-  if (FIXNUM_P(arg)) {                                    \
-    arg_val_ul = FIX2INT (arg);                           \
-  } else if (GMPZ_P(arg)) {                               \
-    mpz_get_struct(arg, arg_val_z);                       \
-    if (!mpz_fits_ulong_p (arg_val_z))                    \
-      rb_raise(rb_eRangeError, "argument out of range");  \
-    arg_val_ul = mpz_get_ui(arg_val_z);                   \
-    if (arg_val_ul == 0)                                  \
-      rb_raise(rb_eRangeError, "argument out of range");  \
-  } else {                                                \
-    typeerror_as(ZX, "argument");                         \
-  }                                                       \
-  mpz_make_struct_init(res, res_val);                     \
-  mpz_fname(res_val, arg_val_ul);                         \
-  return res;                                             \
-}
-
-DEFUN_INT_SINGLETON_UI(fib,mpz_fib_ui)
-DEFUN_INT_SINGLETON_UI(fac,mpz_fac_ui)
 
 extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
 extern VALUE r_gmpz_to_s(VALUE self);
+
+
+/* from gmpq.h */
+
+// Initializing Rationals
+extern VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module);
+
+// Comparing Rationals
+extern VALUE r_gmpq_eq(VALUE self, VALUE arg);
+extern VALUE r_gmpq_cmp(VALUE self, VALUE arg);
+extern int mpq_cmp_value(MP_RAT *OP, VALUE arg);
+
+// _unsorted_
+
+
+/* from gmpf.h */
+
+// Initializing, Assigning Floats
+extern void mpf_set_value(MP_FLOAT *self_val, VALUE arg);
+extern VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module);
+
+// Float Arithmetic
+extern VALUE r_gmpf_add(VALUE self, VALUE arg);
+extern VALUE r_gmpf_mul(VALUE self, VALUE arg);
+
+// Float Comparison
+extern VALUE r_gmpf_eq(VALUE self, VALUE arg);
+extern VALUE r_gmpf_cmp(VALUE self, VALUE arg);
+extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
+
+// _unsorted_
+
 
 extern void init_gmpz();
 
