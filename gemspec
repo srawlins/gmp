@@ -10,9 +10,5 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/srawlins/gmp/tree/master"
   s.summary = "A library providing Ruby bindings to GMP library."
 
-  s.files = Dir['ext/*']
-  s.files += Dir['CHANGELOG']
-  s.files += Dir['INSTALL']
-  s.files += Dir['README.rdoc']
-  s.test_files = Dir['test/*.rb']
+  s.files = FileList["[A-Z]*", "{ext,test}/**/*", 'README.rdoc']
 end
