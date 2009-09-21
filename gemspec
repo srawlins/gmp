@@ -11,6 +11,8 @@ Gem::Specification.new do |s|
   s.summary = "A library providing Ruby bindings to GMP library."
 
   s.files = Dir['ext/*']
-  s.files += Dir['*']
+  s.files += Dir['CHANGELOG']
+  s.files += Dir['INSTALL']
+  s.files += Dir['README.rdoc']
   s.test_files = Dir['test/*.rb']
 end
