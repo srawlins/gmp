@@ -680,6 +680,36 @@ DEFUN_INT_SINGLETON_UI(fib,mpz_fib_ui)
  *    Integer Comparisons                                             *
  **********************************************************************/
 
+VALUE r_gmpz_eq(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val_z;
+  MP_RAT *arg_val_q;
+
+  mpz_get_struct (self, self_val);
+  if (GMPZ_P(arg)) {
+    mpz_get_struct(arg, arg_val_z);
+    return (mpz_cmp (self_val, arg_val_z)==0) ? Qtrue : Qfalse;
+  } else if (FIXNUM_P(arg)) {
+    return (mpz_cmp_si (self_val, FIX2INT(arg))==0) ? Qtrue : Qfalse;
+  } else if (GMPQ_P(arg)) {
+    mpq_get_struct(arg, arg_val_q);
+    if (mpz_cmp_ui(mpq_denref(arg_val_q), 1)==0)
+      return Qfalse;
+    return (mpz_cmp (self_val, mpq_numref(arg_val_q))==0) ? Qtrue : Qfalse;
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum(arg_val_z, arg);
+    if (mpz_cmp (self_val, arg_val_z)==0) {
+      mpz_temp_free(arg_val_z);
+      return Qtrue;
+    } else {
+      mpz_temp_free(arg_val_z);
+      return Qfalse;
+    }
+  } else {
+    return Qfalse;
+  }
+}
+
 VALUE r_gmpz_cmpabs(VALUE self, VALUE arg)
 {
   MP_INT *arg_val_z, *self_val;
@@ -754,6 +784,65 @@ DEFUN_INT_LOGIC(or, mpz_ior)
  * Returns +integer+ bitwise exclusive-or +other+.
  */
 DEFUN_INT_LOGIC(xor, mpz_xor)
+
+/*
+ * call-seq:
+ *   integer.scan0(starting_bit)
+ *
+ * From the GMP Manual:
+ * 
+ * Scan integer, starting from bit starting_bit, towards more significant bits,
+ * until the first 0 bit is found. Return the index of the found bit.
+ *
+ * If the bit at starting_bit is already what's sought, then starting_bit is
+ * returned.
+ * 
+ * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
+ * happen in scan0 past the end of a negative number.
+ */
+VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+  mpz_get_struct(self, self_val);
+  if (FIXNUM_P(bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as(X, "index");
+  }
+  return INT2FIX(mpz_scan0(self_val, bitnr_val));
+}
+
+/*
+ * call-seq:
+ *   integer.scan1(starting_bit)
+ *
+ * From the GMP Manual:
+ * 
+ * Scan integer, starting from bit starting_bit, towards more significant bits,
+ * until the first 1 bit is found. Return the index of the found bit.
+ *
+ * If the bit at starting_bit is already what's sought, then starting_bit is
+ * returned.
+ *
+ * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
+ * happen in mpz_scan1 past the end of a nonnegative number.
+ */
+VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+
+  mpz_get_struct(self, self_val);
+
+  if (FIXNUM_P(bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as(X, "index");
+  }
+
+  return INT2FIX(mpz_scan1(self_val, bitnr_val));
+}
 
 
 /**********************************************************************
@@ -1128,65 +1217,6 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
     typeerror_as(X, "index");
   }
   return mpz_tstbit(self_val, bitnr_val)?Qtrue:Qfalse;
-}
-
-/*
- * call-seq:
- *   integer.scan0(starting_bit)
- *
- * From the GMP Manual:
- * 
- * Scan integer, starting from bit starting_bit, towards more significant bits,
- * until the first 0 bit is found. Return the index of the found bit.
- *
- * If the bit at starting_bit is already what's sought, then starting_bit is
- * returned.
- * 
- * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
- * happen in scan0 past the end of a negative number.
- */
-VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
-{
-  MP_INT *self_val;
-  int bitnr_val;
-  mpz_get_struct(self, self_val);
-  if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
-  } else {
-    typeerror_as(X, "index");
-  }
-  return INT2FIX(mpz_scan0(self_val, bitnr_val));
-}
-
-/*
- * call-seq:
- *   integer.scan1(starting_bit)
- *
- * From the GMP Manual:
- * 
- * Scan integer, starting from bit starting_bit, towards more significant bits,
- * until the first 1 bit is found. Return the index of the found bit.
- *
- * If the bit at starting_bit is already what's sought, then starting_bit is
- * returned.
- *
- * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
- * happen in mpz_scan1 past the end of a nonnegative number.
- */
-VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
-{
-  MP_INT *self_val;
-  int bitnr_val;
-
-  mpz_get_struct(self, self_val);
-
-  if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
-  } else {
-    typeerror_as(X, "index");
-  }
-
-  return INT2FIX(mpz_scan1(self_val, bitnr_val));
 }
 
 /*

@@ -103,6 +103,7 @@ extern VALUE r_gmpz_mul(VALUE self, VALUE arg);
 extern VALUE r_gmpz_remove(VALUE self, VALUE arg);
 
 // Integer Comparisons
+extern VALUE r_gmpz_eq(VALUE self, VALUE arg);
 extern VALUE r_gmpz_cmp(VALUE self, VALUE arg);
 extern VALUE r_gmpz_cmpabs(VALUE self, VALUE arg);
 
@@ -128,11 +129,32 @@ extern VALUE r_gmpz_to_s(VALUE self);
 
 // Initializing Rationals
 extern VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module);
+extern VALUE r_gmpq_swap(VALUE self, VALUE arg);
+
+// Rational Conversions
+extern VALUE r_gmpq_to_d(VALUE self);
+
+// Rational Arithmetic
+extern VALUE r_gmpq_add(VALUE self, VALUE arg);
+extern VALUE r_gmpq_sub(VALUE self, VALUE arg);
+extern VALUE r_gmpq_mul(VALUE self, VALUE arg);
+extern VALUE r_gmpq_div(VALUE self, VALUE arg);
+extern VALUE r_gmpq_neg(VALUE self);
+extern VALUE r_gmpq_neg_self(VALUE self);
+extern VALUE r_gmpq_abs(VALUE self);
+extern VALUE r_gmpq_abs_self(VALUE self);
+extern VALUE r_gmpq_inv(VALUE self);
+extern VALUE r_gmpq_inv_self(VALUE self);
 
 // Comparing Rationals
 extern VALUE r_gmpq_eq(VALUE self, VALUE arg);
 extern VALUE r_gmpq_cmp(VALUE self, VALUE arg);
 extern int mpq_cmp_value(MP_RAT *OP, VALUE arg);
+extern VALUE r_gmpq_sgn(VALUE self);
+
+// Applying Integer Functions
+extern VALUE r_gmpq_num(VALUE self);
+extern VALUE r_gmpq_den(VALUE self);
 
 // _unsorted_
 
@@ -156,5 +178,6 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 
 
 extern void init_gmpz();
+extern void init_gmpq();
 
 #endif
