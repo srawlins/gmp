@@ -1,8 +1,8 @@
 --- !ruby/object:Gem::Specification 
 name: gmp
 version: !ruby/object:Gem::Version 
-  version: 0.1.3
-platform: ruby
+  version: 0.1.4
+  platform: ruby
 authors: 
 - Tomasz Wegrzanowski
 - srawlins
