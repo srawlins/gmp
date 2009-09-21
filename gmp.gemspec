@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: gmp
 version: !ruby/object:Gem::Version 
-  version: 0.1.1
+  version: 0.1.2
 platform: ruby
 authors: 
 - Tomasz Wegrzanowski
@@ -10,7 +10,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-09-09 00:00:00 -07:00
+date: 2009-09-21 00:00:00 -07:00
 default_executable: 
 dependencies:  
 description: gmp is library providing Ruby bindings to GMP library.
