@@ -48,16 +48,14 @@ paragraph at http://gmplib.org/#WHAT :
 
 Only GMP 4 or newer is supported. The following environments have been tested by me:
   gmp gem 0.1.4.2 on:
-  |---------------------------------------|
+  +-----------------+---------+-----------+
   |    Platform     |  Ruby   |    GMP    |
-  |-----------------|---------|-----------|
-  | Cygwin on x86   |  1.8.6  | GMP 4.3.1 |
+  +-----------------+---------+-----------+
+  | Cygwin on x86   |  1.8.7  | GMP 4.3.1 |
   | Mac OS X 10.5.7 |  1.8.6  | GMP 4.3.1 |
-  |---------------------------------------|
+  +-----------------+---------+-----------+
 
-<b>Note:</b> I have not tested one wit on Ruby 1.9.x, but my educated guess is, no, it
-does not behave. If only because of rubyio.h replacing ruby/io.h. This is on my
-todo list. I intend to use RMagick as a guide.
+<b>Note:</b> I have tried with Ruby 1.9.1. No go.
 
 <b>Note:</b> To get this running on Mac OS X, I compiled GMP 4.3.1 with:
   ./configure ABI=32 --disable-dependency-tracking

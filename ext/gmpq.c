@@ -16,25 +16,25 @@
  *    Macros                                                          *
  **********************************************************************/
 
-#define DEFUN_RAT_CMP(name,CMP_OP) \
-static VALUE r_gmpq_cmp_##name(VALUE self, VALUE arg) \
-{ \
-  MP_RAT *self_val; \
-  mpq_get_struct(self,self_val); \
+#define DEFUN_RAT_CMP(name,CMP_OP)                             \
+static VALUE r_gmpq_cmp_##name(VALUE self, VALUE arg)          \
+{                                                              \
+  MP_RAT *self_val;                                            \
+  mpq_get_struct(self,self_val);                               \
   return (mpq_cmp_value(self_val, arg) CMP_OP 0)?Qtrue:Qfalse; \
 }
 
-#define DEFUN_RAT2INT(fname,mpz_fname) \
-static VALUE r_gmpq_##fname(VALUE self) \
-{ \
-  MP_RAT *self_val; \
-  MP_INT *res_val; \
-  VALUE res; \
- \
-  mpq_get_struct(self, self_val); \
-  mpz_make_struct_init(res, res_val) \
+#define DEFUN_RAT2INT(fname,mpz_fname)                            \
+static VALUE r_gmpq_##fname(VALUE self)                           \
+{                                                                 \
+  MP_RAT *self_val;                                               \
+  MP_INT *res_val;                                                \
+  VALUE res;                                                      \
+                                                                  \
+  mpq_get_struct(self, self_val);                                 \
+  mpz_make_struct_init(res, res_val)                              \
   mpz_fname(res_val, mpq_numref(self_val), mpq_denref(self_val)); \
-  return res; \
+  return res;                                                     \
 }
 
 
@@ -62,10 +62,24 @@ VALUE r_gmpq_swap(VALUE self, VALUE arg)
  *    Rational Conversions                                            *
  **********************************************************************/
 
+/*
+ * call-seq:
+ *   rational.to_d
+ *
+ * Returns +rational+ as an Float if +rational+ fits in a Float.
+ *
+ * Otherwise returns the least significant part of +rational+, with the same
+ * sign as +rational+.
+ *
+ * If the exponent from the conversion is too big or too small to fit a double
+ * then the result is system dependent. For too big an infinity is returned
+ * when available. For too small 0.0 is normally returned. Hardware overflow,
+ * underflow and denorm traps may or may not occur. 
+ */
 VALUE r_gmpq_to_d(VALUE self)
 {
   MP_RAT *self_val;
-  mpq_get_struct (self, self_val);
+  mpq_get_struct(self, self_val);
 
   return rb_float_new(mpq_get_d(self_val));
 }
@@ -75,6 +89,17 @@ VALUE r_gmpq_to_d(VALUE self)
  *    Rational Arithmetic                                             *
  **********************************************************************/
 
+/*
+ * call-seq:
+ *   rat1 + rat2
+ *
+ * Adds +rat1+ to +rat2+. +rat2+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 VALUE r_gmpq_add(VALUE self, VALUE arg)
 {
   MP_RAT *self_val, *arg_val_q, *res_val;
@@ -112,6 +137,17 @@ VALUE r_gmpq_add(VALUE self, VALUE arg)
   return res;
 }
 
+/*
+ * call-seq:
+ *   rat1 - rat2
+ *
+ * Subtracts +rat2+ from +rat1+. +rat2+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 VALUE r_gmpq_sub(VALUE self, VALUE arg)
 {
   MP_RAT *self_val, *arg_val_q, *res_val;
@@ -156,6 +192,17 @@ VALUE r_gmpq_sub(VALUE self, VALUE arg)
   return res;
 }
 
+/*
+ * call-seq:
+ *   rat1 * rat2
+ *
+ * Multiplies +rat1+ with +rat2+. +rat2+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 VALUE r_gmpq_mul(VALUE self, VALUE arg)
 {
   MP_RAT *self_val, *arg_val_q, *res_val;
@@ -170,35 +217,35 @@ VALUE r_gmpq_mul(VALUE self, VALUE arg)
 
   if (GMPQ_P(arg)) {
     mpq_get_struct(arg,arg_val_q);
-    mpq_mul (res_val, self_val, arg_val_q);
+    mpq_mul(res_val, self_val, arg_val_q);
   } else if (GMPZ_P(arg)) {
     mpz_get_struct(arg,arg_val_z);
     mpz_temp_init(tmp_z);
-    mpz_gcd (tmp_z, mpq_denref(self_val), arg_val_z);
-    mpz_divexact (mpq_denref(res_val), mpq_denref(self_val), tmp_z);
-    mpz_divexact (mpq_numref(res_val), arg_val_z, tmp_z);
-    mpz_mul (mpq_numref(res_val), mpq_numref(res_val), mpq_numref(self_val));
+    mpz_gcd(tmp_z, mpq_denref(self_val), arg_val_z);
+    mpz_divexact(mpq_denref(res_val), mpq_denref(self_val), tmp_z);
+    mpz_divexact(mpq_numref(res_val), arg_val_z, tmp_z);
+    mpz_mul(mpq_numref(res_val), mpq_numref(res_val), mpq_numref(self_val));
     mpz_temp_free(tmp_z);
   } else if (FIXNUM_P(arg)) {
 #if GMP >= 4
     if (FIX2INT(arg) > 0) {
-      tmp_ui = mpz_gcd_ui (0, mpq_denref(self_val), FIX2INT(arg));
+      tmp_ui = mpz_gcd_ui(0, mpq_denref(self_val), FIX2INT(arg));
     } else if (FIX2INT(arg) < 0) {
-      tmp_ui = mpz_gcd_ui (0, mpq_denref(self_val), -FIX2INT(arg));
+      tmp_ui = mpz_gcd_ui(0, mpq_denref(self_val), -FIX2INT(arg));
     } else {
       mpz_set_ui(mpq_numref(res_val), 0);
       mpz_set_ui(mpq_denref(res_val), 1);
       return res;
     }
-    mpz_divexact_ui (mpq_denref(res_val), mpq_denref(self_val), tmp_ui);
-    mpz_mul_ui (mpq_numref(res_val), mpq_numref(self_val), FIX2INT(arg)/tmp_ui);
+    mpz_divexact_ui(mpq_denref(res_val), mpq_denref(self_val), tmp_ui);
+    mpz_mul_ui(mpq_numref(res_val), mpq_numref(self_val), FIX2INT(arg)/tmp_ui);
 #else
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
-    mpz_mul_si (mpq_numref(res_val), mpq_numref(self_val), FIX2INT(arg));
-    mpq_canonicalize (res_val);
+    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
+    mpz_mul_si(mpq_numref(res_val), mpq_numref(self_val), FIX2INT(arg));
+    mpq_canonicalize(res_val);
 #endif
   } else if (GMPF_P(arg)) {
-    return r_gmpf_mul (arg, self);
+    return r_gmpf_mul(arg, self);
   } else if (BIGNUM_P(arg)) {
     mpz_temp_alloc(tmp_z);
     mpz_set_bignum(tmp_z, arg);
@@ -208,11 +255,22 @@ VALUE r_gmpq_mul(VALUE self, VALUE arg)
     mpz_mul(mpq_numref(res_val), mpq_numref(res_val), mpq_numref(self_val));
     mpz_temp_free(tmp_z);
   } else {
-    typeerror (ZQFXB);
+    typeerror(ZQFXB);
   }
   return res;
 }
 
+/*
+ * call-seq:
+ *   rat1 / rat2
+ *
+ * Divides +rat1+ by +rat2+. +rat2+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
 VALUE r_gmpq_div(VALUE self, VALUE arg)
 {
   MP_RAT *self_val, *arg_val_q, *res_val;
@@ -227,31 +285,31 @@ VALUE r_gmpq_div(VALUE self, VALUE arg)
   if (GMPQ_P(arg)) {
     mpq_get_struct(arg,arg_val_q);
     if (mpz_sgn(mpq_numref(arg_val_q)) == 0)
-      rb_raise (rb_eZeroDivError, "divided by 0");
-    mpq_div (res_val, self_val, arg_val_q);
+      rb_raise(rb_eZeroDivError, "divided by 0");
+    mpq_div(res_val, self_val, arg_val_q);
   } else if (GMPZ_P(arg)) {
     mpz_get_struct(arg,arg_val_z);
     mpz_temp_init(tmp_z);
-    mpz_gcd (tmp_z, mpq_numref(self_val), arg_val_z);
-    mpz_divexact (mpq_numref(res_val), mpq_numref(self_val), tmp_z);
-    mpz_divexact (mpq_denref(res_val), arg_val_z, tmp_z);
-    mpz_mul (mpq_denref(res_val), mpq_denref(res_val), mpq_denref(self_val));
+    mpz_gcd(tmp_z, mpq_numref(self_val), arg_val_z);
+    mpz_divexact(mpq_numref(res_val), mpq_numref(self_val), tmp_z);
+    mpz_divexact(mpq_denref(res_val), arg_val_z, tmp_z);
+    mpz_mul(mpq_denref(res_val), mpq_denref(res_val), mpq_denref(self_val));
     mpz_temp_free(tmp_z);
   } else if (FIXNUM_P(arg)) {
     if (FIX2INT(arg) == 0)
-      rb_raise (rb_eZeroDivError, "divided by 0");
+      rb_raise(rb_eZeroDivError, "divided by 0");
     if (FIX2INT(arg) > 0) {
-      tmp_ui = mpz_gcd_ui (0, mpq_numref(self_val), FIX2INT(arg));
+      tmp_ui = mpz_gcd_ui(0, mpq_numref(self_val), FIX2INT(arg));
     } else {
-      tmp_ui = mpz_gcd_ui (0, mpq_numref(self_val), -FIX2INT(arg));
+      tmp_ui = mpz_gcd_ui(0, mpq_numref(self_val), -FIX2INT(arg));
     }
-    mpz_divexact_ui (mpq_numref(res_val), mpq_numref(self_val), tmp_ui);
-    mpz_mul_ui (mpq_denref(res_val), mpq_denref(self_val), FIX2INT(arg)/tmp_ui);
+    mpz_divexact_ui(mpq_numref(res_val), mpq_numref(self_val), tmp_ui);
+    mpz_mul_ui(mpq_denref(res_val), mpq_denref(self_val), FIX2INT(arg)/tmp_ui);
   } else if (GMPF_P(arg)) {
-    mpf_get_struct_prec (arg, arg_val_f, prec);
+    mpf_get_struct_prec(arg, arg_val_f, prec);
     mpf_make_struct_init(res, res_val_f, prec);
-    mpf_set_q (res_val_f, self_val);
-    mpf_div (res_val_f, res_val_f, arg_val_f);
+    mpf_set_q(res_val_f, self_val);
+    mpf_div(res_val_f, res_val_f, arg_val_f);
   } else if (BIGNUM_P(arg)) {
     mpz_temp_alloc(tmp_z);
     mpz_set_bignum(tmp_z, arg);
@@ -261,7 +319,7 @@ VALUE r_gmpq_div(VALUE self, VALUE arg)
     mpz_mul(mpq_denref(res_val), mpq_denref(res_val), mpq_denref(self_val));
     mpz_temp_free(tmp_z);
   } else {
-    typeerror (ZQFXB);
+    typeerror(ZQFXB);
   }
   return res;
 }
@@ -270,6 +328,17 @@ DEFUN_RAT2INT(floor,mpz_fdiv_q)
 DEFUN_RAT2INT(trunc,mpz_tdiv_q)
 DEFUN_RAT2INT(ceil,mpz_cdiv_q)
 
+/*
+ * Document-method: neg
+ *
+ * call-seq:
+ *   -rational
+ *   rational.neg
+ *
+ * From the GMP Manual:
+ * 
+ * Returns -+rational+.
+ */
 VALUE r_gmpq_neg(VALUE self)
 {
   MP_RAT *self_val, *res_val;
@@ -280,6 +349,16 @@ VALUE r_gmpq_neg(VALUE self)
   return res;
 }
 
+/*
+ * Document-method: neg!
+ *
+ * call-seq:
+ *   rational.neg!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +rational+ to -+rational+.
+ */
 VALUE r_gmpq_neg_self(VALUE self)
 {
   MP_RAT *self_val;
@@ -288,6 +367,16 @@ VALUE r_gmpq_neg_self(VALUE self)
   return Qnil;
 }
 
+/*
+ * Document-method: abs
+ *
+ * call-seq:
+ *   rational.abs
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the absolute value of +rational+.
+ */
 VALUE r_gmpq_abs(VALUE self)
 {
   MP_RAT *self_val, *res_val;
@@ -300,6 +389,16 @@ VALUE r_gmpq_abs(VALUE self)
   return res;
 }
 
+/*
+ * Document-method: abs!
+ *
+ * call-seq:
+ *   rational.abs!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +rational+ to its absolute value.
+ */
 VALUE r_gmpq_abs_self(VALUE self)
 {
   MP_RAT *self_val;
@@ -494,6 +593,14 @@ static VALUE r_gmpq_cmpabs(VALUE self, VALUE arg)
   }
 }
 
+/*
+ * call-seq:
+ *   rational.sgn
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +1 if +rational+ > 0, 0 if +rational+ == 0, and -1 if +rational+ < 0.
+ */
 VALUE r_gmpq_sgn(VALUE self)
 {
   MP_RAT *self_val;
@@ -535,7 +642,7 @@ void init_gmpq()
   rb_define_module_function(mGMP, "Q", r_gmpmod_q, -1);
   rb_define_module_function(mGMP, "F", r_gmpmod_f, -1);
 
-  cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
+  cGMP_Q = rb_define_class_under (mGMP, "Q", rb_cNumeric);
 
   // Initializing Rationals
   rb_define_method(cGMP_Q, "swap",  r_gmpq_swap, 1);

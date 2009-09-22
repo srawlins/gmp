@@ -165,9 +165,15 @@ extern VALUE r_gmpq_den(VALUE self);
 extern void mpf_set_value(MP_FLOAT *self_val, VALUE arg);
 extern VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module);
 
+// Converting Floats
+extern VALUE r_gmpf_to_d(VALUE self);
+extern VALUE r_gmpf_to_s(VALUE self);
+
 // Float Arithmetic
 extern VALUE r_gmpf_add(VALUE self, VALUE arg);
+extern VALUE r_gmpf_sub(VALUE self, VALUE arg);
 extern VALUE r_gmpf_mul(VALUE self, VALUE arg);
+extern VALUE r_gmpf_div(VALUE self, VALUE arg);
 
 // Float Comparison
 extern VALUE r_gmpf_eq(VALUE self, VALUE arg);
@@ -175,9 +181,12 @@ extern VALUE r_gmpf_cmp(VALUE self, VALUE arg);
 extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 
 // _unsorted_
+extern VALUE r_gmpf_sgn(VALUE self);
+extern VALUE r_gmpf_get_prec(VALUE self);
 
 
 extern void init_gmpz();
 extern void init_gmpq();
+extern void init_gmpf();
 
 #endif

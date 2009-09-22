@@ -302,20 +302,6 @@ void Init_gmp() {
   rb_define_method(cGMP_Z, "initialize", r_gmpz_initialize, -1);
   rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, 0);
   rb_define_method(cGMP_Z, "coerce", r_gmpz_coerce, 1);
-  // rb_define_method(cGMP_Z, "lastbits_sgn",  r_gmpz_tshrm, 1);
-  // rb_define_method(cGMP_Z, "lastbits_pos",  r_gmpz_fshrm, 1);
-  // rb_define_method(cGMP_Z, "square?",  r_gmpz_is_square, 0);
-  // rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power, 0);
-  // rb_define_method(cGMP_Z, "swap",  r_gmpz_swap, 1);
-  // rb_define_method(cGMP_Z, "sqrt",  r_gmpz_sqrt, 0);
-  // rb_define_method(cGMP_Z, "sqrt!",  r_gmpz_sqrt_self, 0);
-  // rb_define_method(cGMP_Z, "sqrtrem",  r_gmpz_sqrtrem, 0);
-  // rb_define_method(cGMP_Z, "jacobi",  r_gmpz_jacobi, 0);
-  // rb_define_method(cGMP_Z, "legendre",  r_gmpz_legendre, 0);
-  // rb_define_method(cGMP_Z, "probab_prime?",  r_gmpz_is_probab_prime, -1);
-  // rb_define_method(cGMP_Z, "nextprime",  r_gmpz_nextprime, 0);
-  // rb_define_method(cGMP_Z, "nextprime!",  r_gmpz_nextprime_self, 0);
-  // rb_define_method(cGMP_Z, "popcount",  r_gmpz_popcount, 0);
 /*
   rb_define_method(cGMP_Z, "gcd",  r_gmpz_gcd, 1);
   rb_define_method(cGMP_Z, "lcm",  r_gmpz_lcm, 1);
@@ -330,35 +316,12 @@ void Init_gmp() {
   rb_define_method(cGMP_Q, "den", r_gmpq_den, 0);
 
   cGMP_F = rb_define_class_under (mGMP, "F", rb_cNumeric);
+  init_gmpf();
   rb_define_singleton_method(cGMP_F, "new", r_gmpfsg_new, -1);
   rb_define_singleton_method(cGMP_F, "default_prec", r_gmpfsg_get_default_prec, 0);
   rb_define_singleton_method(cGMP_F, "default_prec=", r_gmpfsg_set_default_prec, 1);
   rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
-  rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, 0);
   rb_define_method(cGMP_F, "coerce", r_gmpf_coerce, 1); // new method - testing
-  rb_define_method(cGMP_F, "+", r_gmpf_add, 1);
-  rb_define_method(cGMP_F, "-", r_gmpf_sub, 1);
-  rb_define_method(cGMP_F, "*", r_gmpf_mul, 1);
-  rb_define_method(cGMP_F, "/", r_gmpf_div, 1);
-  rb_define_method(cGMP_F, "-@", r_gmpf_neg, 0);
-  rb_define_method(cGMP_F, "neg!", r_gmpf_neg_self, 0);
-  rb_define_method(cGMP_F, "abs", r_gmpf_abs, 0);
-  rb_define_method(cGMP_F, "abs!", r_gmpf_abs_self, 0);
-  rb_define_method(cGMP_F, "sgn", r_gmpf_sgn, 0);
-  rb_define_method(cGMP_F, "<=>", r_gmpf_cmp, 1);
-  rb_define_method(cGMP_F, ">",   r_gmpf_cmp_gt, 1);
-  rb_define_method(cGMP_F, ">=",  r_gmpf_cmp_ge, 1);
-  rb_define_method(cGMP_F, "<",   r_gmpf_cmp_lt, 1);
-  rb_define_method(cGMP_F, "<=",  r_gmpf_cmp_le, 1);
-  rb_define_method(cGMP_F, "==",  r_gmpf_eq, 1);
-  rb_define_method(cGMP_F, "floor",  r_gmpf_floor, 0);
-  rb_define_method(cGMP_F, "floor!",  r_gmpf_floor_self, 0);
-  rb_define_method(cGMP_F, "ceil",  r_gmpf_ceil, 0);
-  rb_define_method(cGMP_F, "ceil!",  r_gmpf_ceil_self, 0);
-  rb_define_method(cGMP_F, "trunc",  r_gmpf_trunc, 0);
-  rb_define_method(cGMP_F, "trunc!",  r_gmpf_trunc_self, 0);
-  rb_define_method(cGMP_F, "to_d",  r_gmpf_to_d, 0);
-  rb_define_method(cGMP_F, "prec", r_gmpf_get_prec, 0);
 
 /*  rb_define_method(cGMP_F, "cmpabs",  r_gmpf_cmpabs, 1);*/
 
