@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "gmp"
-  s.version = "0.1.4.2"
+  s.version = "0.1.5"
   s.authors = ["Tomasz Wegrzanowski", "srawlins"]
   s.date = "2009-09-21"
   s.description = "gmp is a library providing Ruby bindings to GMP library."

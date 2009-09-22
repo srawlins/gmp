@@ -111,28 +111,28 @@ VALUE r_gmpq_add(VALUE self, VALUE arg)
 
   if (GMPQ_P(arg)) {
     mpq_get_struct(arg,arg_val_q);
-    mpq_add (res_val, self_val, arg_val_q);
+    mpq_add(res_val, self_val, arg_val_q);
   } else if (GMPZ_P(arg)) {
     res_val_num = mpq_numref(res_val);
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
+    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
     mpz_get_struct(arg, arg_val_z);
-    mpz_mul (res_val_num, mpq_denref(self_val), arg_val_z);
-    mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
+    mpz_mul(res_val_num, mpq_denref(self_val), arg_val_z);
+    mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
   } else if (FIXNUM_P(arg)) {
     res_val_num = mpq_numref(res_val);
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
-    mpz_mul_si (res_val_num, mpq_denref(self_val), FIX2INT(arg));
-    mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
+    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
+    mpz_mul_si(res_val_num, mpq_denref(self_val), FIX2INT(arg));
+    mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
   } else if (GMPF_P(arg)) {
     return r_gmpf_add(arg,self);
   } else if (BIGNUM_P(arg)) {
     res_val_num = mpq_numref(res_val);
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
-    mpz_set_bignum (res_val_num, arg);
-    mpz_mul (res_val_num, res_val_num, mpq_denref(self_val));
-    mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
+    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
+    mpz_set_bignum(res_val_num, arg);
+    mpz_mul(res_val_num, res_val_num, mpq_denref(self_val));
+    mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
   } else {
-    typeerror (ZQFXB);
+    typeerror(ZQFXB);
   }
   return res;
 }

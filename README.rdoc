@@ -222,19 +222,19 @@ still relevant.
 * ruby 1.9.x
 * mpz_fits_* and 31 vs. 32 integer variables
 * all appropriate module and class methods if there are any to add
-* fix all sign issues
+* fix all sign issues (don't know what these are)
 * floats with precision control
 * random numbers
-* to_s vs. inspect ?
+* to_s vs. inspect
 * to_s_hex(), or more-ruby-ish, to_s(:hex)
 * check if mpz_addmul_ui would optimize some statements
 * some system that allow using denref and numref as normal ruby objects
-* should we allocate global temporary variables like Perl GMP do ?
+* should we allocate global temporary variables like Perl GMP does?
 * takeover code that replaces all Bignums with GMP::Z
 * better bignum parser
 * zero-copy method for strings generation
-* what should be ancestors of GMP::* classes ?
-* division and modulo
+* what should be ancestors of GMP::* classes?
+* division and modulo (que?)
 * put rb_raise into nice macros
 * benchmarks against Python GMP and Perl GMP
 * dup methods
@@ -245,7 +245,7 @@ still relevant.
 * check asm output, especially local memory efficiency
 * it might be better to use `register' for some local variables
 * powm with negative exponents
-* check if different sorting of operatations gives better cache usage,
+* check if different sorting of operatations gives better cache usage
 * GMP::* op RubyFloat and RubyFloat op GMP::*
 * sort checks
 * check all new GMP4 operations
