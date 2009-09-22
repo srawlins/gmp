@@ -212,10 +212,10 @@ static void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
   MP_INT *arg_val_z;
 
   if (GMPQ_P(arg)) {
-    mpq_get_struct (arg, arg_val_q);
+    mpq_get_struct(arg, arg_val_q);
     mpf_set_q(self_val, arg_val_q);
   } else if (GMPZ_P(arg)) {
-    mpz_get_struct (arg, arg_val_z);
+    mpz_get_struct(arg, arg_val_z);
     mpf_set_z(self_val, arg_val_z);
   } else if (FLOAT_P(arg)) {
     mpf_set_d(self_val, FLT2DBL(arg));
@@ -223,7 +223,7 @@ static void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
     mpf_set_si(self_val, FIX2INT(arg));
   } else if (STRING_P(arg)) {
     if (mpf_set_str(self_val, STR2CSTR(arg), 10) == -1) {
-      rb_raise (rb_eRuntimeError, "Badly formatted string");
+      rb_raise(rb_eRuntimeError, "Badly formatted string");
     }
   } else if (BIGNUM_P(arg)) {
 #if 1 /* GMP3 code */
@@ -232,7 +232,7 @@ static void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
     mpz_temp_free(arg_val_z);
 #endif
   } else {
-    rb_raise (rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name(rb_class_of(arg)));
+    rb_raise(rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name(rb_class_of(arg)));
   }
 }
 
