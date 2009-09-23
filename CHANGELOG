@@ -1,4 +1,16 @@
-1.1.0:
+0.1.5:
+ * Merged in reorg changes: Files like gmpz.c allow for documenting the C
+   extension methods.
+ * A good portion of the documentation has been written, may not be included
+   yet, but can be generated with
+     rdoc README.rdoc ext/*.c ext/*.h
+
+0.1.4:
+ * Fixed a lot of gemspec problems
+ * Many more tests
+ * Tested on OS X 10.5.8
+
+0.1.1:
 * Attempting to revitalize through GitHub
 * no changes to code yet
 * modernizing files, eg with new ruby standards, towards a gem
