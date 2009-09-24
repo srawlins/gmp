@@ -224,6 +224,12 @@ VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module)
   return r_gmpzsg_new(argc, argv, cGMP_Z);
 }
 
+/*
+ * call-seq:
+ *   int1.swap int2
+ *
+ * Efficiently swaps the contents of +int1+ with +int2+.
+ */
 VALUE r_gmpz_swap(VALUE self, VALUE arg)
 {
   MP_INT *self_val, *arg_val;
@@ -505,8 +511,8 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
  * Document-method: neg
  *
  * call-seq:
- *   -integer
  *   integer.neg
+ *   -integer
  *
  * From the GMP Manual:
  * 
@@ -1529,6 +1535,8 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "-", r_gmpz_sub, 1);  
   rb_define_method(cGMP_Z, "sub!", r_gmpz_sub_self, 1);
   rb_define_method(cGMP_Z, "*", r_gmpz_mul, 1);
+  rb_define_method(cGMP_Z, "neg", r_gmpz_neg, 0);
+  rb_define_method(cGMP_Z, "neg!", r_gmpz_neg_self, 0);
   
   // Integer Division
   rb_define_method(cGMP_Z, "/", r_gmpz_div, 1);
@@ -1557,8 +1565,6 @@ void init_gmpz()
   
   // _unsorted_
   rb_define_method(cGMP_Z, "-@", r_gmpz_neg, 0);
-  rb_define_method(cGMP_Z, "neg", r_gmpz_neg, 0);
-  rb_define_method(cGMP_Z, "neg!", r_gmpz_neg_self, 0);
   rb_define_method(cGMP_Z, "abs", r_gmpz_abs, 0);
   rb_define_method(cGMP_Z, "abs!", r_gmpz_abs_self, 0);
   rb_define_method(cGMP_Z, "com", r_gmpz_com, 0);

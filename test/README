@@ -16,7 +16,7 @@ Tests:
    8*   divide by zero exceptions
    9*   sgn, neg, abs
   10*   fibonacci, factorial, nextprime
-  11    swap
+  11*   swap
   12    floor, ceil, truncate
   13    to_i, to_d
   14    shifts, last_bits

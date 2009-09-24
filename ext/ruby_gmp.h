@@ -59,7 +59,6 @@ typedef __mpf_struct MP_FLOAT;
 #define mpf_temp_alloc(var) { var=malloc(sizeof(MP_FLOAT)); }
 #define mpf_temp_init(var,prec) { mpf_temp_alloc(var); mpf_init2(var,prec); }
 #define mpf_temp_free(var) { mpf_clear(var); free(var); }
-#define FLT2DBL(var) (RFLOAT(var)->value)
 #define prec_max(prec,var) {if(mpf_get_prec(var) > prec) prec = mpf_get_prec(var); }
 
 #define EXPECTED_ZQFXBD "Expected GMP::Z, GMP::Q, GMP::F, FixNum, BigNum or Float"

@@ -133,7 +133,7 @@ VALUE r_gmpf_add(VALUE self, VALUE arg)
     mpf_add (res_val, res_val, self_val);
   } else if (FLOAT_P(arg)) {
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_d (res_val, FLT2DBL(arg));
+    mpf_set_d (res_val, NUM2DBL(arg));
     mpf_add (res_val, res_val, self_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
@@ -179,7 +179,7 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
     mpf_sub (res_val, self_val, res_val);
   } else if (FLOAT_P(arg)) {
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_d (res_val, FLT2DBL(arg));
+    mpf_set_d (res_val, NUM2DBL(arg));
     mpf_sub (res_val, self_val, res_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
@@ -236,7 +236,7 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
     mpf_mul(res_val, self_val, res_val);
   } else if (FLOAT_P(arg)) {
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_d(res_val, FLT2DBL(arg));
+    mpf_set_d(res_val, NUM2DBL(arg));
     mpf_mul(res_val, self_val, res_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
@@ -282,7 +282,7 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
     mpf_div (res_val, self_val, res_val);
   } else if (FLOAT_P(arg)) {
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_d (res_val, FLT2DBL(arg));
+    mpf_set_d (res_val, NUM2DBL(arg));
     mpf_div (res_val, self_val, res_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
@@ -301,8 +301,29 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
   return res;
 }
 
-DEFUN_FLOAT2FLOAT(abs,mpf_abs)
+/*
+ * Document-method: neg
+ *
+ * call-seq:
+ *   float.neg
+ *   -float
+ *
+ * From the GMP Manual:
+ * 
+ * Returns -+float+.
+ */
+/*
+ * Document-method: neg!
+ *
+ * call-seq:
+ *   float.neg!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +float+ to -+float+.
+ */
 DEFUN_FLOAT2FLOAT(neg,mpf_neg)
+DEFUN_FLOAT2FLOAT(abs,mpf_abs)
 
 
 /**********************************************************************

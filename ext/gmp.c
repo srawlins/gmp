@@ -130,7 +130,7 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
     mpz_get_struct(arg, arg_val_z);
     mpf_set_z(self_val, arg_val_z);
   } else if (FLOAT_P(arg)) {
-    mpf_set_d(self_val, FLT2DBL(arg));
+    mpf_set_d(self_val, NUM2DBL(arg));
   } else if (FIXNUM_P(arg)) {
     mpf_set_si(self_val, FIX2INT(arg));
   } else if (STRING_P(arg)) {
