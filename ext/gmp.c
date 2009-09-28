@@ -12,41 +12,6 @@ void r_gmpz_free(void *ptr) { mpz_clear (ptr); free (ptr); }
 void r_gmpq_free(void *ptr) { mpq_clear (ptr); free (ptr); }
 void r_gmpf_free(void *ptr) { mpf_clear (ptr); free (ptr); }
 
-VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
-{
-  MP_INT *res_val;
-  VALUE res;
-
-  (void)klass;
-
-  if (argc > 1)
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0 or 1)", argc);
-
-  mpz_make_struct (res, res_val);
-  mpz_init (res_val);
-
-  rb_obj_call_init(res, argc, argv);
-
-  return res;
-}
-
-static VALUE r_gmpqsg_new(int argc, VALUE *argv, VALUE klass)
-{
-  MP_RAT *res_val;
-  VALUE res;
-
-  (void)klass;
-
-  if (argc > 2)
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0, 1 or 2)", argc);
-
-  mpq_make_struct (res, res_val);
-  mpq_init (res_val);
-  rb_obj_call_init(res, argc, argv);
- 
-  return res;
-}
-
 static VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
 {
   MP_FLOAT *res_val;
@@ -192,45 +157,6 @@ static VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   return Qnil;
 }
 
-/*
- * call-seq: to_s()
- * 
- * Converts this mpq_t object to a Ruby string.
- */
-static VALUE r_gmpq_to_s(VALUE self)
-{
-  MP_RAT *self_val;
-  MP_INT *self_val_num, *self_val_den;
-  char *str;
-  VALUE res;
-  int sizeinbase;
-  int offset;
-
-  Data_Get_Struct(self, MP_RAT, self_val);
-
-  if (mpz_cmp_ui(mpq_denref(self_val), 1) == 0) {
-    str = mpz_get_str(NULL, 10, mpq_numref (self_val));
-    res = rb_str_new2(str);
-    free (str);
-    return res;
-  }
-
-  self_val_num = mpq_numref(self_val);
-  self_val_den = mpq_denref(self_val);
-
-  sizeinbase = mpz_sizeinbase (self_val_num, 10) + mpz_sizeinbase (self_val_den, 10) + 3;
-  str = malloc (sizeinbase);
-
-  mpz_get_str (str, 10, self_val_num);
-  offset = strlen (str);
-  str[offset] = '/';
-  mpz_get_str (str + offset + 1, 10, self_val_den);
-  res = rb_str_new2(str);
-  free (str);
-
-  return res;
-}
-
 static VALUE r_gmpz_coerce(VALUE self, VALUE arg)
 {
   return rb_assoc_new(r_gmpzsg_new(1, &arg, cGMP_Z), self);
@@ -244,12 +170,6 @@ static VALUE r_gmpq_coerce(VALUE self, VALUE arg)
 static VALUE r_gmpf_coerce(VALUE self, VALUE arg)
 {
   return rb_assoc_new(r_gmpfsg_new(1, &arg, cGMP_F), self);
-}
-
-VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
-{
-  (void)module;
-  return r_gmpqsg_new(argc, argv, cGMP_Q);
 }
 
 VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
@@ -291,13 +211,9 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
 
 void Init_gmp() {
   mGMP = rb_define_module("GMP");
-  rb_define_module_function(mGMP, "Z", r_gmpmod_z, -1);
-  rb_define_module_function(mGMP, "Q", r_gmpmod_q, -1);
-  rb_define_module_function(mGMP, "F", r_gmpmod_f, -1);
 
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
   init_gmpz();
-  rb_define_singleton_method(cGMP_Z, "new", r_gmpzsg_new, -1);
   rb_define_singleton_method(cGMP_Z, "pow", r_gmpzsg_pow, 2);
   rb_define_method(cGMP_Z, "initialize", r_gmpz_initialize, -1);
   rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, 0);
@@ -308,9 +224,7 @@ void Init_gmp() {
 */
   cGMP_Q = rb_define_class_under (mGMP, "Q", rb_cNumeric);
   init_gmpq();
-  rb_define_singleton_method(cGMP_Q, "new", r_gmpqsg_new, -1);
   rb_define_method(cGMP_Q, "initialize", r_gmpq_initialize, -1);
-  rb_define_method(cGMP_Q, "to_s", r_gmpq_to_s, 0);
   rb_define_method(cGMP_Q, "coerce", r_gmpq_coerce, 1);
   rb_define_method(cGMP_Q, "num", r_gmpq_num, 0);
   rb_define_method(cGMP_Q, "den", r_gmpq_den, 0);

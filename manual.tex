@@ -1,10 +1,12 @@
 \documentclass[pdftex,10pt]{article}
+\usepackage{amsmath,amsfonts,url}
 \usepackage[pdftex]{graphicx}
 \setlength{\parindent}{0pt}
 \newcommand{\HRule}{\rule{\linewidth}{0.8mm}}
 \newcommand{\sectionline}{\rule{1.0\linewidth}{2.0pt}}
+\def\cour{\fontfamily{pcr}\selectfont}
 \usepackage[top=1.2in, bottom=0.8in, left=0.8in, right=0.8in]{geometry}
-\setcounter{tocdepth}{4}
+\setcounter{tocdepth}{3}
 \title{gmp - Ruby bindings to the GMP library}
 \date{September 27, 2009}
 \author{Sam Rawlins}
@@ -62,7 +64,7 @@ Pyramid AP/XP.\\
 \\
 For up-to-date information on GMP, please see the GMP web pages at\\
 \\
-\hangindent=0.5cm \texttt{http://gmplib.org/}\\
+\indent \texttt{http://gmplib.org/}\\
 
 The latest version of the library is available at\\
 \\
@@ -140,5 +142,13 @@ the following:\\\\
 There shouldn't be any errors, or warnings.
 
 \section{GMP and gmp gem basics}
+
+\subsection{Classes}
+The gmp gem includes the namespace \texttt{GMP} and three classes within \texttt{GMP}:
+\begin{itemize}
+  \item \texttt{GMP::Z}
+  \item \texttt{GMP::Q}
+  \item \texttt{GMP::F}
+\end{itemize}
 
 \end{document}

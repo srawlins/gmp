@@ -200,24 +200,67 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)     \
  *    Initializing, Assigning Integers                                *
  **********************************************************************/
 
+/*
+ * call-seq:
+ *   GMP::Z.new(arg)
+ *
+ * Creates a new GMP::Z integer, with arg as its value, converting where
+ * necessary.
+ */
+VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
+{
+  MP_INT *res_val;
+  VALUE res;
+
+  (void)klass;
+
+  if (argc > 1)
+    rb_raise(rb_eArgError, "wrong # of arguments (%d for 0 or 1)", argc);
+
+  mpz_make_struct(res, res_val);
+  mpz_init(res_val);
+
+  rb_obj_call_init(res, argc, argv);
+
+  return res;
+}
+
+/*
+ * call-seq:
+ *   a = b
+ *
+ * Sets the value of +a+ to the value of +b+. +b+ may be one of the following
+ * classes:
+ *
+ * * GMP::Z
+ * * Fixnum
+ * * String
+ * * Bignum
+ */
 void mpz_set_value(MP_INT *target, VALUE source)
 {
   MP_INT *source_val;
 
   if (GMPZ_P(source)) {
     mpz_get_struct(source, source_val);
-    mpz_set (target, source_val);
+    mpz_set(target, source_val);
   } else if (FIXNUM_P(source)) {
-    mpz_set_si (target, NUM2INT(source));
+    mpz_set_si(target, NUM2INT(source));
   } else if (STRING_P(source)) {
-    mpz_set_str (target, STR2CSTR(source), 0);
+    mpz_set_str(target, STR2CSTR(source), 0);
   } else if (BIGNUM_P(source)) {
     mpz_set_bignum(target, source);
   } else {
-    rb_raise (rb_eTypeError, "Don't know how to convert %s into GMP_Z", rb_class2name(rb_class_of(source)));
+    rb_raise(rb_eTypeError, "Don't know how to convert %s into GMP_Z", rb_class2name(rb_class_of(source)));
   }
 }
 
+/*
+ * call-seq:
+ *   GMP::Z(arg)
+ *
+ * A convenience method for +GMP::Z.new(arg)+.
+ */
 VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module)
 {
   (void)module;
@@ -1529,12 +1572,11 @@ void init_gmpz()
 {
   mGMP = rb_define_module("GMP");
   rb_define_module_function(mGMP, "Z", r_gmpmod_z, -1);
-  rb_define_module_function(mGMP, "Q", r_gmpmod_q, -1);
-  rb_define_module_function(mGMP, "F", r_gmpmod_f, -1);
 
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
 
   // Initializing, Assigning Integers
+  rb_define_singleton_method(cGMP_Z, "new", r_gmpzsg_new, -1);
   rb_define_method(cGMP_Z, "swap",  r_gmpz_swap, 1);
 
   // Converting Integers

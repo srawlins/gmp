@@ -42,6 +42,48 @@ static VALUE r_gmpq_##fname(VALUE self)                           \
  *    Initializing Rationals                                          *
  **********************************************************************/
 
+/*
+ * call-seq:
+ *   GMP::Q.new(arg)
+ *
+ * Creates a new GMP::Q rational, with arg as its value, converting where
+ * necessary.
+ */
+VALUE r_gmpqsg_new(int argc, VALUE *argv, VALUE klass)
+{
+  MP_RAT *res_val;
+  VALUE res;
+
+  (void)klass;
+
+  if (argc > 2)
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0, 1 or 2)", argc);
+
+  mpq_make_struct (res, res_val);
+  mpq_init (res_val);
+  rb_obj_call_init(res, argc, argv);
+ 
+  return res;
+}
+
+/*
+ * call-seq:
+ *   GMP::Q(arg)
+ *
+ * A convenience method for +GMP::Q.new(arg)+.
+ */
+VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
+{
+  (void)module;
+  return r_gmpqsg_new(argc, argv, cGMP_Q);
+}
+
+/*
+ * call-seq:
+ *   rat1.swap rat2
+ *
+ * Efficiently swaps the contents of +rat1+ with +rat2+.
+ */
 VALUE r_gmpq_swap(VALUE self, VALUE arg)
 {
   MP_RAT *self_val, *arg_val;
@@ -82,6 +124,45 @@ VALUE r_gmpq_to_d(VALUE self)
   mpq_get_struct(self, self_val);
 
   return rb_float_new(mpq_get_d(self_val));
+}
+
+/*
+ * call-seq: rational.to_s()
+ * 
+ * Returns +rational+ converted to a Ruby string.
+ */
+VALUE r_gmpq_to_s(VALUE self)
+{
+  MP_RAT *self_val;
+  MP_INT *self_val_num, *self_val_den;
+  char *str;
+  VALUE res;
+  int sizeinbase;
+  int offset;
+
+  Data_Get_Struct(self, MP_RAT, self_val);
+
+  if (mpz_cmp_ui(mpq_denref(self_val), 1) == 0) {
+    str = mpz_get_str(NULL, 10, mpq_numref (self_val));
+    res = rb_str_new2(str);
+    free (str);
+    return res;
+  }
+
+  self_val_num = mpq_numref(self_val);
+  self_val_den = mpq_denref(self_val);
+
+  sizeinbase = mpz_sizeinbase (self_val_num, 10) + mpz_sizeinbase (self_val_den, 10) + 3;
+  str = malloc (sizeinbase);
+
+  mpz_get_str (str, 10, self_val_num);
+  offset = strlen (str);
+  str[offset] = '/';
+  mpz_get_str (str + offset + 1, 10, self_val_den);
+  res = rb_str_new2(str);
+  free (str);
+
+  return res;
 }
 
 
@@ -638,17 +719,17 @@ VALUE r_gmpq_den(VALUE self)
 void init_gmpq()
 {
   mGMP = rb_define_module("GMP");
-  rb_define_module_function(mGMP, "Z", r_gmpmod_z, -1);
   rb_define_module_function(mGMP, "Q", r_gmpmod_q, -1);
-  rb_define_module_function(mGMP, "F", r_gmpmod_f, -1);
 
   cGMP_Q = rb_define_class_under (mGMP, "Q", rb_cNumeric);
 
   // Initializing Rationals
+  rb_define_singleton_method(cGMP_Q, "new", r_gmpqsg_new, -1);
   rb_define_method(cGMP_Q, "swap",  r_gmpq_swap, 1);
   
   // Rational Conversions
-  rb_define_method(cGMP_Q, "to_d",  r_gmpq_to_d, 0);
+  rb_define_method(cGMP_Q, "to_d", r_gmpq_to_d, 0);
+  rb_define_method(cGMP_Q, "to_s", r_gmpq_to_s, 0);
   
   // Rational Arithmetic
   rb_define_method(cGMP_Q, "+", r_gmpq_add, 1);
