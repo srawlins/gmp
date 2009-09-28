@@ -588,6 +588,30 @@ DEFUN_INT_F_UL(root,mpz_root,"root number")
  */
 DEFUN_INT2INT(sqrt, mpz_sqrt)
 
+/*
+ * Document-method: sqrtrem
+ *
+ * call-seq:
+ *   integer.sqrtrem #=> sqrt, rem
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the truncated integer part of the square root of +integer+ as
+ * +sqrt+ and the remainder <tt>integer - sqrt * sqrt</tt> as +rem+, which will
+ * be zero if +integer+ is a perfect square.
+ */
+static VALUE r_gmpz_sqrtrem(VALUE self)
+{
+  MP_INT *self_val, *sqrt_val, *rem_val;
+  VALUE sqrt, rem;
+
+  mpz_get_struct(self, self_val);
+  mpz_make_struct_init(sqrt, sqrt_val);
+  mpz_make_struct_init(rem, rem_val);
+  mpz_sqrtrem(sqrt_val, rem_val, self_val);
+  return rb_assoc_new(sqrt, rem);
+}
+
 
 /**********************************************************************
  *    Number Theoretic Functions                                      *
@@ -1166,18 +1190,6 @@ VALUE r_gmpz_legendre(VALUE self)
     mpz_make_struct_init(res, res_val);
   mpz_legendre(res_val, self_val);
   return res;
-}
-
-static VALUE r_gmpz_sqrtrem(VALUE self)
-{
-  MP_INT *self_val, *sqrt_val, *rem_val;
-  VALUE sqrt, rem;
-
-  mpz_get_struct (self, self_val);
-  mpz_make_struct_init(sqrt, sqrt_val);
-  mpz_make_struct_init(rem, rem_val);
-  mpz_sqrtrem (sqrt_val, rem_val, self_val);
-  return rb_assoc_new(sqrt, rem);
 }
 
 /*

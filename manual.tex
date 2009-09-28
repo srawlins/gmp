@@ -1,0 +1,144 @@
+\documentclass[pdftex,10pt]{article}
+\usepackage[pdftex]{graphicx}
+\setlength{\parindent}{0pt}
+\newcommand{\HRule}{\rule{\linewidth}{0.8mm}}
+\newcommand{\sectionline}{\rule{1.0\linewidth}{2.0pt}}
+\usepackage[top=1.2in, bottom=0.8in, left=0.8in, right=0.8in]{geometry}
+\setcounter{tocdepth}{4}
+\title{gmp - Ruby bindings to the GMP library}
+\date{September 27, 2009}
+\author{Sam Rawlins}
+\begin{document}
+\huge{gmp}\\
+\HRule
+\begin{flushright}
+\large{Ruby bindings to the GMP library}\\
+\large{Edition 0.1.5}\\
+\large{27 September 2009}\\
+\end{flushright}
+\vfill
+\large{written by Sam Rawlins}\\
+\large{with excessive quoting from the GMP Manual}
+\newpage
+
+\vfill
+This manual describes how to use the gmp Ruby gem, which provides bindings to
+the GNU multiple precision arithmetic library, version 4.3.x.\\
+\\
+Copyright 2009 Sam Rawlins.\\
+No license yet.
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introduction to GNU MP}
+
+This entire page is copied verbatim from the GMP Manual.\\
+\\
+GNU MP is a portable library written in C for arbitrary precision arithmetic on
+integers, rational numbers, and floating-point numbers. It aims to provide the
+fastest possible arithmetic for all applications that need higher precision
+than is directly supported by the basic C types.\\
+\\
+Many applications use just a few hundred bits of precision; but some
+applications may need thousands or even millions of bits. GMP is designed to
+give good performance for both, by choosing algorithms based on the sizes of
+the operands, and by carefully keeping the overhead at a minimum.\\
+\\
+The speed of GMP is achieved by using fullwords as the basic arithmetic type,
+by using sophisticated algorithms, by including carefully optimized assembly
+code for the most common inner loops for many different CPUs, and by a general
+emphasis on speed (as opposed to simplicity or elegance).\\
+\\
+There is assembly code for these CPUs: ARM, DEC Alpha 21064, 21164, and 21264,
+AMD 29000, AMD K6, K6-2, Athlon, and Athlon64, Hitachi SuperH and SH-2, HPPA
+1.0, 1.1, and 2.0, Intel Pentium, Pentium Pro/II/III, Pentium 4, generic x86,
+Intel IA-64, i960, Motorola MC68000, MC68020, MC88100, and MC88110,
+Motorola/IBM PowerPC 32 and 64, National NS32000, IBM POWER, MIPS R3000, R4000,
+SPARCv7, SuperSPARC, generic SPARCv8, UltraSPARC, DEC VAX, and Zilog Z8000.
+Some optimizations also for Cray vector systems, Clipper, IBM ROMP (RT), and
+Pyramid AP/XP.\\
+\\
+For up-to-date information on GMP, please see the GMP web pages at\\
+\\
+\hangindent=0.5cm \texttt{http://gmplib.org/}\\
+
+The latest version of the library is available at\\
+\\
+\texttt{ftp://ftp.gnu.org/gnu/gmp/}\\
+\\
+Many sites around the world mirror '\texttt{ftp.gnu.org}', please use a mirror
+near you, see \texttt{http://www.gnu.org/order/ftp.html} for a full list.\\
+\\
+There are three public mailing lists of interest. One for release
+announcements, one for general questions and discussions about usage of the GMP
+library, and one for bug reports. For more information, see\\
+\\
+\texttt{http://gmplib.org/mailman/listinfo/}.\\
+\\
+The proper place for bug reports is gmp-bugs@gmplib.org. See Chapter 4
+[Reporting Bugs], page 28 for information about reporting bugs.
+
+\section{Introduction to the gmp gem}
+
+The gmp Ruby gem is a Ruby library that provides bindings to GMP. The gem is
+incomplete, and will likely only include a subset of the GMP functions. It is
+built as a C extension for ruby, interacting with gmp.h. The gmp gem is not
+endorsed or supported by GNU or the GMP team. The gmp gem also does not ship
+with GMP, so GMP must be compiled separately.
+
+\section{Installing the gmp gem}
+
+\subsection{Prerequisites}
+OK. First, we've got a few requirements. To install the gmp gem, you need one
+of the following versions of Ruby:
+\begin{itemize}
+  \item (MRI) Ruby 1.8.6
+  \item (MRI) Ruby 1.8.7 - tested most often.
+  \item (MRI) Ruby 1.9.1 - more of a "release candidate" state. Please report
+    bugs.
+\end{itemize}
+As you can see only Matz's Ruby Interpreter (MRI) is supported. I haven't even
+put a thought into trying other interpreters/VMs.\\
+
+Next is the platform, the combination of the architecture (processor) and OS.
+As far as I can tell, if you can compile GMP on a given platform, you can use
+the gmp gem there too.\\
+
+Lastly, GMP. GMP must be compiled and working. "and working" means you ran "make check" while installing GMP. The following versions of GMP have been tested:
+\begin{itemize}
+  \item GMP 4.3.1
+\end{itemize}
+
+That's all. I don't intend to test any older versions, maybe 4.3.0 for completeness.\\
+
+Here is a table of the exact environments I have tested the gmp gem on:\\
+\\
+\begin{tabular}{|l|r|r|} \hline
+  Platform & Ruby & GMP \\ \hline
+  Cygwin on x86   & Ruby 1.8.7 & GMP 4.3.1 \\
+  Mac OS X 10.5.7 & Ruby 1.8.6 & GMP 4.3.1 \\ \hline
+\end{tabular}
+
+\subsection{Installing}
+You may clone the gmp gem's git repository with:\\
+\\
+\hangindent=0.5cm \texttt{git clone git://github.com/srawlins/gmp.git}\\
+
+Or you may install the gem from github:\\\\
+
+\texttt{gem install srawlins-gmp}\\\\
+
+At this time, the gem does not self-compile. To compile the C extensions, do
+the following:\\\\
+
+\hangindent=0.5cm \texttt{cd <srawlins-gmp gem directory>/ext\\
+  ruby extconf.rb\\
+  make}\\
+
+There shouldn't be any errors, or warnings.
+
+\section{GMP and gmp gem basics}
+
+\end{document}

@@ -1,10 +1,11 @@
 #ifndef _RUBY_GMP_H_
 #define _RUBY_GMP_H_
 
-#define _GNU_SOURCE
 #include <stdio.h>
-
 #include <ruby.h>
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include <gmp.h>
 
 #ifdef MPFR
