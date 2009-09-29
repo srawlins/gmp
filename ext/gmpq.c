@@ -127,9 +127,12 @@ VALUE r_gmpq_to_d(VALUE self)
 }
 
 /*
- * call-seq: rational.to_s()
- * 
- * Returns +rational+ converted to a Ruby string.
+ * Document-method: to_s
+ *
+ * call-seq:
+ *   rational.to_s
+ *
+ * Returns the decimal representation of +rational+, as a Ruby string.
  */
 VALUE r_gmpq_to_s(VALUE self)
 {

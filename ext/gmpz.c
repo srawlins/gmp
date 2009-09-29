@@ -225,6 +225,17 @@ VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
   return res;
 }
 
+VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
+{
+  MP_INT *self_val;
+
+  if (argc != 0) {
+    mpz_get_struct(self,self_val);
+    mpz_set_value (self_val, argv[0]);
+  }
+  return Qnil;
+}
+
 /*
  * call-seq:
  *   a = b
@@ -337,6 +348,28 @@ VALUE r_gmpz_to_d(VALUE self)
   mpz_get_struct(self, self_val);
 
   return rb_float_new(mpz_get_d(self_val));
+}
+
+/*
+ * Document-method: to_s
+ *
+ * call-seq:
+ *   integer.to_s
+ *
+ * Returns the decimal representation of +integer+, as a Ruby string.
+ */
+VALUE r_gmpz_to_s(VALUE self)
+{
+  MP_INT *self_val;
+  char *str;
+  VALUE res;
+
+  Data_Get_Struct(self, MP_INT, self_val);
+  str = mpz_get_str(NULL, 10, self_val);
+  res = rb_str_new2(str);
+  free (str);
+
+  return res;
 }
 
 
@@ -1546,28 +1579,6 @@ VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
   return r_gmpz_pow (r_gmpzsg_new(1, &base, klass), exp);
 }
 
-/*
- * Document-method: to_s
- *
- * call-seq:
- *   integer.to_s
- *
- * Returns the decimal representation of +integer+, as a string.
- */
-VALUE r_gmpz_to_s(VALUE self)
-{
-  MP_INT *self_val;
-  char *str;
-  VALUE res;
-
-  Data_Get_Struct(self, MP_INT, self_val);
-  str = mpz_get_str(NULL, 10, self_val);
-  res = rb_str_new2(str);
-  free (str);
-
-  return res;
-}
-
 void init_gmpz()
 {
   mGMP = rb_define_module("GMP");
@@ -1577,11 +1588,13 @@ void init_gmpz()
 
   // Initializing, Assigning Integers
   rb_define_singleton_method(cGMP_Z, "new", r_gmpzsg_new, -1);
+  rb_define_method(cGMP_Z, "initialize", r_gmpz_initialize, -1);
   rb_define_method(cGMP_Z, "swap",  r_gmpz_swap, 1);
 
   // Converting Integers
-  rb_define_method(cGMP_Z, "to_i",  r_gmpz_to_i, 0);
-  rb_define_method(cGMP_Z, "to_d",  r_gmpz_to_d, 0);
+  rb_define_method(cGMP_Z, "to_i", r_gmpz_to_i, 0);
+  rb_define_method(cGMP_Z, "to_d", r_gmpz_to_d, 0);
+  rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, 0);
   
   // Integer Arithmetic
   rb_define_method(cGMP_Z, "+", r_gmpz_add, 1);
@@ -1600,6 +1613,9 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "fmod", r_gmpz_fmod, 1);
   rb_define_method(cGMP_Z, "cdiv", r_gmpz_cdiv, 1);
   rb_define_method(cGMP_Z, "cmod", r_gmpz_cmod, 1);
+  
+  // Integer Exponentiation
+  rb_define_singleton_method(cGMP_Z, "pow", r_gmpzsg_pow, 2);
 
   // Integer Roots
   rb_define_method(cGMP_Z, "root",  r_gmpz_root, 1);

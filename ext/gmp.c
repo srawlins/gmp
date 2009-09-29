@@ -12,33 +12,6 @@ void r_gmpz_free(void *ptr) { mpz_clear (ptr); free (ptr); }
 void r_gmpq_free(void *ptr) { mpq_clear (ptr); free (ptr); }
 void r_gmpf_free(void *ptr) { mpf_clear (ptr); free (ptr); }
 
-static VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
-{
-  MP_FLOAT *res_val;
-  VALUE res;
-
-  (void)klass;
-
-  if (argc > 2)
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0, 1 or 2)", argc);
-
-  mpf_make_struct (res, res_val);
-  rb_obj_call_init(res, argc, argv);
-
-  return res;
-}
-
-static VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
-{
-  MP_INT *self_val;
-
-  if (argc != 0) {
-    mpz_get_struct(self,self_val);
-    mpz_set_value (self_val, argv[0]);
-  }
-  return Qnil;
-}
-
 static void mpq_str_set(MP_RAT *ROP, char *str)
 {
   int i=0;
@@ -58,7 +31,6 @@ static void mpq_str_set(MP_RAT *ROP, char *str)
   }
   mpq_canonicalize (ROP);
 }
-
 
 static VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
 {
@@ -113,50 +85,6 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
   }
 }
 
-static VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
-{
-  MP_FLOAT *self_val, *arg_val_f;
-  unsigned long prec = 0;
-  VALUE arg;
-
-  mpf_get_struct (self, self_val);
-
-  if (argc==0) {
-    mpf_init(self_val);
-    mpf_set_si(self_val, 0);
-    return Qnil;
-  }
-
-  arg = argv[0];
-
-  if (argc == 2) {
-    if (FIXNUM_P(argv[1])) {
-      if (FIX2INT(argv[1]) >= 0)
-        prec = FIX2INT(argv[1]);
-      else
-        rb_raise(rb_eRangeError, "prec must be non-negative");
-    } else {
-      rb_raise(rb_eTypeError, "prec must be FixNum");
-    }
-  } else if (GMPF_P(arg)) {
-    mpf_get_struct (arg, arg_val_f);
-    prec = mpf_get_prec (arg_val_f);
-  }
-  if (prec == 0)
-    mpf_init (self_val);
-  else
-    mpf_init2 (self_val, prec);
-
-  if (GMPF_P(arg)) {
-    mpf_get_struct (arg, arg_val_f);
-    mpf_set(self_val, arg_val_f);
-  } else {
-    mpf_set_value(self_val, arg);
-  }
-
-  return Qnil;
-}
-
 static VALUE r_gmpz_coerce(VALUE self, VALUE arg)
 {
   return rb_assoc_new(r_gmpzsg_new(1, &arg, cGMP_Z), self);
@@ -170,12 +98,6 @@ static VALUE r_gmpq_coerce(VALUE self, VALUE arg)
 static VALUE r_gmpf_coerce(VALUE self, VALUE arg)
 {
   return rb_assoc_new(r_gmpfsg_new(1, &arg, cGMP_F), self);
-}
-
-VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
-{
-  (void)module;
-  return r_gmpfsg_new(argc, argv, cGMP_F);
 }
 
 static VALUE r_gmpfsg_get_default_prec(VALUE klass)
@@ -214,14 +136,12 @@ void Init_gmp() {
 
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
   init_gmpz();
-  rb_define_singleton_method(cGMP_Z, "pow", r_gmpzsg_pow, 2);
-  rb_define_method(cGMP_Z, "initialize", r_gmpz_initialize, -1);
-  rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, 0);
   rb_define_method(cGMP_Z, "coerce", r_gmpz_coerce, 1);
 /*
   rb_define_method(cGMP_Z, "gcd",  r_gmpz_gcd, 1);
   rb_define_method(cGMP_Z, "lcm",  r_gmpz_lcm, 1);
 */
+
   cGMP_Q = rb_define_class_under (mGMP, "Q", rb_cNumeric);
   init_gmpq();
   rb_define_method(cGMP_Q, "initialize", r_gmpq_initialize, -1);
@@ -231,10 +151,8 @@ void Init_gmp() {
 
   cGMP_F = rb_define_class_under (mGMP, "F", rb_cNumeric);
   init_gmpf();
-  rb_define_singleton_method(cGMP_F, "new", r_gmpfsg_new, -1);
   rb_define_singleton_method(cGMP_F, "default_prec", r_gmpfsg_get_default_prec, 0);
   rb_define_singleton_method(cGMP_F, "default_prec=", r_gmpfsg_set_default_prec, 1);
-  rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
   rb_define_method(cGMP_F, "coerce", r_gmpf_coerce, 1); // new method - testing
 
 /*  rb_define_method(cGMP_F, "cmpabs",  r_gmpf_cmpabs, 1);*/

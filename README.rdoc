@@ -199,6 +199,11 @@ You can also call them as:
     number?                  /
     **                       power
 
+=Known Issues
+
+* GMP::Z.pow does not appear to be working at all. Looking at the code, I don't
+  think it ever did.
+
 =Precision
 
 Precision can be explicitely set as second argument for GMP::F.new().

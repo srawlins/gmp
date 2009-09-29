@@ -18,7 +18,7 @@ Tests:
   10*   fibonacci, factorial, nextprime
   11*   swap
   12*   floor, ceil, truncate
-  13    to_i, to_d
+  13*   to_i, to_d
   14    shifts, last_bits
   15    logical tests, roots
   16    floating point init with and without explicit precision

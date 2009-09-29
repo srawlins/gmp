@@ -48,6 +48,85 @@ static VALUE r_gmpf_cmp_##name(VALUE self, VALUE arg)          \
  *    Initializing, Assigning Floats                                  *
  **********************************************************************/
 
+/*
+ * call-seq:
+ *   GMP::R.new(arg)
+ *
+ * Creates a new GMP::R float, with arg as its value, converting where
+ * necessary.
+ */
+VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
+{
+  MP_FLOAT *res_val;
+  VALUE res;
+
+  (void)klass;
+
+  if (argc > 2)
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0, 1 or 2)", argc);
+
+  mpf_make_struct (res, res_val);
+  rb_obj_call_init(res, argc, argv);
+
+  return res;
+}
+
+VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
+{
+  MP_FLOAT *self_val, *arg_val_f;
+  unsigned long prec = 0;
+  VALUE arg;
+
+  mpf_get_struct (self, self_val);
+
+  if (argc==0) {
+    mpf_init(self_val);
+    mpf_set_si(self_val, 0);
+    return Qnil;
+  }
+
+  arg = argv[0];
+
+  if (argc == 2) {
+    if (FIXNUM_P(argv[1])) {
+      if (FIX2INT(argv[1]) >= 0)
+        prec = FIX2INT(argv[1]);
+      else
+        rb_raise(rb_eRangeError, "prec must be non-negative");
+    } else {
+      rb_raise(rb_eTypeError, "prec must be FixNum");
+    }
+  } else if (GMPF_P(arg)) {
+    mpf_get_struct (arg, arg_val_f);
+    prec = mpf_get_prec (arg_val_f);
+  }
+  if (prec == 0)
+    mpf_init (self_val);
+  else
+    mpf_init2 (self_val, prec);
+
+  if (GMPF_P(arg)) {
+    mpf_get_struct (arg, arg_val_f);
+    mpf_set(self_val, arg_val_f);
+  } else {
+    mpf_set_value(self_val, arg);
+  }
+
+  return Qnil;
+}
+
+/*
+ * call-seq:
+ *   GMP::F(arg)
+ *
+ * A convenience method for +GMP::F.new(arg)+.
+ */
+VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
+{
+  (void)module;
+  return r_gmpfsg_new(argc, argv, cGMP_F);
+}
+
 
 /**********************************************************************
  *    Converting Floats                                               *
@@ -61,6 +140,14 @@ VALUE r_gmpf_to_d(VALUE self)
   return rb_float_new(mpf_get_d(self_val));
 }
 
+/*
+ * Document-method: to_s
+ *
+ * call-seq:
+ *   float.to_s
+ *
+ * Returns the decimal representation of +float+, as a string.
+ */
 VALUE r_gmpf_to_s(VALUE self)
 {
   MP_FLOAT *self_val;
@@ -105,6 +192,7 @@ VALUE r_gmpf_to_s(VALUE self)
  * * GMP::Q
  * * GMP::F
  * * Bignum
+ * * Float
  */
 VALUE r_gmpf_add(VALUE self, VALUE arg)
 {
@@ -152,6 +240,18 @@ VALUE r_gmpf_add(VALUE self, VALUE arg)
   return res;
 }
 
+/*
+ * call-seq:
+ *   float1 - float2
+ *
+ * Subtracts +float2+ from +float1+. +float2+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ * * Float
+ */
 VALUE r_gmpf_sub(VALUE self, VALUE arg)
 {
   MP_FLOAT *self_val, *res_val, *arg_val_f;
@@ -208,6 +308,7 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
  * * GMP::Q
  * * GMP::F
  * * Bignum
+ * * Float
  */
 VALUE r_gmpf_mul(VALUE self, VALUE arg)
 {
@@ -255,6 +356,18 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
   return res;
 }
 
+/*
+ * call-seq:
+ *   float1 / float2
+ *
+ * Divides +float1+ by +float2+. +float2+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ * * Float
+ */
 VALUE r_gmpf_div(VALUE self, VALUE arg)
 {
   MP_FLOAT *self_val, *res_val, *arg_val_f;
@@ -318,11 +431,27 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
  * call-seq:
  *   float.neg!
  *
- * From the GMP Manual:
- * 
  * Sets +float+ to -+float+.
  */
 DEFUN_FLOAT2FLOAT(neg,mpf_neg)
+/*
+ * Document-method: abs
+ *
+ * call-seq:
+ *   float.abs
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the absolute value of +float+.
+ */
+/*
+ * Document-method: abs!
+ *
+ * call-seq:
+ *   float.abs!
+ *
+ * Sets +float+ to the absolute value of +float+.
+ */
 DEFUN_FLOAT2FLOAT(abs,mpf_abs)
 
 
@@ -383,6 +512,14 @@ DEFUN_FLOAT2FLOAT(floor,mpf_floor)
 DEFUN_FLOAT2FLOAT(trunc,mpf_trunc)
 DEFUN_FLOAT2FLOAT(ceil,mpf_ceil)
 
+/*
+ * call-seq:
+ *   float.sgn
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +1 if +float+ > 0, 0 if +float+ == 0, and -1 if +float+ < 0.
+ */
 VALUE r_gmpf_sgn(VALUE self)
 {
   MP_FLOAT *self_val;
@@ -408,7 +545,9 @@ void init_gmpf()
   cGMP_F = rb_define_class_under (mGMP, "F", rb_cNumeric);
   
   
-  // Initializin, Assigning Floats
+  // Initializing, Assigning Floats
+  rb_define_singleton_method(cGMP_F, "new", r_gmpfsg_new, -1);
+  rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
   
   // Converting Floats
   rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, 0);

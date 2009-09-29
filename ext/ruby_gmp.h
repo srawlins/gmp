@@ -84,6 +84,7 @@ extern void r_gmpf_free(void *ptr);
 
 // Initializing, Assigning Integers
 extern VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass);
+extern VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self);
 extern void mpz_set_value(MP_INT *target, VALUE source);
 extern VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module);
 extern VALUE r_gmpz_swap(VALUE self, VALUE arg);
@@ -91,6 +92,7 @@ extern VALUE r_gmpz_swap(VALUE self, VALUE arg);
 // Converting Integers
 extern VALUE r_gmpz_to_i(VALUE self);
 extern VALUE r_gmpz_to_d(VALUE self);
+extern VALUE r_gmpz_to_s(VALUE self);
 
 // Integer Arithmetic
 extern VALUE r_gmpz_add(VALUE self, VALUE arg);
@@ -98,6 +100,9 @@ extern VALUE r_gmpz_add_self(VALUE self, VALUE arg);
 extern VALUE r_gmpz_sub(VALUE self, VALUE arg);
 extern VALUE r_gmpz_sub_self(VALUE self, VALUE arg);
 extern VALUE r_gmpz_mul(VALUE self, VALUE arg);
+
+// Integer Exponentiation
+extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
 
 // Number Theoretic Functions
 extern VALUE r_gmpz_remove(VALUE self, VALUE arg);
@@ -121,8 +126,6 @@ extern VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod);
 extern VALUE r_gmpz_sgn(VALUE self);
 extern int mpz_cmp_value(MP_INT *OP, VALUE arg);
 
-extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
-extern VALUE r_gmpz_to_s(VALUE self);
 
 
 /* from gmpq.h */
@@ -164,6 +167,8 @@ extern VALUE r_gmpq_den(VALUE self);
 /* from gmpf.h */
 
 // Initializing, Assigning Floats
+extern VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass);
+extern VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self);
 extern void mpf_set_value(MP_FLOAT *self_val, VALUE arg);
 extern VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module);
 
