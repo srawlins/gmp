@@ -48,16 +48,15 @@ paragraph at http://gmplib.org/#WHAT :
 
 Only GMP 4 or newer is supported. The following environments have been tested by me:
   gmp gem 0.1.4.2 on:
-  +-----------------+---------+-----------+
-  |    Platform     |  Ruby   |    GMP    |
-  +-----------------+---------+-----------+
-  | Cygwin on x86   |  1.8.7  | GMP 4.3.1 |
-  | Mac OS X 10.5.7 |  1.8.6  | GMP 4.3.1 |
-  +-----------------+---------+-----------+
+  +--------------------------+---------+-----------+
+  |    Platform              |  Ruby   |    GMP    |
+  +--------------------------+---------+-----------+
+  | Cygwin on x86            |  1.8.7  | GMP 4.3.1 |
+  | Mac OS X 10.5.7 (32-bit) |  1.8.6  | GMP 4.3.1 |
+  | Mac OS X 10.5.7 (32-bit) |  1.9.1  | GMP 4.3.1 |
+  +--------------------------+---------+-----------+
 
-<b>Note:</b> I have tried with Ruby 1.9.1. No go.
-
-<b>Note:</b> To get this running on Mac OS X, I compiled GMP 4.3.1 with:
+<b>Note:</b> To get this running on Mac OS X (32-bit), I compiled GMP 4.3.1 with:
   ./configure ABI=32 --disable-dependency-tracking
 
 =Authors
@@ -68,8 +67,8 @@ Only GMP 4 or newer is supported. The following environments have been tested by
 =Classes
 
 It provides module GMP with following classes:
-* GMP::Z - infitite precision integer numbers
-* GMP::Q - infitite precision rational numbers
+* GMP::Z - infinite precision integer numbers
+* GMP::Q - infinite precision rational numbers
 * GMP::F - arbitrary precision floating point numbers
 
 Numbers are created by using new().

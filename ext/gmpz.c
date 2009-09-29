@@ -1105,7 +1105,38 @@ DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
  * the remainder.
  */
 DEFUN_INT_DIV(fmod, mpz_fdiv_r)
+/*
+ * Document-method: cdiv
+ *
+ * call-seq:
+ *   n.cdiv d
+ *
+ * From the GMP Manual:
+ * 
+ * Divide +n+ by +d+, forming a quotient +q+. +cdiv+ rounds +q+ up towards
+ * <tt>+infinity</tt>. The c stands for “ceil”.
+ *
+ * +q+ will satisfy <tt>n=q*d+r</tt>.
+ *
+ * This function calculates only the quotient.
+ */
 DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
+/*
+ * Document-method: cmod
+ *
+ * call-seq:
+ *   n.cmod d
+ *
+ * From the GMP Manual:
+ * 
+ * Divides +n+ by +d+, forming a remainder +r+. +r+ will have the opposite sign
+ * as +d+. The c stands for “ceil”.
+ *
+ * +r+ will satisfy <tt>n=q*d+r</tt>, and +r+ will satisfy
+ * <tt>0<=abs(r)<abs(d)</tt>.
+ *
+ * This function calculates only the remainder.
+ */
 DEFUN_INT_DIV(cmod, mpz_cdiv_r)
 
 /*

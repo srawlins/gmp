@@ -102,11 +102,13 @@ of the following versions of Ruby:
     bugs.
 \end{itemize}
 As you can see only Matz's Ruby Interpreter (MRI) is supported. I haven't even
-put a thought into trying other interpreters/VMs.\\
+put a thought into trying other interpreters/VMs. I intend to look into FFI,
+which supposedly will allow me to load this extension into JRuby and Rubinius,
+not sure about others...\\
 
 Next is the platform, the combination of the architecture (processor) and OS.
 As far as I can tell, if you can compile GMP on a given platform, you can use
-the gmp gem there too.\\
+the gmp gem there too. Please report problems with that hypothesis.\\
 
 Lastly, GMP. GMP must be compiled and working. "and working" means you ran "make check" while installing GMP. The following versions of GMP have been tested:
 \begin{itemize}
@@ -115,29 +117,30 @@ Lastly, GMP. GMP must be compiled and working. "and working" means you ran "make
 
 That's all. I don't intend to test any older versions, maybe 4.3.0 for completeness.\\
 
-Here is a table of the exact environments I have tested the gmp gem on:\\
-\\
-\begin{tabular}{|l|r|r|} \hline
+Here is a table of the exact environments I have tested the gmp gem on:\\\\
+
+\begin{tabular}{|l|r|r|} \hline \hline
   Platform & Ruby & GMP \\ \hline
-  Cygwin on x86   & Ruby 1.8.7 & GMP 4.3.1 \\
-  Mac OS X 10.5.7 & Ruby 1.8.6 & GMP 4.3.1 \\ \hline
+  Cygwin on x86   & Ruby 1.8.7 & GMP 4.3.1 \\ \hline
+  Mac OS X 10.5.7 (32-bit) & Ruby 1.8.6 & GMP 4.3.1 \\ \hline
+  Mac OS X 10.5.7 (32-bit) & Ruby 1.9.1 & GMP 4.3.1 \\ \hline
 \end{tabular}
 
 \subsection{Installing}
-You may clone the gmp gem's git repository with:\\
-\\
+You may clone the gmp gem's git repository with:\\\\
+
 \hangindent=0.5cm \texttt{git clone git://github.com/srawlins/gmp.git}\\
 
 Or you may install the gem from github:\\\\
 
-\texttt{gem install srawlins-gmp}\\\\
+\hangindent=0.5cm \texttt{gem install srawlins-gmp}\\\\
 
 At this time, the gem does not self-compile. To compile the C extensions, do
 the following:\\\\
 
-\hangindent=0.5cm \texttt{cd <srawlins-gmp gem directory>/ext\\
-  ruby extconf.rb\\
-  make}\\
+\hangindent=0.5cm \texttt{cd <srawlins-gmp gem directory>/ext}\\
+\hangindent=0.5cm \texttt{ruby extconf.rb}\\
+\hangindent=0.5cm \texttt{make}\\
 
 There shouldn't be any errors, or warnings.
 
