@@ -640,6 +640,16 @@ DEFUN_INT2INT(abs, mpz_abs)
  *    Integer Roots                                                   *
  **********************************************************************/
 
+/*
+ * Document-method: root
+ *
+ * call-seq:
+ *   GMP::Z.root(m, n)
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the truncated integer part of the +n+th root of +m+.
+ */
 DEFUN_INT_F_UL(root,mpz_root,"root number")
 
 /*

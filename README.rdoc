@@ -48,13 +48,14 @@ paragraph at http://gmplib.org/#WHAT :
 
 Only GMP 4 or newer is supported. The following environments have been tested by me:
   gmp gem 0.1.4.2 on:
-  +--------------------------+---------+-----------+
-  |    Platform              |  Ruby   |    GMP    |
-  +--------------------------+---------+-----------+
-  | Cygwin on x86            |  1.8.7  | GMP 4.3.1 |
-  | Mac OS X 10.5.7 (32-bit) |  1.8.6  | GMP 4.3.1 |
-  | Mac OS X 10.5.7 (32-bit) |  1.9.1  | GMP 4.3.1 |
-  +--------------------------+---------+-----------+
+  +-------------------------------------+-------------------+-----------+
+  |    Platform                         |       Ruby        |    GMP    |
+  +-------------------------------------+-------------------+-----------+
+  | Cygwin on x86                       | (MRI) Ruby 1.8.7  | GMP 4.3.1 |
+  | Linux (LinuxMint 7) on x86 (32-bit) | (MRI) Ruby 1.8.7  | GMP 4.3.1 |
+  | Mac OS X 10.5.7 on x86 (32-bit)     | (MRI) Ruby 1.8.6  | GMP 4.3.1 |
+  | Mac OS X 10.5.7 on x86 (32-bit)     | (MRI) Ruby 1.9.1  | GMP 4.3.1 |
+  +-------------------------------------+-------------------+-----------+
 
 <b>Note:</b> To get this running on Mac OS X (32-bit), I compiled GMP 4.3.1 with:
   ./configure ABI=32 --disable-dependency-tracking
@@ -200,7 +201,7 @@ You can also call them as:
 
 =Known Issues
 
-* GMP::Z.pow does not appear to be working at all. Looking at the code, I don't
+* GMP::Z#pow does not appear to be working at all. Looking at the code, I don't
   think it ever did.
 
 =Precision

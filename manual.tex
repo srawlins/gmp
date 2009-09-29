@@ -36,18 +36,18 @@ No license yet.
 
 \section{Introduction to GNU MP}
 
-This entire page is copied verbatim from the GMP Manual.\\
-\\
+This entire page is copied verbatim from the GMP Manual.\\\\
+
 GNU MP is a portable library written in C for arbitrary precision arithmetic on
 integers, rational numbers, and floating-point numbers. It aims to provide the
 fastest possible arithmetic for all applications that need higher precision
-than is directly supported by the basic C types.\\
-\\
+than is directly supported by the basic C types.\\\\
+
 Many applications use just a few hundred bits of precision; but some
 applications may need thousands or even millions of bits. GMP is designed to
 give good performance for both, by choosing algorithms based on the sizes of
-the operands, and by carefully keeping the overhead at a minimum.\\
-\\
+the operands, and by carefully keeping the overhead at a minimum.\\\\
+
 The speed of GMP is achieved by using fullwords as the basic arithmetic type,
 by using sophisticated algorithms, by including carefully optimized assembly
 code for the most common inner loops for many different CPUs, and by a general
@@ -120,10 +120,11 @@ That's all. I don't intend to test any older versions, maybe 4.3.0 for completen
 Here is a table of the exact environments I have tested the gmp gem on:\\\\
 
 \begin{tabular}{|l|r|r|} \hline \hline
-  Platform & Ruby & GMP \\ \hline
-  Cygwin on x86   & Ruby 1.8.7 & GMP 4.3.1 \\ \hline
-  Mac OS X 10.5.7 (32-bit) & Ruby 1.8.6 & GMP 4.3.1 \\ \hline
-  Mac OS X 10.5.7 (32-bit) & Ruby 1.9.1 & GMP 4.3.1 \\ \hline
+             Platform             &       Ruby       &    GMP    \\ \hline
+  Cygwin on x86                   & (MRI) Ruby 1.8.7 & GMP 4.3.1 \\ \hline
+  Linux (LinuxMint 7) on x86      & (MRI) Ruby 1.8.7 & GMP 4.3.1 \\ \hline
+  Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.8.6 & GMP 4.3.1 \\ \hline
+  Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.9.1 & GMP 4.3.1 \\ \hline
 \end{tabular}
 
 \subsection{Installing}
@@ -133,7 +134,7 @@ You may clone the gmp gem's git repository with:\\\\
 
 Or you may install the gem from github:\\\\
 
-\hangindent=0.5cm \texttt{gem install srawlins-gmp}\\\\
+\hangindent=0.5cm \texttt{gem install srawlins-gmp}\\
 
 At this time, the gem does not self-compile. To compile the C extensions, do
 the following:\\\\
