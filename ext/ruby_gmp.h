@@ -92,7 +92,7 @@ extern VALUE r_gmpz_swap(VALUE self, VALUE arg);
 // Converting Integers
 extern VALUE r_gmpz_to_i(VALUE self);
 extern VALUE r_gmpz_to_d(VALUE self);
-extern VALUE r_gmpz_to_s(VALUE self);
+extern VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self);
 
 // Integer Arithmetic
 extern VALUE r_gmpz_add(VALUE self, VALUE arg);

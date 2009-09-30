@@ -354,18 +354,66 @@ VALUE r_gmpz_to_d(VALUE self)
  * Document-method: to_s
  *
  * call-seq:
- *   integer.to_s
+ *   integer.to_s(base = 10)
  *
- * Returns the decimal representation of +integer+, as a Ruby string.
+ * Returns +integer+, as a Ruby string. If +base+ is not provided, then
+ * the string will be the decimal representation.
+ *
+ * From the GMP Manual:
+ *
+ * Convert +integer+ to a string of digits in base +base+. The +base+ argument
+ * may vary from 2 to 62 or from -2 to -36.
+ *
+ * For +base+ in the range 2..36, digits and lower-case letters are used; for
+ * -2..-36, digits and upper-case letters are used; for 37..62, digits,
+ * upper-case letters, and lower-case letters (in that significance order) are
+ * used.
  */
-VALUE r_gmpz_to_s(VALUE self)
+VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self)
 {
   MP_INT *self_val;
   char *str;
   VALUE res;
+  VALUE base;
+  int base_val = 10;
+  ID base_id;
+  const char * bin_base = "bin";                            /* binary */
+  const char * oct_base = "oct";                             /* octal */
+  const char * dec_base = "dec";                           /* decimal */
+  const char * hex_base = "hex";                       /* hexadecimal */
+  ID bin_base_id = rb_intern(bin_base);
+  ID oct_base_id = rb_intern(oct_base);
+  ID dec_base_id = rb_intern(dec_base);
+  ID hex_base_id = rb_intern(hex_base);  
+  
+  rb_scan_args(argc, argv, "01", &base);
+  if (NIL_P(base)) { base = INT2FIX(10); }           /* default value */
+  if (FIXNUM_P(base)) {
+    base_val = FIX2INT(base);
+    if ((base_val >=   2 && base_val <= 62) ||
+        (base_val >= -36 && base_val <= -2)) {
+      /* good base */
+    } else {
+      base_val = 10;
+      rb_raise(rb_eRangeError, "base must be within [2, 62] or [-36, -2].");
+    }
+  } else if (SYMBOL_P(base)) {
+    base_id = rb_to_id(base);
+    if (base_id == bin_base_id) {
+      base_val =  2;
+    } else if (base_id == oct_base_id) {
+      base_val =  8;
+    } else if (base_id == dec_base_id) {
+      base_val = 10;
+    } else if (base_id == hex_base_id) {
+      base_val = 16;
+    } else {
+      base_val = 10;  /* should raise an exception here. */
+    }
+  }
 
   Data_Get_Struct(self, MP_INT, self_val);
-  str = mpz_get_str(NULL, 10, self_val);
+  str = mpz_get_str(NULL, base_val, self_val);
   res = rb_str_new2(str);
   free (str);
 
@@ -412,7 +460,7 @@ VALUE r_gmpz_add(VALUE self, VALUE arg)
   } else if (BIGNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
     mpz_init(res_val);
-    mpz_set_bignum (res_val, arg);
+    mpz_set_bignum(res_val, arg);
     mpz_add(res_val, res_val, self_val);
   } else {
     typeerror(ZQFXB);
@@ -631,6 +679,178 @@ DEFUN_INT2INT(abs, mpz_abs)
 /**********************************************************************
  *    Integer Division                                                *
  **********************************************************************/
+
+/*
+ * call-seq:
+ *   /(other)
+ *
+ * Divides this GMP::Z by other. Other can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ */
+VALUE r_gmpz_div(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val_z, *tmp_z;
+  MP_RAT *arg_val_q, *res_val_q;
+  MP_FLOAT *arg_val_f, *res_val_f;
+  VALUE res;
+  unsigned int prec;
+
+  mpz_get_struct(self,self_val);
+
+  if (GMPZ_P(arg)) {
+    mpz_get_struct(arg, arg_val_z);
+    if (mpz_cmp_ui(arg_val_z, 0) == 0)
+      rb_raise(rb_eZeroDivError, "divided by 0");
+    mpq_make_struct_init(res, res_val_q);
+    mpq_set_num(res_val_q, self_val);
+    mpq_set_den(res_val_q, arg_val_z);
+    mpq_canonicalize (res_val_q);
+  } else if (FIXNUM_P(arg)) {
+    if (FIX2INT(arg) == 0)
+      rb_raise(rb_eZeroDivError, "divided by 0");
+    mpq_make_struct_init(res, res_val_q);
+    mpq_set_num(res_val_q, self_val);
+    mpz_set_ui(mpq_denref(res_val_q), FIX2INT(arg));
+    mpq_canonicalize (res_val_q);
+  } else if (GMPQ_P(arg)) {
+    mpq_get_struct(arg, arg_val_q);
+    if (mpz_cmp_ui(mpq_numref(arg_val_q), 0) == 0)
+      rb_raise(rb_eZeroDivError, "divided by 0");
+    mpz_temp_init(tmp_z);
+    mpq_make_struct_init(res, res_val_q);
+    mpz_gcd(tmp_z, mpq_numref(arg_val_q), self_val);
+    mpz_divexact(mpq_numref(res_val_q), self_val, tmp_z);
+    mpz_divexact(mpq_denref(res_val_q), mpq_numref(arg_val_q), tmp_z);
+    mpz_mul(mpq_numref(res_val_q), mpq_numref(res_val_q), mpq_denref(arg_val_q));
+    mpz_temp_free(tmp_z);
+  } else if (GMPF_P(arg)) {
+    mpf_get_struct_prec(arg, arg_val_f, prec);
+    mpf_make_struct_init(res, res_val_f, prec);
+    mpf_set_z(res_val_f, self_val);
+    mpf_div(res_val_f, res_val_f, arg_val_f);
+  } else if (BIGNUM_P(arg)) {
+    mpq_make_struct_init(res, res_val_q);
+    mpz_set_bignum(mpq_denref(res_val_q), arg);
+    if (mpz_cmp_ui(mpq_denref(res_val_q), 0) == 0)
+      rb_raise(rb_eZeroDivError, "divided by 0");
+    mpq_set_num(res_val_q, self_val);
+    mpq_canonicalize(res_val_q);
+  } else {
+    typeerror(ZQFXB);
+  }
+  return res;
+}
+
+/*
+ * Document-method: tdiv
+ *
+ * call-seq:
+ *   n.tdiv d
+ *
+ * From the GMP Manual:
+ * 
+ * Divides +n+ by +d+, forming a quotient +q+. tdiv rounds +q+ towards zero.
+ * The +t+ stands for "truncate".
+ *
+ * +q+ will satisfy <tt>n=q*d+r</tt>, and +r+ will satisfy
+ * <tt>0<=abs(r)<abs(d)</tt>.
+ *
+ * This function calculates only the quotient.
+ */
+DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
+/*
+ * Document-method: tmod
+ *
+ * call-seq:
+ *   n.tmod d
+ *
+ * From the GMP Manual:
+ * 
+ * Divides +n+ by +d+, forming a remainder +r+. +r+ will have the same sign as
+ * +n+. The +t+ stands for “truncate”. 
+ *
+ * +r+ will satisfy <tt>n=q*d+r</tt>, and +r+ will satisfy
+ * <tt>0<=abs(r)<abs(d)</tt>.
+ *
+ * This function calculates only the remainder.
+ *
+ * The remainder can be negative, so the return value is the absolute value of
+ * the remainder.
+ */
+DEFUN_INT_DIV(tmod, mpz_tdiv_r)
+/*
+ * Document-method: fdiv
+ *
+ * call-seq:
+ *   n.fdiv d
+ *
+ * From the GMP Manual:
+ * 
+ * Divide n by d, forming a quotient q. fdiv rounds q down towards -infinity.
+ * The f stands for “floor”.
+ *
+ * q will satisfy n=q*d+r.
+ *
+ * This function calculates only the quotient.
+ */
+DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
+/*
+ * Document-method: fmod
+ *
+ * call-seq:
+ *   n.fmod d
+ *
+ * From the GMP Manual:
+ * 
+ * Divides n by d, forming a remainder r. r will have the same sign as d. The f
+ * stands for “floor”. 
+ *
+ * r will satisfy n=q*d+r, and r will satisfy 0<=abs(r)<abs(d).
+ *
+ * This function calculates only the remainder.
+ *
+ * The remainder can be negative, so the return value is the absolute value of
+ * the remainder.
+ */
+DEFUN_INT_DIV(fmod, mpz_fdiv_r)
+/*
+ * Document-method: cdiv
+ *
+ * call-seq:
+ *   n.cdiv d
+ *
+ * From the GMP Manual:
+ * 
+ * Divide +n+ by +d+, forming a quotient +q+. +cdiv+ rounds +q+ up towards
+ * <tt>+infinity</tt>. The c stands for “ceil”.
+ *
+ * +q+ will satisfy <tt>n=q*d+r</tt>.
+ *
+ * This function calculates only the quotient.
+ */
+DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
+/*
+ * Document-method: cmod
+ *
+ * call-seq:
+ *   n.cmod d
+ *
+ * From the GMP Manual:
+ * 
+ * Divides +n+ by +d+, forming a remainder +r+. +r+ will have the opposite sign
+ * as +d+. The c stands for “ceil”.
+ *
+ * +r+ will satisfy <tt>n=q*d+r</tt>, and +r+ will satisfy
+ * <tt>0<=abs(r)<abs(d)</tt>.
+ *
+ * This function calculates only the remainder.
+ */
+DEFUN_INT_DIV(cmod, mpz_cdiv_r)
+
 
 /**********************************************************************
  *    Integer Exponentiation                                          *
@@ -977,177 +1197,6 @@ VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
 /**********************************************************************
  *    _unsorted_                                                      *
  **********************************************************************/
-
-/*
- * call-seq:
- *   /(other)
- *
- * Divides this GMP::Z by other. Other can be
- * * GMP::Z
- * * Fixnum
- * * GMP::Q
- * * GMP::F
- * * Bignum
- */
-VALUE r_gmpz_div(VALUE self, VALUE arg)
-{
-  MP_INT *self_val, *arg_val_z, *tmp_z;
-  MP_RAT *arg_val_q, *res_val_q;
-  MP_FLOAT *arg_val_f, *res_val_f;
-  VALUE res;
-  unsigned int prec;
-
-  mpz_get_struct(self,self_val);
-
-  if (GMPZ_P(arg)) {
-    mpz_get_struct(arg, arg_val_z);
-    if (mpz_cmp_ui(arg_val_z, 0) == 0)
-      rb_raise(rb_eZeroDivError, "divided by 0");
-    mpq_make_struct_init(res, res_val_q);
-    mpq_set_num(res_val_q, self_val);
-    mpq_set_den(res_val_q, arg_val_z);
-    mpq_canonicalize (res_val_q);
-  } else if (FIXNUM_P(arg)) {
-    if (FIX2INT(arg) == 0)
-      rb_raise(rb_eZeroDivError, "divided by 0");
-    mpq_make_struct_init(res, res_val_q);
-    mpq_set_num(res_val_q, self_val);
-    mpz_set_ui(mpq_denref(res_val_q), FIX2INT(arg));
-    mpq_canonicalize (res_val_q);
-  } else if (GMPQ_P(arg)) {
-    mpq_get_struct(arg, arg_val_q);
-    if (mpz_cmp_ui(mpq_numref(arg_val_q), 0) == 0)
-      rb_raise(rb_eZeroDivError, "divided by 0");
-    mpz_temp_init(tmp_z);
-    mpq_make_struct_init(res, res_val_q);
-    mpz_gcd(tmp_z, mpq_numref(arg_val_q), self_val);
-    mpz_divexact(mpq_numref(res_val_q), self_val, tmp_z);
-    mpz_divexact(mpq_denref(res_val_q), mpq_numref(arg_val_q), tmp_z);
-    mpz_mul(mpq_numref(res_val_q), mpq_numref(res_val_q), mpq_denref(arg_val_q));
-    mpz_temp_free(tmp_z);
-  } else if (GMPF_P(arg)) {
-    mpf_get_struct_prec(arg, arg_val_f, prec);
-    mpf_make_struct_init(res, res_val_f, prec);
-    mpf_set_z(res_val_f, self_val);
-    mpf_div(res_val_f, res_val_f, arg_val_f);
-  } else if (BIGNUM_P(arg)) {
-    mpq_make_struct_init(res, res_val_q);
-    mpz_set_bignum(mpq_denref(res_val_q), arg);
-    if (mpz_cmp_ui(mpq_denref(res_val_q), 0) == 0)
-      rb_raise(rb_eZeroDivError, "divided by 0");
-    mpq_set_num(res_val_q, self_val);
-    mpq_canonicalize(res_val_q);
-  } else {
-    typeerror(ZQFXB);
-  }
-  return res;
-}
-
-/*
- * Document-method: tdiv
- *
- * call-seq:
- *   n.tdiv d
- *
- * From the GMP Manual:
- * 
- * Divides +n+ by +d+, forming a quotient +q+. tdiv rounds +q+ towards zero.
- * The +t+ stands for "truncate".
- *
- * +q+ will satisfy <tt>n=q*d+r</tt>, and +r+ will satisfy
- * <tt>0<=abs(r)<abs(d)</tt>.
- *
- * This function calculates only the quotient.
- */
-DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
-/*
- * Document-method: tmod
- *
- * call-seq:
- *   n.tmod d
- *
- * From the GMP Manual:
- * 
- * Divides +n+ by +d+, forming a remainder +r+. +r+ will have the same sign as
- * +n+. The +t+ stands for “truncate”. 
- *
- * +r+ will satisfy <tt>n=q*d+r</tt>, and +r+ will satisfy
- * <tt>0<=abs(r)<abs(d)</tt>.
- *
- * This function calculates only the remainder.
- *
- * The remainder can be negative, so the return value is the absolute value of
- * the remainder.
- */
-DEFUN_INT_DIV(tmod, mpz_tdiv_r)
-/*
- * Document-method: fdiv
- *
- * call-seq:
- *   n.fdiv d
- *
- * From the GMP Manual:
- * 
- * Divide n by d, forming a quotient q. fdiv rounds q down towards -infinity.
- * The f stands for “floor”.
- *
- * q will satisfy n=q*d+r.
- *
- * This function calculates only the quotient.
- */
-DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
-/*
- * Document-method: fmod
- *
- * call-seq:
- *   n.fmod d
- *
- * From the GMP Manual:
- * 
- * Divides n by d, forming a remainder r. r will have the same sign as d. The f
- * stands for “floor”. 
- *
- * r will satisfy n=q*d+r, and r will satisfy 0<=abs(r)<abs(d).
- *
- * This function calculates only the remainder.
- *
- * The remainder can be negative, so the return value is the absolute value of
- * the remainder.
- */
-DEFUN_INT_DIV(fmod, mpz_fdiv_r)
-/*
- * Document-method: cdiv
- *
- * call-seq:
- *   n.cdiv d
- *
- * From the GMP Manual:
- * 
- * Divide +n+ by +d+, forming a quotient +q+. +cdiv+ rounds +q+ up towards
- * <tt>+infinity</tt>. The c stands for “ceil”.
- *
- * +q+ will satisfy <tt>n=q*d+r</tt>.
- *
- * This function calculates only the quotient.
- */
-DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
-/*
- * Document-method: cmod
- *
- * call-seq:
- *   n.cmod d
- *
- * From the GMP Manual:
- * 
- * Divides +n+ by +d+, forming a remainder +r+. +r+ will have the opposite sign
- * as +d+. The c stands for “ceil”.
- *
- * +r+ will satisfy <tt>n=q*d+r</tt>, and +r+ will satisfy
- * <tt>0<=abs(r)<abs(d)</tt>.
- *
- * This function calculates only the remainder.
- */
-DEFUN_INT_DIV(cmod, mpz_cdiv_r)
 
 /*
  * Document-method: com
@@ -1635,7 +1684,7 @@ void init_gmpz()
   // Converting Integers
   rb_define_method(cGMP_Z, "to_i", r_gmpz_to_i, 0);
   rb_define_method(cGMP_Z, "to_d", r_gmpz_to_d, 0);
-  rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, 0);
+  rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, -1);
   
   // Integer Arithmetic
   rb_define_method(cGMP_Z, "+", r_gmpz_add, 1);

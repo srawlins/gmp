@@ -106,7 +106,10 @@ You can also call them as:
     +                        addition
     -                        substraction
     *                        multiplication
-    to_s                     convert to string
+    to_s                     convert to string. For GMP::Z, this method takes
+                             one optional argument, a base. The base can be a
+                             Fixnum in the ranges [2, 62] or [-36, -2] or a
+                             Symbol: :bin, :oct, :dec, or :hex.
     -@                       negation
     neg!                     in-place negation
     abs                      absolute value
@@ -231,7 +234,6 @@ still relevant.
 * floats with precision control
 * random numbers
 * to_s vs. inspect
-* to_s_hex(), or more-ruby-ish, to_s(:hex)
 * check if mpz_addmul_ui would optimize some statements
 * some system that allow using denref and numref as normal ruby objects
 * should we allocate global temporary variables like Perl GMP does?
