@@ -227,7 +227,6 @@ thinks is appropriate.
 These are inherited from Tomasz. I will go through these and see which are
 still relevant.
 
-* ruby 1.9.x
 * mpz_fits_* and 31 vs. 32 integer variables
 * all appropriate module and class methods if there are any to add
 * fix all sign issues (don't know what these are)
@@ -235,13 +234,11 @@ still relevant.
 * random numbers
 * to_s vs. inspect
 * check if mpz_addmul_ui would optimize some statements
-* some system that allow using denref and numref as normal ruby objects
+* some system that allows using denref and numref as normal ruby objects
 * should we allocate global temporary variables like Perl GMP does?
 * takeover code that replaces all Bignums with GMP::Z
 * better bignum parser
 * zero-copy method for strings generation
-* what should be ancestors of GMP::* classes?
-* division and modulo (que?)
 * put rb_raise into nice macros
 * benchmarks against Python GMP and Perl GMP
 * dup methods
@@ -256,3 +253,4 @@ still relevant.
 * GMP::* op RubyFloat and RubyFloat op GMP::*
 * sort checks
 * check all new GMP4 operations
+* GMP::Q.to_s(base), GMP::F.to_s(base)

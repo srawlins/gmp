@@ -12,26 +12,8 @@ require 'tc_zerodivisionexceptions'
 require 'tc_sgn_neg_abs'
 require 'tc_fib_fac_nextprime'
 require 'tc_swap'
+require 'tc_floor_ceil_truncate'
 
-class TC_floor_ceil_truncate < Test::Unit::TestCase
-  def setup
-    @a = GMP::Q.new(200,11)
-    @b = -@a
-    @c = GMP::Q.new(70,10)
-  end
-  
-  def test_floor_ceil_truncate
-    assert_equal(@a.floor, 18, "GMP::Q should floor.")
-    assert_equal(@a.ceil, 19, "GMP::Q should ceil.")
-    assert_equal(@a.trunc, 18, "GMP::Q should truncate.")
-    assert_equal(@b.floor, -19, "GMP::Q (negative) should floor.")
-    assert_equal(@b.ceil, -18, "GMP::Q (negative) should ceil.")
-    assert_equal(@b.trunc, -18, "GMP::Q (negative) should truncate.")
-    assert_equal(@c.floor, 7, "GMP::Q (integer) should floor.")
-    assert_equal(@c.ceil, 7, "GMP::Q (integer) should ceil.")
-    assert_equal(@c.trunc, 7, "GMP::Q (integer) should truncate.")
-  end
-end
 
 class TC_to_i_to_d < Test::Unit::TestCase
   def setup
@@ -53,5 +35,26 @@ class TC_to_i_to_d < Test::Unit::TestCase
     #assert_equal(@b.to_d, 2**32*1.0, "GMP::Z should to_d correctly.")
     #assert_equal(@b.to_d.class, Float, "GMP::Z.to_d should be a Float.")
     assert_equal(@c.to_d.class, Float, "GMP::Q.to_d should be a Float.")
+  end
+end
+
+class TC_shifts_last_bits < Test::Unit::TestCase
+  def setup
+    @a = GMP::Z.new(100)  # 01100100
+    @b =- @a              # 10011100
+  end
+  
+  def test_shifts
+    assert_equal(   3, @a >> 5, "GMP::Z should >> correctly.")  # 00000011
+    assert_equal(-  4, @b >> 5, "GMP::Z should >> correctly.")  # 11111100
+    assert_equal( 400, @a << 2, "GMP::Z should << correctly.")  # 0110010000
+    assert_equal(-400, @b << 2, "GMP::Z should << correctly.")  # 1110010000
+  end
+  
+  def test_last_bits
+    #assert_equal( 5, @a.lastbits_pos(5), "GMP::Z should lastbits_pos correctly.")  #   100
+    #assert_equal(28, @b.lastbits_pos(5), "GMP::Z should lastbits_pos correctly.")  # 11100
+    #assert_equal(-4, @b.lastbits_sgn(5), "GMP::Z should lastbits_sgn correctly.")
+    # a.tshr 5 ???
   end
 end
