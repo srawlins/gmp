@@ -13,30 +13,7 @@ require 'tc_sgn_neg_abs'
 require 'tc_fib_fac_nextprime'
 require 'tc_swap'
 require 'tc_floor_ceil_truncate'
-
-
-class TC_to_i_to_d < Test::Unit::TestCase
-  def setup
-    @a = GMP::Z.new(100)
-    #@b = GMP::Z.pow(2,32)
-    @c = GMP::Q.new(200,11)
-  end
-  
-  def test_to_i
-    assert_equal(@a.to_i, 100, "GMP::Z should to_i correctly.")
-    assert_equal(@a.to_i.class, Fixnum, "GMP::Z.to_i should be a Fixnum.")
-    #assert_equal(@b.to_i, 2**32, "GMP::Z (Bignum) should to_i correctly.")
-    #assert_equal(@b.to_i.class, Bignum, "GMP::Z.to_i should be a Bignum.")
-  end
-  
-  def test_to_d
-    assert_equal(@a.to_d, 100.0, "GMP::Z should to_d correctly.")
-    assert_equal(@a.to_d.class, Float, "GMP::Z.to_d should be a Float.")
-    #assert_equal(@b.to_d, 2**32*1.0, "GMP::Z should to_d correctly.")
-    #assert_equal(@b.to_d.class, Float, "GMP::Z.to_d should be a Float.")
-    assert_equal(@c.to_d.class, Float, "GMP::Q.to_d should be a Float.")
-  end
-end
+require 'tc_to_d_to_i'
 
 class TC_shifts_last_bits < Test::Unit::TestCase
   def setup
@@ -56,5 +33,52 @@ class TC_shifts_last_bits < Test::Unit::TestCase
     #assert_equal(28, @b.lastbits_pos(5), "GMP::Z should lastbits_pos correctly.")  # 11100
     #assert_equal(-4, @b.lastbits_sgn(5), "GMP::Z should lastbits_sgn correctly.")
     # a.tshr 5 ???
+  end
+end
+
+class TC_logical_roots < Test::Unit::TestCase
+  def setup
+    @a = GMP::Z.new(100)
+    @b = GMP::Z.new( 27)
+    @c = GMP::Z.new( 99)
+  end
+  
+  def test_parity
+    assert  @a.even?, "GMP::Z should even? correctly."
+    assert !@b.even?, "GMP::Z should even? correctly."
+    assert !@c.even?, "GMP::Z should even? correctly."
+    assert !@a.odd?,  "GMP::Z should odd? correctly."
+    assert  @b.odd?,  "GMP::Z should odd? correctly."
+    assert  @c.odd?,  "GMP::Z should odd? correctly."
+  end
+  
+  def test_square
+    assert  @a.square?, "GMP::Z should square? correctly."
+    assert !@b.square?, "GMP::Z should square? correctly."
+    assert !@c.square?, "GMP::Z should square? correctly."
+  end
+  
+  def test_power
+    assert  @a.power?, "GMP::Z should power? correctly."
+    assert  @b.power?, "GMP::Z should power? correctly."
+    assert !@c.power?, "GMP::Z should power? correctly."
+  end
+  
+  def sqrtrem
+    assert_equal([10,  0], @a.sqrtrem, "GMP::Z should sqrtrem correctly.")
+    assert_equal([ 5,  2], @b.sqrtrem, "GMP::Z should sqrtrem correctly.")
+    assert_equal([ 9, 18], @c.sqrtrem, "GMP::Z should sqrtrem correctly.")
+  end
+  
+  def sqrt
+    assert_equal(10, @a.sqrt, "GMP::Z should sqrt correctly.")
+    assert_equal( 5, @b.sqrt, "GMP::Z should sqrt correctly.")
+    assert_equal( 9, @c.sqrt, "GMP::Z should sqrt correctly.")
+  end
+  
+  def root
+    assert_equal(4, @a.root(3), "GMP::Z should root correctly.")
+    assert_equal(3, @b.root(3), "GMP::Z should root correctly.")
+    assert_equal(4, @c.root(3), "GMP::Z should root correctly.")
   end
 end

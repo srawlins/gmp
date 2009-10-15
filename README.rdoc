@@ -151,6 +151,7 @@ You can also call them as:
     square?                  is perfect square
     sqrt                     square root
     sqrt!                    change the object into its square root
+    sqrtrem                  square root, remainder
     root(n)                  nth root
     jacobi                   jacobi symbol
     legendre                 legendre symbol
