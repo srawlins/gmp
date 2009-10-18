@@ -20,7 +20,7 @@
 \end{flushright}
 \vfill
 \large{written by Sam Rawlins}\\
-\large{with excessive quoting from the GMP Manual}
+\large{with extensive quoting from the GMP Manual}
 \newpage
 
 \vfill
@@ -41,13 +41,13 @@ This entire page is copied verbatim from the GMP Manual.\\\\
 GNU MP is a portable library written in C for arbitrary precision arithmetic on
 integers, rational numbers, and floating-point numbers. It aims to provide the
 fastest possible arithmetic for all applications that need higher precision
-than is directly supported by the basic C types.\\\\
-
+than is directly supported by the basic C types.\\
+\\
 Many applications use just a few hundred bits of precision; but some
 applications may need thousands or even millions of bits. GMP is designed to
 give good performance for both, by choosing algorithms based on the sizes of
-the operands, and by carefully keeping the overhead at a minimum.\\\\
-
+the operands, and by carefully keeping the overhead at a minimum.\\
+\\
 The speed of GMP is achieved by using fullwords as the basic arithmetic type,
 by using sophisticated algorithms, by including carefully optimized assembly
 code for the most common inner loops for many different CPUs, and by a general
@@ -96,8 +96,8 @@ with GMP, so GMP must be compiled separately.
 OK. First, we've got a few requirements. To install the gmp gem, you need one
 of the following versions of Ruby:
 \begin{itemize}
-  \item (MRI) Ruby 1.8.6
-  \item (MRI) Ruby 1.8.7 - tested most often.
+  \item (MRI) Ruby 1.8.6 - tested lightly.
+  \item (MRI) Ruby 1.8.7 - tested seriously.
   \item (MRI) Ruby 1.9.1 - more of a "release candidate" state. Please report
     bugs.
 \end{itemize}
@@ -107,8 +107,8 @@ which supposedly will allow me to load this extension into JRuby and Rubinius,
 not sure about others...\\
 
 Next is the platform, the combination of the architecture (processor) and OS.
-As far as I can tell, if you can compile GMP on a given platform, you can use
-the gmp gem there too. Please report problems with that hypothesis.\\
+As far as I can tell, if you can compile GMP and Ruby on a given platform, you
+can use the gmp gem there too. Please report problems with that hypothesis.\\
 
 Lastly, GMP. GMP must be compiled and working. "and working" means you ran "make check" while installing GMP. The following versions of GMP have been tested:
 \begin{itemize}
@@ -119,8 +119,8 @@ That's all. I don't intend to test any older versions, maybe 4.3.0 for completen
 
 Here is a table of the exact environments I have tested the gmp gem on:\\\\
 
-\begin{tabular}{|l|r|r|} \hline \hline
-             Platform             &       Ruby       &    GMP    \\ \hline
+\begin{tabular}{|l|r|r|} \hline
+             Platform             &       Ruby       &    GMP    \\ \hline \hline
   Cygwin on x86                   & (MRI) Ruby 1.8.7 & GMP 4.3.1 \\ \hline
   Linux (LinuxMint 7) on x86      & (MRI) Ruby 1.8.7 & GMP 4.3.1 \\ \hline
   Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.8.6 & GMP 4.3.1 \\ \hline
@@ -128,17 +128,17 @@ Here is a table of the exact environments I have tested the gmp gem on:\\\\
 \end{tabular}
 
 \subsection{Installing}
-You may clone the gmp gem's git repository with:\\\\
-
+You may clone the gmp gem's git repository with:\\
+\\
 \hangindent=0.5cm \texttt{git clone git://github.com/srawlins/gmp.git}\\
 
-Or you may install the gem from github:\\\\
-
+Or you may install the gem from github:\\
+\\
 \hangindent=0.5cm \texttt{gem install srawlins-gmp}\\
 
-At this time, the gem does not self-compile. To compile the C extensions, do
-the following:\\\\
-
+At this time, the gem does not self-compile (how does that work?). To compile the C
+extensions, do the following:\\
+\\
 \hangindent=0.5cm \texttt{cd <srawlins-gmp gem directory>/ext}\\
 \hangindent=0.5cm \texttt{ruby extconf.rb}\\
 \hangindent=0.5cm \texttt{make}\\
@@ -150,9 +150,35 @@ There shouldn't be any errors, or warnings.
 \subsection{Classes}
 The gmp gem includes the namespace \texttt{GMP} and three classes within \texttt{GMP}:
 \begin{itemize}
-  \item \texttt{GMP::Z}
-  \item \texttt{GMP::Q}
-  \item \texttt{GMP::F}
+  \item \texttt{GMP::Z} - Methods for signed integer arithmetic. There are at least 35
+    methods here (still accounting).
+  \item \texttt{GMP::Q} - Methods for rational number arithmetic. There are at least 6
+    methods here (still accounting).
+  \item \texttt{GMP::F} - Methods for floating-point arithmetic. There are at least 0
+    methods here (still accounting).
 \end{itemize}
+
+In addition to the above three classes, there is also one constant within \texttt{GMP}:
+\begin{itemize}
+  \item \texttt{GMP::GMP\_VERSION} - The version of GMP compiled into the gmp gem.
+\end{itemize}
+
+\section{Integer Functions}
+
+\subsection{Initializing, Assigning Integers}
+
+\large{\textbf{GMP::Z.new(a = 0)}}\\
+\large{\textbf{GMP::Z(a = 0)}}\\
+\\
+This method creates a new \texttt{GMP::Z} integer. It takes one optional argument for the value of the integer. This argument can be one of several classes. Here are some examples:
+\begin{verbatim}
+GMP::Z.new                  #=> 0           (default)
+GMP::Z.new(1)               #=> 1           (Ruby Fixnum)
+GMP::Z.new("127")           #=> 127         (Ruby String)
+GMP::Z.new(4294967296)      #=> 4294967296  (Ruby Bignum)
+GMP::Z.new(GMP::Z.new(31))  #=> 31          (GMP Integer)
+\end{verbatim}
+
+There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \end{document}

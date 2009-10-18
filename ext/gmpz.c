@@ -15,6 +15,9 @@
  * reference should be found in the rdocs.
  *
  *   Ruby method  C Extension function  GMP function
+ *   to_d         r_gmpz_to_d           mpz_get_d
+ *   to_i         r_gmpz_to_i           mpz_get_i
+ *   to_s         r_gmpz_to_s           mpz_get_s
  *   +            r_gmpz_add            mpz_add
  *   add!         r_gmpz_add_self       mpz_add
  *   -            r_gmpz_sub            mpz_sub
@@ -27,11 +30,18 @@
  *   fmod         r_gmpz_fmod           mpz_fdiv_r
  *   cdiv         r_gmpz_cdiv           mpz_cdiv_q
  *   cmod         r_gmpz_cmod           mpz_cdiv_r
- *   abs          r_gmpz_abs            mpz_abs
- *   abs!         r_gmpz_abs_self       mpz_abs
  *   -@           r_gmpz_neg            mpz_neg
  *   neg          r_gmpz_neg            mpz_neg
  *   neg!         r_gmpz_neg_self       mpz_neg
+ *   abs          r_gmpz_abs            mpz_abs
+ *   abs!         r_gmpz_abs_self       mpz_abs
+ *   root         r_gmpz_root           mpz_root
+ *   sqrt         r_gmpz_sqrt           mpz_sqrt
+ *   sqrt!        r_gmpz_sqrt_self      mpz_sqrt
+ *   sqrtrem      r_gmpz_sqrtrem        mpz_sqrtrem
+ *   remove       r_gmpz_remove         mpz_remove
+ *   fac          r_gmpz_fac            mpz_fac_ui
+ *   fib          r_gmpz_fib            mpz_fib_ui
  *   com          r_gmpz_com            mpz_com
  *   com!         r_gmpz_com_self       mpz_com
  *   []=          r_gmpz_setbit         mpz_setbit

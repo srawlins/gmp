@@ -135,7 +135,7 @@ VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
 VALUE r_gmpf_to_d(VALUE self)
 {
   MP_FLOAT *self_val;
-  mpf_get_struct (self, self_val);
+  mpf_get_struct(self, self_val);
 
   return rb_float_new(mpf_get_d(self_val));
 }
@@ -158,22 +158,22 @@ VALUE r_gmpf_to_s(VALUE self)
   mpf_get_struct(self, self_val);
 
   str = mpf_get_str(NULL, &exponent, 10, 0, self_val);
-  if ((strcmp (str,  "NaN") == 0) ||
-      (strcmp (str,  "Inf") == 0) ||
-      (strcmp (str, "-Inf") == 0))
+  if ((strcmp(str,  "NaN") == 0) ||
+      (strcmp(str,  "Inf") == 0) ||
+      (strcmp(str, "-Inf") == 0))
   {
     res = rb_str_new2(str);
   }
   else
   {
     if (str[0] == '-')
-      __gmp_asprintf (&str2, "-0.%se%+ld", str+1, exponent);
+      __gmp_asprintf(&str2, "-0.%se%+ld", str+1, exponent);
     else
-      __gmp_asprintf (&str2, "0.%se%+ld", str, exponent);
+      __gmp_asprintf(&str2, "0.%se%+ld", str, exponent);
     res = rb_str_new2(str2);
-    free (str2);
+    free(str2);
   }
-  free (str);
+  free(str);
   return res;
 }
 
@@ -552,6 +552,7 @@ void init_gmpf()
   // Converting Floats
   rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, 0);
   rb_define_method(cGMP_F, "to_d",  r_gmpf_to_d, 0);
+  rb_define_alias(cGMP_F, "to_f", "to_d");
   
   // Float Arithmetic
   rb_define_method(cGMP_F, "+", r_gmpf_add, 1);

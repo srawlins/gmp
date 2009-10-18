@@ -7,10 +7,10 @@ Current version fails on these tests because:
   none
 Tests:
    1*   initializations and to_s
-   2*   basic integer arithmetics and coertion to Z
+   2*   basic integer arithmetics and coersion to Z
    3*   integer logical operators
    4*   comparisions between Z, Q, FixNum and BigNum
-   5*   basic rational arithmetics and coertion to Q
+   5*   basic rational arithmetics and coersion to Q
    6    bit operations, scan0, scan1
    7*   exponentiation and exponentiation modulo
    8*   divide by zero exceptions
@@ -21,8 +21,8 @@ Tests:
   13*   to_i, to_d
   14*   shifts, last_bits
   15*   logical tests, roots
-  16    floating point init with and without explicit precision
-  17    basic floating point arithmetics and coercion to F
+  16*   floating point init with and without explicit precision
+  17    basic floating point arithmetics and coersion to F
   18    default_prec and default_prec=
   19    integer division methods
   20    mpfr - exp and log
@@ -38,3 +38,4 @@ TODO:
   random numbers
   range error exceptions
   full coverage?
+  use more assert_in_delta

@@ -133,6 +133,7 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
 
 void Init_gmp() {
   mGMP = rb_define_module("GMP");
+  rb_define_const(mGMP, "GMP_VERSION", rb_str_new2(gmp_version));
 
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
   init_gmpz();

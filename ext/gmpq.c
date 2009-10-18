@@ -10,6 +10,17 @@
  * Instances of this class can store variables of the type mpq_t. This class
  * also contains many methods that act as the functions for mpq_t variables,
  * as well as a few methods that attempt to make this library more Ruby-ish.
+ *
+ * The following list is just a simple checklist for me, really. A better
+ * reference should be found in the rdocs.
+ *
+ *   Ruby method  C Extension function  GMP function
+ *   to_d         r_gmpq_to_d           mpq_get_d
+ *   to_s         r_gmpq_to_s           ?
+ *   add          r_gmpq_add            mpq_add
+ *   sub          r_gmpq_sub            mpq_sub
+ *   mul          r_gmpq_mul            mpq_mul
+ *   div          r_gmpq_div            mpq_div
  */
 
 /**********************************************************************
