@@ -241,11 +241,11 @@ still relevant.
 * better bignum parser
 * zero-copy method for strings generation
 * put rb_raise into nice macros
-* benchmarks against Python GMP and Perl GMP
+* benchmarks against Python GMP (gmpy? Is this still active?) and Perl GMP (I can't
+  find this either!)
 * dup methods
 * integrate F into system
 * should Z.[] bits be 0/1 or true/false, 0 is true, what might badly surprise users
-* seriously investigate Ruby Makefile-making system
 * any2small_integer()
 * check asm output, especially local memory efficiency
 * it might be better to use `register' for some local variables

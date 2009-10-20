@@ -16,120 +16,72 @@ require 'tc_floor_ceil_truncate'
 require 'tc_z_to_d_to_i'
 require 'tc_z_shifts_last_bits'
 require 'tc_logical_roots'
+require 'tc_f_precision'
+require 'tc_f_arithmetics_coersion'
 
-class TC_precision < Test::Unit::TestCase
-  def setup
-    @pi = GMP::F.new(3.14)
-    @seven_halves = GMP::F.new(GMP::Q.new(7,2), 1000)
-  end
-  
-  def test_default_precision
-    assert_equal("0.e+0", GMP::F.new().to_s)
-    assert_equal(64,      GMP::F.new().prec)
-    assert_equal("0.314000000000000012434e+1", @pi.to_s)
-    assert_equal(64,                           @pi.prec)
-    assert_equal("0.1e+1", GMP::F.new(1).to_s)
-    assert_equal(64,       GMP::F.new(1).prec)
-    assert_equal("0.314e+1", GMP::F.new("3.14").to_s)
-    assert_equal(64,         GMP::F.new("3.14").prec)
-    assert_equal("0.4294967296e+10", GMP::F.new(2**32).to_s)
-    assert_equal(64,                 GMP::F.new(2**32).prec)
-    assert_equal("0.3e+1", GMP::F.new(GMP::Z.new(3)).to_s)
-    assert_equal(64,       GMP::F.new(GMP::Z.new(3)).prec)
-    assert_equal("0.35e+1", GMP::F.new(GMP::Q.new(7,2)).to_s)
-    assert_equal(64,        GMP::F.new(GMP::Q.new(7,2)).prec)
-    assert_equal("0.314000000000000012434e+1", GMP::F.new(@pi).to_s)
-    assert_equal(64,                           GMP::F.new(@pi).prec)
-  end
-  
-  def test_specific_precision
-    assert_equal("0.3140000000000000124344978758017532527446746826171875e+1", GMP::F.new(3.14, 1000).to_s)
-    assert_equal(1024,                                                        GMP::F.new(3.14, 1000).prec)
-    assert_equal("0.1e+1", GMP::F.new(1, 1000).to_s)
-    assert_equal(1024,     GMP::F.new(1, 1000).prec)
-    assert_equal("0.314e+1", GMP::F.new("3.14", 1000).to_s)
-    assert_equal(1024,       GMP::F.new("3.14", 1000).prec)
-    assert_equal("0.4294967296e+10", GMP::F.new(2**32, 1000).to_s)
-    assert_equal(1024,               GMP::F.new(2**32, 1000).prec)
-    assert_equal("0.3e+1", GMP::F.new(GMP::Z.new(3), 1000).to_s)
-    assert_equal(1024,     GMP::F.new(GMP::Z.new(3), 1000).prec)
-    assert_equal("0.35e+1", @seven_halves.to_s)
-    assert_equal(1024,      @seven_halves.prec)
-    assert_equal("0.35e+1", GMP::F.new(@seven_halves).to_s)
-    assert_equal(1024,      GMP::F.new(@seven_halves).prec)
-    assert_equal("0.3140000000000000124344978758017532527446746826171875e+1", GMP::F.new(@pi, 1000).to_s)
-    assert_equal(1024,                                                        GMP::F.new(@pi, 1000).prec)
-    assert_equal("0.35e+1", GMP::F.new(@seven_halves, 0).to_s)
-    assert_equal(64,        GMP::F.new(@seven_halves, 0).prec)
+class TC_default_prec < Test::Unit::TestCase
+  def test_default_prec
+    assert_equal( 64, GMP::F.default_prec, "GMP::F.default_prec should be 64.")
+    GMP::F.default_prec = 100
+    assert_equal(128, GMP::F.default_prec, "GMP::F.default_prec should be assignable.")
+    GMP::F.default_prec =  64
   end
 end
 
-class TC_F_arithmetics_coersion < Test::Unit::TestCase
+class TC_division < Test::Unit::TestCase
   def setup
-    @a = GMP::F.new(3.14, 100)
-    @b = GMP::F.new(2.71, 200)
-    @c = GMP::Z(3)
-    @d = GMP::Q(7,2)
-    @e = 2**32
+    @a = GMP::Z.new(5)
+    @b = GMP::Z.new(7)
+    @c = GMP::Z.new(25)
+    @d = GMP::Q.new(3,11)
+    @e = GMP::F.new(3.14)
+    @f = 2**32
   end
   
-  def test_add
-    assert_in_delta(         5.85,   @a +   @b, 1e-6)
-    assert_in_delta(         5.85,   @b +   @a, 1e-6)
-    assert_in_delta(         6.14,   @a +   @c, 1e-6)
-    assert_in_delta(         6.14,   @c +   @a, 1e-6)
-    assert_in_delta(         6.64,   @a +   @d, 1e-6)
-    assert_in_delta(         6.64,   @d +   @a, 1e-6)
-    assert_in_delta(         5.14,   @a +    2, 1e-6)
-    assert_in_delta(         5.14,    2 +   @a, 1e-6)
-    assert_in_delta(4294967299.14,   @a +   @e, 1e-6)
-    assert_in_delta(4294967299.14,   @e +   @a, 1e-6)
-    assert_in_delta(         7.65,   @a + 4.51, 1e-6)
-    assert_in_delta(         7.65, 4.51 +   @a, 1e-6)
+  def test_z_div
+    assert_equal(GMP::Q, (@a / @b   ).class, "GMP::Z / GMP::Z should be GMP::Q.")
+    assert_equal(GMP::Q, (@a / 3    ).class, "GMP::Z / Fixnum should be GMP::Q.")
+    assert_equal(GMP::Q, (@a / 2**32).class, "GMP::Z / Bignum should be GMP::Q.")
+    assert_equal(GMP::Q, (@a / @c   ).class, "GMP::Z / GMP::Z should be GMP::Q.")
+    assert_in_delta(0.7142857142, @a / @b, 1e-7, "GMP::Z./ should work.")
+    assert_in_delta(1.4         , @b / @a, 1e-7, "GMP::Z./ should work.")
+    assert_in_delta(1.6666666667, @a /  3, 1e-7, "GMP::Z./ should work.")
+    assert_in_delta(0.6         ,  3 / @a, 1e-7, "GMP::Z./ should work.")
+    assert_in_delta(0.2         , @a / @c, 1e-7, "GMP::Z./ should work.")
+    assert_in_delta(5.0         , @c / @a, 1e-7, "GMP::Z./ should work.")
   end
   
-  def test_sub
-    assert_in_delta(          0.43,   @a -   @b, 1e-6)
-    assert_in_delta(         -0.43,   @b -   @a, 1e-6)
-    assert_in_delta(          0.14,   @a -   @c, 1e-6)
-    assert_in_delta(         -0.14,   @c -   @a, 1e-6)
-    assert_in_delta(         -0.36,   @a -   @d, 1e-6)
-    assert_in_delta(          0.36,   @d -   @a, 1e-6)
-    assert_in_delta(          1.14,   @a -    2, 1e-6)
-    assert_in_delta(         -1.14,    2 -   @a, 1e-6)
-    assert_in_delta(-4294967292.86,   @a -   @e, 1e-6)
-    assert_in_delta( 4294967292.86,   @e -   @a, 1e-6)
-    assert_in_delta(         -1.37,   @a - 4.51, 1e-6)
-    assert_in_delta(          1.37, 4.51 -   @a, 1e-6)
+  def test_z_tdiv
+    assert_equal(GMP::Z, @a.tdiv(@b).class,    "GMP::Z.tdiv GMP::Z should be GMP::Z.")
+    assert_equal(GMP::Z, @a.tdiv(3).class,     "GMP::Z.tdiv Fixnum should be GMP::Z.")
+    assert_equal(GMP::Z, @a.tdiv(2**32).class, "GMP::Z.tdiv Bignum should be GMP::Z.")
+    assert_equal(GMP::Z, @a.tdiv(@c).class,    "GMP::Z.tdiv GMP::Z should be GMP::Z.")
+    assert_equal(0, @a.tdiv(@b), "GMP::Z.tdiv should work.")
+    assert_equal(1, @b.tdiv(@a), "GMP::Z.tdiv should work.")
+    assert_equal(1, @a.tdiv( 3), "GMP::Z.tdiv should work.")
+    assert_equal(0, @a.tdiv(@c), "GMP::Z.tdiv should work.")
+    assert_equal(5, @c.tdiv(@a), "GMP::Z.tdiv should work.")
   end
   
-  def test_mul
-    assert_in_delta(          8.5094,   @a *   @b, 1e-6)
-    assert_in_delta(          8.5094,   @b *   @a, 1e-6)
-    assert_in_delta(          9.42  ,   @a *   @c, 1e-6)
-    assert_in_delta(          9.42  ,   @c *   @a, 1e-6)
-    assert_in_delta(         10.99  ,   @a *   @d, 1e-6)
-    assert_in_delta(         10.99  ,   @d *   @a, 1e-6)
-    assert_in_delta(          6.28  ,   @a *    2, 1e-6)
-    assert_in_delta(          6.28  ,    2 *   @a, 1e-6)
-    assert_in_delta(13486197309.44  ,   @a *   @e, 1e-6)
-    assert_in_delta(13486197309.44  ,   @e *   @a, 1e-6)
-    assert_in_delta(         14.1614,   @a * 4.51, 1e-6)
-    assert_in_delta(         14.1614, 4.51 *   @a, 1e-6)
+  def test_z_fdiv
+    assert_equal(GMP::Z, @a.fdiv(@b).class,    "GMP::Z.fdiv GMP::Z should be GMP::Z.")
+    assert_equal(GMP::Z, @a.fdiv(3).class,     "GMP::Z.fdiv Fixnum should be GMP::Z.")
+    assert_equal(GMP::Z, @a.fdiv(2**32).class, "GMP::Z.fdiv Bignum should be GMP::Z.")
+    assert_equal(0, @a.fdiv(@b), "GMP::Z.fdiv should work.")
+    assert_equal(1, @b.fdiv(@a), "GMP::Z.fdiv should work.")
+    assert_equal(1, @a.fdiv( 3), "GMP::Z.fdiv should work.")
+    assert_equal(0, @a.fdiv(@c), "GMP::Z.fdiv should work.")
+    assert_equal(5, @c.fdiv(@a), "GMP::Z.fdiv should work.")
   end
   
-  def test_div
-    assert_in_delta(          1.1586715867,   @a /   @b, 1e-6)
-    assert_in_delta(          0.8630573248,   @b /   @a, 1e-6)
-    assert_in_delta(          1.0466666667,   @a /   @c, 1e-6)
-    assert_in_delta(          0.9554140127,   @c /   @a, 1e-6)
-    assert_in_delta(          0.8971428571,   @a /   @d, 1e-6)
-    assert_in_delta(          1.1146496815,   @d /   @a, 1e-6)
-    assert_in_delta(          1.57        ,   @a /    2, 1e-6)
-    assert_in_delta(          0.6369426752,    2 /   @a, 1e-6)
-    assert_in_delta(          0.0000000007,   @a /   @e, 1e-6)
-    assert_in_delta( 1367823979.6178343949,   @e /   @a, 1e-6)
-    assert_in_delta(          0.6962305987,   @a / 4.51, 1e-6)
-    assert_in_delta(          1.4363057325, 4.51 /   @a, 1e-6)
+  def test_z_cdiv
+    assert_equal(GMP::Z, @a.cdiv(@b).class,    "GMP::Z.cdiv GMP::Z should be GMP::Z.")
+    assert_equal(GMP::Z, @a.cdiv(3).class,     "GMP::Z.cdiv Fixnum should be GMP::Z.")
+    assert_equal(GMP::Z, @a.cdiv(2**32).class, "GMP::Z.cdiv Bignum should be GMP::Z.")
+    assert_equal(1, @a.cdiv(@b), "GMP::Z.cdiv should work.")
+    assert_equal(2, @b.cdiv(@a), "GMP::Z.cdiv should work.")
+    assert_equal(2, @a.cdiv( 3), "GMP::Z.cdiv should work.")
+    assert_equal(1, @a.cdiv(@c), "GMP::Z.cdiv should work.")
+    assert_equal(5, @c.cdiv(@a), "GMP::Z.cdiv should work.")
   end
 end

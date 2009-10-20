@@ -169,7 +169,9 @@ In addition to the above three classes, there is also one constant within \textt
 
 \large{\textbf{GMP::Z.new(a = 0)}}\\
 \large{\textbf{GMP::Z(a = 0)}}\\
-This method creates a new \texttt{GMP::Z} integer. It takes one optional argument for the value of the integer. This argument can be one of several classes. Here are some examples:
+This method creates a new \texttt{GMP::Z} integer. It takes one optional argument for the
+value of the integer. This argument can be one of several classes. Here are some
+examples:
 \begin{verbatim}
 GMP::Z.new                  #=> 0           (default)
 GMP::Z.new(1)               #=> 1           (Ruby Fixnum)
@@ -179,5 +181,45 @@ GMP::Z.new(GMP::Z.new(31))  #=> 31          (GMP Integer)
 \end{verbatim}
 
 There is also a convenience method available, \texttt{GMP::Z()}.\\
+
+\subsection{Converting Integers}
+
+\large{\textbf{GMP::Z.to\_d}}\\
+Returns \texttt{integer} as an Float if \texttt{integer} fits in a Float.\\
+\\
+Otherwise returns the least significant part of \texttt{integer}, with the same sign as
+\texttt{integer}.\\
+\\
+If \texttt{integer} is too big to fit in a Float, the returned result is probably not
+very useful. To find out if the value will fit, use the function
+\texttt{mpz\_fits\_slong\_p} (\textbf{Unimplemented}).\\
+\\
+\large{\textbf{GMP::Z.to\_i}}\\
+Returns \texttt{integer} as a Fixnum if \texttt{integer} fits in a Fixnum.\\
+\\
+Otherwise returns the least significant part of \texttt{integer}, with the same sign as
+\texttt{integer}.\\
+\\
+If \texttt{integer} is too big to fit in a Fixnum, the returned result is probably not
+very useful. To find out if the value will fit, use the function
+\texttt{mpz\_fits\_slong\_p} (\textbf{Unimplemented}).\\
+\\
+\large{\textbf{GMP::Z.to\_s(base = 10)}}\\
+Returns \texttt{integer}, as a Ruby string. If \texttt{base} is not provided, then the
+string will be the decimal representation.\\
+\\
+From the GMP Manual:\\
+\\
+Convert \texttt{integer} to a string of digits in base \texttt{base}. The \texttt{base}
+argument may vary from 2 to 62 or from -2 to -36.\\
+\\
+For \texttt{base} in the range 2..36, digits and lower-case letters are used; for
+-2..-36, digits and upper-case letters are used; for 37..62, digits, upper-case letters,
+and lower-case letters (in that significance order) are used.\\
+
+\subsection{Integer Arithmetic}
+
+\large{\textbf{GMP::Z.add}}\\
+\large{\textbf{GMP::Z.add!}}\\
 
 \end{document}

@@ -1,3 +1,17 @@
+0.18:
+  * Added test: tc_division, in progress.
+  * Unit test results: 56 tests, 361 assertions, 0 failures, 0 errors
+  * Added to_f ==> to_d aliases for GMP::Q and GMP::F.
+
+0.1.7:
+  * Added tests: tc_shifts_last_bits, tc_logical_roots, tc_f_precision,
+    tc_f_arithmetics_coersion, tc_default_prec
+  * Unit test results: 54 tests, 326 assertions, 0 failures, 0 errors
+  * Fixed defect in GMP::F.sub when argument is Bignum
+  * Fixed defect in GMP::F.div when argument is Bignum
+  * Added documentation "manual" in form of a LaTeX-based PDF. Very incomplete
+  * as of yet.
+
 0.1.6.2:
   * Added optional argument to GMP::Z.to_s. Supply base as either a Fixnum or
     a Symbol like :hex to get the string in a different base.

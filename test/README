@@ -22,8 +22,8 @@ Tests:
   14*   shifts, last_bits
   15*   logical tests, roots
   16*   floating point init with and without explicit precision
-  17    basic floating point arithmetics and coersion to F
-  18    default_prec and default_prec=
+  17*   basic floating point arithmetics and coersion to F
+  18*   default_prec and default_prec=
   19    integer division methods
   20    mpfr - exp and log
   21    mpfr - trigonometry

@@ -743,6 +743,7 @@ void init_gmpq()
   
   // Rational Conversions
   rb_define_method(cGMP_Q, "to_d", r_gmpq_to_d, 0);
+  rb_define_alias(cGMP_Q, "to_f", "to_d");
   rb_define_method(cGMP_Q, "to_s", r_gmpq_to_s, 0);
   
   // Rational Arithmetic
