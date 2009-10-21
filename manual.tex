@@ -184,7 +184,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \subsection{Converting Integers}
 
-\large{\textbf{GMP::Z.to\_d}}\\
+\large{\textbf{integer.to\_d -> Float}}\\
 Returns \texttt{integer} as an Float if \texttt{integer} fits in a Float.\\
 \\
 Otherwise returns the least significant part of \texttt{integer}, with the same sign as
@@ -194,7 +194,7 @@ If \texttt{integer} is too big to fit in a Float, the returned result is probabl
 very useful. To find out if the value will fit, use the function
 \texttt{mpz\_fits\_slong\_p} (\textbf{Unimplemented}).\\
 \\
-\large{\textbf{GMP::Z.to\_i}}\\
+\large{\textbf{integer.to\_i -> Fixnum}}\\
 Returns \texttt{integer} as a Fixnum if \texttt{integer} fits in a Fixnum.\\
 \\
 Otherwise returns the least significant part of \texttt{integer}, with the same sign as
@@ -204,7 +204,7 @@ If \texttt{integer} is too big to fit in a Fixnum, the returned result is probab
 very useful. To find out if the value will fit, use the function
 \texttt{mpz\_fits\_slong\_p} (\textbf{Unimplemented}).\\
 \\
-\large{\textbf{GMP::Z.to\_s(base = 10)}}\\
+\large{\textbf{integer.to\_s(base = 10) -> String}}\\
 Returns \texttt{integer}, as a Ruby string. If \texttt{base} is not provided, then the
 string will be the decimal representation.\\
 \\
@@ -219,7 +219,18 @@ and lower-case letters (in that significance order) are used.\\
 
 \subsection{Integer Arithmetic}
 
-\large{\textbf{GMP::Z.add}}\\
-\large{\textbf{GMP::Z.add!}}\\
+\large{\textbf{integer.add(b)}}\\
+\large{\textbf{integer + b}}\\
+\large{\textbf{integer.add!(b)}}\\
+Adds \texttt{integer} to \texttt{b}. \texttt{add} and \texttt{+} return the result.
+\texttt{add!} sets \texttt{integer} to the result. \texttt{b} can be a member of one of
+the following classes:
+\begin{verbatim}
+  GMP::Z
+  Fixnum
+  GMP::Q
+  GMP::F
+  Bignum
+\end{verbatim}
 
 \end{document}
