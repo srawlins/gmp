@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.files = ["ext/extconf.rb", "ext/gmp.c", "ext/gmpf.c", "ext/gmpf.h", "ext/gmpq.c", "ext/gmpq.h",
              "ext/gmpz.c", "ext/gmpz.h", "ext/ruby_gmp.h", "ext/takeover.h"]
   s.files += ["test/README", "test/tc_cmp.rb", "test/tc_f_precision.rb",
-              "test/tc_f_arithmetics_coersion.rb" "test/tc_fib_fac_nextprime.rb",
+              "test/tc_f_arithmetics_coersion.rb", "test/tc_fib_fac_nextprime.rb",
               "test/tc_floor_ceil_truncate.rb", "test/tc_logical_roots.rb", "test/tc_q.rb",
               "test/tc_q_basic.rb", "test/tc_sgn_neg_abs.rb", "test/tc_swap.rb", "test/tc_z.rb",
               "test/tc_z_basic.rb", "test/tc_z_exponentiation.rb", "test/tc_z_logic.rb",
