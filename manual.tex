@@ -1,23 +1,31 @@
 \documentclass[pdftex,10pt]{article}
 \usepackage{amsmath,amsfonts,url}
 \usepackage[pdftex]{graphicx}
+\usepackage{booktabs}
+\usepackage{url}
 \setlength{\parindent}{0pt}
-\newcommand{\HRule}{\rule{\linewidth}{0.8mm}}
-\newcommand{\sectionline}{\rule{1.0\linewidth}{2.0pt}}
 \def\cour{\fontfamily{pcr}\selectfont}
-\usepackage[top=1.2in, bottom=0.8in, left=0.8in, right=0.8in]{geometry}
+\usepackage[top=1in, bottom=0.8in, left=0.8in, right=0.8in]{geometry}
 \setcounter{tocdepth}{3}
-\title{gmp - Ruby bindings to the GMP library}
-\date{September 27, 2009}
-\author{Sam Rawlins}
+\newlength{\titrwidth}
+\setlength{\titrwidth}{\textwidth}
+\addtolength{\titrwidth}{-1.2in}
+\newlength{\methwidth}
+\setlength{\methwidth}{0.8in}
+\newlength{\defnwidth}
+\setlength{\defnwidth}{\textwidth}
+\addtolength{\defnwidth}{-1.2in}
+\addtolength{\heavyrulewidth}{\heavyrulewidth}
 \begin{document}
-\huge{gmp}\\
-\HRule
-\begin{flushright}
-\large{Ruby bindings to the GMP library}\\
-\large{Edition 0.1.5}\\
-\large{27 September 2009}\\
-\end{flushright}
+
+\begin{tabular}{p{1.0in} p{\titrwidth}}
+\huge{gmp} &\\
+\midrule[3pt]
+\multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
+\multicolumn{2}{r}{\large{Edition 0.1.8}}\\
+\multicolumn{2}{r}{\large{24 October 2009}}
+\end{tabular}
+
 \vfill
 \large{written by Sam Rawlins}\\
 \large{with extensive quoting from the GMP Manual}
@@ -64,7 +72,7 @@ Pyramid AP/XP.\\
 \\
 For up-to-date information on GMP, please see the GMP web pages at\\
 \\
-\indent \texttt{http://gmplib.org/}\\
+\texttt{http://gmplib.org/}\\
 
 The latest version of the library is available at\\
 \\
@@ -119,8 +127,8 @@ That's all. I don't intend to test any older versions, maybe 4.3.0 for completen
 
 Here is a table of the exact environments I have tested the gmp gem on:\\\\
 
-\begin{tabular}{|l|r|r|} \hline
-             Platform             &       Ruby       &    GMP    \\ \hline \hline
+\begin{tabular}{lrr} \hline
+             Platform             &       Ruby       &    GMP    \\ \midrule[1pt]
   Cygwin on x86                   & (MRI) Ruby 1.8.7 & GMP 4.3.1 \\ \hline
   Linux (LinuxMint 7) on x86      & (MRI) Ruby 1.8.7 & GMP 4.3.1 \\ \hline
   Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.8.6 & GMP 4.3.1 \\ \hline
@@ -130,18 +138,18 @@ Here is a table of the exact environments I have tested the gmp gem on:\\\\
 \subsection{Installing}
 You may clone the gmp gem's git repository with:\\
 \\
-\hangindent=0.5cm \texttt{git clone git://github.com/srawlins/gmp.git}\\
+\texttt{git clone git://github.com/srawlins/gmp.git}\\
 
 Or you may install the gem from github:\\
 \\
-\hangindent=0.5cm \texttt{gem install srawlins-gmp}\\
+\texttt{gem install srawlins-gmp}\\
 
 At this time, the gem does not self-compile (how does that work?). To compile the C
 extensions, do the following:\\
 \\
-\hangindent=0.5cm \texttt{cd <srawlins-gmp gem directory>/ext}\\
-\hangindent=0.5cm \texttt{ruby extconf.rb}\\
-\hangindent=0.5cm \texttt{make}\\
+\texttt{cd <srawlins-gmp gem directory>/ext}\\
+\texttt{ruby extconf.rb}\\
+\texttt{make}\\
 
 There shouldn't be any errors, or warnings.
 
@@ -167,70 +175,143 @@ In addition to the above three classes, there is also one constant within \textt
 
 \subsection{Initializing, Assigning Integers}
 
-\large{\textbf{GMP::Z.new(a = 0)}}\\
-\large{\textbf{GMP::Z(a = 0)}}\\
-This method creates a new \texttt{GMP::Z} integer. It takes one optional argument for the
-value of the integer. This argument can be one of several classes. Here are some
-examples:
-\begin{verbatim}
-GMP::Z.new                  #=> 0           (default)
-GMP::Z.new(1)               #=> 1           (Ruby Fixnum)
-GMP::Z.new("127")           #=> 127         (Ruby String)
-GMP::Z.new(4294967296)      #=> 4294967296  (Ruby Bignum)
-GMP::Z.new(GMP::Z.new(31))  #=> 31          (GMP Integer)
-\end{verbatim}
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{new} & & GMP::Z.new $\rightarrow$ \textit{integer} \\
+& & GMP::Z.new(\textit{numeric = 0}) $\rightarrow$ \textit{integer} \\
+& & GMP::Z.new(\textit{str}) $\rightarrow$ \textit{integer} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  This method creates a new \textit{GMP::Z} integer. It takes one optional argument for
+  the value of the integer. This argument can be one of several classes. Here are some
+  examples:\newline
+  
+  \texttt{GMP::Z.new                  \#=> 0           (default)}\newline
+  GMP::Z.new(1)               \#=> 1           (Ruby Fixnum)\newline
+  GMP::Z.new("127")           \#=> 127         (Ruby String)\newline
+  GMP::Z.new(4294967296)      \#=> 4294967296  (Ruby Bignum)\newline
+  GMP::Z.new(GMP::Z.new(31))  \#=> 31          (GMP Integer)
+}
+\end{tabular}
+\newline\newline
 
 There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \subsection{Converting Integers}
 
-\large{\textbf{integer.to\_d -> Float}}\\
-Returns \texttt{integer} as an Float if \texttt{integer} fits in a Float.\\
-\\
-Otherwise returns the least significant part of \texttt{integer}, with the same sign as
-\texttt{integer}.\\
-\\
-If \texttt{integer} is too big to fit in a Float, the returned result is probably not
-very useful. To find out if the value will fit, use the function
-\texttt{mpz\_fits\_slong\_p} (\textbf{Unimplemented}).\\
-\\
-\large{\textbf{integer.to\_i -> Fixnum}}\\
-Returns \texttt{integer} as a Fixnum if \texttt{integer} fits in a Fixnum.\\
-\\
-Otherwise returns the least significant part of \texttt{integer}, with the same sign as
-\texttt{integer}.\\
-\\
-If \texttt{integer} is too big to fit in a Fixnum, the returned result is probably not
-very useful. To find out if the value will fit, use the function
-\texttt{mpz\_fits\_slong\_p} (\textbf{Unimplemented}).\\
-\\
-\large{\textbf{integer.to\_s(base = 10) -> String}}\\
-Returns \texttt{integer}, as a Ruby string. If \texttt{base} is not provided, then the
-string will be the decimal representation.\\
-\\
-From the GMP Manual:\\
-\\
-Convert \texttt{integer} to a string of digits in base \texttt{base}. The \texttt{base}
-argument may vary from 2 to 62 or from -2 to -36.\\
-\\
-For \texttt{base} in the range 2..36, digits and lower-case letters are used; for
--2..-36, digits and upper-case letters are used; for 37..62, digits, upper-case letters,
-and lower-case letters (in that significance order) are used.\\
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{to\_d} & & \textit{integer}.to\_d $\rightarrow$ \textit{float} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns \textit{integer} as an Float if \textit{integer} fits in a Float.
+
+  Otherwise returns the least significant part of \texttt{integer}, with the same sign as
+  \textit{integer}.
+  
+  If \textit{integer} is too big to fit in a Float, the returned result is probably not
+  very useful. To find out if the value will fit, use the function
+  \textit{mpz\_fits\_slong\_p} (\textbf{Unimplemented}).
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{to\_i} & & \textit{integer}.to\_i $\rightarrow$ \textit{fixnum} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns \textit{integer} as a Fixnum if \textit{integer} fits in a Fixnum.
+  \newline
+  
+  Otherwise returns the least significant part of \textit{integer}, with the same sign as
+  \textit{integer}.
+  \newline
+  
+  If \textit{integer} is too big to fit in a Fixnum, the returned result is probably not
+  very useful. To find out if the value will fit, use the function
+  \textit{mpz\_fits\_slong\_p} (\textbf{Unimplemented}).
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{to\_s} & & \textit{integer}.to\_s(\textit{base = 10}) $\rightarrow$ \textit{str} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Converts \textit{integer} to a string of digits in base \textit{base}. The
+  \textit{base} argument may vary from 2 to 62 or from -2 to -36, or be a symbol, one of
+  \textit{:bin}, \textit{:oct}, \textit{:dec}, or \textit{:hex}.
+  \newline
+  
+  For \textit{base} in the range 2..36, digits and lower-case letters are used; for
+  -2..-36 (and \textit{:bin}, \textit{:oct}, \textit{:dec}, and \textit{:hex}), digits
+  and upper-case letters are used; for 37..62, digits, upper-case letters, and lower-case
+  letters (in that significance order) are used.
+}
+\end{tabular}
 
 \subsection{Integer Arithmetic}
 
-\large{\textbf{integer.add(b)}}\\
-\large{\textbf{integer + b}}\\
-\large{\textbf{integer.add!(b)}}\\
-Adds \texttt{integer} to \texttt{b}. \texttt{add} and \texttt{+} return the result.
-\texttt{add!} sets \texttt{integer} to the result. \texttt{b} can be a member of one of
-the following classes:
-\begin{verbatim}
-  GMP::Z
-  Fixnum
-  GMP::Q
-  GMP::F
-  Bignum
-\end{verbatim}
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{+} & & \textit{integer} + \textit{numeric} $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the sum of \textit{integer} and \textit{numeric}. \textit{numeric} can be a
+  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
+  \textit{Bignum}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{add} & & \textit{integer}.add(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the sum of \textit{integer} and \textit{numeric}. \textit{numeric} can be a
+  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
+  \textit{Bignum}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{add!} & & \textit{integer}.add!(\textit{numeric}) $\rightarrow$
+\textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Sums \textit{integer} and \textit{numeric}, in place. \textit{numeric} can be a
+  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
+  \textit{Bignum}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{-} & & \textit{integer} - \textit{numeric} $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the difference of \textit{integer} and \textit{numeric}. \textit{numeric} can be a
+  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
+  \textit{Bignum}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{sub} & & \textit{integer}.sub(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the difference of \textit{integer} and \textit{numeric}. \textit{numeric} can be a
+  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
+  \textit{Bignum}.
+}
+\end{tabular}
 
 \end{document}

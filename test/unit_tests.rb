@@ -108,4 +108,16 @@ class TC_division < Test::Unit::TestCase
     assert_equal(5, @a.fmod(@c), "GMP::Z.fmod should work.")
     assert_equal(0, @c.fmod(@a), "GMP::Z.fmod should work.")
   end
+  
+  def test_z_cmod
+    assert_equal(GMP::Z, @a.cmod(@b).class,    "GMP::Z.cmod GMP::Z should be GMP::Z.")
+    assert_equal(GMP::Z, @a.cmod(3).class,     "GMP::Z.cmod Fixnum should be GMP::Z.")
+    assert_equal(GMP::Z, @a.cmod(2**32).class, "GMP::Z.cmod Bignum should be GMP::Z.")
+    assert_equal(GMP::Z, @a.cmod(@c).class,    "GMP::Z.cmod GMP::Z should be GMP::Z.")
+    assert_equal( -2, @a.cmod(@b), "GMP::Z.cmod should work.")
+    assert_equal( -3, @b.cmod(@a), "GMP::Z.cmod should work.")
+    assert_equal( -1, @a.cmod( 3), "GMP::Z.cmod should work.")
+    assert_equal(-20, @a.cmod(@c), "GMP::Z.cmod should work.")
+    assert_equal(  0, @c.cmod(@a), "GMP::Z.cmod should work.")
+  end
 end
