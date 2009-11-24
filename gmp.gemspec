@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "gmp"
-  s.version = "0.1.8"
+  s.version = "0.1.9"
   s.authors = ["Tomasz Wegrzanowski", "srawlins"]
   s.date = "2009-10-20"
   s.description = "gmp - providing Ruby bindings to the GMP library."
@@ -24,5 +24,5 @@ Gem::Specification.new do |s|
               "test/tc_z_basic.rb", "test/tc_z_exponentiation.rb", "test/tc_z_logic.rb",
               "test/tc_z_shifts_last_bits.rb", "test/tc_z_to_d_to_i.rb",
               "test/tc_zerodivisionexceptions.rb", "test/test_helper.rb", "test/unit_tests.rb"]
-  s.files += ["CHANGELOG", "INSTALL", "README.rdoc", "manual.tex"]
+  s.files += ["CHANGELOG", "INSTALL", "README.rdoc", "manual.pdf", "manual.tex"]
 end

@@ -1,4 +1,7 @@
-0.18:
+0.1.9:
+  * Cleaning up more documentation in PDF format.
+
+0.1.8:
   * Added test: tc_division, in progress.
   * Unit test results: 56 tests, 361 assertions, 0 failures, 0 errors
   * Added to_f ==> to_d aliases for GMP::Q and GMP::F.

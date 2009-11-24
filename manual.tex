@@ -16,14 +16,16 @@
 \setlength{\defnwidth}{\textwidth}
 \addtolength{\defnwidth}{-1.2in}
 \addtolength{\heavyrulewidth}{\heavyrulewidth}
+\def\qquad{\quad\quad}
+\def\qqqquad{\quad\quad\quad\quad}
 \begin{document}
 
 \begin{tabular}{p{1.0in} p{\titrwidth}}
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.1.8}}\\
-\multicolumn{2}{r}{\large{24 October 2009}}
+\multicolumn{2}{r}{\large{Edition 0.1.9}}\\
+\multicolumn{2}{r}{\large{23 November 2009}}
 \end{tabular}
 
 \vfill
@@ -71,13 +73,17 @@ Some optimizations also for Cray vector systems, Clipper, IBM ROMP (RT), and
 Pyramid AP/XP.\\
 \\
 For up-to-date information on GMP, please see the GMP web pages at\\
+\setlength{\parindent}{0.25in}
+\texttt{http://gmplib.org/}
+\setlength{\parindent}{0in}
 \\
-\texttt{http://gmplib.org/}\\
 
 The latest version of the library is available at\\
-\\
+\setlength{\parindent}{0.25in}
 \texttt{ftp://ftp.gnu.org/gnu/gmp/}\\
+\setlength{\parindent}{0in}
 \\
+
 Many sites around the world mirror '\texttt{ftp.gnu.org}', please use a mirror
 near you, see \texttt{http://www.gnu.org/order/ftp.html} for a full list.\\
 \\
@@ -171,6 +177,7 @@ In addition to the above three classes, there is also one constant within \textt
   \item \texttt{GMP::GMP\_VERSION} - The version of GMP compiled into the gmp gem.
 \end{itemize}
 
+\newpage
 \section{Integer Functions}
 
 \subsection{Initializing, Assigning Integers}
@@ -186,11 +193,11 @@ In addition to the above three classes, there is also one constant within \textt
   the value of the integer. This argument can be one of several classes. Here are some
   examples:\newline
   
-  \texttt{GMP::Z.new                  \#=> 0           (default)}\newline
-  GMP::Z.new(1)               \#=> 1           (Ruby Fixnum)\newline
-  GMP::Z.new("127")           \#=> 127         (Ruby String)\newline
-  GMP::Z.new(4294967296)      \#=> 4294967296  (Ruby Bignum)\newline
-  GMP::Z.new(GMP::Z.new(31))  \#=> 31          (GMP Integer)
+  \texttt{GMP::Z.new \qqqquad\qqqquad \#=> 0 (default) \newline
+          GMP::Z.new(1) \qqqquad\qquad\  \#=> 1 (Ruby Fixnum) \newline
+          GMP::Z.new("127") \qqqquad\  \#=> 127 (Ruby String)\newline
+          GMP::Z.new(4294967296) \qquad \#=> 4294967296 (Ruby Bignum)\newline
+          GMP::Z.new(GMP::Z.new(31))  \#=> 31 (GMP Integer)}
 }
 \end{tabular}
 \newline\newline
@@ -248,7 +255,18 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   For \textit{base} in the range 2..36, digits and lower-case letters are used; for
   -2..-36 (and \textit{:bin}, \textit{:oct}, \textit{:dec}, and \textit{:hex}), digits
   and upper-case letters are used; for 37..62, digits, upper-case letters, and lower-case
-  letters (in that significance order) are used.
+  letters (in that significance order) are used. Here are some
+  examples:\newline
+  
+  \texttt{GMP::Z(1).to\_s \qqqquad \#=> "1" \newline
+          GMP::Z(32).to\_s(2) \qquad \#=> "100000" \newline
+          GMP::Z(32).to\_s(4) \qquad \#=> "200" \newline
+          GMP::Z(10).to\_s(16) \quad\  \#=> "a" \newline
+          GMP::Z(10).to\_s(-16) \quad \#=> "A" \newline
+          GMP::Z(255).to\_s(:bin) \#=> "11111111" \newline
+          GMP::Z(255).to\_s(:oct) \#=> "377" \newline
+          GMP::Z(255).to\_s(:dec) \#=> "255" \newline
+          GMP::Z(255).to\_s(:hex) \#=> "ff"}
 }
 \end{tabular}
 
@@ -294,23 +312,138 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \begin{tabular}{p{\methwidth} l r}
 \toprule
 \textbf{-} & & \textit{integer} - \textit{numeric} $\rightarrow$ \textit{numeric} \\
+& & \textit{integer}.sub(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+& & \textit{integer}.sub!(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the difference of \textit{integer} and \textit{numeric}. \textit{numeric} can be a
-  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
-  \textit{Bignum}.
+  Returns the difference of \textit{integer} and \textit{numeric}. The destructive method
+  calculates the difference in place. \textit{numeric} can be a member of
+  \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or \textit{Bignum}.
 }
 \end{tabular}
 \newline\newline
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{sub} & & \textit{integer}.sub(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+\textbf{*} & & \textit{integer} * \textit{numeric} $\rightarrow$ \textit{numeric} \\
+& & \textit{integer}.mul(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+& & \textit{integer}.mul!(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the difference of \textit{integer} and \textit{numeric}. \textit{numeric} can be a
-  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
-  \textit{Bignum}.
+  Returns the product of \textit{integer} and \textit{numeric}. The destructive method
+  calculates the product in place. \textit{numeric} can be a member of \textit{GMP::Z},
+  \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or \textit{Bignum}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{-@} & & -\textit{integer}\\
+& & \textit{integer}.neg\\
+& & \textit{integer}.neg!\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the negation, the additive inverse, of \textit{integer}. The destructive method
+  negates in place.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{abs} & & \textit{integer}.abs\\
+& & \textit{integer}.abs!\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the absolute value of \textit{integer}. The destructive method calculates the
+  absolute value in place.
+}
+\end{tabular}
+
+\subsection{Integer Division}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{tdiv} & & \textit{integer}.tdiv(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the division of \textit{integer} by \textit{numeric}, truncated.
+  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
+  The return object's class is always \textit{GMP::Z}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{fdiv} & & \textit{integer}.fdiv(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the division of \textit{integer} by \textit{numeric}, floored.
+  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
+  The return object's class is always \textit{GMP::Z}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{cdiv} & & \textit{integer}.cdiv(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the ceiling division of \textit{integer} by \textit{numeric}.
+  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
+  The return object's class is always \textit{GMP::Z}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{tmod} & & \textit{integer}.tmod(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the remainder after truncated division of \textit{integer} by \textit{numeric}.
+  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
+  The return object's class is always \textit{GMP::Z}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{fmod} & & \textit{integer}.fmod(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the remainder after floored division of \textit{integer} by \textit{numeric}.
+  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
+  The return object's class is always \textit{GMP::Z}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{cmod} & & \textit{integer}.cmod(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the remainder after ceilinged division of \textit{integer} by \textit{numeric}.
+  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
+  The return object's class is always \textit{GMP::Z}.
+}
+\end{tabular}
+
+\subsection{Integer Exponentiation}
+
+\subsection{Integer Roots}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{root} & & \textit{integer}.root(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the integer part of the \textit{numeric}'th root of \textit{integer}.
 }
 \end{tabular}
 
