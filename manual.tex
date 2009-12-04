@@ -319,6 +319,19 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   Returns the difference of \textit{integer} and \textit{numeric}. The destructive method
   calculates the difference in place. \textit{numeric} can be a member of
   \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or \textit{Bignum}.
+  Here are some examples:\newline
+  
+  \texttt{seven     = GMP::Z(7) \newline
+          nine \    = GMP::Z(9) \newline
+          half \    = GMP::Q(1,2) \newline
+          pi \quad\ = GMP::F("3.14") \newline
+          nine - 5 \qquad\quad \#=> 4 (GMP Integer) \newline
+          nine - seven \quad \#=> 2 (GMP Integer) \newline
+          nine - (2**32) \#=> -4294967287 (GMP Integer) \newline
+          nine - nine \quad\ \#=> 0 (GMP Integer) \newline
+          nine - half \quad\ \#=> 8.5 (GMP Rational) \newline
+          nine - pi \qquad\  \#=> 5.86 (GMP Float)}
+  
 }
 \end{tabular}
 \newline\newline
