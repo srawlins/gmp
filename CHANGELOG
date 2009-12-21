@@ -1,3 +1,7 @@
+0.2.1:
+  * Got GMP::F(Fixnum) working, (I think it already was).
+  * More and more documentation in PDF.
+
 0.1.9:
   * Cleaning up more documentation in PDF format.
 

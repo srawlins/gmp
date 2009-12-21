@@ -98,7 +98,7 @@ Constructors can take following arguments:
 You can also call them as:
         GMP.Z(args)
         GMP.Q(args)
-  todo  GMP.F(args)
+        GMP.F(args)
 
 =Methods
 
@@ -127,11 +127,11 @@ You can also call them as:
                              may have different precisions, which would make
                              them unswapable
   GMP::Z
-   .add!                     in-place addition
-   .sub!                     in-place subtraction
+    add!                     in-place addition
+    sub!                     in-place subtraction
     tdiv,fdiv,cdiv           truncate, floor and ceil division
     tmod,fmod,cmod           truncate, floor and ceil modulus
-   .[],[]=                   testing and setting bits (as booleans)
+    [],[]=                   testing and setting bits (as booleans)
     scan0,scan1              starting at bitnr (1st arg), scan for a 0 or 1
                              (respectively), then return the index of the
                              first instance.

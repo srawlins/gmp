@@ -24,8 +24,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.1.9}}\\
-\multicolumn{2}{r}{\large{23 November 2009}}
+\multicolumn{2}{r}{\large{Edition 0.2.1}}\\
+\multicolumn{2}{r}{\large{21 December 2009}}
 \end{tabular}
 
 \vfill
@@ -447,8 +447,6 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 }
 \end{tabular}
 
-\subsection{Integer Exponentiation}
-
 \subsection{Integer Roots}
 
 \begin{tabular}{p{\methwidth} l r}
@@ -457,6 +455,41 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the integer part of the \textit{numeric}'th root of \textit{integer}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{sqrt} & & \textit{integer}.sqrt $\rightarrow$ \textit{numeric} \\
+& & \textit{integer}.sqrt!(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the truncated integer part of the square root of \textit{integer}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{sqrtrem} & & \textit{integer}.sqrtrem $\rightarrow$ \textit{sqrt}, \textit{rem} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the truncated integer part of the square root of \textit{integer} as
+  \textit{sqrt} and the remainder, \textit{integer - sqrt * sqrt}, as \textit{rem}, which
+  will be zero if \textit{integer} is a perfect square.
+}
+\end{tabular}
+
+\subsection{Integer Exponentiation}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{**} & & \textit{integer} ** \textit{numeric} $\rightarrow$ \textit{numeric} \\
+& & \textit{integer}.pow(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns \textit{integer} raised to the \textit{numeric} power.
 }
 \end{tabular}
 
