@@ -18,6 +18,7 @@ require 'tc_z_shifts_last_bits'
 require 'tc_logical_roots'
 require 'tc_f_precision'
 require 'tc_f_arithmetics_coersion'
+require 'tc_z_jac_leg_rem'
 
 class TC_default_prec < Test::Unit::TestCase
   def test_default_prec
