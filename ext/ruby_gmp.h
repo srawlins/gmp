@@ -62,11 +62,12 @@ typedef __mpf_struct MP_FLOAT;
 #define mpf_temp_free(var) { mpf_clear(var); free(var); }
 #define prec_max(prec,var) {if(mpf_get_prec(var) > prec) prec = mpf_get_prec(var); }
 
-#define EXPECTED_ZQFXBD "Expected GMP::Z, GMP::Q, GMP::F, FixNum, BigNum or Float"
-#define EXPECTED_ZQFXB "Expected GMP::Z, GMP::Q, GMP::F, FixNum or BigNum"
-#define EXPECTED_ZXB "Expected GMP::Z, FixNum or BigNum"
-#define EXPECTED_ZX "Expected GMP::Z or FixNum"
-#define EXPECTED_X "Expected FixNum"
+#define EXPECTED_ZQFXBD "Expected GMP::Z, GMP::Q, GMP::F, Fixnum, Bignum or Float"
+#define EXPECTED_ZQFXB "Expected GMP::Z, GMP::Q, GMP::F, Fixnum or Bignum"
+#define EXPECTED_ZXB "Expected GMP::Z, Fixnum or Bignum"
+#define EXPECTED_ZX "Expected GMP::Z or Fixnum"
+#define EXPECTED_X "Expected Fixnum"
+#define EXPECTED_Z "Expected GMP::Z"
 #define typeerror(expected) rb_raise(rb_eTypeError, EXPECTED_##expected)
 #define typeerror_as(expected, argname) rb_raise(rb_eTypeError, EXPECTED_##expected " as " argname)
 
@@ -105,6 +106,9 @@ extern VALUE r_gmpz_mul(VALUE self, VALUE arg);
 extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
 
 // Number Theoretic Functions
+extern VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self);
+extern VALUE r_gmpz_jacobi(VALUE self, VALUE b);
+extern VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b);
 extern VALUE r_gmpz_remove(VALUE self, VALUE arg);
 
 // Integer Comparisons
@@ -114,9 +118,7 @@ extern VALUE r_gmpz_cmpabs(VALUE self, VALUE arg);
 
 // _unsorted_
 extern VALUE r_gmpz_div(VALUE self, VALUE arg);
-extern VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self);
 extern VALUE r_gmpz_popcount(VALUE self);
-extern VALUE r_gmpz_jacobi(VALUE self);
 extern VALUE r_gmpz_legendre(VALUE self);
 extern VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to);
 extern VALUE r_gmpz_getbit(VALUE self, VALUE bitnr);

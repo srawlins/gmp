@@ -352,6 +352,17 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
+\textbf{\textless\textless} & & \textit{integer} \textless\textless \textit{numeric} $\rightarrow$ \textit{integer} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns \textit{integer} times 2 to the \textit{numeric} power. This can also be
+  defined as a left shift by \textit{numeric} bits.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
 \textbf{-@} & & -\textit{integer}\\
 & & \textit{integer}.neg\\
 & & \textit{integer}.neg!\\
@@ -405,9 +416,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{cdiv} & & \textit{integer}.cdiv(\textit{numeric}) $\rightarrow$ \textit{integer}\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the ceiling division of \textit{integer} by \textit{numeric}.
-  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
-  The return object's class is always \textit{GMP::Z}.
+  Returns the ceiling division of $integer$ by $numeric$. $numeric$ can be a member of
+  $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always $GMP::Z$.
 }
 \end{tabular}
 \newline\newline
@@ -417,9 +427,9 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{tmod} & & \textit{integer}.tmod(\textit{numeric}) $\rightarrow$ \textit{integer}\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the remainder after truncated division of \textit{integer} by \textit{numeric}.
-  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
-  The return object's class is always \textit{GMP::Z}.
+  Returns the remainder after truncated division of $integer$ by $numeric$. $numeric$ can
+  be a member of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
+  $GMP::Z$.
 }
 \end{tabular}
 \newline\newline
@@ -429,9 +439,9 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{fmod} & & \textit{integer}.fmod(\textit{numeric}) $\rightarrow$ \textit{integer}\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the remainder after floored division of \textit{integer} by \textit{numeric}.
-  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
-  The return object's class is always \textit{GMP::Z}.
+  Returns the remainder after floored division of $integer$ by $numeric$. $numeric$ can
+  be a member of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
+  $GMP::Z$.
 }
 \end{tabular}
 \newline\newline
@@ -441,9 +451,9 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{cmod} & & \textit{integer}.cmod(\textit{numeric}) $\rightarrow$ \textit{integer}\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the remainder after ceilinged division of \textit{integer} by \textit{numeric}.
-  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
-  The return object's class is always \textit{GMP::Z}.
+  Returns the remainder after ceilinged division of $integer$ by $numeric$. $numeric$ can
+  be a member of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
+  $GMP::Z$.
 }
 \end{tabular}
 
@@ -454,7 +464,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{root} & & \textit{integer}.root(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the integer part of the \textit{numeric}'th root of \textit{integer}.
+  Returns the integer part of the $numeric$'th root of $integer$.
 }
 \end{tabular}
 \newline\newline
@@ -465,7 +475,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 & & \textit{integer}.sqrt!(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the truncated integer part of the square root of \textit{integer}.
+  Returns the truncated integer part of the square root of $integer$.
 }
 \end{tabular}
 \newline\newline
@@ -475,9 +485,35 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{sqrtrem} & & \textit{integer}.sqrtrem $\rightarrow$ \textit{sqrt}, \textit{rem} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the truncated integer part of the square root of \textit{integer} as
-  \textit{sqrt} and the remainder, \textit{integer - sqrt * sqrt}, as \textit{rem}, which
-  will be zero if \textit{integer} is a perfect square.
+  Returns the truncated integer part of the square root of $integer$ as $sqrt$ and the
+  remainder, $integer - sqrt * sqrt$, as $rem$, which will be zero if $integer$ is a
+  perfect square.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{power?} & & \textit{integer}.power? $\rightarrow$ \textit{true} \textbar\  \textit{false} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns true if $integer$ is a perfect power, i.e., if there exist integers $a$ and
+  $b$, with $b > 1$, such that $integer$ equals $a$ raised to the power $b$.
+  \newline\newline
+  Under this definition both 0 and 1 are considered to be perfect powers. Negative values
+  of integers are accepted, but of course can only be odd perfect powers.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{square?} & & \textit{integer}.square? $\rightarrow$ \textit{true} \textbar\  \textit{false} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns true if $integer$ is a perfect square, i.e., if the square root of
+  $integer$ is an integer. Under this definition both 0 and 1 are considered to be
+  perfect squares.
 }
 \end{tabular}
 
@@ -489,7 +525,68 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 & & \textit{integer}.pow(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns \textit{integer} raised to the \textit{numeric} power.
+  Returns $integer$ raised to the $numeric$ power.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{powmod} & & \textit{integer}.powmod(\textit{exp}, \textit{mod}) $\rightarrow$ \textit{integer} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns $integer$ raised to the $exp$ power, modulo $mod$. Negative $exp$ is supported
+  if an inverse, $integer^{-1}$ modulo $mod$, exists. If an inverse doesn't exist then a
+  divide by zero exception is raised.
+}
+\end{tabular}
+
+\subsection{Number Theoretic Functions}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{is\_probab\_prime?} & & $integer$.is\_probab\_prime?($reps = 5$) $\rightarrow$ 0, 1, or 2 \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Determine whether $integer$ is prime. Returns 2 if $integer$ is definitely prime,
+  returns 1 if $integer$ is probably prime (without being certain), or returns 0 if
+  $integer$ is definitely composite. 
+  \newline\newline
+  This function does some trial divisions, then some Miller-Rabin probabilistic primality
+  tests. $reps$ controls how many such tests are done, 5 to 10 is a reasonable number,
+  more will reduce the chances of a composite being returned as “probably prime”.
+  \newline\newline
+  Miller-Rabin and similar tests can be more properly called compositeness tests. Numbers
+  which fail are known to be composite but those which pass might be prime or might be
+  composite. Only a few composites pass, hence those which pass are considered probably
+  prime.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{nextprime} & & $integer$.nextprime $\rightarrow$ $prime$ \\
+& & $integer$.nextprime! $\rightarrow$ $prime$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the next prime greater than $integer$. The destructive method sets $integer$ to
+  the next prime greater than $integer$.
+  \newline\newline
+  This function uses a probabilistic algorithm to identify primes. For practical purposes
+  it's adequate, the chance of a composite passing will be extremely small.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{jacobi} & & $a$.jacobi($b$) $\rightarrow$ $integer$ \\
+& & GMP::Z.jacobi($a$, $b$) $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the Jacobi symbol $(a/b)$. This is defined only for $b$ odd. If $b$ is even, a
+  range exception will be raised.
 }
 \end{tabular}
 

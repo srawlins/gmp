@@ -642,6 +642,19 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: <<
+ *
+ * call-seq:
+ *   integer << n
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +integer+ times 2 raised to +n+. This operation can also be defined
+ * as a left shift by +n+ bits.
+ */
+DEFUN_INT_F_UL(shl,mpz_mul_2exp,"shift size")
+
+/*
  * Document-method: neg
  *
  * call-seq:
@@ -866,6 +879,90 @@ DEFUN_INT_DIV(cmod, mpz_cdiv_r)
  *    Integer Exponentiation                                          *
  **********************************************************************/
 
+/*
+ * Document-method: **
+ *
+ * call-seq:
+ *   integer ** exp
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +integer+ raised to +exp+. The case 0^0 yields 1.
+ */
+DEFUN_INT_F_UL(pow,mpz_pow_ui,"exponent")
+
+/*
+ * call-seq:
+ *   integer.powmod(exp, mod)
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +integer+ raised to +exp+ modulo +mod+.
+ *
+ * Negative +exp+ is supported if an inverse <tt>integer^-1</tt> mod
+ * <tt>mod</tt> exists. If an inverse doesn't exist then a divide by zero is
+ * raised.
+ */
+VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
+{
+  MP_INT *self_val, *res_val, *mod_val, *exp_val;
+  VALUE res;
+  int free_mod_val = 0;
+
+  if (GMPZ_P(mod)) {
+    mpz_get_struct(mod, mod_val);
+    if (mpz_sgn(mod_val) <= 0) {
+      rb_raise (rb_eRangeError, "modulus must be positive");
+    }
+  } else if (FIXNUM_P(mod)) {
+  if (FIX2INT(mod) <= 0) {
+    rb_raise (rb_eRangeError, "modulus must be positive");
+  }
+  mpz_temp_alloc (mod_val);
+  mpz_init_set_ui(mod_val, FIX2INT(mod));
+  free_mod_val = 1;
+  } else if (BIGNUM_P(mod)) {
+    mpz_temp_from_bignum (mod_val, mod);
+    if (mpz_sgn(mod_val) <= 0) {
+      mpz_temp_free(mod_val);
+      rb_raise (rb_eRangeError, "modulus must be positive");
+    }
+    free_mod_val = 1;
+  } else {
+    typeerror_as (ZXB, "modulus");
+  }
+  mpz_make_struct_init(res, res_val);
+  mpz_get_struct(self, self_val);
+
+  if (GMPZ_P(exp)) {
+    mpz_get_struct(exp, exp_val);
+    if (mpz_sgn(mod_val) < 0) {
+      rb_raise (rb_eRangeError, "exponent must be nonnegative");
+    }
+    mpz_powm (res_val, self_val, exp_val, mod_val);
+  } else if (FIXNUM_P(exp)) {
+    if (FIX2INT(exp) < 0)
+    {
+      if (free_mod_val)
+        mpz_temp_free(mod_val);
+      rb_raise (rb_eRangeError, "exponent must be nonnegative");
+    }
+    mpz_powm_ui (res_val, self_val, FIX2INT(exp), mod_val);
+  } else if (BIGNUM_P(exp)) {
+    mpz_temp_from_bignum (exp_val, exp);
+    mpz_powm (res_val, self_val, exp_val, mod_val);
+    mpz_temp_free (exp_val);
+  } else {
+    if (free_mod_val)
+      mpz_temp_free(mod_val);
+    typeerror_as (ZXB, "exponent");
+  }
+  if (free_mod_val)
+    mpz_temp_free(mod_val);
+  return res;
+}
+
+
 /**********************************************************************
  *    Integer Roots                                                   *
  **********************************************************************/
@@ -928,10 +1025,157 @@ static VALUE r_gmpz_sqrtrem(VALUE self)
   return rb_assoc_new(sqrt, rem);
 }
 
+/*
+ * Document-method: power?
+ *
+ * call-seq:
+ *   integer.square?
+ *
+ * From the GMP Manual:
+ * 
+ * Returns true if integer is a perfect power, i.e., if there exist integers a
+ * and b, with b>1, such that integer equals a raised to the power b.
+ *
+ * Under this definition both 0 and 1 are considered to be perfect powers.
+ * Negative values of integers are accepted, but of course can only be odd
+ * perfect powers.
+ */
+DEFUN_INT_COND_P(is_power,mpz_perfect_power_p)
+/*
+ * Document-method: square?
+ *
+ * call-seq:
+ *   integer.square?
+ *
+ * From the GMP Manual:
+ * 
+ * Returns true if integer is a perfect square, i.e., if the square root of
+ * integer is an integer. Under this definition both 0 and 1 are considered to
+ * be perfect squares.
+ */
+DEFUN_INT_COND_P(is_square,mpz_perfect_square_p)
+
 
 /**********************************************************************
  *    Number Theoretic Functions                                      *
  **********************************************************************/
+
+/*
+ * call-seq: probab_prime?([reps])
+ *
+ * Determine whether +n+ is prime. Returns 2 if +n+ is definitely prime,
+ * returns 1 if +n+ is probably prime (without being certain), or returns 0 if
+ * +n+ is definitely composite.
+ *
+ * This function does some trial divisions, then some Miller-Rabin
+ * probabilistic primality tests. +reps+ controls how many such tests are done,
+ * 5 to 10 is a reasonable number, more will reduce the chances of a composite
+ * being returned as “probably prime”.
+ *
+ * Miller-Rabin and similar tests can be more properly called compositeness
+ * tests. Numbers which fail are known to be composite but those which pass
+ * might be prime or might be composite. Only a few composites pass, hence
+ * those which pass are considered probably prime.
+ */
+VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
+{
+  MP_INT *self_val;
+  int reps_val;
+  VALUE reps;
+  mpz_get_struct(self, self_val);
+  rb_scan_args(argc, argv, "01", &reps);
+  if(NIL_P(reps)){
+    reps = INT2FIX(5);
+  }
+  if (FIXNUM_P(reps)) {
+    reps_val = FIX2INT (reps);
+  } else {
+    typeerror_as(X, "reps");
+  }
+  return INT2FIX(mpz_probab_prime_p(self_val, reps_val));
+}
+
+/*
+ * Document-method: nextprime
+ *
+ * call-seq:
+ *   integer.nextprime
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the next prime greater than +integer+.
+ *
+ * This function uses a probabilistic algorithm to identify primes. For
+ * practical purposes it's adequate, the chance of a composite passing will be
+ * extremely small.
+ */
+/*
+ * Document-method: nextprime!
+ *
+ * call-seq:
+ *   integer.nextprime!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +integer+ to the next prime greater than +integer+.
+ *
+ * This function uses a probabilistic algorithm to identify primes. For
+ * practical purposes it's adequate, the chance of a composite passing will be
+ * extremely small.
+ */
+DEFUN_INT2INT(nextprime, mpz_nextprime)
+
+/*
+ * Document-method: jacobi
+ *
+ * call-seq:
+ *   a.jacobi(b)
+ *
+ * From the GMP Manual:
+ * 
+ * Calculate the Jacobi symbol <tt>(a/b)</tt>. This is defined only for +b+
+ * odd and positive.
+ */
+VALUE r_gmpz_jacobi(VALUE self, VALUE b)
+{
+  MP_INT *self_val, *b_val;
+  int res_val;
+  mpz_get_struct(self, self_val);
+  mpz_get_struct(   b,    b_val);
+  if (mpz_sgn(b_val) != 1)
+    rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is non-positive.");
+  if (mpz_even_p(b_val))
+    rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is even.");
+  res_val = mpz_jacobi(self_val, b_val);
+  return INT2FIX(res_val);
+}
+
+/*
+ * Document-method: GMP::Z.jacobi
+ *
+ * call-seq:
+ *   GMP::Z.jacobi(a, b)
+ *
+ * From the GMP Manual:
+ * 
+ * Calculate the Jacobi symbol <tt>(a/b)</tt>. This is defined only for +b+
+ * odd and positive.
+ */
+VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
+{
+  MP_INT *a_val, *b_val;
+  int res_val;
+  (void)klass;
+  
+  mpz_get_struct(a, a_val);
+  mpz_get_struct(b, b_val);
+  if (mpz_sgn(b_val) != 1)
+    rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is non-positive.");
+  if (mpz_even_p(b_val))
+    rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is even.");
+  res_val = mpz_jacobi(a_val, b_val);
+  return INT2FIX(res_val);
+}
 
 /*
  * Document-method: remove
@@ -1190,110 +1434,6 @@ VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
   return INT2FIX(mpz_scan1(self_val, bitnr_val));
 }
 
-
-/**********************************************************************
- *    Integer Random Numbers                                          *
- **********************************************************************/
-
-/**********************************************************************
- *    Miscellaneous Integer Functions                                 *
- **********************************************************************/
-
-/**********************************************************************
- *    Integer Special Functions                                       *
- **********************************************************************/
-
-
-/**********************************************************************
- *    _unsorted_                                                      *
- **********************************************************************/
-
-/*
- * Document-method: com
- *
- * call-seq:
- *   integer.com
- *
- * From the GMP Manual:
- * 
- * Returns the one's complement of +integer+.
- */
-/*
- * Document-method: com!
- *
- * call-seq:
- *   integer.com!
- *
- * From the GMP Manual:
- * 
- * Sets +integer+ to its one's complement.
- */
-DEFUN_INT2INT(com, mpz_com)
-/*
- * Document-method: nextprime
- *
- * call-seq:
- *   integer.nextprime
- *
- * From the GMP Manual:
- * 
- * Returns the next prime greater than +integer+.
- *
- * This function uses a probabilistic algorithm to identify primes. For
- * practical purposes it's adequate, the chance of a composite passing will be
- * extremely small.
- */
-/*
- * Document-method: nextprime!
- *
- * call-seq:
- *   integer.nextprime!
- *
- * From the GMP Manual:
- * 
- * Sets +integer+ to the next prime greater than +integer+.
- *
- * This function uses a probabilistic algorithm to identify primes. For
- * practical purposes it's adequate, the chance of a composite passing will be
- * extremely small.
- */
-DEFUN_INT2INT(nextprime, mpz_nextprime)
-
-/*
- * call-seq: probab_prime?([reps])
- *
- * Determine whether +n+ is prime. Returns 2 if +n+ is definitely prime,
- * returns 1 if +n+ is probably prime (without being certain), or return 0 if
- * +n+ is definitely composite. 
- *
- * This function does some trial divisions, then some Miller-Rabin
- * probabilistic primality tests. +reps+ controls how many such tests are done,
- * 5 to 10 is a reasonable number, more will reduce the chances of a composite
- * being returned as “probably prime”.
- *
- * Miller-Rabin and similar tests can be more properly called compositeness
- * tests. Numbers which fail are known to be composite but those which pass
- * might be prime or might be composite. Only a few composites pass, hence
- * those which pass are considered probably prime. 
- */
-VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
-{
-  MP_INT *self_val;
-  int reps_val;
-  VALUE reps;
-  mpz_get_struct(self, self_val);
-  rb_scan_args(argc, argv, "01", &reps);
-  if(NIL_P(reps)){
-    reps = INT2FIX(5);
-  }
-  if (FIXNUM_P(reps)) {
-    reps_val = FIX2INT (reps);
-  } else {
-    typeerror_as(X, "reps");
-  }
-  return INT2FIX(mpz_probab_prime_p(self_val, reps_val));
-}
-
 /*
  * Document-method: popcount
  *
@@ -1312,60 +1452,6 @@ VALUE r_gmpz_popcount(VALUE self)
   MP_INT *self_val;
   mpz_get_struct(self, self_val);
   return INT2FIX(mpz_popcount(self_val));
-}
-
-/*
- * Document-method: jacobi
- *
- * call-seq:
- *   a.jacobi
- *
- * <b>90% sure this is incorrectly implemented. Todo.</b>
- *
- * From the GMP Manual:
- * 
- * Calculate the Jacobi symbol <tt>(a/b)</tt>. This is defined only for +b+
- * odd.
- */
-VALUE r_gmpz_jacobi(VALUE self)
-{
-  MP_INT *self_val, *res_val;
-  VALUE res;
-  mpz_get_struct(self, self_val);
-  if (mpz_sgn(self_val) != 1)
-    rb_raise(rb_eRangeError, "you can take jacobi symbol only of positive value");
-  if (mpz_even_p(self_val))
-    rb_raise(rb_eRangeError, "you can't take jacobi symbol of even value");
-  mpz_make_struct_init(res, res_val);
-  mpz_jacobi(res_val, self_val);
-  return res;
-}
-
-/*
- * Document-method: legendre
- *
- * call-seq:
- *   a.legendre
- *
- * <b>90% sure this is incorrectly implemented. Todo.</b>
- *
- * From the GMP Manual:
- * 
- * Calculate the Legendre symbol <tt>(a/p)</tt>. This is defined only for +p+
- * an odd positive prime, and for such +p+ it's identical to the Jacobi symbol. 
- */
-VALUE r_gmpz_legendre(VALUE self)
-{
-  MP_INT *self_val, *res_val;
-  VALUE res;
-  mpz_get_struct(self, self_val);
-  if (mpz_sgn(self_val) != 1)
-    rb_raise(rb_eRangeError, "you can take legendre symbol only of positive value");
-  if (mpz_even_p(self_val))
-    rb_raise(rb_eRangeError, "you can't take legendre symbol of even value");
-    mpz_make_struct_init(res, res_val);
-  mpz_legendre(res_val, self_val);
-  return res;
 }
 
 /*
@@ -1413,6 +1499,73 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
   return mpz_tstbit(self_val, bitnr_val)?Qtrue:Qfalse;
 }
 
+
+/**********************************************************************
+ *    Integer Random Numbers                                          *
+ **********************************************************************/
+
+/**********************************************************************
+ *    Miscellaneous Integer Functions                                 *
+ **********************************************************************/
+
+/**********************************************************************
+ *    Integer Special Functions                                       *
+ **********************************************************************/
+
+
+/**********************************************************************
+ *    _unsorted_                                                      *
+ **********************************************************************/
+
+/*
+ * Document-method: com
+ *
+ * call-seq:
+ *   integer.com
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the one's complement of +integer+.
+ */
+/*
+ * Document-method: com!
+ *
+ * call-seq:
+ *   integer.com!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +integer+ to its one's complement.
+ */
+DEFUN_INT2INT(com, mpz_com)
+
+/*
+ * Document-method: legendre
+ *
+ * call-seq:
+ *   a.legendre
+ *
+ * <b>90% sure this is incorrectly implemented. Todo.</b>
+ *
+ * From the GMP Manual:
+ * 
+ * Calculate the Legendre symbol <tt>(a/p)</tt>. This is defined only for +p+
+ * an odd positive prime, and for such +p+ it's identical to the Jacobi symbol. 
+ */
+VALUE r_gmpz_legendre(VALUE self)
+{
+  MP_INT *self_val, *res_val;
+  VALUE res;
+  mpz_get_struct(self, self_val);
+  if (mpz_sgn(self_val) != 1)
+    rb_raise(rb_eRangeError, "you can take legendre symbol only of positive value");
+  if (mpz_even_p(self_val))
+    rb_raise(rb_eRangeError, "you can't take legendre symbol of even value");
+    mpz_make_struct_init(res, res_val);
+  mpz_legendre(res_val, self_val);
+  return res;
+}
+
 /*
  * Document-method: even?
  *
@@ -1435,35 +1588,6 @@ DEFUN_INT_COND_P(is_even,mpz_even_p)
  * Determines whether integer is odd. Returns true or false.
  */
 DEFUN_INT_COND_P(is_odd,mpz_odd_p)
-/*
- * Document-method: square?
- *
- * call-seq:
- *   integer.square?
- *
- * From the GMP Manual:
- * 
- * Returns true if integer is a perfect square, i.e., if the square root of
- * integer is an integer. Under this definition both 0 and 1 are considered to
- * be perfect squares.
- */
-DEFUN_INT_COND_P(is_square,mpz_perfect_square_p)
-/*
- * Document-method: power?
- *
- * call-seq:
- *   integer.square?
- *
- * From the GMP Manual:
- * 
- * Returns true if integer is a perfect power, i.e., if there exist integers a
- * and b, with b>1, such that integer equals a raised to the power b.
- *
- * Under this definition both 0 and 1 are considered to be perfect powers.
- * Negative values of integers are accepted, but of course can only be odd
- * perfect powers.
- */
-DEFUN_INT_COND_P(is_power,mpz_perfect_power_p)
 
 /*
  * call-seq:
@@ -1480,100 +1604,6 @@ VALUE r_gmpz_sgn(VALUE self)
   return INT2FIX(mpz_sgn(self_val));
 }
 
-/*
- * call-seq:
- *   integer.powmod(exp, mod)
- *
- * From the GMP Manual:
- * 
- * Returns +integer+ raised to +exp+ modulo +mod+.
- *
- * Negative +exp+ is supported if an inverse <tt>integer^-1</tt> mod
- * <tt>mod</tt> exists. If an inverse doesn't exist then a divide by zero is
- * raised.
- */
-VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
-{
-  MP_INT *self_val, *res_val, *mod_val, *exp_val;
-  VALUE res;
-  int free_mod_val = 0;
-
-  if (GMPZ_P(mod)) {
-    mpz_get_struct(mod, mod_val);
-    if (mpz_sgn(mod_val) <= 0) {
-      rb_raise (rb_eRangeError, "modulus must be positive");
-    }
-  } else if (FIXNUM_P(mod)) {
-  if (FIX2INT(mod) <= 0) {
-    rb_raise (rb_eRangeError, "modulus must be positive");
-  }
-  mpz_temp_alloc (mod_val);
-  mpz_init_set_ui(mod_val, FIX2INT(mod));
-  free_mod_val = 1;
-  } else if (BIGNUM_P(mod)) {
-    mpz_temp_from_bignum (mod_val, mod);
-    if (mpz_sgn(mod_val) <= 0) {
-      mpz_temp_free(mod_val);
-      rb_raise (rb_eRangeError, "modulus must be positive");
-    }
-    free_mod_val = 1;
-  } else {
-    typeerror_as (ZXB, "modulus");
-  }
-  mpz_make_struct_init(res, res_val);
-  mpz_get_struct(self, self_val);
-
-  if (GMPZ_P(exp)) {
-    mpz_get_struct(exp, exp_val);
-    if (mpz_sgn(mod_val) < 0) {
-      rb_raise (rb_eRangeError, "exponent must be nonnegative");
-    }
-    mpz_powm (res_val, self_val, exp_val, mod_val);
-  } else if (FIXNUM_P(exp)) {
-    if (FIX2INT(exp) < 0)
-    {
-      if (free_mod_val)
-        mpz_temp_free(mod_val);
-      rb_raise (rb_eRangeError, "exponent must be nonnegative");
-    }
-    mpz_powm_ui (res_val, self_val, FIX2INT(exp), mod_val);
-  } else if (BIGNUM_P(exp)) {
-    mpz_temp_from_bignum (exp_val, exp);
-    mpz_powm (res_val, self_val, exp_val, mod_val);
-    mpz_temp_free (exp_val);
-  } else {
-    if (free_mod_val)
-      mpz_temp_free(mod_val);
-    typeerror_as (ZXB, "exponent");
-  }
-  if (free_mod_val)
-    mpz_temp_free(mod_val);
-  return res;
-}
-
-/*
- * Document-method: **
- *
- * call-seq:
- *   integer ** exp
- *
- * From the GMP Manual:
- * 
- * Returns +integer+ raised to +exp+. The case 0^0 yields 1.
- */
-DEFUN_INT_F_UL(pow,mpz_pow_ui,"exponent")
-/*
- * Document-method: <<
- *
- * call-seq:
- *   integer << n
- *
- * From the GMP Manual:
- * 
- * Returns +integer+ times 2 raised to +n+. This operation can also be defined
- * as a left shift by +n+ bits.
- */
-DEFUN_INT_F_UL(shl,mpz_mul_2exp,"shift size")
 DEFUN_INT_F_UL(fshr,mpz_fdiv_q_2exp,"shift size")
 DEFUN_INT_F_UL(tshr,mpz_tdiv_q_2exp,"shift size")
 DEFUN_INT_F_UL(fshrm,mpz_fdiv_r_2exp,"mark size")
@@ -1702,8 +1732,12 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "-", r_gmpz_sub, 1);  
   rb_define_method(cGMP_Z, "sub!", r_gmpz_sub_self, 1);
   rb_define_method(cGMP_Z, "*", r_gmpz_mul, 1);
+  rb_define_method(cGMP_Z, "<<",  r_gmpz_shl, 1);
   rb_define_method(cGMP_Z, "neg", r_gmpz_neg, 0);
   rb_define_method(cGMP_Z, "neg!", r_gmpz_neg_self, 0);
+  rb_define_method(cGMP_Z, "-@", r_gmpz_neg, 0);
+  rb_define_method(cGMP_Z, "abs", r_gmpz_abs, 0);
+  rb_define_method(cGMP_Z, "abs!", r_gmpz_abs_self, 0);
   
   // Integer Division
   rb_define_method(cGMP_Z, "/", r_gmpz_div, 1);
@@ -1716,11 +1750,23 @@ void init_gmpz()
   
   // Integer Exponentiation
   rb_define_singleton_method(cGMP_Z, "pow", r_gmpzsg_pow, 2);
+  rb_define_method(cGMP_Z, "**", r_gmpz_pow, 1);
+  rb_define_method(cGMP_Z, "powmod", r_gmpz_powm, 2);
 
   // Integer Roots
   rb_define_method(cGMP_Z, "root",  r_gmpz_root, 1);
+  rb_define_method(cGMP_Z, "sqrt",  r_gmpz_sqrt, 0);
+  rb_define_method(cGMP_Z, "sqrt!",  r_gmpz_sqrt_self, 0);
+  rb_define_method(cGMP_Z, "sqrtrem",  r_gmpz_sqrtrem, 0);
+  rb_define_method(cGMP_Z, "square?",  r_gmpz_is_square, 0);
+  rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power, 0);
   
   // Number Theoretic Functions
+  rb_define_method(cGMP_Z, "probab_prime?",  r_gmpz_is_probab_prime, -1);
+  rb_define_method(cGMP_Z, "nextprime",  r_gmpz_nextprime, 0);
+  rb_define_method(cGMP_Z, "nextprime!",  r_gmpz_nextprime_self, 0);
+  rb_define_method(cGMP_Z, "jacobi",  r_gmpz_jacobi, 1);
+  rb_define_singleton_method(cGMP_Z, "jacobi",  r_gmpzsg_jacobi, 2);
   rb_define_method(cGMP_Z, "remove",  r_gmpz_remove, 1);
   rb_define_singleton_method(cGMP_Z, "fac", r_gmpzsg_fac, 1);
   rb_define_singleton_method(cGMP_Z, "fib", r_gmpzsg_fib, 1);
@@ -1734,9 +1780,6 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "cmpabs",  r_gmpz_cmpabs, 1);
   
   // _unsorted_
-  rb_define_method(cGMP_Z, "-@", r_gmpz_neg, 0);
-  rb_define_method(cGMP_Z, "abs", r_gmpz_abs, 0);
-  rb_define_method(cGMP_Z, "abs!", r_gmpz_abs_self, 0);
   rb_define_method(cGMP_Z, "com", r_gmpz_com, 0);
   rb_define_method(cGMP_Z, "com!", r_gmpz_com_self, 0);
   rb_define_method(cGMP_Z, "&", r_gmpz_and, 1);
@@ -1750,25 +1793,12 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
   rb_define_method(cGMP_Z, "sgn", r_gmpz_sgn, 0);
   
-  rb_define_method(cGMP_Z, "**", r_gmpz_pow, 1);
-  rb_define_method(cGMP_Z, "powmod", r_gmpz_powm, 2);
-  
   rb_define_method(cGMP_Z, "==",  r_gmpz_eq, 1);
   rb_define_method(cGMP_Z, ">>",  r_gmpz_fshr, 1);
-  rb_define_method(cGMP_Z, "<<",  r_gmpz_shl, 1);
   rb_define_method(cGMP_Z, "tshr",  r_gmpz_tshr, 1);
   rb_define_method(cGMP_Z, "lastbits_sgn",  r_gmpz_tshrm, 1);
   rb_define_method(cGMP_Z, "lastbits_pos",  r_gmpz_fshrm, 1);
-  rb_define_method(cGMP_Z, "square?",  r_gmpz_is_square, 0);
-  rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power, 0);
-  rb_define_method(cGMP_Z, "sqrt",  r_gmpz_sqrt, 0);
-  rb_define_method(cGMP_Z, "sqrt!",  r_gmpz_sqrt_self, 0);
-  rb_define_method(cGMP_Z, "sqrtrem",  r_gmpz_sqrtrem, 0);
-  rb_define_method(cGMP_Z, "jacobi",  r_gmpz_jacobi, 0);
   rb_define_method(cGMP_Z, "legendre",  r_gmpz_legendre, 0);
-  rb_define_method(cGMP_Z, "probab_prime?",  r_gmpz_is_probab_prime, -1);
-  rb_define_method(cGMP_Z, "nextprime",  r_gmpz_nextprime, 0);
-  rb_define_method(cGMP_Z, "nextprime!",  r_gmpz_nextprime_self, 0);
   rb_define_method(cGMP_Z, "popcount",  r_gmpz_popcount, 0);
 
 }

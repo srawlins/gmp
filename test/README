@@ -29,6 +29,7 @@ Tests:
   21    mpfr - trigonometry
   22    mpfr - type tests
   23    mpfr - sqrt and power
+  24    jacobi, legendre, remove
 TODO:
   jacobi, legendre, remove
   gcd, lcm
