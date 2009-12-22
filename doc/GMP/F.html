@@ -1,0 +1,2528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Class: GMP::F</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (F)</a> &raquo; 
+    <a href="../GMP.html" title="GMP">GMP</a>
+     &raquo; 
+    <span class="title">F</span>
+  
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Namespace List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: GMP::F 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Numeric</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Numeric</li>
+          
+            <li class="next">GMP::F</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">ext/gmp.c<span class="defines">,<br />
+  ext/gmpf.c</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+GMP Multiple Precision floating point numbers.
+</p>
+<p>
+Instances of this class can store variables of the type mpf_t. This class
+also contains many methods that act as the functions for mpf_t variables,
+as well as a few methods that attempt to make this library more Ruby-ish.
+</p>
+<p>
+The following list is just a simple checklist for me, really. A better
+reference should be found in the rdocs.
+</p>
+<pre class="code">
+  <span class='Ruby constant id'>Ruby</span> <span class='method identifier id'>method</span>    <span class='C constant id'>C</span> <span class='Extension constant id'>Extension</span> <span class='function identifier id'>function</span>    <span class='GMP constant id'>GMP</span> <span class='function identifier id'>function</span>
+  <span class='to_d identifier id'>to_d</span>           <span class='r_gmpf_to_d identifier id'>r_gmpf_to_d</span>             <span class='mpf_get_d identifier id'>mpf_get_d</span>
+  <span class='to_s identifier id'>to_s</span>           <span class='r_gmpf_to_s identifier id'>r_gmpf_to_s</span>             <span class='mpf_get_s identifier id'>mpf_get_s</span>
+  <span class='plus op'>+</span>              <span class='r_gmpf_add identifier id'>r_gmpf_add</span>              <span class='mpf_add identifier id'>mpf_add</span>
+  <span class='minus op'>-</span>              <span class='r_gmpf_sub identifier id'>r_gmpf_sub</span>              <span class='mpf_sub identifier id'>mpf_sub</span>
+  <span class='mult op'>*</span>              <span class='r_gmpf_mul identifier id'>r_gmpf_mul</span>              <span class='mpf_mul identifier id'>mpf_mul</span>
+  <span class='regexp val'>/              r_gmpf_div              mpf_div
+</span></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+  
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_prec-class_method" title="default_prec (class method)">+ (Object) <strong>default_prec</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#default_prec%3D-class_method" title="default_prec= (class method)">+ (Object) <strong>default_prec=</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#GMP%3A%3AR.new-class_method" title="GMP::R.new (class method)">+ (Object) <strong>GMP::R.new</strong>(arg) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+Creates a new GMP::R float, with arg as its value, converting where
+necessary.
+
+</span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%2A-instance_method" title="#* (instance method)">- (Object) <strong>*</strong>(other) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+Returns the product of <tt>float</tt> and <tt>other</tt>.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%2A%2A-instance_method" title="#** (instance method)">- (Object) <strong>**</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%2B-instance_method" title="#+ (instance method)">- (Object) <strong>+</strong>(other) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+Returns the sum of <tt>float</tt> and <tt>other</tt>.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#--instance_method" title="#- (instance method)">- (Object) <strong>-</strong>(float2) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+Subtracts <tt>float2</tt> from <tt>float1</tt>.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#-%40-instance_method" title="#-@ (instance method)">- (Object) <strong>-@</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%2F-instance_method" title="#/ (instance method)">- (Object) <strong>/</strong>(float2) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+Divides <tt>float1</tt> by <tt>float2</tt>.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%3C-instance_method" title="#&lt; (instance method)">- (Object) <strong>&lt;</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%3C%3D-instance_method" title="#&lt;= (instance method)">- (Object) <strong>&lt;=</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%3C%3D%3E-instance_method" title="#&lt;=&gt; (instance method)">- (Object) <strong>&lt;=&gt;</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%3D%3D-instance_method" title="#== (instance method)">- (Object) <strong>==</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+what does really &quot;equal&quot; mean ? it&#8217;s not obvious.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%3E-instance_method" title="#&gt; (instance method)">- (Object) <strong>&gt;</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#%3E%3D-instance_method" title="#&gt;= (instance method)">- (Object) <strong>&gt;=</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#abs-instance_method" title="#abs (instance method)">- (Object) <strong>abs</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#abs%21-instance_method" title="#abs! (instance method)">- (Object) <strong>abs!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#acos-instance_method" title="#acos (instance method)">- (Object) <strong>acos</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#acosh-instance_method" title="#acosh (instance method)">- (Object) <strong>acosh</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#asin-instance_method" title="#asin (instance method)">- (Object) <strong>asin</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#asinh-instance_method" title="#asinh (instance method)">- (Object) <strong>asinh</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#atan-instance_method" title="#atan (instance method)">- (Object) <strong>atan</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#atanh-instance_method" title="#atanh (instance method)">- (Object) <strong>atanh</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ceil-instance_method" title="#ceil (instance method)">- (Object) <strong>ceil</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ceil%21-instance_method" title="#ceil! (instance method)">- (Object) <strong>ceil!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#cmpabs-instance_method" title="#cmpabs (instance method)">- (Object) <strong>cmpabs</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#coerce-instance_method" title="#coerce (instance method)">- (Object) <strong>coerce</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#cos-instance_method" title="#cos (instance method)">- (Object) <strong>cos</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#cosh-instance_method" title="#cosh (instance method)">- (Object) <strong>cosh</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#exp-instance_method" title="#exp (instance method)">- (Object) <strong>exp</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#expm1-instance_method" title="#expm1 (instance method)">- (Object) <strong>expm1</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#finite%3F-instance_method" title="#finite? (instance method)">- (Boolean) <strong>finite?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#floor-instance_method" title="#floor (instance method)">- (Object) <strong>floor</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#floor%21-instance_method" title="#floor! (instance method)">- (Object) <strong>floor!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#infinite%3F-instance_method" title="#infinite? (instance method)">- (Boolean) <strong>infinite?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Object) <strong>initialize</strong> </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#log-instance_method" title="#log (instance method)">- (Object) <strong>log</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#log10-instance_method" title="#log10 (instance method)">- (Object) <strong>log10</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#log1p-instance_method" title="#log1p (instance method)">- (Object) <strong>log1p</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#log2-instance_method" title="#log2 (instance method)">- (Object) <strong>log2</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#nan%3F-instance_method" title="#nan? (instance method)">- (Boolean) <strong>nan?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#neg%21-instance_method" title="#neg! (instance method)">- (Object) <strong>neg!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#number%3F-instance_method" title="#number? (instance method)">- (Boolean) <strong>number?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#prec-instance_method" title="#prec (instance method)">- (Object) <strong>prec</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sgn-instance_method" title="#sgn (instance method)">- (Object) <strong>sgn</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+From the GMP Manual:.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sin-instance_method" title="#sin (instance method)">- (Object) <strong>sin</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sinh-instance_method" title="#sinh (instance method)">- (Object) <strong>sinh</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sqrt-instance_method" title="#sqrt (instance method)">- (Object) <strong>sqrt</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tan-instance_method" title="#tan (instance method)">- (Object) <strong>tan</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#tanh-instance_method" title="#tanh (instance method)">- (Object) <strong>tanh</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_d-instance_method" title="#to_d (instance method)">- (Object) <strong>to_d</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+*********************************************************************.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_s-instance_method" title="#to_s (instance method)">- (Object) <strong>to_s</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+call-seq:.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#trunc-instance_method" title="#trunc (instance method)">- (Object) <strong>trunc</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#trunc%21-instance_method" title="#trunc! (instance method)">- (Object) <strong>trunc!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+  </ul>
+
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt>Object</tt>) <strong>initialize</strong> 
+  
+
+  
+</p>
+</div>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="default_prec-class_method">
+  
+    + (<tt>Object</tt>) <strong>default_prec</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="default_prec=-class_method">
+  
+    + (<tt>Object</tt>) <strong>default_prec=</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="new-class_method">
+  
+    + (<tt>Object</tt>) <strong>GMP::R.new</strong>(arg) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Creates a new GMP::R float, with arg as its value, converting where
+necessary.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/*
+ * call-seq:
+ *   GMP::R.new(arg)
+ *
+ * Creates a new GMP::R float, with arg as its value, converting where
+ * necessary.
+ */
+VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
+{
+  MP_FLOAT *res_val;
+  VALUE res;
+
+  (void)klass;
+
+  if (argc &gt; 2)
+    rb_raise(rb_eArgError, &quot;wrong # of arguments(%d for 0, 1 or 2)&quot;, argc);
+
+  mpf_make_struct (res, res_val);
+  rb_obj_call_init(res, argc, argv);
+
+  return res;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="*-instance_method">
+  
+    - (<tt>Object</tt>) <strong>*</strong>(other) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the product of <tt>float</tt> and <tt>other</tt>. <tt>other</tt>
+can be
+</p>
+<ul>
+<li>GMP::Z
+
+</li>
+<li>Fixnum
+
+</li>
+<li>GMP::Q
+
+</li>
+<li>GMP::F
+
+</li>
+<li>Bignum
+
+</li>
+<li>Float
+
+</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/*
+ * call-seq:
+ *   float * other
+ *
+ * Returns the product of +float+ and +other+. +other+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ * * Float
+ */
+VALUE r_gmpf_mul(VALUE self, VALUE arg)
+{
+  MP_FLOAT *self_val, *res_val, *arg_val_f;
+  MP_RAT *arg_val_q;
+  MP_INT *arg_val_z;
+  VALUE res;
+  unsigned long prec;
+
+  mpf_get_struct_prec (self, self_val, prec);
+
+  if (GMPF_P(arg)) {
+    mpf_get_struct(arg, arg_val_f);
+    prec_max(prec, arg_val_f);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_mul(res_val, self_val, arg_val_f);
+  } else if (GMPQ_P(arg)) {
+    mpq_get_struct(arg, arg_val_q);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_q(res_val, arg_val_q);
+    mpf_mul(res_val, self_val, res_val);
+  } else if (GMPZ_P(arg)) {
+    mpz_get_struct(arg, arg_val_z);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_z(res_val, arg_val_z);
+    mpf_mul(res_val, self_val, res_val);
+  } else if (FLOAT_P(arg)) {
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_d(res_val, NUM2DBL(arg));
+    mpf_mul(res_val, self_val, res_val);
+  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_si(res_val, FIX2INT(arg));
+    mpf_mul(res_val, self_val, res_val);
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum(arg_val_z, arg);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_z(res_val, arg_val_z);
+    mpf_mul(res_val, res_val, self_val);
+    mpz_temp_free(arg_val_z);
+  } else {
+    typeerror(ZQFXBD);
+  }
+
+  return res;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="**-instance_method">
+  
+    - (<tt>Object</tt>) <strong>**</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="+-instance_method">
+  
+    - (<tt>Object</tt>) <strong>+</strong>(other) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the sum of <tt>float</tt> and <tt>other</tt>. <tt>other</tt> can be
+</p>
+<ul>
+<li>GMP::Z
+
+</li>
+<li>Fixnum
+
+</li>
+<li>GMP::Q
+
+</li>
+<li>GMP::F
+
+</li>
+<li>Bignum
+
+</li>
+<li>Float
+
+</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/*
+ * call-seq:
+ *   float + other
+ *
+ * Returns the sum of +float+ and +other+. +other+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ * * Float
+ */
+VALUE r_gmpf_add(VALUE self, VALUE arg)
+{
+  MP_FLOAT *self_val, *res_val, *arg_val_f;
+  MP_RAT *arg_val_q;
+  MP_INT *arg_val_z;
+  VALUE res;
+  unsigned long prec;
+
+  mpf_get_struct_prec (self, self_val, prec);
+
+  if (GMPF_P(arg)) {
+    mpf_get_struct (arg, arg_val_f);
+    prec_max(prec, arg_val_f);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_add(res_val, self_val, arg_val_f);
+  } else if (GMPQ_P(arg)) {
+    mpq_get_struct (arg, arg_val_q);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_q (res_val, arg_val_q);
+    mpf_add (res_val, res_val, self_val);
+  } else if (GMPZ_P(arg)) {
+    mpz_get_struct (arg, arg_val_z);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_z (res_val, arg_val_z);
+    mpf_add (res_val, res_val, self_val);
+  } else if (FLOAT_P(arg)) {
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_d (res_val, NUM2DBL(arg));
+    mpf_add (res_val, res_val, self_val);
+  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_si (res_val, FIX2INT(arg));
+    mpf_add (res_val, res_val, self_val);
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum(arg_val_z, arg);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_z (res_val, arg_val_z);
+    mpf_add (res_val, res_val, self_val);
+    mpz_temp_free(arg_val_z);
+  } else {
+    typeerror(ZQFXBD);
+  }
+
+  return res;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="--instance_method">
+  
+    - (<tt>Object</tt>) <strong>-</strong>(float2) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Subtracts <tt>float2</tt> from <tt>float1</tt>. <tt>float2</tt> can be
+</p>
+<ul>
+<li>GMP::Z
+
+</li>
+<li>Fixnum
+
+</li>
+<li>GMP::Q
+
+</li>
+<li>GMP::F
+
+</li>
+<li>Bignum
+
+</li>
+<li>Float
+
+</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/*
+ * call-seq:
+ *   float1 - float2
+ *
+ * Subtracts +float2+ from +float1+. +float2+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ * * Float
+ */
+VALUE r_gmpf_sub(VALUE self, VALUE arg)
+{
+  MP_FLOAT *self_val, *res_val, *arg_val_f;
+  MP_RAT *arg_val_q;
+  MP_INT *arg_val_z;
+  VALUE res;
+  unsigned long prec;
+
+  mpf_get_struct_prec (self, self_val, prec);
+
+  if (GMPF_P(arg)) {
+    mpf_get_struct(arg, arg_val_f);
+    prec_max(prec, arg_val_f);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_sub(res_val, self_val, arg_val_f);
+  } else if (GMPQ_P(arg)) {
+    mpq_get_struct(arg, arg_val_q);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_q(res_val, arg_val_q);
+    mpf_sub(res_val, self_val, res_val);
+  } else if (GMPZ_P(arg)) {
+    mpz_get_struct(arg, arg_val_z);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_z(res_val, arg_val_z);
+    mpf_sub(res_val, self_val, res_val);
+  } else if (FLOAT_P(arg)) {
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_d(res_val, NUM2DBL(arg));
+    mpf_sub(res_val, self_val, res_val);
+  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_si(res_val, FIX2INT(arg));
+    mpf_sub(res_val, self_val, res_val);
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum(arg_val_z, arg);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_z(res_val, arg_val_z);
+    mpf_sub(res_val, self_val, res_val);
+    mpz_temp_free(arg_val_z);
+  } else {
+    typeerror(ZQFXBD);
+  }
+
+  return res;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="-@-instance_method">
+  
+    - (<tt>Object</tt>) <strong>-@</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="/-instance_method">
+  
+    - (<tt>Object</tt>) <strong>/</strong>(float2) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Divides <tt>float1</tt> by <tt>float2</tt>. <tt>float2</tt> can be
+</p>
+<ul>
+<li>GMP::Z
+
+</li>
+<li>Fixnum
+
+</li>
+<li>GMP::Q
+
+</li>
+<li>GMP::F
+
+</li>
+<li>Bignum
+
+</li>
+<li>Float
+
+</li>
+</ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/*
+ * call-seq:
+ *   float1 / float2
+ *
+ * Divides +float1+ by +float2+. +float2+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ * * Float
+ */
+VALUE r_gmpf_div(VALUE self, VALUE arg)
+{
+  MP_FLOAT *self_val, *res_val, *arg_val_f;
+  MP_RAT *arg_val_q;
+  MP_INT *arg_val_z;
+  VALUE res;
+  unsigned long prec;
+
+  mpf_get_struct_prec (self, self_val, prec);
+
+  if (GMPF_P(arg)) {
+    mpf_get_struct(arg, arg_val_f);
+    prec_max(prec, arg_val_f);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_div(res_val, self_val, arg_val_f);
+  } else if (GMPQ_P(arg)) {
+    mpq_get_struct(arg, arg_val_q);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_q(res_val, arg_val_q);
+    mpf_div(res_val, self_val, res_val);
+  } else if (GMPZ_P(arg)) {
+    mpz_get_struct(arg, arg_val_z);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_z(res_val, arg_val_z);
+    mpf_div(res_val, self_val, res_val);
+  } else if (FLOAT_P(arg)) {
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_d(res_val, NUM2DBL(arg));
+    mpf_div(res_val, self_val, res_val);
+  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_si(res_val, FIX2INT(arg));
+    mpf_div(res_val, self_val, res_val);
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum(arg_val_z, arg);
+    mpf_make_struct_init(res, res_val, prec);
+    mpf_set_z(res_val, arg_val_z);
+    mpf_div(res_val, self_val, res_val);    
+    mpz_temp_free(arg_val_z);
+  } else {
+    typeerror(ZQFXBD);
+  }
+
+  return res;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="<-instance_method">
+  
+    - (<tt>Object</tt>) <strong>&lt;</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="<=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>&lt;=</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="<=>-instance_method">
+  
+    - (<tt>Object</tt>) <strong>&lt;=&gt;</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="==-instance_method">
+  
+    - (<tt>Object</tt>) <strong>==</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+what does really &quot;equal&quot; mean ? it&#8217;s not obvious
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/* what does really &quot;equal&quot; mean ? it's not obvious */
+VALUE r_gmpf_eq(VALUE self, VALUE arg)
+{
+  MP_FLOAT *self_val;
+  mpf_get_struct (self,self_val);
+  return (mpf_cmp_value(self_val, arg) == 0) ? Qtrue : Qfalse;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id=">-instance_method">
+  
+    - (<tt>Object</tt>) <strong>&gt;</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id=">=-instance_method">
+  
+    - (<tt>Object</tt>) <strong>&gt;=</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="abs-instance_method">
+  
+    - (<tt>Object</tt>) <strong>abs</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="abs!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>abs!</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="acos-instance_method">
+  
+    - (<tt>Object</tt>) <strong>acos</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="acosh-instance_method">
+  
+    - (<tt>Object</tt>) <strong>acosh</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="asin-instance_method">
+  
+    - (<tt>Object</tt>) <strong>asin</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="asinh-instance_method">
+  
+    - (<tt>Object</tt>) <strong>asinh</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="atan-instance_method">
+  
+    - (<tt>Object</tt>) <strong>atan</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="atanh-instance_method">
+  
+    - (<tt>Object</tt>) <strong>atanh</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="ceil-instance_method">
+  
+    - (<tt>Object</tt>) <strong>ceil</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="ceil!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>ceil!</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="cmpabs-instance_method">
+  
+    - (<tt>Object</tt>) <strong>cmpabs</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="coerce-instance_method">
+  
+    - (<tt>Object</tt>) <strong>coerce</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="cos-instance_method">
+  
+    - (<tt>Object</tt>) <strong>cos</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="cosh-instance_method">
+  
+    - (<tt>Object</tt>) <strong>cosh</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="exp-instance_method">
+  
+    - (<tt>Object</tt>) <strong>exp</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="expm1-instance_method">
+  
+    - (<tt>Object</tt>) <strong>expm1</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="finite?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>finite?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="floor-instance_method">
+  
+    - (<tt>Object</tt>) <strong>floor</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="floor!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>floor!</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="infinite?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>infinite?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="log-instance_method">
+  
+    - (<tt>Object</tt>) <strong>log</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="log10-instance_method">
+  
+    - (<tt>Object</tt>) <strong>log10</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="log1p-instance_method">
+  
+    - (<tt>Object</tt>) <strong>log1p</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="log2-instance_method">
+  
+    - (<tt>Object</tt>) <strong>log2</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="nan?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>nan?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="neg!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>neg!</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="number?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>number?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="prec-instance_method">
+  
+    - (<tt>Object</tt>) <strong>prec</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="sgn-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sgn</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+From the GMP Manual:
+</p>
+<p>
+Returns <tt>1 if </tt>float+ &gt; 0, 0 if <tt>float</tt> == 0, and -1 if
+<tt>float</tt> &lt; 0.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/*
+ * call-seq:
+ *   float.sgn
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +1 if +float+ &gt; 0, 0 if +float+ == 0, and -1 if +float+ &lt; 0.
+ */
+VALUE r_gmpf_sgn(VALUE self)
+{
+  MP_FLOAT *self_val;
+  mpf_get_struct(self, self_val);
+  return INT2FIX(mpf_sgn(self_val));
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="sin-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sin</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="sinh-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sinh</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="sqrt-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sqrt</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="tan-instance_method">
+  
+    - (<tt>Object</tt>) <strong>tan</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="tanh-instance_method">
+  
+    - (<tt>Object</tt>) <strong>tanh</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="to_d-instance_method">
+  
+    - (<tt>Object</tt>) <strong>to_d</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+*********************************************************************
+</p>
+<pre class="code">
+    <span class='Converting constant id'>Converting</span> <span class='Floats constant id'>Floats</span>                                               <span class='mult op'>*</span>
+</pre>
+<p>
+********************************************************************
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/**********************************************************************
+ *    Converting Floats                                               *
+ **********************************************************************/
+
+VALUE r_gmpf_to_d(VALUE self)
+{
+  MP_FLOAT *self_val;
+  mpf_get_struct(self, self_val);
+
+  return rb_float_new(mpf_get_d(self_val));
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="to_s-instance_method">
+  
+    - (<tt>Object</tt>) <strong>to_s</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+call-seq:
+</p>
+<pre class="code">
+  <span class='float identifier id'>float</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+</pre>
+<p>
+Returns the decimal representation of <tt>float</tt>, as a string.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/*
+ * Document-method: to_s
+ *
+ * call-seq:
+ *   float.to_s
+ *
+ * Returns the decimal representation of +float+, as a string.
+ */
+VALUE r_gmpf_to_s(VALUE self)
+{
+  MP_FLOAT *self_val;
+  char *str, *str2;
+  VALUE res;
+  mp_exp_t exponent;
+
+  mpf_get_struct(self, self_val);
+
+  str = mpf_get_str(NULL, &amp;exponent, 10, 0, self_val);
+  if ((strcmp(str,  &quot;NaN&quot;) == 0) ||
+      (strcmp(str,  &quot;Inf&quot;) == 0) ||
+      (strcmp(str, &quot;-Inf&quot;) == 0))
+  {
+    res = rb_str_new2(str);
+  }
+  else
+  {
+    if (str[0] == '-')
+      __gmp_asprintf(&amp;str2, &quot;-0.%se%+ld&quot;, str+1, exponent);
+    else
+      __gmp_asprintf(&amp;str2, &quot;0.%se%+ld&quot;, str, exponent);
+    res = rb_str_new2(str2);
+    free(str2);
+  }
+  free(str);
+  return res;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="trunc-instance_method">
+  
+    - (<tt>Object</tt>) <strong>trunc</strong> 
+  
+
+  
+</p>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="trunc!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>trunc!</strong> 
+  
+
+  
+</p>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on 12/22/09 14:40:07 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.2 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Module: GMP</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (G)</a> &raquo; 
+    
+    
+    <span class="title">GMP</span>
+  
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Namespace List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: GMP 
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">ext/gmp.c<span class="defines">,<br />
+  ext/gmpf.c,<br /> ext/gmpq.c,<br /> ext/gmpz.c</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+call-seq:
+</p>
+<pre class="code">
+  <span class='int1 identifier id'>int1</span> <span class='geq op'>&gt;=</span> <span class='int2 identifier id'>int2</span>
+</pre>
+<p>
+Returns whether <tt>int1</tt> is greater than or equal to <tt>int2</tt>.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+   
+    
+   
+    
+      <strong class="classes">Classes:</strong> <a href="GMP/F.html" title="F">F</a>, <a href="GMP/Q.html" title="Q">Q</a>, <a href="GMP/Z.html" title="Z">Z</a>
+    
+  
+</p>
+
+
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#GMP%3A%3AF-class_method" title="GMP::F (class method)">+ (Object) <strong>GMP::F</strong>(arg) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+A convenience method for <tt>GMP::F.new(arg)</tt>.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#GMP%3A%3AQ-class_method" title="GMP::Q (class method)">+ (Object) <strong>GMP::Q</strong>(arg) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+A convenience method for <tt>GMP::Q.new(arg)</tt>.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#GMP%3A%3AZ-class_method" title="GMP::Z (class method)">+ (Object) <strong>GMP::Z</strong>(arg) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+A convenience method for <tt>GMP::Z.new(arg)</tt>.
+
+</span>
+  
+</li>
+
+    
+  </ul>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="F-class_method">
+  
+    + (<tt>Object</tt>) <strong>GMP::F</strong>(arg) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A convenience method for <tt>GMP::F.new(arg)</tt>.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpf.c'</span>
+
+/*
+ * call-seq:
+ *   GMP::F(arg)
+ *
+ * A convenience method for +GMP::F.new(arg)+.
+ */
+VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
+{
+  (void)module;
+  return r_gmpfsg_new(argc, argv, cGMP_F);
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="Q-class_method">
+  
+    + (<tt>Object</tt>) <strong>GMP::Q</strong>(arg) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A convenience method for <tt>GMP::Q.new(arg)</tt>.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpq.c'</span>
+
+/*
+ * call-seq:
+ *   GMP::Q(arg)
+ *
+ * A convenience method for +GMP::Q.new(arg)+.
+ */
+VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
+{
+  (void)module;
+  return r_gmpqsg_new(argc, argv, cGMP_Q);
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="Z-class_method">
+  
+    + (<tt>Object</tt>) <strong>GMP::Z</strong>(arg) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A convenience method for <tt>GMP::Z.new(arg)</tt>.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmpz.c'</span>
+
+/*
+ * call-seq:
+ *   GMP::Z(arg)
+ *
+ * A convenience method for +GMP::Z.new(arg)+.
+ */
+VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module)
+{
+  (void)module;
+  return r_gmpzsg_new(argc, argv, cGMP_Z);
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on 12/22/09 14:40:08 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.2 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

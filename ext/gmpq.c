@@ -21,6 +21,11 @@
  *   sub          r_gmpq_sub            mpq_sub
  *   mul          r_gmpq_mul            mpq_mul
  *   div          r_gmpq_div            mpq_div
+ *   -@           r_gmpq_neg            mpq_neg
+ *   neg          r_gmpq_neg            mpq_neg
+ *   neg!         r_gmpq_neg_self       mpq_neg
+ *   abs          r_gmpq_abs            mpq_abs
+ *   abs!         r_gmpq_abs_self       mpq_abs
  */
 
 /**********************************************************************

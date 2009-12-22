@@ -6,6 +6,7 @@ class TC_Z_Jacobi_Legendre_Remove < Test::Unit::TestCase
     @two         = GMP::Z(2)
     @three       = GMP::Z(3)
     @four        = GMP::Z(4)
+    @five        = GMP::Z(5)
     @nine        = GMP::Z(9)
     @forty_five  = GMP::Z(45)
     @neg_one     = GMP::Z(-1)
@@ -59,5 +60,14 @@ class TC_Z_Jacobi_Legendre_Remove < Test::Unit::TestCase
     assert_raise(RangeError) { @one.legendre(@neg_one) }
     assert_raise(RangeError) { @one.legendre(@four) }
     assert_raise(RangeError) { @one.legendre(@nine) }
+  end
+  
+  def test_remove
+    assert_equal(@nine, @forty_five.remove(5)[0],      "GMP::Z should remove(GMP::Z) correctly.")
+    assert_equal(@nine, @forty_five.remove(@five)[0],  "GMP::Z should remove(GMP::Z) correctly.")
+    assert_equal(@five, @forty_five.remove(@three)[0], "GMP::Z should remove(GMP::Z) correctly.")
+    assert_equal(1, @forty_five.remove(5)[1],      "GMP::Z should remove(GMP::Z) correctly.")
+    assert_equal(1, @forty_five.remove(@five)[1],  "GMP::Z should remove(GMP::Z) correctly.")
+    assert_equal(2, @forty_five.remove(@three)[1], "GMP::Z should remove(GMP::Z) correctly.")
   end
 end

@@ -26,7 +26,7 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.2.1}}\\
+\multicolumn{2}{r}{\large{Edition 0.2.2}}\\
 \multicolumn{2}{r}{\large{21 December 2009}}
 \end{tabular}
 
@@ -168,9 +168,9 @@ The gmp gem includes the namespace \texttt{GMP} and three classes within \texttt
 \begin{itemize}
   \item \texttt{GMP::Z} - Methods for signed integer arithmetic. There are at least 45
     methods here (still accounting).
-  \item \texttt{GMP::Q} - Methods for rational number arithmetic. There are at least 6
+  \item \texttt{GMP::Q} - Methods for rational number arithmetic. There are at least 11
     methods here (still accounting).
-  \item \texttt{GMP::F} - Methods for floating-point arithmetic. There are at least 0
+  \item \texttt{GMP::F} - Methods for floating-point arithmetic. There are at least 6
     methods here (still accounting).
 \end{itemize}
 
@@ -553,9 +553,9 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{next_prime} & & $integer$.next_prime $\rightarrow$ $prime$ \\
+\textbf{next\_prime} & & $integer$.next\_prime $\rightarrow$ $prime$ \\
 & & $integer$.nextprime $\rightarrow$ $prime$ \\
-& & $integer$.next_prime! $\rightarrow$ $prime$ \\
+& & $integer$.next\_prime! $\rightarrow$ $prime$ \\
 & & $integer$.nextprime! $\rightarrow$ $prime$ \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
@@ -592,6 +592,18 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the Legendre symbol $(a/b)$. This is defined only for $p$ an odd positive
   prime. If $p$ is even, negative, or composite, a range exception will be raised.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{remove} & & $n$.remove($factor$) $\rightarrow$ ($integer$, $times$) \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Remove all occurrences of the factor $factor$ from $n$. $factor$ can be an instance of
+  $GMP::Z$, $Fixnum$, or $Bignum$. $integer$ is the resulting integer, an instance of
+  $GMP::Z$. $times$ is how many times $factor$ was removed, a $Fixnum$.
 }
 \end{tabular}
 

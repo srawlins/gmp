@@ -10,6 +10,17 @@
  * Instances of this class can store variables of the type mpf_t. This class
  * also contains many methods that act as the functions for mpf_t variables,
  * as well as a few methods that attempt to make this library more Ruby-ish.
+ *
+ * The following list is just a simple checklist for me, really. A better
+ * reference should be found in the rdocs.
+ *
+ *   Ruby method    C Extension function    GMP function
+ *   to_d           r_gmpf_to_d             mpf_get_d
+ *   to_s           r_gmpf_to_s             mpf_get_s
+ *   +              r_gmpf_add              mpf_add
+ *   -              r_gmpf_sub              mpf_sub
+ *   *              r_gmpf_mul              mpf_mul
+ *   /              r_gmpf_div              mpf_div
  */
 
 /**********************************************************************
@@ -379,33 +390,33 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
   mpf_get_struct_prec (self, self_val, prec);
 
   if (GMPF_P(arg)) {
-    mpf_get_struct (arg, arg_val_f);
+    mpf_get_struct(arg, arg_val_f);
     prec_max(prec, arg_val_f);
     mpf_make_struct_init(res, res_val, prec);
     mpf_div(res_val, self_val, arg_val_f);
   } else if (GMPQ_P(arg)) {
-    mpq_get_struct (arg, arg_val_q);
+    mpq_get_struct(arg, arg_val_q);
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_q (res_val, arg_val_q);
-    mpf_div (res_val, self_val, res_val);
+    mpf_set_q(res_val, arg_val_q);
+    mpf_div(res_val, self_val, res_val);
   } else if (GMPZ_P(arg)) {
-    mpz_get_struct (arg, arg_val_z);
+    mpz_get_struct(arg, arg_val_z);
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_z (res_val, arg_val_z);
-    mpf_div (res_val, self_val, res_val);
+    mpf_set_z(res_val, arg_val_z);
+    mpf_div(res_val, self_val, res_val);
   } else if (FLOAT_P(arg)) {
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_d (res_val, NUM2DBL(arg));
-    mpf_div (res_val, self_val, res_val);
+    mpf_set_d(res_val, NUM2DBL(arg));
+    mpf_div(res_val, self_val, res_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_si (res_val, FIX2INT(arg));
-    mpf_div (res_val, self_val, res_val);
+    mpf_set_si(res_val, FIX2INT(arg));
+    mpf_div(res_val, self_val, res_val);
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val_z, arg);
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_z (res_val, arg_val_z);
-    mpf_div (res_val, self_val, res_val);	
+    mpf_set_z(res_val, arg_val_z);
+    mpf_div(res_val, self_val, res_val);	
     mpz_temp_free(arg_val_z);
   } else {
     typeerror(ZQFXBD);

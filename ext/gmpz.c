@@ -1039,7 +1039,7 @@ static VALUE r_gmpz_sqrtrem(VALUE self)
  * Document-method: power?
  *
  * call-seq:
- *   integer.square?
+ *   integer.power?
  *
  * From the GMP Manual:
  * 
@@ -1071,7 +1071,7 @@ DEFUN_INT_COND_P(is_square,mpz_perfect_square_p)
  **********************************************************************/
 
 /*
- * call-seq: probab_prime?([reps])
+ * call-seq: probab_prime?(reps = 5)
  *
  * Determine whether +n+ is prime. Returns 2 if +n+ is definitely prime,
  * returns 1 if +n+ is probably prime (without being certain), or returns 0 if
@@ -1080,7 +1080,7 @@ DEFUN_INT_COND_P(is_square,mpz_perfect_square_p)
  * This function does some trial divisions, then some Miller-Rabin
  * probabilistic primality tests. +reps+ controls how many such tests are done,
  * 5 to 10 is a reasonable number, more will reduce the chances of a composite
- * being returned as “probably prime”.
+ * being returned as "probably prime".
  *
  * Miller-Rabin and similar tests can be more properly called compositeness
  * tests. Numbers which fail are known to be composite but those which pass
@@ -1271,9 +1271,10 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
 {
   MP_INT *self_val, *arg_val, *res_val;
   VALUE res;
+  int   removed_val;
   int free_arg_val = 0;
 
-  mpz_get_struct(self,self_val);
+  mpz_get_struct(self, self_val);
 
   if (GMPZ_P(arg)) {
     mpz_get_struct(arg,arg_val);
@@ -1287,20 +1288,20 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val, arg);
     if (mpz_sgn(arg_val) != 1) {
-      mpz_temp_free (arg_val);
+      mpz_temp_free(arg_val);
       rb_raise(rb_eRangeError, "argument must be positive");
     }
   } else {
     typeerror(ZXB);
   }
 
-  mpz_make_struct_init (res, res_val);
-  mpz_remove (res_val, self_val, arg_val);
+  mpz_make_struct_init(res, res_val);
+  removed_val = mpz_remove(res_val, self_val, arg_val);
 
   if (free_arg_val)
     mpz_temp_free(arg_val);
 
-  return res;
+  return rb_assoc_new(res, INT2FIX(removed_val));
 }
 
 /*

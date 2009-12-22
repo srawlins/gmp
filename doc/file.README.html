@@ -1,0 +1,404 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>File: README</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html" title="Index">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Namespace List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><div id='filecontents'><h1>gmp</h1>
+<p>
+gmp is library providing Ruby bindings to GMP library. Here is the
+introduction paragraph at http://gmplib.org/#WHAT :
+</p>
+<ul>
+<li>&quot;GMP is a free library for arbitrary precision arithmetic, operating
+on signed integers, rational numbers, and floating point numbers. There is
+no practical limit to the precision except the ones implied by the
+available memory in the machine GMP runs on. GMP has a rich set of
+functions, and the functions have a regular interface.
+
+</li>
+<li>The main target applications for GMP are cryptography applications and
+research, Internet security applications, algebra systems, computational
+algebra research, etc.
+
+</li>
+<li>GMP is carefully designed to be as fast as possible, both for small
+operands and for huge operands. The speed is achieved by using fullwords as
+the basic arithmetic type, by using fast algorithms, with highly optimised
+assembly code for the most common inner loops for a lot of CPUs, and by a
+general emphasis on speed.
+
+</li>
+<li>GMP is faster than any other bignum library. The advantage for GMP
+increases with the operand sizes for many operations, since GMP uses
+asymptotically faster algorithms.
+
+</li>
+<li>The first GMP release was made in 1991. It is continually developed and
+maintained, with a new release about once a year.
+
+</li>
+<li>GMP is distributed under the GNU LGPL. This license makes the library free
+to use, share, and improve, and allows you to pass on the result. The
+license gives freedoms, but also sets firm restrictions on the use with
+non-free programs.
+
+</li>
+<li>GMP is part of the GNU project. For more information about the GNU project,
+please see the official GNU web site.
+
+</li>
+<li>GMP&#8217;s main target platforms are Unix-type systems, such as GNU/Linux,
+Solaris, HP-UX, Mac OS X/Darwin, BSD, AIX, etc. It also is known to work on
+Windoze in 32-bit mode.
+
+</li>
+<li>GMP is brought to you by a team listed in the manual.
+
+</li>
+<li>GMP is carefully developed and maintained, both technically and legally. We
+of course inspect and test contributed code carefully, but equally
+importantly we make sure we have the legal right to distribute the
+contributions, meaning users can safely use GMP. To achieve this, we will
+ask contributors to sign paperwork where they allow us to distribute their
+work.&quot;
+
+</li>
+</ul>
+<p>
+Only GMP 4 or newer is supported. The following environments have been
+tested by me:
+</p>
+<pre class="code">
+  <span class='gmp identifier id'>gmp</span> <span class='gem identifier id'>gem</span> <span class='integer val'>0</span><span class='float val'>.2.2</span> <span class='on identifier id'>on</span><span class='colon op'>:</span>
+  <span class='lt op'>&lt;</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='lt op'>&lt;</span><span class='regexp val'>/tt&gt;-------------------&lt;tt&gt;-----------&lt;/</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span>
+  <span class='bitor op'>|</span>    <span class='Platform constant id'>Platform</span>                         <span class='bitor op'>|</span>       <span class='Ruby constant id'>Ruby</span>        <span class='bitor op'>|</span>    <span class='GMP constant id'>GMP</span>    <span class='bitor op'>|</span>
+  <span class='lt op'>&lt;</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='lt op'>&lt;</span><span class='regexp val'>/tt&gt;-------------------&lt;tt&gt;-----------&lt;/</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span>
+  <span class='bitor op'>|</span> <span class='Cygwin constant id'>Cygwin</span> <span class='on identifier id'>on</span> <span class='x86 identifier id'>x86</span>                       <span class='bitor op'>|</span> <span class='lparen token'>(</span><span class='MRI constant id'>MRI</span><span class='rparen token'>)</span> <span class='Ruby constant id'>Ruby</span> <span class='float val'>1.8</span><span class='integer val'>.7</span>  <span class='bitor op'>|</span> <span class='GMP constant id'>GMP</span> <span class='float val'>4.3</span><span class='integer val'>.1</span> <span class='bitor op'>|</span>
+  <span class='bitor op'>|</span> <span class='Linux constant id'>Linux</span> <span class='lparen token'>(</span><span class='LinuxMint constant id'>LinuxMint</span> <span class='integer val'>7</span><span class='rparen token'>)</span> <span class='on identifier id'>on</span> <span class='x86 identifier id'>x86</span> <span class='lparen token'>(</span><span class='integer val'>32</span><span class='minus op'>-</span><span class='bit identifier id'>bit</span><span class='rparen token'>)</span> <span class='bitor op'>|</span> <span class='lparen token'>(</span><span class='MRI constant id'>MRI</span><span class='rparen token'>)</span> <span class='Ruby constant id'>Ruby</span> <span class='float val'>1.8</span><span class='integer val'>.7</span>  <span class='bitor op'>|</span> <span class='GMP constant id'>GMP</span> <span class='float val'>4.3</span><span class='integer val'>.1</span> <span class='bitor op'>|</span>
+  <span class='bitor op'>|</span> <span class='Mac constant id'>Mac</span> <span class='OS constant id'>OS</span> <span class='X constant id'>X</span> <span class='float val'>10.5</span><span class='integer val'>.7</span> <span class='on identifier id'>on</span> <span class='x86 identifier id'>x86</span> <span class='lparen token'>(</span><span class='integer val'>32</span><span class='minus op'>-</span><span class='bit identifier id'>bit</span><span class='rparen token'>)</span>     <span class='bitor op'>|</span> <span class='lparen token'>(</span><span class='MRI constant id'>MRI</span><span class='rparen token'>)</span> <span class='Ruby constant id'>Ruby</span> <span class='float val'>1.8</span><span class='integer val'>.6</span>  <span class='bitor op'>|</span> <span class='GMP constant id'>GMP</span> <span class='float val'>4.3</span><span class='integer val'>.1</span> <span class='bitor op'>|</span>
+  <span class='bitor op'>|</span> <span class='Mac constant id'>Mac</span> <span class='OS constant id'>OS</span> <span class='X constant id'>X</span> <span class='float val'>10.5</span><span class='integer val'>.7</span> <span class='on identifier id'>on</span> <span class='x86 identifier id'>x86</span> <span class='lparen token'>(</span><span class='integer val'>32</span><span class='minus op'>-</span><span class='bit identifier id'>bit</span><span class='rparen token'>)</span>     <span class='bitor op'>|</span> <span class='lparen token'>(</span><span class='MRI constant id'>MRI</span><span class='rparen token'>)</span> <span class='Ruby constant id'>Ruby</span> <span class='float val'>1.9</span><span class='integer val'>.1</span>  <span class='bitor op'>|</span> <span class='GMP constant id'>GMP</span> <span class='float val'>4.3</span><span class='integer val'>.1</span> <span class='bitor op'>|</span>
+  <span class='lt op'>&lt;</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='lt op'>&lt;</span><span class='regexp val'>/tt&gt;-------------------&lt;tt&gt;-----------&lt;/</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span>
+</pre>
+<p>
+<b>Note:</b> To get this running on Mac OS X (32-bit), I compiled GMP 4.3.1
+with:
+</p>
+<pre class="code">
+  <span class='dot token'>.</span><span class='div op'>/</span><span class='configure identifier id'>configure</span> <span class='ABI constant id'>ABI</span><span class='assign token'>=</span><span class='integer val'>32</span> <span class='minus op'>-</span><span class='minus op'>-</span><span class='disable identifier id'>disable</span><span class='minus op'>-</span><span class='dependency identifier id'>dependency</span><span class='minus op'>-</span><span class='tracking identifier id'>tracking</span>
+</pre>
+<h1>Authors</h1>
+<ul>
+<li>Tomasz Wegrzanowski
+
+</li>
+<li>srawlins
+
+</li>
+</ul>
+<h1>Classes</h1>
+<p>
+It provides module GMP with following classes:
+</p>
+<ul>
+<li>GMP::Z - infinite precision integer numbers
+
+</li>
+<li>GMP::Q - infinite precision rational numbers
+
+</li>
+<li>GMP::F - arbitrary precision floating point numbers
+
+</li>
+</ul>
+<p>
+Numbers are created by using new(). Constructors can take following
+arguments:
+</p>
+<pre class="code">
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Fixnum constant id'>Fixnum</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Bignum constant id'>Bignum</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='String constant id'>String</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='String constant id'>String</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='any identifier id'>any</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span> <span class='initializer identifier id'>initializer</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='any identifier id'>any</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span> <span class='initializer identifier id'>initializer</span><span class='comma token'>,</span> <span class='any identifier id'>any</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span> <span class='initializer identifier id'>initializer</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span><span class='comma token'>,</span> <span class='precision identifier id'>precision</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span><span class='comma token'>,</span> <span class='precision identifier id'>precision</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='comma token'>,</span> <span class='precision identifier id'>precision</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='String constant id'>String</span><span class='comma token'>,</span> <span class='precision identifier id'>precision</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Fixnum constant id'>Fixnum</span><span class='comma token'>,</span> <span class='precision identifier id'>precision</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Bignum constant id'>Bignum</span><span class='comma token'>,</span> <span class='precision identifier id'>precision</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Float constant id'>Float</span><span class='comma token'>,</span>  <span class='precision identifier id'>precision</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='rparen token'>)</span>
+</pre>
+<p>
+You can also call them as:
+</p>
+<pre class="code">
+  <span class='GMP constant id'>GMP</span><span class='dot token'>.</span><span class='Z constant id'>Z</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='dot token'>.</span><span class='Q constant id'>Q</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='dot token'>.</span><span class='F constant id'>F</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+</pre>
+<h1>Methods</h1>
+<pre class="code">
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span><span class='comma token'>,</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span> <span class='and and kw'>and</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span>
+    <span class='plus op'>+</span>                        <span class='addition identifier id'>addition</span>
+    <span class='minus op'>-</span>                        <span class='substraction identifier id'>substraction</span>
+    <span class='mult op'>*</span>                        <span class='multiplication identifier id'>multiplication</span>
+    <span class='to_s identifier id'>to_s</span>                     <span class='convert identifier id'>convert</span> <span class='to identifier id'>to</span> <span class='string identifier id'>string</span><span class='dot token'>.</span> <span class='For constant id'>For</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span><span class='comma token'>,</span> <span class='this identifier id'>this</span> <span class='method identifier id'>method</span> <span class='takes identifier id'>takes</span>
+                             <span class='one identifier id'>one</span> <span class='optional identifier id'>optional</span> <span class='argument identifier id'>argument</span><span class='comma token'>,</span> <span class='a identifier id'>a</span> <span class='base identifier id'>base</span><span class='dot token'>.</span> <span class='The constant id'>The</span> <span class='base identifier id'>base</span> <span class='can identifier id'>can</span> <span class='be identifier id'>be</span> <span class='a identifier id'>a</span>
+                             <span class='Fixnum constant id'>Fixnum</span> <span class='in in kw'>in</span> <span class='the identifier id'>the</span> <span class='ranges identifier id'>ranges</span> <span class='lbrack token'>[</span><span class='integer val'>2</span><span class='comma token'>,</span> <span class='integer val'>62</span><span class='rbrack token'>]</span> <span class='or or kw'>or</span> <span class='lbrack token'>[</span><span class='integer val'>-36</span><span class='comma token'>,</span> <span class='integer val'>-2</span><span class='rbrack token'>]</span> <span class='or or kw'>or</span> <span class='a identifier id'>a</span>
+                             <span class='Symbol constant id'>Symbol</span><span class='colon op'>:</span> <span class='symbol val'>:bin</span><span class='comma token'>,</span> <span class='symbol val'>:oct</span><span class='comma token'>,</span> <span class='symbol val'>:dec</span><span class='comma token'>,</span> <span class='or or kw'>or</span> <span class='symbol val'>:hex</span><span class='dot token'>.</span>
+    <span class='minus op'>-</span>@                       <span class='negation identifier id'>negation</span>
+    <span class='neg! fid id'>neg!</span>                     <span class='in in kw'>in</span><span class='minus op'>-</span><span class='place identifier id'>place</span> <span class='negation identifier id'>negation</span>
+    <span class='abs identifier id'>abs</span>                      <span class='absolute identifier id'>absolute</span> <span class='value identifier id'>value</span>
+    <span class='asb! fid id'>asb!</span>                     <span class='in in kw'>in</span><span class='minus op'>-</span><span class='place identifier id'>place</span> <span class='absolute identifier id'>absolute</span> <span class='value identifier id'>value</span>
+    <span class='coerce identifier id'>coerce</span>                   <span class='promotion identifier id'>promotion</span> <span class='of identifier id'>of</span> <span class='arguments identifier id'>arguments</span>
+    <span class='eq op'>==</span>                       <span class='equality identifier id'>equality</span> <span class='test identifier id'>test</span>
+    <span class='cmp op'>&lt;=&gt;</span><span class='comma token'>,</span><span class='geq op'>&gt;=</span><span class='comma token'>,</span><span class='gt op'>&gt;</span><span class='comma token'>,</span><span class='leq op'>&lt;=</span><span class='comma token'>,</span><span class='lt op'>&lt;</span>            <span class='comparisions identifier id'>comparisions</span>
+  <span class='class class kw'>class</span> <span class='methods identifier id'>methods</span> <span class='of identifier id'>of</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span>
+    <span class='fac identifier id'>fac</span><span class='lparen token'>(</span><span class='n identifier id'>n</span><span class='rparen token'>)</span>                   <span class='factorial identifier id'>factorial</span> <span class='of identifier id'>of</span> <span class='n identifier id'>n</span>
+    <span class='fib identifier id'>fib</span><span class='lparen token'>(</span><span class='n identifier id'>n</span><span class='rparen token'>)</span>                   <span class='nth identifier id'>nth</span> <span class='fibonacci identifier id'>fibonacci</span> <span class='number identifier id'>number</span>
+    <span class='pow identifier id'>pow</span><span class='lparen token'>(</span><span class='n identifier id'>n</span><span class='comma token'>,</span><span class='m identifier id'>m</span><span class='rparen token'>)</span>                 <span class='n identifier id'>n</span> <span class='to identifier id'>to</span> <span class='mth identifier id'>mth</span> <span class='power identifier id'>power</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span> <span class='and and kw'>and</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span>
+    <span class='swap identifier id'>swap</span>                     <span class='efficiently identifier id'>efficiently</span> <span class='swap identifier id'>swap</span> <span class='contents identifier id'>contents</span> <span class='of identifier id'>of</span> <span class='two identifier id'>two</span> <span class='objects identifier id'>objects</span><span class='comma token'>,</span> <span class='there identifier id'>there</span>
+                             <span class='is identifier id'>is</span> <span class='no identifier id'>no</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='swap identifier id'>swap</span> <span class='because identifier id'>because</span> <span class='various identifier id'>various</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span> <span class='objects identifier id'>objects</span>
+                             <span class='may identifier id'>may</span> <span class='have identifier id'>have</span> <span class='different identifier id'>different</span> <span class='precisions identifier id'>precisions</span><span class='comma token'>,</span> <span class='which identifier id'>which</span> <span class='would identifier id'>would</span> <span class='make identifier id'>make</span>
+                             <span class='them identifier id'>them</span> <span class='unswapable identifier id'>unswapable</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span>
+    <span class='add! fid id'>add!</span>                     <span class='in in kw'>in</span><span class='minus op'>-</span><span class='place identifier id'>place</span> <span class='addition identifier id'>addition</span>
+    <span class='sub! fid id'>sub!</span>                     <span class='in in kw'>in</span><span class='minus op'>-</span><span class='place identifier id'>place</span> <span class='subtraction identifier id'>subtraction</span>
+    <span class='tdiv identifier id'>tdiv</span><span class='comma token'>,</span><span class='fdiv identifier id'>fdiv</span><span class='comma token'>,</span><span class='cdiv identifier id'>cdiv</span>           <span class='truncate identifier id'>truncate</span><span class='comma token'>,</span> <span class='floor identifier id'>floor</span> <span class='and and kw'>and</span> <span class='ceil identifier id'>ceil</span> <span class='division identifier id'>division</span>
+    <span class='tmod identifier id'>tmod</span><span class='comma token'>,</span><span class='fmod identifier id'>fmod</span><span class='comma token'>,</span><span class='cmod identifier id'>cmod</span>           <span class='truncate identifier id'>truncate</span><span class='comma token'>,</span> <span class='floor identifier id'>floor</span> <span class='and and kw'>and</span> <span class='ceil identifier id'>ceil</span> <span class='modulus identifier id'>modulus</span>
+    <span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='assign token'>=</span>                   <span class='testing identifier id'>testing</span> <span class='and and kw'>and</span> <span class='setting identifier id'>setting</span> <span class='bits identifier id'>bits</span> <span class='lparen token'>(</span><span class='as identifier id'>as</span> <span class='booleans identifier id'>booleans</span><span class='rparen token'>)</span>
+    <span class='scan0 identifier id'>scan0</span><span class='comma token'>,</span><span class='scan1 identifier id'>scan1</span>              <span class='starting identifier id'>starting</span> <span class='at identifier id'>at</span> <span class='bitnr identifier id'>bitnr</span> <span class='lparen token'>(</span><span class='integer val'>1</span><span class='st identifier id'>st</span> <span class='arg identifier id'>arg</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='scan identifier id'>scan</span> <span class='for for kw'>for</span> <span class='a identifier id'>a</span> <span class='integer val'>0</span> <span class='or or kw'>or</span> <span class='integer val'>1</span>
+                             <span class='lparen token'>(</span><span class='respectively identifier id'>respectively</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='then then kw'>then</span> <span class='return return kw'>return</span> <span class='the identifier id'>the</span> <span class='index identifier id'>index</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span>
+                             <span class='first identifier id'>first</span> <span class='instance identifier id'>instance</span><span class='dot token'>.</span>
+    <span class='com identifier id'>com</span>                      <span class='integer val'>2</span><span class='string val'>'s complement
+    com!                     in-place 2'</span><span class='s identifier id'>s</span> <span class='complement identifier id'>complement</span>
+    <span class='bitand op'>&amp;</span><span class='comma token'>,</span><span class='bitor op'>|</span><span class='comma token'>,</span><span class='bitxor op'>^</span>                    <span class='logical identifier id'>logical</span> <span class='operations identifier id'>operations</span><span class='colon op'>:</span> <span class='and and kw'>and</span><span class='comma token'>,</span> <span class='or or kw'>or</span><span class='comma token'>,</span> <span class='xor identifier id'>xor</span>
+    <span class='pow op'>**</span>                       <span class='power identifier id'>power</span>
+    <span class='powmod identifier id'>powmod</span>                   <span class='power identifier id'>power</span> <span class='modulo identifier id'>modulo</span>
+    <span class='even? fid id'>even?</span>                    <span class='is identifier id'>is</span> <span class='even identifier id'>even</span>
+    <span class='odd? fid id'>odd?</span>                     <span class='is identifier id'>is</span> <span class='odd identifier id'>odd</span>
+    <span class='lshft op'>&lt;&lt;</span>                       <span class='shift identifier id'>shift</span> <span class='left identifier id'>left</span>
+    <span class='rshft op'>&gt;&gt;</span>                       <span class='shift identifier id'>shift</span> <span class='right identifier id'>right</span><span class='comma token'>,</span> <span class='floor identifier id'>floor</span>
+    <span class='tshr identifier id'>tshr</span>                     <span class='shift identifier id'>shift</span> <span class='right identifier id'>right</span><span class='comma token'>,</span> <span class='truncate identifier id'>truncate</span>
+    <span class='lastbits_pos identifier id'>lastbits_pos</span><span class='lparen token'>(</span><span class='n identifier id'>n</span><span class='rparen token'>)</span>          <span class='last identifier id'>last</span> <span class='n identifier id'>n</span> <span class='bits identifier id'>bits</span> <span class='of identifier id'>of</span> <span class='object identifier id'>object</span><span class='comma token'>,</span> <span class='modulo identifier id'>modulo</span> <span class='if if_mod kw'>if</span> <span class='negative identifier id'>negative</span>
+    <span class='lastbits_sgn identifier id'>lastbits_sgn</span><span class='lparen token'>(</span><span class='n identifier id'>n</span><span class='rparen token'>)</span>          <span class='last identifier id'>last</span> <span class='n identifier id'>n</span> <span class='bits identifier id'>bits</span> <span class='of identifier id'>of</span> <span class='object identifier id'>object</span><span class='comma token'>,</span> <span class='preserve identifier id'>preserve</span> <span class='sign identifier id'>sign</span>
+    <span class='power? fid id'>power?</span>                   <span class='is identifier id'>is</span> <span class='perfect identifier id'>perfect</span> <span class='power identifier id'>power</span>
+    <span class='square? fid id'>square?</span>                  <span class='is identifier id'>is</span> <span class='perfect identifier id'>perfect</span> <span class='square identifier id'>square</span>
+    <span class='sqrt identifier id'>sqrt</span>                     <span class='square identifier id'>square</span> <span class='root identifier id'>root</span>
+    <span class='sqrt! fid id'>sqrt!</span>                    <span class='change identifier id'>change</span> <span class='the identifier id'>the</span> <span class='object identifier id'>object</span> <span class='into identifier id'>into</span> <span class='its identifier id'>its</span> <span class='square identifier id'>square</span> <span class='root identifier id'>root</span>
+    <span class='sqrtrem identifier id'>sqrtrem</span>                  <span class='square identifier id'>square</span> <span class='root identifier id'>root</span><span class='comma token'>,</span> <span class='remainder identifier id'>remainder</span>
+    <span class='root identifier id'>root</span><span class='lparen token'>(</span><span class='n identifier id'>n</span><span class='rparen token'>)</span>                  <span class='nth identifier id'>nth</span> <span class='root identifier id'>root</span>
+    <span class='jacobi identifier id'>jacobi</span>                   <span class='jacobi identifier id'>jacobi</span> <span class='symbol identifier id'>symbol</span>
+    <span class='legendre identifier id'>legendre</span>                 <span class='legendre identifier id'>legendre</span> <span class='symbol identifier id'>symbol</span>
+    <span class='probab_prime? fid id'>probab_prime?</span>            <span class='integer val'>0</span> <span class='if if_mod kw'>if</span> <span class='composite identifier id'>composite</span><span class='comma token'>,</span> <span class='integer val'>1</span> <span class='if if_mod kw'>if</span> <span class='probably identifier id'>probably</span> <span class='prime identifier id'>prime</span><span class='comma token'>,</span> <span class='integer val'>2</span> <span class='if if_mod kw'>if</span>
+                             <span class='certainly identifier id'>certainly</span> <span class='prime identifier id'>prime</span>
+    <span class='nextprime identifier id'>nextprime</span>                <span class='next next kw'>next</span> <span class='mult op'>*</span><span class='probable identifier id'>probable</span><span class='mult op'>*</span> <span class='prime identifier id'>prime</span>
+    <span class='nextprime! fid id'>nextprime!</span>               <span class='change identifier id'>change</span> <span class='the identifier id'>the</span> <span class='object identifier id'>object</span> <span class='into identifier id'>into</span> <span class='its identifier id'>its</span> <span class='next next kw'>next</span> <span class='mult op'>*</span><span class='probable identifier id'>probable</span><span class='mult op'>*</span> <span class='prime identifier id'>prime</span>
+    <span class='popcount identifier id'>popcount</span>                 <span class='the identifier id'>the</span> <span class='number identifier id'>number</span> <span class='of identifier id'>of</span> <span class='bits identifier id'>bits</span> <span class='equal identifier id'>equal</span> <span class='to identifier id'>to</span> <span class='integer val'>1</span>
+    <span class='to_i identifier id'>to_i</span>                     <span class='convert identifier id'>convert</span> <span class='to identifier id'>to</span> <span class='FixNum constant id'>FixNum</span> <span class='or or kw'>or</span> <span class='BigNum constant id'>BigNum</span>
+    <span class='remove identifier id'>remove</span><span class='lparen token'>(</span><span class='n identifier id'>n</span><span class='rparen token'>)</span>                <span class='remove identifier id'>remove</span> <span class='all identifier id'>all</span> <span class='occurences identifier id'>occurences</span> <span class='of identifier id'>of</span> <span class='factor identifier id'>factor</span> <span class='n identifier id'>n</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Q constant id'>Q</span> <span class='and and kw'>and</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span>
+    <span class='regexp val'>/                        division
+  GMP::Q
+    num                      numerator
+    den                      denominator
+    inv                      inversion
+    inv!                     in-place inversion
+    floor,ceil,trunc         nearest integer
+  class methods of GMP::F
+    default_prec             get default precision
+    default_prec=            set default precision
+  GMP::F
+    prec                     get precision
+    floor,ceil,trunc         nearest integer, GMP::F is returned, not GMP::Z
+    floor!,ceil!,trunc!      in-place nearest integer
+  GMP::F (only if MPFR is available)
+    exp                      e^object
+    expm1                    the same as (object.exp) - 1, with better precision
+    log                      natural logarithm of object
+    log2                     binary logarithm of object
+    log10                    decimal logarithm of object
+    log1p                    the same as (object + 1).log, with better precision
+    sqrt                     square root of the object
+    cos                      \
+    sin                      |
+    tan                      |
+    acos                     |
+    asin                     |
+    atan                     | trigonometric functions
+    cosh                     | of the object
+    sinh                     |
+    tanh                     |
+    aconh                    |
+    asinh                    |
+    atanh                    /</span>
+    <span class='nan? fid id'>nan?</span>                     \
+    <span class='infinite? fid id'>infinite?</span>                <span class='bitor op'>|</span> <span class='type identifier id'>type</span> <span class='of identifier id'>of</span> <span class='floating identifier id'>floating</span> <span class='point identifier id'>point</span> <span class='number identifier id'>number</span>
+    <span class='finite? fid id'>finite?</span>                  <span class='bitor op'>|</span>
+    <span class='number? fid id'>number?</span>                  <span class='div op'>/</span>
+    <span class='pow op'>**</span>                       <span class='power identifier id'>power</span>
+</pre>
+<h1>Known Issues</h1>
+<ul>
+<li>GMP::Z#pow does not appear to be working at all. Looking at the code, I
+don&#8217;t think it ever did.
+
+</li>
+</ul>
+<h1>Precision</h1>
+<p>
+Precision can be explicitely set as second argument for GMP::F.new().
+</p>
+<p>
+If there is no explicit precision, highest precision of all GMP::F
+arguments is used. That doesn&#8217;t ensure that result will be exact. For
+details, consult any paper about floating point arithmetics.
+</p>
+<p>
+Default precision can be explicitely set by passing 0 to GMP::F.new(). In
+particular, you can set precision of copy of GMP::F object by:
+</p>
+<pre class="code">
+  <span class='new_obj identifier id'>new_obj</span> <span class='assign token'>=</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='old_obj identifier id'>old_obj</span><span class='comma token'>,</span> <span class='integer val'>0</span><span class='rparen token'>)</span>
+</pre>
+<p>
+Precision argument, and default_precision will be rounded up to whatever
+GMP thinks is appropriate.
+</p>
+<h1>Todo</h1>
+<p>
+These are inherited from Tomasz. I will go through these and see which are
+still relevant.
+</p>
+<ul>
+<li>mpz_fits_* and 31 vs. 32 integer variables
+
+</li>
+<li>all appropriate module and class methods if there are any to add
+
+</li>
+<li>fix all sign issues (don&#8217;t know what these are)
+
+</li>
+<li>floats with precision control
+
+</li>
+<li>random numbers
+
+</li>
+<li>to_s vs. inspect
+
+</li>
+<li>check if mpz_addmul_ui would optimize some statements
+
+</li>
+<li>some system that allows using denref and numref as normal ruby objects
+
+</li>
+<li>should we allocate global temporary variables like Perl GMP does?
+
+</li>
+<li>takeover code that replaces all Bignums with GMP::Z
+
+</li>
+<li>better bignum parser
+
+</li>
+<li>zero-copy method for strings generation
+
+</li>
+<li>put rb_raise into nice macros
+
+</li>
+<li>benchmarks against Python GMP (gmpy? Is this still active?) and Perl GMP (I
+can&#8217;t find this either!)
+
+</li>
+<li>dup methods
+
+</li>
+<li>integrate F into system
+
+</li>
+<li>should Z.[] bits be 0/1 or true/false, 0 is true, what might badly surprise
+users
+
+</li>
+<li>any2small_integer()
+
+</li>
+<li>check asm output, especially local memory efficiency
+
+</li>
+<li>it might be better to use `register&#8217; for some local variables
+
+</li>
+<li>powm with negative exponents
+
+</li>
+<li>check if different sorting of operatations gives better cache usage
+
+</li>
+<li>GMP::* op RubyFloat and RubyFloat op GMP::*
+
+</li>
+<li>sort checks
+
+</li>
+<li>check all new GMP4 operations
+
+</li>
+<li>GMP::Q.to_s(base), GMP::F.to_s(base)
+
+</li>
+</ul>
+</div></div>
+    
+    <div id="footer">
+  Generated on 12/22/09 14:40:03 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.2 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

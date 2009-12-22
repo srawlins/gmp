@@ -47,7 +47,7 @@ paragraph at http://gmplib.org/#WHAT :
   contributors to sign paperwork where they allow us to distribute their work."
 
 Only GMP 4 or newer is supported. The following environments have been tested by me:
-  gmp gem 0.2.1 on:
+  gmp gem 0.2.2 on:
   +-------------------------------------+-------------------+-----------+
   |    Platform                         |       Ruby        |    GMP    |
   +-------------------------------------+-------------------+-----------+
@@ -77,8 +77,8 @@ Constructors can take following arguments:
 
   GMP::Z.new()
   GMP::Z.new(GMP::Z)
-  GMP::Z.new(FixNum)
-  GMP::Z.new(BigNum)
+  GMP::Z.new(Fixnum)
+  GMP::Z.new(Bignum)
   GMP::Z.new(String)
   GMP::Q.new()
   GMP::Q.new(GMP::Q)
@@ -91,8 +91,8 @@ Constructors can take following arguments:
   GMP::F.new(GMP::F)
   GMP::F.new(GMP::F, precision)
   GMP::F.new(String, precision=0)
-  GMP::F.new(FixNum, precision=0)
-  GMP::F.new(BigNum, precision=0)
+  GMP::F.new(Fixnum, precision=0)
+  GMP::F.new(Bignum, precision=0)
   GMP::F.new(Float,  precision=0)
 
 You can also call them as:
