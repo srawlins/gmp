@@ -14,42 +14,52 @@
  * The following list is just a simple checklist for me, really. A better
  * reference should be found in the rdocs.
  *
- *   Ruby method  C Extension function  GMP function
- *   to_d         r_gmpz_to_d           mpz_get_d
- *   to_i         r_gmpz_to_i           mpz_get_i
- *   to_s         r_gmpz_to_s           mpz_get_s
- *   +            r_gmpz_add            mpz_add
- *   add!         r_gmpz_add_self       mpz_add
- *   -            r_gmpz_sub            mpz_sub
- *   sub!         r_gmpz_sub_self       mpz_sub
- *   *            r_gmpz_mul            mpz_mul
- *   /            r_gmpz_div            ...
- *   tdiv         r_gmpz_tdiv           mpz_tdiv_q
- *   tmod         r_gmpz_tmod           mpz_tdiv_r
- *   fdiv         r_gmpz_fdiv           mpz_fdiv_q
- *   fmod         r_gmpz_fmod           mpz_fdiv_r
- *   cdiv         r_gmpz_cdiv           mpz_cdiv_q
- *   cmod         r_gmpz_cmod           mpz_cdiv_r
- *   -@           r_gmpz_neg            mpz_neg
- *   neg          r_gmpz_neg            mpz_neg
- *   neg!         r_gmpz_neg_self       mpz_neg
- *   abs          r_gmpz_abs            mpz_abs
- *   abs!         r_gmpz_abs_self       mpz_abs
- *   root         r_gmpz_root           mpz_root
- *   sqrt         r_gmpz_sqrt           mpz_sqrt
- *   sqrt!        r_gmpz_sqrt_self      mpz_sqrt
- *   sqrtrem      r_gmpz_sqrtrem        mpz_sqrtrem
- *   remove       r_gmpz_remove         mpz_remove
- *   fac          r_gmpz_fac            mpz_fac_ui
- *   fib          r_gmpz_fib            mpz_fib_ui
- *   com          r_gmpz_com            mpz_com
- *   com!         r_gmpz_com_self       mpz_com
- *   []=          r_gmpz_setbit         mpz_setbit
- *   []           r_gmpz_getbit         mpz_tstbit
- *   scan0        r_gmpz_scan0          mpz_scan0
- *   scan1        r_gmpz_scan1          mpz_scan1
- *   even?        r_gmpz_is_even        mpz_even
- *   odd?         r_gmpz_is_odd         mpz_odd
+ *   Ruby method    C Extension function    GMP function
+ *   to_d           r_gmpz_to_d             mpz_get_d
+ *   to_i           r_gmpz_to_i             mpz_get_i
+ *   to_s           r_gmpz_to_s             mpz_get_s
+ *   +              r_gmpz_add              mpz_add
+ *   add!           r_gmpz_add_self         mpz_add
+ *   -              r_gmpz_sub              mpz_sub
+ *   sub!           r_gmpz_sub_self         mpz_sub
+ *   *              r_gmpz_mul              mpz_mul
+ *   /              r_gmpz_div              ...
+ *   tdiv           r_gmpz_tdiv             mpz_tdiv_q
+ *   tmod           r_gmpz_tmod             mpz_tdiv_r
+ *   fdiv           r_gmpz_fdiv             mpz_fdiv_q
+ *   fmod           r_gmpz_fmod             mpz_fdiv_r
+ *   cdiv           r_gmpz_cdiv             mpz_cdiv_q
+ *   cmod           r_gmpz_cmod             mpz_cdiv_r
+ *   -@             r_gmpz_neg              mpz_neg
+ *   neg            r_gmpz_neg              mpz_neg
+ *   neg!           r_gmpz_neg_self         mpz_neg
+ *   abs            r_gmpz_abs              mpz_abs
+ *   abs!           r_gmpz_abs_self         mpz_abs
+ *   **             r_gmpz_pow              mpz_pow_ui
+ *   powmod         r_gmpz_powm             mpz_powm
+ *   root           r_gmpz_root             mpz_root
+ *   sqrt           r_gmpz_sqrt             mpz_sqrt
+ *   sqrt!          r_gmpz_sqrt_self        mpz_sqrt
+ *   sqrtrem        r_gmpz_sqrtrem          mpz_sqrtrem
+ *   power?         r_gmpz_is_power         mpz_perfect_power_p
+ *   square?        r_gmpz_is_square        mpz_perfect_square_p
+ *   probab_prime?  r_gmpz_is_probab_prime  mpz_probab_prime_p
+ *   nextprime      r_gmpz_nextprime        mpz_nextprime
+ *   nextprime!     r_gmpz_nextprime_self   mpz_nextprime
+ *   jacobi         r_gmpz_jacobi           mpz_jacobi
+ *   #jacobi        r_gmpzsg_jacobi         mpz_jacobi
+ *   legendre       r_gmpz_legendre         mpz_legendre
+ *   remove         r_gmpz_remove           mpz_remove
+ *   fac            r_gmpz_fac              mpz_fac_ui
+ *   fib            r_gmpz_fib              mpz_fib_ui
+ *   com            r_gmpz_com              mpz_com
+ *   com!           r_gmpz_com_self         mpz_com
+ *   []=            r_gmpz_setbit           mpz_setbit
+ *   []             r_gmpz_getbit           mpz_tstbit
+ *   scan0          r_gmpz_scan0            mpz_scan0
+ *   scan1          r_gmpz_scan1            mpz_scan1
+ *   even?          r_gmpz_is_even          mpz_even
+ *   odd?           r_gmpz_is_odd           mpz_odd
  *   ...
  */
 
@@ -78,7 +88,7 @@ static VALUE r_gmpz_##fname##_self(VALUE self) \
   MP_INT *self_val;                            \
   mpz_get_struct(self, self_val);              \
   mpz_fname(self_val, self_val);               \
-  return Qnil;                                 \
+  return self;                                 \
 }
 
 #define DEFUN_INT_F_UL(fname,mpz_fname,argname)          \
@@ -912,24 +922,24 @@ VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
   if (GMPZ_P(mod)) {
     mpz_get_struct(mod, mod_val);
     if (mpz_sgn(mod_val) <= 0) {
-      rb_raise (rb_eRangeError, "modulus must be positive");
+      rb_raise(rb_eRangeError, "modulus must be positive");
     }
   } else if (FIXNUM_P(mod)) {
-  if (FIX2INT(mod) <= 0) {
-    rb_raise (rb_eRangeError, "modulus must be positive");
-  }
-  mpz_temp_alloc (mod_val);
-  mpz_init_set_ui(mod_val, FIX2INT(mod));
-  free_mod_val = 1;
+    if (FIX2INT(mod) <= 0) {
+      rb_raise(rb_eRangeError, "modulus must be positive");
+    }
+    mpz_temp_alloc(mod_val);
+    mpz_init_set_ui(mod_val, FIX2INT(mod));
+    free_mod_val = 1;
   } else if (BIGNUM_P(mod)) {
-    mpz_temp_from_bignum (mod_val, mod);
+    mpz_temp_from_bignum(mod_val, mod);
     if (mpz_sgn(mod_val) <= 0) {
       mpz_temp_free(mod_val);
-      rb_raise (rb_eRangeError, "modulus must be positive");
+      rb_raise(rb_eRangeError, "modulus must be positive");
     }
     free_mod_val = 1;
   } else {
-    typeerror_as (ZXB, "modulus");
+    typeerror_as(ZXB, "modulus");
   }
   mpz_make_struct_init(res, res_val);
   mpz_get_struct(self, self_val);
@@ -937,25 +947,25 @@ VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
   if (GMPZ_P(exp)) {
     mpz_get_struct(exp, exp_val);
     if (mpz_sgn(mod_val) < 0) {
-      rb_raise (rb_eRangeError, "exponent must be nonnegative");
+      rb_raise(rb_eRangeError, "exponent must be nonnegative");
     }
-    mpz_powm (res_val, self_val, exp_val, mod_val);
+    mpz_powm(res_val, self_val, exp_val, mod_val);
   } else if (FIXNUM_P(exp)) {
     if (FIX2INT(exp) < 0)
     {
       if (free_mod_val)
         mpz_temp_free(mod_val);
-      rb_raise (rb_eRangeError, "exponent must be nonnegative");
+      rb_raise(rb_eRangeError, "exponent must be nonnegative");
     }
-    mpz_powm_ui (res_val, self_val, FIX2INT(exp), mod_val);
+    mpz_powm_ui(res_val, self_val, FIX2INT(exp), mod_val);
   } else if (BIGNUM_P(exp)) {
-    mpz_temp_from_bignum (exp_val, exp);
-    mpz_powm (res_val, self_val, exp_val, mod_val);
-    mpz_temp_free (exp_val);
+    mpz_temp_from_bignum(exp_val, exp);
+    mpz_powm(res_val, self_val, exp_val, mod_val);
+    mpz_temp_free(exp_val);
   } else {
     if (free_mod_val)
       mpz_temp_free(mod_val);
-    typeerror_as (ZXB, "exponent");
+    typeerror_as(ZXB, "exponent");
   }
   if (free_mod_val)
     mpz_temp_free(mod_val);
@@ -1165,15 +1175,82 @@ VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
 {
   MP_INT *a_val, *b_val;
   int res_val;
+  int free_a_val = 0;
+  int free_b_val = 0;
   (void)klass;
   
-  mpz_get_struct(a, a_val);
-  mpz_get_struct(b, b_val);
-  if (mpz_sgn(b_val) != 1)
-    rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is non-positive.");
-  if (mpz_even_p(b_val))
-    rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is even.");
+  if (GMPZ_P(a)) {
+    mpz_get_struct(a, a_val);
+  } else if (FIXNUM_P(a)) {
+    mpz_temp_alloc(a_val);
+    mpz_init_set_ui(a_val, FIX2INT(a));
+    free_a_val = 1;
+  } else if (BIGNUM_P(a)) {
+    mpz_temp_from_bignum(a_val, a);
+    free_a_val = 1;
+  } else {
+    typeerror_as(ZXB, "a");
+  }
+  
+  if (GMPZ_P(b)) {
+    mpz_get_struct(b, b_val);
+    if (mpz_sgn(b_val) != 1)
+      rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is non-positive.");
+    if (mpz_even_p(b_val))
+      rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is even.");
+  } else if (FIXNUM_P(b)) {
+    if (FIX2INT(b) <= 0)
+      rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is non-positive.");
+    if (FIX2INT(b) % 2 == 0)
+      rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is even.");
+    mpz_temp_alloc(b_val);
+    mpz_init_set_ui(b_val, FIX2INT(b));
+    free_b_val = 1;
+  } else if (BIGNUM_P(b)) {
+    mpz_temp_from_bignum(b_val, b);
+    if (mpz_sgn(b_val) != 1) {
+      mpz_temp_free(b_val);
+      rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is non-positive.");
+    }
+    if (mpz_even_p(b_val)) {
+      mpz_temp_free(b_val);
+      rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is even.");
+    }
+    free_b_val = 1;
+  } else {
+    typeerror_as(ZXB, "b");
+  }
+  
   res_val = mpz_jacobi(a_val, b_val);
+  if (free_a_val) { mpz_temp_free(a_val); }
+  if (free_b_val) { mpz_temp_free(b_val); }
+  return INT2FIX(res_val);
+}
+
+/*
+ * Document-method: legendre
+ *
+ * call-seq:
+ *   a.legendre(p)
+ *
+ * From the GMP Manual:
+ * 
+ * Calculate the Legendre symbol <tt>(a/p)</tt>. This is defined only for +p+
+ * an odd positive prime, and for such +p+ it's identical to the Jacobi symbol. 
+ */
+VALUE r_gmpz_legendre(VALUE self, VALUE p)
+{
+  MP_INT *self_val, *p_val;
+  int res_val;
+  mpz_get_struct(self, self_val);
+  mpz_get_struct(   p,    p_val);
+  if (mpz_sgn(p_val) != 1)
+    rb_raise(rb_eRangeError, "Cannot take Legendre symbol (a/p) where p is non-positive.");
+  if (mpz_even_p(p_val))
+    rb_raise(rb_eRangeError, "Cannot take Legendre symbol (a/p) where p is even.");
+  if (mpz_probab_prime_p(p_val, 5) == 0)
+    rb_raise(rb_eRangeError, "Cannot take Legendre symbol (a/p) where p is composite.");
+  res_val = mpz_legendre(self_val, p_val);
   return INT2FIX(res_val);
 }
 
@@ -1540,33 +1617,6 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
 DEFUN_INT2INT(com, mpz_com)
 
 /*
- * Document-method: legendre
- *
- * call-seq:
- *   a.legendre
- *
- * <b>90% sure this is incorrectly implemented. Todo.</b>
- *
- * From the GMP Manual:
- * 
- * Calculate the Legendre symbol <tt>(a/p)</tt>. This is defined only for +p+
- * an odd positive prime, and for such +p+ it's identical to the Jacobi symbol. 
- */
-VALUE r_gmpz_legendre(VALUE self)
-{
-  MP_INT *self_val, *res_val;
-  VALUE res;
-  mpz_get_struct(self, self_val);
-  if (mpz_sgn(self_val) != 1)
-    rb_raise(rb_eRangeError, "you can take legendre symbol only of positive value");
-  if (mpz_even_p(self_val))
-    rb_raise(rb_eRangeError, "you can't take legendre symbol of even value");
-    mpz_make_struct_init(res, res_val);
-  mpz_legendre(res_val, self_val);
-  return res;
-}
-
-/*
  * Document-method: even?
  *
  * call-seq:
@@ -1727,20 +1777,20 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, -1);
   
   // Integer Arithmetic
-  rb_define_method(cGMP_Z, "+", r_gmpz_add, 1);
+  rb_define_method(cGMP_Z, "+",    r_gmpz_add, 1);
   rb_define_method(cGMP_Z, "add!", r_gmpz_add_self, 1);
-  rb_define_method(cGMP_Z, "-", r_gmpz_sub, 1);  
+  rb_define_method(cGMP_Z, "-",    r_gmpz_sub, 1);  
   rb_define_method(cGMP_Z, "sub!", r_gmpz_sub_self, 1);
-  rb_define_method(cGMP_Z, "*", r_gmpz_mul, 1);
-  rb_define_method(cGMP_Z, "<<",  r_gmpz_shl, 1);
-  rb_define_method(cGMP_Z, "neg", r_gmpz_neg, 0);
+  rb_define_method(cGMP_Z, "*",    r_gmpz_mul, 1);
+  rb_define_method(cGMP_Z, "<<",   r_gmpz_shl, 1);
+  rb_define_method(cGMP_Z, "neg",  r_gmpz_neg, 0);
   rb_define_method(cGMP_Z, "neg!", r_gmpz_neg_self, 0);
-  rb_define_method(cGMP_Z, "-@", r_gmpz_neg, 0);
-  rb_define_method(cGMP_Z, "abs", r_gmpz_abs, 0);
+  rb_define_method(cGMP_Z, "-@",   r_gmpz_neg, 0);
+  rb_define_method(cGMP_Z, "abs",  r_gmpz_abs, 0);
   rb_define_method(cGMP_Z, "abs!", r_gmpz_abs_self, 0);
   
   // Integer Division
-  rb_define_method(cGMP_Z, "/", r_gmpz_div, 1);
+  rb_define_method(cGMP_Z, "/",    r_gmpz_div, 1);
   rb_define_method(cGMP_Z, "tdiv", r_gmpz_tdiv, 1);
   rb_define_method(cGMP_Z, "tmod", r_gmpz_tmod, 1);
   rb_define_method(cGMP_Z, "fdiv", r_gmpz_fdiv, 1);
@@ -1749,27 +1799,28 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "cmod", r_gmpz_cmod, 1);
   
   // Integer Exponentiation
-  rb_define_singleton_method(cGMP_Z, "pow", r_gmpzsg_pow, 2);
-  rb_define_method(cGMP_Z, "**", r_gmpz_pow, 1);
-  rb_define_method(cGMP_Z, "powmod", r_gmpz_powm, 2);
+  rb_define_singleton_method(cGMP_Z, "pow",    r_gmpzsg_pow, 2);
+  rb_define_method(cGMP_Z,           "**",     r_gmpz_pow, 1);
+  rb_define_method(cGMP_Z,           "powmod", r_gmpz_powm, 2);
 
   // Integer Roots
-  rb_define_method(cGMP_Z, "root",  r_gmpz_root, 1);
-  rb_define_method(cGMP_Z, "sqrt",  r_gmpz_sqrt, 0);
-  rb_define_method(cGMP_Z, "sqrt!",  r_gmpz_sqrt_self, 0);
-  rb_define_method(cGMP_Z, "sqrtrem",  r_gmpz_sqrtrem, 0);
-  rb_define_method(cGMP_Z, "square?",  r_gmpz_is_square, 0);
+  rb_define_method(cGMP_Z, "root",    r_gmpz_root, 1);
+  rb_define_method(cGMP_Z, "sqrt",    r_gmpz_sqrt, 0);
+  rb_define_method(cGMP_Z, "sqrt!",   r_gmpz_sqrt_self, 0);
+  rb_define_method(cGMP_Z, "sqrtrem", r_gmpz_sqrtrem, 0);
+  rb_define_method(cGMP_Z, "square?", r_gmpz_is_square, 0);
   rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power, 0);
   
   // Number Theoretic Functions
-  rb_define_method(cGMP_Z, "probab_prime?",  r_gmpz_is_probab_prime, -1);
-  rb_define_method(cGMP_Z, "nextprime",  r_gmpz_nextprime, 0);
-  rb_define_method(cGMP_Z, "nextprime!",  r_gmpz_nextprime_self, 0);
-  rb_define_method(cGMP_Z, "jacobi",  r_gmpz_jacobi, 1);
-  rb_define_singleton_method(cGMP_Z, "jacobi",  r_gmpzsg_jacobi, 2);
-  rb_define_method(cGMP_Z, "remove",  r_gmpz_remove, 1);
-  rb_define_singleton_method(cGMP_Z, "fac", r_gmpzsg_fac, 1);
-  rb_define_singleton_method(cGMP_Z, "fib", r_gmpzsg_fib, 1);
+  rb_define_method(          cGMP_Z, "probab_prime?", r_gmpz_is_probab_prime, -1);
+  rb_define_method(          cGMP_Z, "nextprime",     r_gmpz_nextprime, 0);
+  rb_define_method(          cGMP_Z, "nextprime!",    r_gmpz_nextprime_self, 0);
+  rb_define_method(          cGMP_Z, "jacobi",        r_gmpz_jacobi, 1);
+  rb_define_singleton_method(cGMP_Z, "jacobi",        r_gmpzsg_jacobi, 2);
+  rb_define_method(          cGMP_Z, "legendre",      r_gmpz_legendre, 1);
+  rb_define_method(          cGMP_Z, "remove",        r_gmpz_remove, 1);
+  rb_define_singleton_method(cGMP_Z, "fac",           r_gmpzsg_fac, 1);
+  rb_define_singleton_method(cGMP_Z, "fib",           r_gmpzsg_fib, 1);
   
   // Integer Comparisons
   rb_define_method(cGMP_Z, "<=>", r_gmpz_cmp, 1);
@@ -1798,7 +1849,6 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "tshr",  r_gmpz_tshr, 1);
   rb_define_method(cGMP_Z, "lastbits_sgn",  r_gmpz_tshrm, 1);
   rb_define_method(cGMP_Z, "lastbits_pos",  r_gmpz_fshrm, 1);
-  rb_define_method(cGMP_Z, "legendre",  r_gmpz_legendre, 0);
   rb_define_method(cGMP_Z, "popcount",  r_gmpz_popcount, 0);
 
 }

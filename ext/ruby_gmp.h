@@ -109,6 +109,7 @@ extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
 extern VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self);
 extern VALUE r_gmpz_jacobi(VALUE self, VALUE b);
 extern VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b);
+extern VALUE r_gmpz_legendre(VALUE self, VALUE p);
 extern VALUE r_gmpz_remove(VALUE self, VALUE arg);
 
 // Integer Comparisons
@@ -119,7 +120,6 @@ extern VALUE r_gmpz_cmpabs(VALUE self, VALUE arg);
 // _unsorted_
 extern VALUE r_gmpz_div(VALUE self, VALUE arg);
 extern VALUE r_gmpz_popcount(VALUE self);
-extern VALUE r_gmpz_legendre(VALUE self);
 extern VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to);
 extern VALUE r_gmpz_getbit(VALUE self, VALUE bitnr);
 extern VALUE r_gmpz_scan0(VALUE self, VALUE bitnr);

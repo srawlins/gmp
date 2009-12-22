@@ -31,7 +31,6 @@ Tests:
   23    mpfr - sqrt and power
   24    jacobi, legendre, remove
 TODO:
-  jacobi, legendre, remove
   gcd, lcm
   cmpabs
   integer and integer->rational division, modulo

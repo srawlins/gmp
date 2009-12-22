@@ -18,6 +18,8 @@
 \addtolength{\heavyrulewidth}{\heavyrulewidth}
 \def\qquad{\quad\quad}
 \def\qqqquad{\quad\quad\quad\quad}
+\def\cc{\colon\colon}
+\frenchspacing
 \begin{document}
 
 \begin{tabular}{p{1.0in} p{\titrwidth}}
@@ -164,7 +166,7 @@ There shouldn't be any errors, or warnings.
 \subsection{Classes}
 The gmp gem includes the namespace \texttt{GMP} and three classes within \texttt{GMP}:
 \begin{itemize}
-  \item \texttt{GMP::Z} - Methods for signed integer arithmetic. There are at least 35
+  \item \texttt{GMP::Z} - Methods for signed integer arithmetic. There are at least 45
     methods here (still accounting).
   \item \texttt{GMP::Q} - Methods for rational number arithmetic. There are at least 6
     methods here (still accounting).
@@ -277,8 +279,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{+} & & \textit{integer} + \textit{numeric} $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the sum of \textit{integer} and \textit{numeric}. \textit{numeric} can be a
-  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
+  Returns the sum of \textit{integer} and \textit{numeric}. \textit{numeric} can be an
+  instance of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
   \textit{Bignum}.
 }
 \end{tabular}
@@ -289,8 +291,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{add} & & \textit{integer}.add(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the sum of \textit{integer} and \textit{numeric}. \textit{numeric} can be a
-  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
+  Returns the sum of \textit{integer} and \textit{numeric}. \textit{numeric} can be an
+  instance of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
   \textit{Bignum}.
 }
 \end{tabular}
@@ -302,8 +304,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Sums \textit{integer} and \textit{numeric}, in place. \textit{numeric} can be a
-  member of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
+  Sums \textit{integer} and \textit{numeric}, in place. \textit{numeric} can be an
+  instance of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
   \textit{Bignum}.
 }
 \end{tabular}
@@ -317,7 +319,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the difference of \textit{integer} and \textit{numeric}. The destructive method
-  calculates the difference in place. \textit{numeric} can be a member of
+  calculates the difference in place. \textit{numeric} can be an instance of
   \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or \textit{Bignum}.
   Here are some examples:\newline
   
@@ -344,8 +346,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the product of \textit{integer} and \textit{numeric}. The destructive method
-  calculates the product in place. \textit{numeric} can be a member of \textit{GMP::Z},
-  \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or \textit{Bignum}.
+  calculates the product in place. \textit{numeric} can be an instance of
+  \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or \textit{Bignum}.
 }
 \end{tabular}
 \newline\newline
@@ -389,34 +391,32 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{tdiv} & & \textit{integer}.tdiv(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\textbf{tdiv} & & $integer$.tdiv($numeric$) $\rightarrow$ $integer$\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the division of \textit{integer} by \textit{numeric}, truncated.
-  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
-  The return object's class is always \textit{GMP::Z}.
+  Returns the division of $integer$ by $numeric$, truncated. $numeric$ can be an instance
+  of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always $GMP::Z$.
 }
 \end{tabular}
 \newline\newline
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{fdiv} & & \textit{integer}.fdiv(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\textbf{fdiv} & & $integer$.fdiv($numeric$) $\rightarrow$ $integer$\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the division of \textit{integer} by \textit{numeric}, floored.
-  \textit{numeric} can be a member of \textit{GMP::Z}, \textit{Fixnum}, \textit{Bignum}.
-  The return object's class is always \textit{GMP::Z}.
+  Returns the division of $integer$ by $numeric$, floored. $numeric$ can be an instance
+  of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always $GMP::Z$.
 }
 \end{tabular}
 \newline\newline
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{cdiv} & & \textit{integer}.cdiv(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\textbf{cdiv} & & $integer$.cdiv($numeric$) $\rightarrow$ $integer$\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns the ceiling division of $integer$ by $numeric$. $numeric$ can be a member of
+  Returns the ceiling division of $integer$ by $numeric$. $numeric$ can be an instance of
   $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always $GMP::Z$.
 }
 \end{tabular}
@@ -424,11 +424,11 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{tmod} & & \textit{integer}.tmod(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\textbf{tmod} & & $integer$.tmod($numeric$) $\rightarrow$ $integer$\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the remainder after truncated division of $integer$ by $numeric$. $numeric$ can
-  be a member of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
+  be an instance of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
   $GMP::Z$.
 }
 \end{tabular}
@@ -436,11 +436,11 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{fmod} & & \textit{integer}.fmod(\textit{numeric}) $\rightarrow$ \textit{integer}\\
+\textbf{fmod} & & $integer$.fmod($numeric$) $\rightarrow$ $integer$\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the remainder after floored division of $integer$ by $numeric$. $numeric$ can
-  be a member of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
+  be an instance of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
   $GMP::Z$.
 }
 \end{tabular}
@@ -452,7 +452,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the remainder after ceilinged division of $integer$ by $numeric$. $numeric$ can
-  be a member of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
+  be an instance of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
   $GMP::Z$.
 }
 \end{tabular}
@@ -587,6 +587,22 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the Jacobi symbol $(a/b)$. This is defined only for $b$ odd. If $b$ is even, a
   range exception will be raised.
+  \newline\newline
+  $GMP::Z.jacobi$ (the instance method) requires $b$ to be an instance of $GMP::Z$.
+  \newline
+  $GMP::Z\#jacobi$ (the class method) requires $a$ and $b$ each to be an instance of
+  $GMP::Z$, $Fixnum$, or $Bignum$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{legendre} & & $a$.legendre($b$) $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the Legendre symbol $(a/b)$. This is defined only for $p$ an odd positive
+  prime. If $p$ is even, negative, or composite, a range exception will be raised.
 }
 \end{tabular}
 
