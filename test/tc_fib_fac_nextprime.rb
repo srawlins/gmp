@@ -41,11 +41,11 @@ class TC_fib_fac_nextprime < Test::Unit::TestCase
   end
 
   def test_nextprime
-    assert_equal(@z11,  @z7.nextprime, "GMP::Z.nextprime should work.")
-    assert_equal(@z11,  @z8.nextprime, "GMP::Z.nextprime should work.")
-    assert_equal(@z11,  @z8.nextprime, "GMP::Z.nextprime should work.")
-    assert_equal(@z13, @z11.nextprime, "GMP::Z.nextprime should work.")
-    assert_equal(@z17, @z13.nextprime, "GMP::Z.nextprime should work.")
-    assert_equal(@z19, @z17.nextprime, "GMP::Z.nextprime should work.")
+    assert_equal(@z11,  @z7.next_prime, "GMP::Z.nextprime should work.")
+    assert_equal(@z11,  @z8.nextprime,  "GMP::Z.nextprime should work.")
+    assert_equal(@z11,  @z8.next_prime, "GMP::Z.nextprime should work.")
+    assert_equal(@z13, @z11.nextprime,  "GMP::Z.nextprime should work.")
+    assert_equal(@z17, @z13.next_prime, "GMP::Z.nextprime should work.")
+    assert_equal(@z19, @z17.nextprime,  "GMP::Z.nextprime should work.")
   end
 end

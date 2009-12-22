@@ -1110,6 +1110,7 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
  *
  * call-seq:
  *   integer.nextprime
+ *   integer.next_prime
  *
  * From the GMP Manual:
  * 
@@ -1124,6 +1125,7 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
  *
  * call-seq:
  *   integer.nextprime!
+ *   integer.next_prime!
  *
  * From the GMP Manual:
  * 
@@ -1815,6 +1817,8 @@ void init_gmpz()
   rb_define_method(          cGMP_Z, "probab_prime?", r_gmpz_is_probab_prime, -1);
   rb_define_method(          cGMP_Z, "nextprime",     r_gmpz_nextprime, 0);
   rb_define_method(          cGMP_Z, "nextprime!",    r_gmpz_nextprime_self, 0);
+  rb_define_alias(           cGMP_Z, "next_prime",    "nextprime");
+  rb_define_alias(           cGMP_Z, "next_prime!",   "nextprime!");
   rb_define_method(          cGMP_Z, "jacobi",        r_gmpz_jacobi, 1);
   rb_define_singleton_method(cGMP_Z, "jacobi",        r_gmpzsg_jacobi, 2);
   rb_define_method(          cGMP_Z, "legendre",      r_gmpz_legendre, 1);

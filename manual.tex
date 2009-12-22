@@ -288,18 +288,6 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{add} & & \textit{integer}.add(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
-\cmidrule(r){2-3}
-& \multicolumn{2}{p{\defnwidth}}{
-  Returns the sum of \textit{integer} and \textit{numeric}. \textit{numeric} can be an
-  instance of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
-  \textit{Bignum}.
-}
-\end{tabular}
-\newline\newline
-
-\begin{tabular}{p{\methwidth} l r}
-\toprule
 \textbf{add!} & & \textit{integer}.add!(\textit{numeric}) $\rightarrow$
 \textit{numeric} \\
 \cmidrule(r){2-3}
@@ -314,7 +302,6 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \begin{tabular}{p{\methwidth} l r}
 \toprule
 \textbf{-} & & \textit{integer} - \textit{numeric} $\rightarrow$ \textit{numeric} \\
-& & \textit{integer}.sub(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
 & & \textit{integer}.sub!(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
@@ -566,7 +553,9 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{nextprime} & & $integer$.nextprime $\rightarrow$ $prime$ \\
+\textbf{next_prime} & & $integer$.next_prime $\rightarrow$ $prime$ \\
+& & $integer$.nextprime $\rightarrow$ $prime$ \\
+& & $integer$.next_prime! $\rightarrow$ $prime$ \\
 & & $integer$.nextprime! $\rightarrow$ $prime$ \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
