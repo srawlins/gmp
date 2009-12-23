@@ -101,7 +101,7 @@ Only GMP 4 or newer is supported. The following environments have been
 tested by me:
 </p>
 <pre class="code">
-  <span class='gmp identifier id'>gmp</span> <span class='gem identifier id'>gem</span> <span class='integer val'>0</span><span class='float val'>.2.2</span> <span class='on identifier id'>on</span><span class='colon op'>:</span>
+  <span class='gmp identifier id'>gmp</span> <span class='gem identifier id'>gem</span> <span class='integer val'>0</span><span class='float val'>.2.8</span> <span class='on identifier id'>on</span><span class='colon op'>:</span>
   <span class='lt op'>&lt;</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='lt op'>&lt;</span><span class='regexp val'>/tt&gt;-------------------&lt;tt&gt;-----------&lt;/</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span>
   <span class='bitor op'>|</span>    <span class='Platform constant id'>Platform</span>                         <span class='bitor op'>|</span>       <span class='Ruby constant id'>Ruby</span>        <span class='bitor op'>|</span>    <span class='GMP constant id'>GMP</span>    <span class='bitor op'>|</span>
   <span class='lt op'>&lt;</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='lt op'>&lt;</span><span class='regexp val'>/tt&gt;-------------------&lt;tt&gt;-----------&lt;/</span><span class='tt identifier id'>tt</span><span class='gt op'>&gt;</span>
@@ -129,7 +129,7 @@ with:
 </ul>
 <h1>Classes</h1>
 <p>
-It provides module GMP with following classes:
+The module GMP is provided with following classes:
 </p>
 <ul>
 <li>GMP::Z - infinite precision integer numbers
@@ -139,6 +139,9 @@ It provides module GMP with following classes:
 
 </li>
 <li>GMP::F - arbitrary precision floating point numbers
+
+</li>
+<li>GMP::RandState - states of individual random number generators
 
 </li>
 </ul>
@@ -166,6 +169,7 @@ arguments:
   <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Fixnum constant id'>Fixnum</span><span class='comma token'>,</span> <span class='precision identifier id'>precision</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='rparen token'>)</span>
   <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Bignum constant id'>Bignum</span><span class='comma token'>,</span> <span class='precision identifier id'>precision</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='rparen token'>)</span>
   <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='F constant id'>F</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='Float constant id'>Float</span><span class='comma token'>,</span>  <span class='precision identifier id'>precision</span><span class='assign token'>=</span><span class='integer val'>0</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='RandState constant id'>RandState</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
 </pre>
 <p>
 You can also call them as:
@@ -174,6 +178,7 @@ You can also call them as:
   <span class='GMP constant id'>GMP</span><span class='dot token'>.</span><span class='Z constant id'>Z</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='GMP constant id'>GMP</span><span class='dot token'>.</span><span class='Q constant id'>Q</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='GMP constant id'>GMP</span><span class='dot token'>.</span><span class='F constant id'>F</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='GMP constant id'>GMP</span><span class='dot token'>.</span><span class='RandState constant id'>RandState</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
 </pre>
 <h1>Methods</h1>
 <pre class="code">
@@ -254,11 +259,13 @@ You can also call them as:
     floor!,ceil!,trunc!      in-place nearest integer
   GMP::F (only if MPFR is available)
     exp                      e^object
-    expm1                    the same as (object.exp) - 1, with better precision
+    expm1                    the same as (object.exp) - 1, with better
+                             precision
     log                      natural logarithm of object
     log2                     binary logarithm of object
     log10                    decimal logarithm of object
-    log1p                    the same as (object + 1).log, with better precision
+    log1p                    the same as (object + 1).log, with better
+                             precision
     sqrt                     square root of the object
     cos                      \
     sin                      |
@@ -277,6 +284,10 @@ You can also call them as:
     <span class='finite? fid id'>finite?</span>                  <span class='bitor op'>|</span>
     <span class='number? fid id'>number?</span>                  <span class='div op'>/</span>
     <span class='pow op'>**</span>                       <span class='power identifier id'>power</span>
+  <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='RandState constant id'>RandState</span>
+    <span class='seed identifier id'>seed</span><span class='lparen token'>(</span><span class='integer identifier id'>integer</span><span class='rparen token'>)</span>            <span class='seed identifier id'>seed</span> <span class='the identifier id'>the</span> <span class='generator identifier id'>generator</span> <span class='with identifier id'>with</span> <span class='a identifier id'>a</span> <span class='Fixnum constant id'>Fixnum</span> <span class='or or kw'>or</span> <span class='GMP constant id'>GMP</span><span class='colon2 op'>::</span><span class='Z constant id'>Z</span>
+    <span class='urandomb identifier id'>urandomb</span><span class='lparen token'>(</span><span class='fixnum identifier id'>fixnum</span><span class='rparen token'>)</span>         <span class='get identifier id'>get</span> <span class='uniformly identifier id'>uniformly</span> <span class='distributed identifier id'>distributed</span> <span class='random identifier id'>random</span> <span class='number identifier id'>number</span> <span class='between identifier id'>between</span> <span class='integer val'>0</span>
+                             <span class='and and kw'>and</span> <span class='integer val'>2</span><span class='bitxor op'>^</span><span class='fixnum identifier id'>fixnum</span><span class='minus op'>-</span><span class='integer val'>1</span><span class='comma token'>,</span> <span class='inclusive identifier id'>inclusive</span>
 </pre>
 <h1>Known Issues</h1>
 <ul>
@@ -321,9 +332,6 @@ still relevant.
 
 </li>
 <li>floats with precision control
-
-</li>
-<li>random numbers
 
 </li>
 <li>to_s vs. inspect
@@ -395,7 +403,7 @@ users
 </div></div>
     
     <div id="footer">
-  Generated on 12/22/09 14:40:03 by 
+  Generated on 12/23/09 09:34:00 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.2 (ruby-1.8.6).
 </div>

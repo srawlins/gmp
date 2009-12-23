@@ -47,7 +47,7 @@ paragraph at http://gmplib.org/#WHAT :
   contributors to sign paperwork where they allow us to distribute their work."
 
 Only GMP 4 or newer is supported. The following environments have been tested by me:
-  gmp gem 0.2.2 on:
+  gmp gem 0.2.8 on:
   +-------------------------------------+-------------------+-----------+
   |    Platform                         |       Ruby        |    GMP    |
   +-------------------------------------+-------------------+-----------+
@@ -67,10 +67,11 @@ Only GMP 4 or newer is supported. The following environments have been tested by
 
 =Classes
 
-It provides module GMP with following classes:
+The module GMP is provided with following classes:
 * GMP::Z - infinite precision integer numbers
 * GMP::Q - infinite precision rational numbers
 * GMP::F - arbitrary precision floating point numbers
+* GMP::RandState - states of individual random number generators
 
 Numbers are created by using new().
 Constructors can take following arguments:
@@ -94,11 +95,13 @@ Constructors can take following arguments:
   GMP::F.new(Fixnum, precision=0)
   GMP::F.new(Bignum, precision=0)
   GMP::F.new(Float,  precision=0)
+  GMP::RandState.new()
 
 You can also call them as:
   GMP.Z(args)
   GMP.Q(args)
   GMP.F(args)
+  GMP.RandState()
 
 =Methods
 
@@ -179,11 +182,13 @@ You can also call them as:
     floor!,ceil!,trunc!      in-place nearest integer
   GMP::F (only if MPFR is available)
     exp                      e^object
-    expm1                    the same as (object.exp) - 1, with better precision
+    expm1                    the same as (object.exp) - 1, with better
+                             precision
     log                      natural logarithm of object
     log2                     binary logarithm of object
     log10                    decimal logarithm of object
-    log1p                    the same as (object + 1).log, with better precision
+    log1p                    the same as (object + 1).log, with better
+                             precision
     sqrt                     square root of the object
     cos                      \
     sin                      |
@@ -202,6 +207,10 @@ You can also call them as:
     finite?                  |
     number?                  /
     **                       power
+  GMP::RandState
+    seed(integer)            seed the generator with a Fixnum or GMP::Z
+    urandomb(fixnum)         get uniformly distributed random number between 0
+                             and 2^fixnum-1, inclusive
 
 =Known Issues
 
@@ -232,7 +241,6 @@ still relevant.
 * all appropriate module and class methods if there are any to add
 * fix all sign issues (don't know what these are)
 * floats with precision control
-* random numbers
 * to_s vs. inspect
 * check if mpz_addmul_ui would optimize some statements
 * some system that allows using denref and numref as normal ruby objects
@@ -241,8 +249,8 @@ still relevant.
 * better bignum parser
 * zero-copy method for strings generation
 * put rb_raise into nice macros
-* benchmarks against Python GMP (gmpy? Is this still active?) and Perl GMP (I can't
-  find this either!)
+* benchmarks against Python GMP (gmpy? Is this still active?) and Perl GMP (I
+  can't find this either!)
 * dup methods
 * integrate F into system
 * should Z.[] bits be 0/1 or true/false, 0 is true, what might badly surprise users

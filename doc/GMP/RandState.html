@@ -1,0 +1,465 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+<title>Class: GMP::RandState</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (R)</a> &raquo; 
+    <a href="../GMP.html" title="GMP">GMP</a>
+     &raquo; 
+    <span class="title">RandState</span>
+  
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Namespace List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: GMP::RandState 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">GMP::RandState</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">ext/gmp.c<span class="defines">,<br />
+  ext/gmprandstate.c</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+From the GMP Manual:
+</p>
+<p>
+Generate a uniformly distributed random integer in the range 0 to
+2^fixnum-1, inclusive.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div>
+
+
+  <h2>Class Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#GMP%3A%3ARandState.new-class_method" title="GMP::RandState.new (class method)">+ (Object) <strong>GMP::RandState.new</strong>(arg = 0) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+Initializes a new Random State object.
+
+</span>
+  
+</li>
+
+    
+  </ul>
+
+  <h2>Instance Method Summary</h2>
+
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Object) <strong>initialize</strong> </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#seed-instance_method" title="#seed (instance method)">- (Object) <strong>seed</strong>(integer) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+From the GMP Manual:.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#urandomb-instance_method" title="#urandomb (instance method)">- (Object) <strong>urandomb</strong>(fixnum) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+From the GMP Manual:.
+
+</span>
+  
+</li>
+
+    
+  </ul>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt>Object</tt>) <strong>initialize</strong> 
+  
+
+  
+</p>
+</div>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="new-class_method">
+  
+    + (<tt>Object</tt>) <strong>GMP::RandState.new</strong>(arg = 0) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Initializes a new Random State object. Multiple GMP::RandState objects can
+be instantiated. They may use different generators (TODO) and the states
+are kept separate.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmprandstate.c'</span>
+
+/*
+ * call-seq:
+ *   GMP::RandState.new(arg = 0)
+ *
+ * Initializes a new Random State object. Multiple GMP::RandState objects can
+ * be instantiated. They may use different generators (TODO) and the states
+ * are kept separate.
+ */
+VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
+{
+  MP_RANDSTATE *rs_val;
+  VALUE rs;
+ 
+  (void)klass;
+
+  if (argc &gt; 1)
+    rb_raise(rb_eArgError, &quot;wrong # of arguments (%d for 0 or 1)&quot;, argc);
+  
+  mprandstate_make_struct(rs, rs_val);
+  /* Process argv to search for an alternative generator, ie
+     :mt (gmp_randinit_mt), :lc_2exp (gmp_randinit_lc_2exp), or
+     :lc_2exp_size (gmp_randinit_lc_2exp_size) */
+  gmp_randinit_default(rs_val);
+  rb_obj_call_init(rs, argc, argv);
+  
+  return rs;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="seed-instance_method">
+  
+    - (<tt>Object</tt>) <strong>seed</strong>(integer) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+From the GMP Manual:
+</p>
+<p>
+Set an initial seed value into state.
+</p>
+<p>
+The size of a seed determines how many different sequences of random
+numbers that it&#8217;s possible to generate. The “quality” of the seed is
+the randomness of a given seed compared to the previous seed used, and this
+affects the randomness of separate number sequences. The method for
+choosing a seed is critical if the generated numbers are to be used for
+important applications, such as generating cryptographic keys.
+</p>
+<p>
+Traditionally the system time has been used to seed, but care needs to be
+taken with this. If an application seeds often and the resolution of the
+system clock is low, then the same sequence of numbers might be repeated.
+Also, the system time is quite easy to guess, so if unpredictability is
+required then it should definitely not be the only source for the seed
+value. On some systems there&#8217;s a special device /dev/random which
+provides random data better suited for use as a seed.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmprandstate.c'</span>
+
+/*
+ * call-seq:
+ *   rand_state.seed(integer)
+ *
+ * From the GMP Manual:
+ *
+ * Set an initial seed value into state.
+ *
+ * The size of a seed determines how many different sequences of random numbers
+ * that it's possible to generate. The “quality” of the seed is the randomness
+ * of a given seed compared to the previous seed used, and this affects the
+ * randomness of separate number sequences. The method for choosing a seed is
+ * critical if the generated numbers are to be used for important applications,
+ * such as generating cryptographic keys.
+ *
+ * Traditionally the system time has been used to seed, but care needs to be
+ * taken with this. If an application seeds often and the resolution of the
+ * system clock is low, then the same sequence of numbers might be repeated.
+ * Also, the system time is quite easy to guess, so if unpredictability is
+ * required then it should definitely not be the only source for the seed
+ * value. On some systems there's a special device /dev/random which provides
+ * random data better suited for use as a seed.
+ */
+VALUE r_gmprandstate_seed(VALUE self, VALUE arg)
+{
+  MP_RANDSTATE *self_val;
+  MP_INT *arg_val;
+
+  mprandstate_get_struct(self,self_val);
+  
+  if (GMPZ_P(arg)) {
+    mpz_get_struct(arg,arg_val);
+    gmp_randseed(self_val, arg_val);
+  } else if (FIXNUM_P(arg)) {
+    gmp_randseed_ui(self_val, FIX2INT(arg));
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum(arg_val, arg);
+    gmp_randseed(self_val, arg_val);
+  } else {
+    typeerror(ZXB);
+  }
+  return arg;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="urandomb-instance_method">
+  
+    - (<tt>Object</tt>) <strong>urandomb</strong>(fixnum) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+From the GMP Manual:
+</p>
+<p>
+Generate a uniformly distributed random integer in the range 0 to
+2^fixnum-1, inclusive.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmprandstate.c'</span>
+
+/*
+ * call-seq:
+ *   rand_state.urandomb(fixnum)
+ *
+ * From the GMP Manual:
+ *
+ * Generate a uniformly distributed random integer in the range 0 to
+ * 2^fixnum-1, inclusive. 
+ */
+VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg)
+{
+  MP_RANDSTATE *self_val;
+  MP_INT *res_val;
+  VALUE res;
+
+  mprandstate_get_struct(self,self_val);
+  
+   if (FIXNUM_P(arg)) {
+    mpz_make_struct_init(res, res_val);
+    mpz_urandomb(res_val, self_val, FIX2INT(arg));
+  } else {
+    typeerror(X);
+  }
+  
+  return res;
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on 12/23/09 09:34:03 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.2 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

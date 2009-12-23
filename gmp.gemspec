@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name = "gmp"
-  s.version = "0.2.2"
+  s.version = "0.2.8"
   s.authors = ["Tomasz Wegrzanowski", "srawlins"]
-  s.date = "2009-12-22"
+  s.date = "2009-12-23"
   s.description = "gmp - providing Ruby bindings to the GMP library."
   s.email = ["Tomasz.Wegrzanowski@gmail.com", "sam.rawlins@gmail.com"]
   
@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["ext"]
   #s.files = FileList["[A-Z]*", "{ext,test}/**/*", 'README.rdoc']
   s.files = ["ext/extconf.rb", "ext/gmp.c", "ext/gmpf.c", "ext/gmpf.h", "ext/gmpq.c", "ext/gmpq.h",
-             "ext/gmpz.c", "ext/gmpz.h", "ext/ruby_gmp.h", "ext/takeover.h"]
+             "ext/gmprandstate.c", "ext/gmpz.c", "ext/gmpz.h", "ext/ruby_gmp.h", "ext/takeover.h"]
   s.files += ["test/README", "test/tc_cmp.rb", "test/tc_f_precision.rb",
               "test/tc_f_arithmetics_coersion.rb", "test/tc_fib_fac_nextprime.rb",
               "test/tc_floor_ceil_truncate.rb", "test/tc_logical_roots.rb", "test/tc_q.rb",

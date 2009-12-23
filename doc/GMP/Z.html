@@ -218,7 +218,7 @@ call-seq:.
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#GMP%3A%3AZ.new-class_method" title="GMP::Z.new (class method)">+ (Object) <strong>GMP::Z.new</strong>(arg) </a>
+      <a href="#GMP%3A%3AZ.new-class_method" title="GMP::Z.new (class method)">+ (Object) <strong>GMP::Z.new</strong>(arg = 0) </a>
     
 
     
@@ -231,8 +231,8 @@ call-seq:.
 
   
     <span class="summary_desc">
-Creates a new GMP::Z integer, with arg as its value, converting where
-necessary.
+Creates a new GMP::Z integer, with <tt>arg</tt> as its value, converting
+where necessary.
 
 </span>
   
@@ -1773,15 +1773,15 @@ VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
       <div class="method_details ">
   <p class="signature " id="new-class_method">
   
-    + (<tt>Object</tt>) <strong>GMP::Z.new</strong>(arg) 
+    + (<tt>Object</tt>) <strong>GMP::Z.new</strong>(arg = 0) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     <p>
-Creates a new GMP::Z integer, with arg as its value, converting where
-necessary.
+Creates a new GMP::Z integer, with <tt>arg</tt> as its value, converting
+where necessary.
 </p>
 
 
@@ -1804,9 +1804,9 @@ necessary.
 
 /*
  * call-seq:
- *   GMP::Z.new(arg)
+ *   GMP::Z.new(arg = 0)
  *
- * Creates a new GMP::Z integer, with arg as its value, converting where
+ * Creates a new GMP::Z integer, with +arg+ as its value, converting where
  * necessary.
  */
 VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
@@ -1821,7 +1821,6 @@ VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
 
   mpz_make_struct(res, res_val);
   mpz_init(res_val);
-
   rb_obj_call_init(res, argc, argv);
 
   return res;
@@ -4190,7 +4189,7 @@ VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self)
 </div>
     
     <div id="footer">
-  Generated on 12/22/09 14:40:05 by 
+  Generated on 12/23/09 09:34:03 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.2 (ruby-1.8.6).
 </div>

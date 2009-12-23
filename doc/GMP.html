@@ -52,7 +52,7 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">ext/gmp.c<span class="defines">,<br />
-  ext/gmpf.c,<br /> ext/gmpq.c,<br /> ext/gmpz.c</span>
+  ext/gmpf.c,<br /> ext/gmpq.c,<br /> ext/gmpz.c,<br /> ext/gmprandstate.c</span>
 </dd>
   
 </dl>
@@ -61,13 +61,11 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     <p>
-call-seq:
+From the GMP Manual:
 </p>
-<pre class="code">
-  <span class='int1 identifier id'>int1</span> <span class='geq op'>&gt;=</span> <span class='int2 identifier id'>int2</span>
-</pre>
 <p>
-Returns whether <tt>int1</tt> is greater than or equal to <tt>int2</tt>.
+Generate a uniformly distributed random integer in the range 0 to
+2^fixnum-1, inclusive.
 </p>
 
 
@@ -75,13 +73,15 @@ Returns whether <tt>int1</tt> is greater than or equal to <tt>int2</tt>.
 </div>
 <div class="tags">
   
+  
+
 </div><h2>Defined Under Namespace</h2>
 <p class="children">
    
     
    
     
-      <strong class="classes">Classes:</strong> <a href="GMP/F.html" title="F">F</a>, <a href="GMP/Q.html" title="Q">Q</a>, <a href="GMP/Z.html" title="Z">Z</a>
+      <strong class="classes">Classes:</strong> <a href="GMP/F.html" title="F">F</a>, <a href="GMP/Q.html" title="Q">Q</a>, <a href="GMP/RandState.html" title="RandState">RandState</a>, <a href="GMP/Z.html" title="Z">Z</a>
     
   
 </p>
@@ -132,6 +132,29 @@ A convenience method for <tt>GMP::F.new(arg)</tt>.
   
     <span class="summary_desc">
 A convenience method for <tt>GMP::Q.new(arg)</tt>.
+
+</span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#GMP%3A%3ARandState-class_method" title="GMP::RandState (class method)">+ (Object) <strong>GMP::RandState</strong>(arg) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc">
+A convenience method for <tt>GMP::RandState.new(arg)</tt>.
 
 </span>
   
@@ -263,6 +286,53 @@ VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
 </div>
     
       <div class="method_details ">
+  <p class="signature " id="RandState-class_method">
+  
+    + (<tt>Object</tt>) <strong>GMP::RandState</strong>(arg) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A convenience method for <tt>GMP::RandState.new(arg)</tt>.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'ext/gmprandstate.c'</span>
+
+/*
+ * call-seq:
+ *   GMP::RandState(arg)
+ *
+ * A convenience method for +GMP::RandState.new(arg)+.
+ */
+VALUE r_gmpmod_randstate(int argc, VALUE *argv, VALUE module)
+{
+  (void)module;
+  return r_gmprandstatesg_new(argc, argv, cGMP_RandState);
+}</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
   <p class="signature " id="Z-class_method">
   
     + (<tt>Object</tt>) <strong>GMP::Z</strong>(arg) 
@@ -314,7 +384,7 @@ VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module)
 </div>
     
     <div id="footer">
-  Generated on 12/22/09 14:40:08 by 
+  Generated on 12/23/09 09:34:06 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
   0.5.2 (ruby-1.8.6).
 </div>
