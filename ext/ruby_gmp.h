@@ -34,13 +34,21 @@ typedef __mpfr_struct MP_FLOAT;
 typedef __mpf_struct MP_FLOAT;
 #endif /* HAVE_MPF2MPFR_H */
 
+/*
+  I don't like this solution, because in gmp.h, all of these typedefs are
+  marked with "gmp 1 source compatibility". :(.
+*/
+typedef __gmp_randstate_struct MP_RANDSTATE;
+
 #define mpz_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_INT, c_var); }
 #define mpq_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_RAT, c_var); }
 #define mpf_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_FLOAT, c_var); }
+#define mprandstate_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_RANDSTATE, c_var); }
 #define mpf_get_struct_prec(ruby_var,c_var,prec) { mpf_get_struct(ruby_var,c_var); prec = mpf_get_prec(c_var); }
 #define mpz_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_Z, MP_INT, 0, r_gmpz_free, c_var); }
 #define mpq_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_Q, MP_RAT, 0, r_gmpq_free, c_var); }
 #define mpf_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_F, MP_FLOAT, 0, r_gmpf_free, c_var); }
+#define mprandstate_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_RandState, MP_RANDSTATE, 0, r_gmprandstate_free, c_var); }
 #define mpz_make_struct_init(ruby_var,c_var) { mpz_make_struct(ruby_var,c_var); mpz_init (c_var); }
 #define mpq_make_struct_init(ruby_var,c_var) { mpq_make_struct(ruby_var,c_var); mpq_init (c_var); }
 #define mpf_make_struct_init(ruby_var,c_var,prec) { mpf_make_struct(ruby_var,c_var); mpf_init2 (c_var,prec); }
@@ -74,11 +82,12 @@ typedef __mpf_struct MP_FLOAT;
 //should change exception type
 #define not_yet rb_raise(rb_eTypeError,"Not implemented yet")
 
-extern VALUE mGMP, cGMP_Z, cGMP_Q, cGMP_F;
+extern VALUE mGMP, cGMP_Z, cGMP_Q, cGMP_F, cGMP_RandState;
 
 extern void r_gmpz_free(void *ptr);
 extern void r_gmpq_free(void *ptr);
 extern void r_gmpf_free(void *ptr);
+extern void r_gmprandstate_free(void *ptr);
 
 
 /* from gmpz.h */
@@ -194,8 +203,24 @@ extern VALUE r_gmpf_sgn(VALUE self);
 extern VALUE r_gmpf_get_prec(VALUE self);
 
 
+/* from gmprandstate.h */
+
+// Random State Initialization
+extern VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass);
+extern VALUE r_gmprandstate_initialize(int argc, VALUE *argv, VALUE self);
+extern VALUE r_gmpmod_randstate(int argc, VALUE *argv, VALUE module);
+
+// Random State Seeding
+extern VALUE r_gmprandstate_seed(VALUE self, VALUE arg);
+
+// Integer Random Numbers
+extern VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg);
+
+
+
 extern void init_gmpz();
 extern void init_gmpq();
 extern void init_gmpf();
+extern void init_gmprandstate();
 
 #endif

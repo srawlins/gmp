@@ -63,11 +63,6 @@
  *   ...
  */
 
-/*
- * The goal is to organize this file in the same order that the GMP Manual
- * is organized.
- */
-
 /**********************************************************************
  *    Macros                                                          *
  **********************************************************************/
@@ -222,9 +217,9 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)     \
 
 /*
  * call-seq:
- *   GMP::Z.new(arg)
+ *   GMP::Z.new(arg = 0)
  *
- * Creates a new GMP::Z integer, with arg as its value, converting where
+ * Creates a new GMP::Z integer, with +arg+ as its value, converting where
  * necessary.
  */
 VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
@@ -239,7 +234,6 @@ VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
 
   mpz_make_struct(res, res_val);
   mpz_init(res_val);
-
   rb_obj_call_init(res, argc, argv);
 
   return res;

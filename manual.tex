@@ -133,7 +133,7 @@ Lastly, GMP. GMP must be compiled and working. "and working" means you ran "make
 
 That's all. I don't intend to test any older versions, maybe 4.3.0 for completeness.\\
 
-Here is a table of the exact environments I have tested the gmp gem on:\\\\
+Here is a table of the exact environments on which I have tested the gmp gem:\\\\
 
 \begin{tabular}{lrr} \hline
              Platform             &       Ruby       &    GMP    \\ \midrule[1pt]
@@ -148,14 +148,18 @@ You may clone the gmp gem's git repository with:\\
 \\
 \texttt{git clone git://github.com/srawlins/gmp.git}\\
 
-Or you may install the gem from github:\\
+Or you may install the gem from gemcutter:\\
+\\
+\texttt{gem install gmp}\\
+
+Or you may install the gem from github (old):\\
 \\
 \texttt{gem install srawlins-gmp}\\
 
 At this time, the gem does not self-compile (how does that work?). To compile the C
 extensions, do the following:\\
 \\
-\texttt{cd <srawlins-gmp gem directory>/ext}\\
+\texttt{cd <gmp gem directory>/ext}\\
 \texttt{ruby extconf.rb}\\
 \texttt{make}\\
 
@@ -164,7 +168,7 @@ There shouldn't be any errors, or warnings.
 \section{GMP and gmp gem basics}
 
 \subsection{Classes}
-The gmp gem includes the namespace \texttt{GMP} and three classes within \texttt{GMP}:
+The gmp gem includes the namespace \texttt{GMP} and four classes within \texttt{GMP}:
 \begin{itemize}
   \item \texttt{GMP::Z} - Methods for signed integer arithmetic. There are at least 45
     methods here (still accounting).
@@ -172,9 +176,11 @@ The gmp gem includes the namespace \texttt{GMP} and three classes within \texttt
     methods here (still accounting).
   \item \texttt{GMP::F} - Methods for floating-point arithmetic. There are at least 6
     methods here (still accounting).
+  \item \texttt{GMP::RandState} - Methods for random number generation. There are 3
+    methods here.
 \end{itemize}
 
-In addition to the above three classes, there is also one constant within \texttt{GMP}:
+In addition to the above four classes, there is also one constant within \texttt{GMP}:
 \begin{itemize}
   \item \texttt{GMP::GMP\_VERSION} - The version of GMP compiled into the gmp gem.
 \end{itemize}

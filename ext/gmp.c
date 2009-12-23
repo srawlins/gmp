@@ -6,11 +6,12 @@
 
 #include <ruby_gmp.h>
 
-VALUE mGMP, cGMP_Z, cGMP_Q, cGMP_F;
+VALUE mGMP, cGMP_Z, cGMP_Q, cGMP_F, cGMP_RandState;
 
-void r_gmpz_free(void *ptr) { mpz_clear (ptr); free (ptr); }
-void r_gmpq_free(void *ptr) { mpq_clear (ptr); free (ptr); }
-void r_gmpf_free(void *ptr) { mpf_clear (ptr); free (ptr); }
+void r_gmpz_free(void *ptr)         { mpz_clear (ptr);     free (ptr); }
+void r_gmpq_free(void *ptr)         { mpq_clear (ptr);     free (ptr); }
+void r_gmpf_free(void *ptr)         { mpf_clear (ptr);     free (ptr); }
+void r_gmprandstate_free(void *ptr) { gmp_randclear (ptr); free (ptr); }
 
 static void mpq_str_set(MP_RAT *ROP, char *str)
 {
@@ -157,6 +158,9 @@ void Init_gmp() {
   rb_define_method(cGMP_F, "coerce", r_gmpf_coerce, 1); // new method - testing
 
 /*  rb_define_method(cGMP_F, "cmpabs",  r_gmpf_cmpabs, 1);*/
+  
+  cGMP_RandState = rb_define_class_under (mGMP, "RandState", rb_cObject);
+  init_gmprandstate();
 
 #ifdef MPFR
   rb_define_method(cGMP_F, "exp", r_gmpfr_exp, 0);
