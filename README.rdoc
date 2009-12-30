@@ -220,6 +220,7 @@ You can also call them as:
 
 * GMP::Z#pow does not appear to be working at all. Looking at the code, I don't
   think it ever did.
+* Don't call GMP::RandState(:lc_2exp_size). Give a 2nd arg.
 
 =Precision
 
