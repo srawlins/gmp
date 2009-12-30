@@ -243,14 +243,13 @@ still relevant.
 * floats with precision control
 * to_s vs. inspect
 * check if mpz_addmul_ui would optimize some statements
-* some system that allows using denref and numref as normal ruby objects
+* some system that allows using denref and numref as normal ruby objects (?)
 * should we allocate global temporary variables like Perl GMP does?
 * takeover code that replaces all Bignums with GMP::Z
 * better bignum parser
 * zero-copy method for strings generation
 * put rb_raise into nice macros
-* benchmarks against Python GMP (gmpy? Is this still active?) and Perl GMP (I
-  can't find this either!)
+* benchmarks against Python GMP (gmpy? Is this still active?) and Perl GMP
 * dup methods
 * integrate F into system
 * should Z.[] bits be 0/1 or true/false, 0 is true, what might badly surprise users
@@ -261,5 +260,4 @@ still relevant.
 * check if different sorting of operatations gives better cache usage
 * GMP::* op RubyFloat and RubyFloat op GMP::*
 * sort checks
-* check all new GMP4 operations
 * GMP::Q.to_s(base), GMP::F.to_s(base)

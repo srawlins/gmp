@@ -217,10 +217,18 @@ extern VALUE r_gmprandstate_seed(VALUE self, VALUE arg);
 extern VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg);
 
 
+/* from gmpbench_timing.c */
+
+// GMPbench Timing
+extern VALUE r_gmpmod_cputime(VALUE self);
+extern VALUE r_gmpmod_time(VALUE self);
+
+
 
 extern void init_gmpz();
 extern void init_gmpq();
 extern void init_gmpf();
 extern void init_gmprandstate();
+extern void init_gmpbench_timing();
 
 #endif

@@ -161,6 +161,8 @@ void Init_gmp() {
   
   cGMP_RandState = rb_define_class_under (mGMP, "RandState", rb_cObject);
   init_gmprandstate();
+  
+  init_gmpbench_timing();
 
 #ifdef MPFR
   rb_define_method(cGMP_F, "exp", r_gmpfr_exp, 0);
