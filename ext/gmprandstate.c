@@ -28,27 +28,72 @@
 
 /*
  * call-seq:
- *   GMP::RandState.new(arg = 0)
+ *   GMP::RandState.new()
+ *   GMP::RandState.new(:mt) #=> uses gmp_randinit_mt
+ *   GMP::RandState.new(:lc_2exp, a, c, m2exp) #=> uses gmp_randinit_lc_2exp
+ *   GMP::RandState.new(:lc_2exp_size, size) #=> uses gmp_randinit_lc_2exp_size
  *
  * Initializes a new Random State object. Multiple GMP::RandState objects can
- * be instantiated. They may use different generators (TODO) and the states
+ * be instantiated. They may use different generators and the states
  * are kept separate.
  */
 VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
 {
   MP_RANDSTATE *rs_val;
   VALUE rs;
- 
+  VALUE algorithm, arg2, arg3, arg4;
+  ID algorithm_id = rb_intern("default");
+  MP_INT *a_val;
+  unsigned long c_val, m2exp_val;
+  unsigned long size_val;
+  int free_a_val = 0;
+  
+  ID default_algorithm      = rb_intern("default");
+  ID mt_algorithm           = rb_intern("mt");
+  ID lc_2exp_algorithm      = rb_intern("lc_2exp");
+  ID lc_2exp_size_algorithm = rb_intern("lc_2exp_size");
+  
   (void)klass;
-
-  if (argc > 1)
-    rb_raise(rb_eArgError, "wrong # of arguments (%d for 0 or 1)", argc);
   
   mprandstate_make_struct(rs, rs_val);
-  /* Process argv to search for an alternative generator, ie
-     :mt (gmp_randinit_mt), :lc_2exp (gmp_randinit_lc_2exp), or
-     :lc_2exp_size (gmp_randinit_lc_2exp_size) */
-  gmp_randinit_default(rs_val);
+  rb_scan_args(argc, argv, "04", &algorithm, &arg2, &arg3, &arg4);
+  if (NIL_P(algorithm))    { algorithm_id = rb_intern("default"); }  /* default value */
+  if (SYMBOL_P(algorithm)) { algorithm_id = rb_to_id(algorithm); }
+  if (algorithm_id == default_algorithm ||
+      algorithm_id == mt_algorithm) {
+    if (argc > 1)
+      rb_raise(rb_eArgError, "wrong # of arguments (%d for 0 or 1)", argc);
+    gmp_randinit_default(rs_val);
+  } else if (algorithm_id == lc_2exp_algorithm) {
+    if (argc != 4)
+      rb_raise(rb_eArgError, "wrong # of arguments (%d for 4)", argc);
+    if (GMPZ_P(arg2)) {
+      mpz_get_struct(arg2, a_val);
+    } else if (FIXNUM_P(arg2)) {
+      mpz_temp_alloc(a_val);
+      mpz_init_set_ui(a_val, FIX2INT(arg2));
+      free_a_val = 1;
+    } else if (BIGNUM_P(arg2)) {
+      mpz_temp_from_bignum(a_val, arg2);
+      free_a_val = 1;
+    } else {
+      typeerror_as(ZXB, "b");
+    }
+    c_val     = NUM2LONG(arg3);
+    m2exp_val = NUM2LONG(arg4);
+    gmp_randinit_lc_2exp(rs_val, a_val, c_val, m2exp_val);
+  } else if (algorithm_id == lc_2exp_size_algorithm) {
+    if (argc != 2)
+      rb_raise(rb_eArgError, "wrong # of arguments (%d for 2)", argc);
+    size_val = NUM2LONG(arg2);
+    if (size_val > 128)
+      rb_raise(rb_eArgError, "size must be within [0..128]");
+    int rv = gmp_randinit_lc_2exp_size(rs_val, size_val);
+    if (rv == 0)
+      rb_raise(rb_eArgError, "could not gmp_randinit_lc_2exp_size with %d", size_val);
+  }
+  
+  if (free_a_val) { mpz_temp_free(a_val); }
   rb_obj_call_init(rs, argc, argv);
   
   return rs;
@@ -57,12 +102,10 @@ VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
 VALUE r_gmprandstate_initialize(int argc, VALUE *argv, VALUE self)
 {
   MP_RANDSTATE *self_val;
+  (void)argv;
 
   if (argc != 0) {
     mprandstate_get_struct(self,self_val);
-    /* Process argv to search for an alternative generator, ie
-       :mt (gmp_randinit_mt), :lc_2exp (gmp_randinit_lc_2exp), or
-       :lc_2exp_size (gmp_randinit_lc_2exp_size) */
   }
   return Qnil;
 }

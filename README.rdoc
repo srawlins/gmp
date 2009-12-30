@@ -46,8 +46,8 @@ paragraph at http://gmplib.org/#WHAT :
   contributions, meaning users can safely use GMP. To achieve this, we will ask
   contributors to sign paperwork where they allow us to distribute their work."
 
-Only GMP 4 or newer is supported. The following environments have been tested by me:
-  gmp gem 0.2.8 on:
+Only GMP 4 or newer is supported. The following environments have been tested
+by me: gmp gem 0.2.9 on:
   +-------------------------------------+-------------------+-----------+
   |    Platform                         |       Ruby        |    GMP    |
   +-------------------------------------+-------------------+-----------+
@@ -95,7 +95,7 @@ Constructors can take following arguments:
   GMP::F.new(Fixnum, precision=0)
   GMP::F.new(Bignum, precision=0)
   GMP::F.new(Float,  precision=0)
-  GMP::RandState.new()
+  GMP::RandState.new([algorithm] [, algorithm_args])
 
 You can also call them as:
   GMP.Z(args)
@@ -211,6 +211,10 @@ You can also call them as:
     seed(integer)            seed the generator with a Fixnum or GMP::Z
     urandomb(fixnum)         get uniformly distributed random number between 0
                              and 2^fixnum-1, inclusive
+  GMP (timing functions for GMPbench (0.2))
+    cputime                  milliseconds of cpu time since Ruby start
+    time                     times the execution of a block
+    
 
 =Known Issues
 
@@ -231,6 +235,45 @@ particular, you can set precision of copy of GMP::F object by:
 
 Precision argument, and default_precision will be rounded up to whatever GMP
 thinks is appropriate.
+
+=Benchmarking
+
+"GMP is carefully designed to be as fast as possible." Therefore, I believe it
+is very important for GMP, and its various language bindings to be benchmarked.
+In recent years, the GMP team developed GMPbench, an elegant, weighted
+benchmark. Currently, at http://www.gmplib.org/gmpbench.html they maintain a
+list of recent benchmark results, broken down by CPU, CPU freq, ABI, and
+compiler flags; GMPbench compares different processor's performance against
+eachother, rather than GMP against other bignum libraries, or comparing
+different versions of GMP.
+
+I intend to build a plug-in to GMPbench that will test the ruby gmp gem. The
+results of this benchmark should be directly comparable with the results of GMP
+(on same CPU, etc.). Rather than write a benchmark from the ground up, or try
+to emulate what GMPbench does, a plug-in will allow for this type of
+comparison. And in fact, GMPbench is (perhaps intentionally) written perfectly
+to allow for plugging in.
+
+Various scores are derived from GMPbench by running the <tt>runbench</tt>
+script. This script compiles and runs various individual programs that
+measure the performance of base functions, such as multiply, and app functions
+such as rsa.
+
+The gmp gem benchmark uses the GMPbench framework (that is, runbench, gexpr,
+and the timing methods), and plugs in ruby scripts as the individual programs.
+Right now, there are only two such plugged in ruby scripts:
+
+* multiply - measures performance of multiplying (or squaring) GMP::Z objects
+  whose size (in bits) is given by 1 or 2 operands.
+* divide - measures performance of dividing two GMP::Z objects (using tdiv)
+  whose size (in bits) is given by 2 operands.
+  
+Results: on my little Intel Core Duo T2400 @ 1.83GHz:
+  +------------+--------+-------------------------------+
+  |  test      |  GMP   |  ruby gmp gem                 |
+  |  multiply  |  4660  |        2473.8 (47% overhead)  |
+  |  divide    |  2744  |        2253.1 (18% overhead)  |
+  +------------+--------+-------------------------------+
 
 =Todo
 
@@ -261,3 +304,4 @@ still relevant.
 * GMP::* op RubyFloat and RubyFloat op GMP::*
 * sort checks
 * GMP::Q.to_s(base), GMP::F.to_s(base)
+* benchmark gcd, gcdext, rsa, pi

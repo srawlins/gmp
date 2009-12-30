@@ -1,3 +1,12 @@
+0.2.9:
+  * benchmark/ finally something.
+  * GMP::time and GMP::cputime introduced.
+  * GMP::RandState.new now supports different algorithms.
+
+0.2.8:
+  * GMP::RandState introduced. urandomb supported.
+  * PDF documentation is extended.
+
 0.2.2:
   * GMP::Z.jacobi and GPM::Z#jacobi work and are tested.
   * GMP::Z.legendre works and is tested.
