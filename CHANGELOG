@@ -1,3 +1,9 @@
+0.2.11:
+  * Added GMP::Z.gcd. _not_ tested or documented.
+  * Added GMP::Z.invert. _not_ tested or documented.
+  * Added GMP::Z.sizeinbase and size_in_bin. _not_ tested or documented.
+  * benchmark/rsa is complete, assuming gcd and invert function properly.
+
 0.2.10:
   * Added GMP::Z.%. Tested. Documented.
   * Beginning benchmark/rsa (it required %).

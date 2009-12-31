@@ -4,7 +4,7 @@ require '../ext/gmp'
 
 RSA_EXP = 0x10001
 
-def rsa_sign(smsg, msg, p, q, pq, p_i_q, dp, dq)
+def rsa_sign(msg, p, q, pq, p_i_q, dp, dq)
   pr = msg.powmod(dp, p)
   qr = msg.powmod(dq, q)
   
@@ -14,8 +14,8 @@ def rsa_sign(smsg, msg, p, q, pq, p_i_q, dp, dq)
   o = t % q
   
   t = o * p
-  smsg  = pr + t
-  smsg %= pq
+  smsg = pr + t
+  smsg % pq
 end
 
 n = ARGV[0].to_i
@@ -48,15 +48,37 @@ qm1 = q - 1
 phi = pm1 * qm1
 d = e.invert(phi)
 
-t = GMP::time { z = x.tdiv y }
-iterations = (1 + (1e4 / t)).to_i
+puts "done; pq is %i bits" % pq.sizeinbase(2)
+puts "Precomputing CRT constants"
 
-print "Dividing an %i-bit number by an %i-bit number %i times..." % [dividend, divisor, iterations]
+p_i_q = p.invert(q)
+
+dp = d % pm1
+dq = d % qm1
+
+puts "Generating random messages"
+
+msg = []
+(0...1024).each do |i|
+  msg << random_state.urandomb(n)
+end
+
+print "Calibrating CPU speed..."
+STDOUT.flush
+
+
+t = GMP::time { smsg = rsa_sign(msg[0], p, q, pq, p_i_q, dp, dq) }
+puts "done"
+
+iterations = (1e4 / t).to_i
+iterations = 1 if iterations == 0
+
+print "Signing random messages %i times..." % iterations
 STDOUT.flush
 
 t0 = GMP::cputime
-iterations.times do
-  z = x.tdiv y
+(1..iterations).to_a.reverse.each do |i|
+  smsg = rsa_sign(msg[i % 1024], p, q, pq, p_i_q, dp, dq)
 end
 ti = GMP::cputime - t0
   

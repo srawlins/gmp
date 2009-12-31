@@ -48,6 +48,9 @@
  *   probab_prime?  r_gmpz_is_probab_prime  mpz_probab_prime_p
  *   nextprime      r_gmpz_nextprime        mpz_nextprime
  *   nextprime!     r_gmpz_nextprime_self   mpz_nextprime
+ *   gcd            r_gmpz_gcd              mpz_gcd
+ *   \------------------------              mpz_gcd_ui
+ *   invert         r_gmpz_invert           mpz_invert
  *   jacobi         r_gmpz_jacobi           mpz_jacobi
  *   #jacobi        r_gmpzsg_jacobi         mpz_jacobi
  *   legendre       r_gmpz_legendre         mpz_legendre
@@ -62,6 +65,8 @@
  *   scan1          r_gmpz_scan1            mpz_scan1
  *   even?          r_gmpz_is_even          mpz_even
  *   odd?           r_gmpz_is_odd           mpz_odd
+ *   sizeinbase     r_gmpz_sizeinbase       mpz_sizeinbase
+ *   size_in_bin    r_gmpz_size_in_bin      mpz_sizeinbits
  *   ...
  */
 
@@ -1666,6 +1671,22 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
  *    Miscellaneous Integer Functions                                 *
  **********************************************************************/
 
+VALUE r_gmpz_sizeinbase(VALUE self, VALUE base)
+{
+  MP_INT *self_val;
+  int base_val;
+  mpz_get_struct (self, self_val);
+  base_val = FIX2INT (base);
+  return INT2FIX (mpz_sizeinbase (self_val, base_val));
+}
+
+VALUE r_gmpz_size_in_bin(VALUE self)
+{
+  MP_INT *self_val;
+  mpz_get_struct (self, self_val);
+  return INT2FIX (mpz_sizeinbase (self_val, 2));
+}
+
 
 /**********************************************************************
  *    Integer Special Functions                                       *
@@ -1927,6 +1948,11 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
   rb_define_method(cGMP_Z, "scan0", r_gmpz_scan0, 1);
   rb_define_method(cGMP_Z, "scan1", r_gmpz_scan1, 1);
+  
+  //Miscellaneous Integer Functions
+  rb_define_method(cGMP_Z, "sizeinbase", r_gmpz_sizeinbase, 1);
+  rb_define_alias( cGMP_Z, "size_in_base", "sizeinbase");
+  rb_define_method(cGMP_Z, "size_in_bin", r_gmpz_size_in_bin, 0);
   
   // _unsorted_
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);

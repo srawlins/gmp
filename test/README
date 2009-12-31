@@ -1,10 +1,3 @@
-TODO: Port everything to Test::Unit framework
-Test files 1-6 ported.
-
-Current version passes:
-  1-23
-Current version fails on these tests because:
-  none
 Tests:
    1*   initializations and to_s
    2*   basic integer arithmetics and coersion to Z
@@ -30,11 +23,12 @@ Tests:
   22    mpfr - type tests
   23    mpfr - sqrt and power
   24*   jacobi, legendre, remove
+  25*   gcd, gcdext, lcm, invert
 TODO:
   gcd, lcm
   cmpabs
   integer and integer->rational division, modulo
   more number theoretic functions
   random numbers
-  range error exceptions
+  range errors
   full coverage?

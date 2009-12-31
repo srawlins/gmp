@@ -93,10 +93,10 @@ pi_weight=1
 
 # base_tests="multiply divide gcd gcdext"
 base_tests="multiply divide"
-app_tests="rsa pi"
+# app_tests="rsa pi"
+app_tests="rsa"
 
-# tests="base app"
-tests="base"
+tests="base app"
 
 echo "Running benchmarks (propagated score accuracy exceeds printed intermediates)"
 

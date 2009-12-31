@@ -131,6 +131,10 @@ extern VALUE r_gmpz_eq(VALUE self, VALUE arg);
 extern VALUE r_gmpz_cmp(VALUE self, VALUE arg);
 extern VALUE r_gmpz_cmpabs(VALUE self, VALUE arg);
 
+// Miscelaneous Integer Functions
+extern VALUE r_gmpz_sizeinbase(VALUE self, VALUE base);
+extern VALUE r_gmpz_size_in_bin(VALUE self);
+
 // _unsorted_
 extern VALUE r_gmpz_div(VALUE self, VALUE arg);
 extern VALUE r_gmpz_popcount(VALUE self);

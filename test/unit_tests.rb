@@ -20,6 +20,7 @@ require 'tc_f_precision'
 require 'tc_f_arithmetics_coersion'
 require 'tc_division'
 require 'tc_z_jac_leg_rem'
+require 'tc_z_gcd_lcm_invert'
 
 class TC_default_prec < Test::Unit::TestCase
   def test_default_prec

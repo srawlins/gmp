@@ -47,7 +47,7 @@ paragraph at http://gmplib.org/#WHAT :
   contributors to sign paperwork where they allow us to distribute their work."
 
 Only GMP 4 or newer is supported. The following environments have been tested
-by me: gmp gem 0.2.9 on:
+by me: gmp gem 0.2.10 on:
   +-------------------------------------+-------------------+-----------+
   |    Platform                         |       Ruby        |    GMP    |
   +-------------------------------------+-------------------+-----------+
@@ -262,19 +262,22 @@ such as rsa.
 
 The gmp gem benchmark uses the GMPbench framework (that is, runbench, gexpr,
 and the timing methods), and plugs in ruby scripts as the individual programs.
-Right now, there are only two such plugged in ruby scripts:
+Right now, there are only three such plugged in ruby scripts:
 
 * multiply - measures performance of multiplying (or squaring) GMP::Z objects
   whose size (in bits) is given by 1 or 2 operands.
 * divide - measures performance of dividing two GMP::Z objects (using tdiv)
   whose size (in bits) is given by 2 operands.
+* rsa - measures performance of using RSA to sign messages. The size of pq, the
+  product of the two co-prime GMP::Z objects, p and q, is given by 1 operand.
   
 Results: on my little Intel Core Duo T2400 @ 1.83GHz:
-  +------------+--------+-------------------------------+
-  |  test      |  GMP   |  ruby gmp gem                 |
-  |  multiply  |  4660  |        2473.8 (47% overhead)  |
-  |  divide    |  2744  |        2253.1 (18% overhead)  |
-  +------------+--------+-------------------------------+
+  +------------+-----------+-------------------------------+
+  |  test      |  GMP      |  ruby gmp gem                 |
+  |  multiply  |  4660     |        2473.8 (47% overhead)  |
+  |  divide    |  2744     |        2253.1 (18% overhead)  |
+  |  rsa       |   515.49  |         506.69 (2% overhead)  |
+  +------------+--------+----------------------------------+
 
 =Todo
 
