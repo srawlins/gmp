@@ -24,12 +24,12 @@ Tests:
   16*   floating point init with and without explicit precision
   17*   basic floating point arithmetics and coersion to F
   18*   default_prec and default_prec=
-  19    integer division methods
+  19*   integer division methods
   20    mpfr - exp and log
   21    mpfr - trigonometry
   22    mpfr - type tests
   23    mpfr - sqrt and power
-  24    jacobi, legendre, remove
+  24*   jacobi, legendre, remove
 TODO:
   gcd, lcm
   cmpabs
@@ -38,4 +38,3 @@ TODO:
   random numbers
   range error exceptions
   full coverage?
-  use more assert_in_delta

@@ -111,6 +111,9 @@ extern VALUE r_gmpz_sub(VALUE self, VALUE arg);
 extern VALUE r_gmpz_sub_self(VALUE self, VALUE arg);
 extern VALUE r_gmpz_mul(VALUE self, VALUE arg);
 
+// Integer Division
+extern VALUE r_gmpz_mod(VALUE self, VALUE arg);
+
 // Integer Exponentiation
 extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
 

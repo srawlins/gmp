@@ -126,12 +126,14 @@ Next is the platform, the combination of the architecture (processor) and OS.
 As far as I can tell, if you can compile GMP and Ruby on a given platform, you
 can use the gmp gem there too. Please report problems with that hypothesis.\\
 
-Lastly, GMP. GMP must be compiled and working. "and working" means you ran "make check" while installing GMP. The following versions of GMP have been tested:
+Lastly, GMP. GMP must be compiled and working. "and working" means you ran "make
+check" while installing GMP. The following versions of GMP have been tested:
 \begin{itemize}
   \item GMP 4.3.1
 \end{itemize}
 
-That's all. I don't intend to test any older versions, maybe 4.3.0 for completeness.\\
+That's all. I don't intend to test any older versions, maybe 4.3.0 for
+completeness.\\
 
 Here is a table of the exact environments on which I have tested the gmp gem:\\\\
 
@@ -421,7 +423,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the remainder after truncated division of $integer$ by $numeric$. $numeric$ can
-  be an instance of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
+  be an instance of $GMP::Z$, $Fixnum$, or $Bignum$. The return object's class is always
   $GMP::Z$.
 }
 \end{tabular}
@@ -433,7 +435,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the remainder after floored division of $integer$ by $numeric$. $numeric$ can
-  be an instance of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
+  be an instance of $GMP::Z$, $Fixnum$, or $Bignum$. The return object's class is always
   $GMP::Z$.
 }
 \end{tabular}
@@ -445,8 +447,19 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the remainder after ceilinged division of $integer$ by $numeric$. $numeric$ can
-  be an instance of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always
+  be an instance of $GMP::Z$, $Fixnum$, or $Bignum$. The return object's class is always
   $GMP::Z$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{\%} & & \textit{integer} \% \textit{numeric} $\rightarrow$ \textit{integer}\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns $integer$ modulo $numeric$. $numeric$ can be an instance of $GMP::Z$, $Fixnum$,
+  or $Bignum$. The return object's class is always $GMP::Z$.
 }
 \end{tabular}
 

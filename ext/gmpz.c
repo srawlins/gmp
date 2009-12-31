@@ -30,6 +30,8 @@
  *   fmod           r_gmpz_fmod             mpz_fdiv_r
  *   cdiv           r_gmpz_cdiv             mpz_cdiv_q
  *   cmod           r_gmpz_cmod             mpz_cdiv_r
+ *   %              r_gmpz_mod              mpz_mod
+ *   \------------------------              mpz_mod_ui
  *   -@             r_gmpz_neg              mpz_neg
  *   neg            r_gmpz_neg              mpz_neg
  *   neg!           r_gmpz_neg_self         mpz_neg
@@ -709,9 +711,12 @@ DEFUN_INT2INT(abs, mpz_abs)
 
 /*
  * call-seq:
- *   /(other)
+ *   a / b
  *
- * Divides this GMP::Z by other. Other can be
+ * Divides _a_ by _b_. Combines the different GMP division functions to
+ * provide what one is hopefully looking for. The result will either be
+ * an instance of GMP::Q or GMP::F, depending on _b_. _b_ can be an
+ * instance of any of the following:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -726,48 +731,48 @@ VALUE r_gmpz_div(VALUE self, VALUE arg)
   VALUE res;
   unsigned int prec;
 
-  mpz_get_struct(self,self_val);
+  mpz_get_struct (self,self_val);
 
-  if (GMPZ_P(arg)) {
-    mpz_get_struct(arg, arg_val_z);
-    if (mpz_cmp_ui(arg_val_z, 0) == 0)
-      rb_raise(rb_eZeroDivError, "divided by 0");
-    mpq_make_struct_init(res, res_val_q);
-    mpq_set_num(res_val_q, self_val);
-    mpq_set_den(res_val_q, arg_val_z);
+  if (GMPZ_P (arg)) {
+    mpz_get_struct (arg, arg_val_z);
+    if (mpz_cmp_ui (arg_val_z, 0) == 0)
+      rb_raise (rb_eZeroDivError, "divided by 0");
+    mpq_make_struct_init (res, res_val_q);
+    mpq_set_num (res_val_q, self_val);
+    mpq_set_den (res_val_q, arg_val_z);
     mpq_canonicalize (res_val_q);
-  } else if (FIXNUM_P(arg)) {
-    if (FIX2INT(arg) == 0)
-      rb_raise(rb_eZeroDivError, "divided by 0");
-    mpq_make_struct_init(res, res_val_q);
-    mpq_set_num(res_val_q, self_val);
-    mpz_set_ui(mpq_denref(res_val_q), FIX2INT(arg));
+  } else if (FIXNUM_P (arg)) {
+    if (FIX2INT (arg) == 0)
+      rb_raise (rb_eZeroDivError, "divided by 0");
+    mpq_make_struct_init (res, res_val_q);
+    mpq_set_num (res_val_q, self_val);
+    mpz_set_ui (mpq_denref (res_val_q), FIX2INT (arg));
     mpq_canonicalize (res_val_q);
-  } else if (GMPQ_P(arg)) {
-    mpq_get_struct(arg, arg_val_q);
-    if (mpz_cmp_ui(mpq_numref(arg_val_q), 0) == 0)
-      rb_raise(rb_eZeroDivError, "divided by 0");
-    mpz_temp_init(tmp_z);
-    mpq_make_struct_init(res, res_val_q);
-    mpz_gcd(tmp_z, mpq_numref(arg_val_q), self_val);
-    mpz_divexact(mpq_numref(res_val_q), self_val, tmp_z);
-    mpz_divexact(mpq_denref(res_val_q), mpq_numref(arg_val_q), tmp_z);
-    mpz_mul(mpq_numref(res_val_q), mpq_numref(res_val_q), mpq_denref(arg_val_q));
-    mpz_temp_free(tmp_z);
+  } else if (GMPQ_P (arg)) {
+    mpq_get_struct (arg, arg_val_q);
+    if (mpz_cmp_ui (mpq_numref (arg_val_q), 0) == 0)
+      rb_raise (rb_eZeroDivError, "divided by 0");
+    mpz_temp_init (tmp_z);
+    mpq_make_struct_init (res, res_val_q);
+    mpz_gcd (tmp_z, mpq_numref (arg_val_q), self_val);
+    mpz_divexact (mpq_numref (res_val_q), self_val, tmp_z);
+    mpz_divexact (mpq_denref (res_val_q), mpq_numref (arg_val_q), tmp_z);
+    mpz_mul (mpq_numref (res_val_q), mpq_numref (res_val_q), mpq_denref (arg_val_q));
+    mpz_temp_free (tmp_z);
   } else if (GMPF_P(arg)) {
-    mpf_get_struct_prec(arg, arg_val_f, prec);
-    mpf_make_struct_init(res, res_val_f, prec);
-    mpf_set_z(res_val_f, self_val);
-    mpf_div(res_val_f, res_val_f, arg_val_f);
-  } else if (BIGNUM_P(arg)) {
-    mpq_make_struct_init(res, res_val_q);
-    mpz_set_bignum(mpq_denref(res_val_q), arg);
-    if (mpz_cmp_ui(mpq_denref(res_val_q), 0) == 0)
-      rb_raise(rb_eZeroDivError, "divided by 0");
-    mpq_set_num(res_val_q, self_val);
-    mpq_canonicalize(res_val_q);
+    mpf_get_struct_prec (arg, arg_val_f, prec);
+    mpf_make_struct_init (res, res_val_f, prec);
+    mpf_set_z (res_val_f, self_val);
+    mpf_div (res_val_f, res_val_f, arg_val_f);
+  } else if (BIGNUM_P (arg)) {
+    mpq_make_struct_init (res, res_val_q);
+    mpz_set_bignum (mpq_denref (res_val_q), arg);
+    if (mpz_cmp_ui (mpq_denref (res_val_q), 0) == 0)
+      rb_raise (rb_eZeroDivError, "divided by 0");
+    mpq_set_num (res_val_q, self_val);
+    mpq_canonicalize (res_val_q);
   } else {
-    typeerror(ZQFXB);
+    typeerror (ZQFXB);
   }
   return res;
 }
@@ -877,6 +882,39 @@ DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
  * This function calculates only the remainder.
  */
 DEFUN_INT_DIV(cmod, mpz_cdiv_r)
+
+/*
+ * call-seq:
+ *   a % b
+ *
+ * Returns _a_ mod _b_. _b_ can be an instance any of the following:
+ * * GMP::Z
+ * * Fixnum
+ * * Bignum
+ */
+VALUE r_gmpz_mod(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val, *res_val;
+  VALUE res;
+
+  mpz_get_struct(self,self_val);
+
+  if (GMPZ_P(arg)) {
+    mpz_make_struct_init(res, res_val);
+    mpz_get_struct(arg, arg_val);
+    mpz_mod(res_val, self_val, arg_val);
+  } else if (FIXNUM_P(arg)) {
+    mpz_make_struct_init(res, res_val);
+    mpz_mod_ui(res_val, self_val, FIX2INT(arg));
+  } else if (BIGNUM_P(arg)) {
+    mpz_make_struct_init(res, res_val);
+    mpz_set_bignum(res_val, arg);
+    mpz_mod(res_val, res_val, self_val);
+  } else {
+    typeerror(ZXB);
+  }
+  return res;
+}
 
 
 /**********************************************************************
@@ -1794,6 +1832,7 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "fmod", r_gmpz_fmod, 1);
   rb_define_method(cGMP_Z, "cdiv", r_gmpz_cdiv, 1);
   rb_define_method(cGMP_Z, "cmod", r_gmpz_cmod, 1);
+  rb_define_method(cGMP_Z, "%",    r_gmpz_mod, 1);
   
   // Integer Exponentiation
   rb_define_singleton_method(cGMP_Z, "pow",    r_gmpzsg_pow, 2);
