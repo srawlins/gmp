@@ -46,6 +46,7 @@ e = GMP::Z(RSA_EXP)
 pm1 = p - 1
 qm1 = q - 1
 phi = pm1 * qm1
+d = e.invert(phi)
 
 t = GMP::time { z = x.tdiv y }
 iterations = (1 + (1e4 / t)).to_i

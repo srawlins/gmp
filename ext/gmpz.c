@@ -1193,6 +1193,32 @@ VALUE r_gmpz_gcd(VALUE self, VALUE arg)
   return res;
 }
 
+VALUE r_gmpz_invert(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val, *res_val;
+  VALUE res;
+
+  mpz_get_struct (self,self_val);
+
+  if (GMPZ_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_get_struct (arg, arg_val);
+    mpz_invert (res_val, self_val, arg_val);
+  } else if (FIXNUM_P (arg)) {
+    mpz_temp_alloc(arg_val);
+    mpz_init_set_ui(arg_val, FIX2INT(arg));
+    mpz_make_struct_init (res, res_val);
+    mpz_invert (res_val, self_val, arg_val);
+  } else if (BIGNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_set_bignum (res_val, arg);
+    mpz_invert (res_val, res_val, self_val);
+  } else {
+    typeerror (ZXB);
+  }
+  return res;
+}
+
 /*
  * Document-method: jacobi
  *
@@ -1875,6 +1901,7 @@ void init_gmpz()
   rb_define_alias(           cGMP_Z, "next_prime",    "nextprime");
   rb_define_alias(           cGMP_Z, "next_prime!",   "nextprime!");
   rb_define_method(          cGMP_Z, "gcd",           r_gmpz_gcd, 1);
+  rb_define_method(          cGMP_Z, "invert",        r_gmpz_invert, 1);
   rb_define_method(          cGMP_Z, "jacobi",        r_gmpz_jacobi, 1);
   rb_define_singleton_method(cGMP_Z, "jacobi",        r_gmpzsg_jacobi, 2);
   rb_define_method(          cGMP_Z, "legendre",      r_gmpz_legendre, 1);
