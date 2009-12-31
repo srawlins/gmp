@@ -119,6 +119,7 @@ extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
 
 // Number Theoretic Functions
 extern VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self);
+extern VALUE r_gmpz_gcd(VALUE self, VALUE arg);
 extern VALUE r_gmpz_jacobi(VALUE self, VALUE b);
 extern VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b);
 extern VALUE r_gmpz_legendre(VALUE self, VALUE p);

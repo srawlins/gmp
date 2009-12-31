@@ -1169,6 +1169,30 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
  */
 DEFUN_INT2INT(nextprime, mpz_nextprime)
 
+VALUE r_gmpz_gcd(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val, *res_val;
+  VALUE res;
+
+  mpz_get_struct (self,self_val);
+
+  if (GMPZ_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_get_struct (arg, arg_val);
+    mpz_gcd (res_val, self_val, arg_val);
+  } else if (FIXNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_gcd_ui (res_val, self_val, FIX2INT(arg));
+  } else if (BIGNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_set_bignum (res_val, arg);
+    mpz_gcd (res_val, res_val, self_val);
+  } else {
+    typeerror (ZXB);
+  }
+  return res;
+}
+
 /*
  * Document-method: jacobi
  *
@@ -1354,7 +1378,7 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
  * GMP::Z.fac(3)  #=>  6
  * GMP::Z.fac(4)  #=> 24
  */
-DEFUN_INT_SINGLETON_UI(fac,mpz_fac_ui)
+DEFUN_INT_SINGLETON_UI(fac, mpz_fac_ui)
 /*
  * Document-method: GMP::Z.fib
  *
@@ -1375,7 +1399,7 @@ DEFUN_INT_SINGLETON_UI(fac,mpz_fac_ui)
  * GMP::Z.fac(6)  #=>  8
  * GMP::Z.fac(7)  #=> 13
  */
-DEFUN_INT_SINGLETON_UI(fib,mpz_fib_ui)
+DEFUN_INT_SINGLETON_UI(fib, mpz_fib_ui)
 
 
 /**********************************************************************
@@ -1577,17 +1601,17 @@ VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
   MP_INT *self_val;
   int bitnr_val;
 
-  mpz_get_struct(self, self_val);
+  mpz_get_struct (self, self_val);
 
-  if (FIXNUM_P(bitnr)) {
+  if (FIXNUM_P (bitnr)) {
     bitnr_val = FIX2INT (bitnr);
   } else {
-    typeerror_as(X, "index");
+    typeerror_as (X, "index");
   }
-  if (RTEST(set_to)) {
-    mpz_setbit(self_val, bitnr_val);
+  if (RTEST (set_to)) {
+    mpz_setbit (self_val, bitnr_val);
   } else {
-    mpz_clrbit(self_val, bitnr_val);
+    mpz_clrbit (self_val, bitnr_val);
   }
   return Qnil;
 }
@@ -1613,12 +1637,9 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
 
 
 /**********************************************************************
- *    Integer Random Numbers                                          *
- **********************************************************************/
-
-/**********************************************************************
  *    Miscellaneous Integer Functions                                 *
  **********************************************************************/
+
 
 /**********************************************************************
  *    Integer Special Functions                                       *
@@ -1853,6 +1874,7 @@ void init_gmpz()
   rb_define_method(          cGMP_Z, "nextprime!",    r_gmpz_nextprime_self, 0);
   rb_define_alias(           cGMP_Z, "next_prime",    "nextprime");
   rb_define_alias(           cGMP_Z, "next_prime!",   "nextprime!");
+  rb_define_method(          cGMP_Z, "gcd",           r_gmpz_gcd, 1);
   rb_define_method(          cGMP_Z, "jacobi",        r_gmpz_jacobi, 1);
   rb_define_singleton_method(cGMP_Z, "jacobi",        r_gmpzsg_jacobi, 2);
   rb_define_method(          cGMP_Z, "legendre",      r_gmpz_legendre, 1);
@@ -1868,7 +1890,7 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "<=",  r_gmpz_cmp_le, 1);
   rb_define_method(cGMP_Z, "cmpabs",  r_gmpz_cmpabs, 1);
   
-  // _unsorted_
+  // Integer Logic and Bit Fiddling
   rb_define_method(cGMP_Z, "com", r_gmpz_com, 0);
   rb_define_method(cGMP_Z, "com!", r_gmpz_com_self, 0);
   rb_define_method(cGMP_Z, "&", r_gmpz_and, 1);
@@ -1878,10 +1900,11 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
   rb_define_method(cGMP_Z, "scan0", r_gmpz_scan0, 1);
   rb_define_method(cGMP_Z, "scan1", r_gmpz_scan1, 1);
+  
+  // _unsorted_
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
   rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
   rb_define_method(cGMP_Z, "sgn", r_gmpz_sgn, 0);
-  
   rb_define_method(cGMP_Z, "==",  r_gmpz_eq, 1);
   rb_define_method(cGMP_Z, ">>",  r_gmpz_fshr, 1);
   rb_define_method(cGMP_Z, "tshr",  r_gmpz_tshr, 1);

@@ -5,24 +5,47 @@ require '../ext/gmp'
 RSA_EXP = 0x10001
 
 def rsa_sign(smsg, msg, p, q, pq, p_i_q, dp, dq)
-  pr      = GMP::Z()
-  qr      = GMP::Z()
-  qr_m_pr = GMP::Z()
-  t       = GMP::Z()
-  o       = GMP::Z()
   pr = msg.powmod(dp, p)
   qr = msg.powmod(dq, q)
+  
   qr_m_pr = qr - pr
+  
   t = qr_m_pr * p_i_q
   o = t % q
+  
+  t = o * p
+  smsg  = pr + t
+  smsg %= pq
 end
 
-dividend = ARGV[0].to_i
-divisor = ARGV[1].to_i
+n = ARGV[0].to_i
 random_state = GMP::RandState.new
 
-x = random_state.urandomb(dividend)
-y = random_state.urandomb(divisor)
+print "Generating p, q, d..."
+STDOUT.flush
+
+pq = GMP::Z()
+while pq != 1
+  p = random_state.urandomb(n/2)
+  p[n/2 - 1] = true
+  p[n/2 - 2] = true
+  p[0]       = true
+  
+  q = random_state.urandomb(n/2)
+  q[n/2 - 1] = true
+  q[n/2 - 2] = true
+  q[0]       = true
+  
+  pq = p.gcd(q)
+end
+
+pq = p * q
+
+e = GMP::Z(RSA_EXP)
+
+pm1 = p - 1
+qm1 = q - 1
+phi = pm1 * qm1
 
 t = GMP::time { z = x.tdiv y }
 iterations = (1 + (1e4 / t)).to_i

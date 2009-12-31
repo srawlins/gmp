@@ -139,10 +139,6 @@ void Init_gmp() {
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
   init_gmpz();
   rb_define_method(cGMP_Z, "coerce", r_gmpz_coerce, 1);
-/*
-  rb_define_method(cGMP_Z, "gcd",  r_gmpz_gcd, 1);
-  rb_define_method(cGMP_Z, "lcm",  r_gmpz_lcm, 1);
-*/
 
   cGMP_Q = rb_define_class_under (mGMP, "Q", rb_cNumeric);
   init_gmpq();
