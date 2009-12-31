@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name = "gmp"
-  s.version = "0.2.9"
+  s.version = "0.2.10"
   s.authors = ["Tomasz Wegrzanowski", "srawlins"]
-  s.date = "2009-12-30"
+  s.date = "2009-12-31"
   s.description = "gmp - providing Ruby bindings to the GMP library."
   s.email = ["Tomasz.Wegrzanowski@gmail.com", "sam.rawlins@gmail.com"]
   
