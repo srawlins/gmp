@@ -27,6 +27,12 @@ class TC_default_prec < Test::Unit::TestCase
     assert_equal( 64, GMP::F.default_prec, "GMP::F.default_prec should be 64.")
     GMP::F.default_prec = 100
     assert_equal(128, GMP::F.default_prec, "GMP::F.default_prec should be assignable.")
+    GMP::F.default_prec = 130
+    assert_equal(160, GMP::F.default_prec, "GMP::F.default_prec should be assignable.")
+    GMP::F.default_prec = 1000
+    assert_equal(1024, GMP::F.default_prec, "GMP::F.default_prec should be assignable.")
+    assert_raise(RangeError) { GMP::F.default_prec = -64 }
+    assert_raise(TypeError) { GMP::F.default_prec = "Cow" }
     GMP::F.default_prec =  64
   end
 end
