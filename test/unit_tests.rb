@@ -21,6 +21,7 @@ require 'tc_f_arithmetics_coersion'
 require 'tc_division'
 require 'tc_z_jac_leg_rem'
 require 'tc_z_gcd_lcm_invert'
+require 'tc_random'
 
 class TC_default_prec < Test::Unit::TestCase
   def test_default_prec
