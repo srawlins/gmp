@@ -1,3 +1,12 @@
+0.4.0:
+  * Added tests for GMP::Z.gcd.
+  * Added tests for GMP::Z.invert.
+  * Added tests for GMP::RandState (seed, urandomb).
+  * Added documentation for GMP::Z.gcd.
+  * Added documentation for GMP::Z.invert.
+  * Added documentation for GMP::RandState (new, seed, urandomb).
+  * Cleaned up documentation (fixed GMP   ::   Z spacings).
+
 0.2.11:
   * Added GMP::Z.gcd. _not_ tested or documented.
   * Added GMP::Z.invert. _not_ tested or documented.

@@ -19,6 +19,8 @@
 \def\qquad{\quad\quad}
 \def\qqqquad{\quad\quad\quad\quad}
 \def\cc{\colon\colon}
+\def\gmpz{\textit{GMP::Z}}
+\def\gmprandstate{\textit{GMP::RandState\ }}
 \frenchspacing
 \begin{document}
 
@@ -26,8 +28,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.2.10}}\\
-\multicolumn{2}{r}{\large{31 December 2009}}
+\multicolumn{2}{r}{\large{Edition 0.4.0}}\\
+\multicolumn{2}{r}{\large{03 January 2010}}
 \end{tabular}
 
 \vfill
@@ -458,8 +460,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{\%} & & \textit{integer} \% \textit{numeric} $\rightarrow$ \textit{integer}\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns $integer$ modulo $numeric$. $numeric$ can be an instance of $GMP::Z$, $Fixnum$,
-  or $Bignum$. The return object's class is always $GMP::Z$.
+  Returns $integer$ modulo $numeric$. $numeric$ can be an instance of \gmpz, $Fixnum$,
+  or $Bignum$. The return object's class is always \gmpz.
 }
 \end{tabular}
 
@@ -589,6 +591,36 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
+\textbf{gcd} & & $a$.gcd($b$) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Computes the greatest common divisor of $a$ and $b$. $g$ will always be positive, even
+  if $a$ or $b$ is negative. $b$ can be an instance of \gmpz, $Fixnum$, or $Bignum$.
+  \newline\newline
+  \texttt{GMP::Z(24).gcd(GMP::Z(8)) \quad \#=> GMP::Z(8) \newline
+          GMP::Z(24).gcd(8) \quad \#=> GMP::Z(8) \newline
+          GMP::Z(24).gcd(2**32) \quad \#=> GMP::Z(8)}
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{invert} & & $a$.invert($m$) $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Computes the inverse of $a$ mod $m$. $m$ can be an instance of \gmpz, $Fixnum$, or
+  $Bignum$.
+  \newline\newline
+  \texttt{GMP::Z(2).invert(GMP::Z(11)) \quad \#=> GMP::Z(6) \newline
+          GMP::Z(3).invert(11) \quad \#=> GMP::Z(4) \newline
+          GMP::Z(5).invert(11) \quad \#=> GMP::Z(9)}
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
 \textbf{jacobi} & & $a$.jacobi($b$) $\rightarrow$ $integer$ \\
 & & GMP::Z.jacobi($a$, $b$) $\rightarrow$ $integer$ \\
 \cmidrule(r){2-3}
@@ -596,10 +628,10 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   Returns the Jacobi symbol $(a/b)$. This is defined only for $b$ odd. If $b$ is even, a
   range exception will be raised.
   \newline\newline
-  $GMP::Z.jacobi$ (the instance method) requires $b$ to be an instance of $GMP::Z$.
+  \textit{GMP::Z.jacobi} (the instance method) requires $b$ to be an instance of \gmpz.
   \newline
-  $GMP::Z\#jacobi$ (the class method) requires $a$ and $b$ each to be an instance of
-  $GMP::Z$, $Fixnum$, or $Bignum$.
+  \textit{GMP::Z\#jacobi} (the class method) requires $a$ and $b$ each to be an instance of
+  \gmpz, $Fixnum$, or $Bignum$.
 }
 \end{tabular}
 \newline\newline
@@ -621,8 +653,67 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Remove all occurrences of the factor $factor$ from $n$. $factor$ can be an instance of
-  $GMP::Z$, $Fixnum$, or $Bignum$. $integer$ is the resulting integer, an instance of
-  $GMP::Z$. $times$ is how many times $factor$ was removed, a $Fixnum$.
+  \gmpz, $Fixnum$, or $Bignum$. $integer$ is the resulting integer, an instance of
+  \gmpz. $times$ is how many times $factor$ was removed, a $Fixnum$.
+}
+\end{tabular}
+
+\newpage
+\section{Random Number Functions}
+
+\subsection{Random State Initialization}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{new} & & GMP::RandState.new $\rightarrow$ \textit{mersenne twister state} \\
+& & GMP::RandState.new(:default) $\rightarrow$ \textit{mersenne twister state} \\
+& & GMP::RandState(:mt) $\rightarrow$ \textit{mersenne twister random state} \\
+& & GMP::RandState.new(:lc\_2exp, a, c, m2exp) $\rightarrow$ \textit{linear congruential state} \\
+& & GMP::RandState.new(:lc\_2exp\_size, size) $\rightarrow$ \textit{linear congruential state} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  This method creates a new \gmprandstate instance. The first argument defaults
+  to \textit{:default} (also \textit{:mt}), which initializes the \gmprandstate for a Mersenne
+  Twister algorithm. No other arguments should be given if \textit{:default} or \textit{:mt} is
+  specified.
+  \newline\newline
+  If the first argument given is \textit{:lc\_2exp}, then the \gmprandstate is
+  initialized for a linear congruential algorithm. \textit{:lc\_2exp} must be followed with $a$,
+  $c$, and $m2exp$. The algorithm can then proceed as ($X = (a*X + c) \mod 2^{m2exp}$).
+  \newline\newline
+  \gmprandstate can also be initialized for a linear congruential algorithm with
+  \textit{:lc\_2exp\_size}. This initializer instead takes just one argument, $size$. $a$, $c$,
+  and $m2exp$ are then chosen from a table, with $m2exp/2 > size$. The maximum size
+  currently supported is 128.\newline
+  
+  \texttt{GMP::RandState.new \newline
+          GMP::RandState.new(:mt) \newline
+          GMP::RandState.new(:lc\_2exp, 1103515245, 12345, 15) \quad \#=> Perl's old rand() \newline
+          GMP::RandState.new(:lc\_2exp, 25\_214\_903\_917, 11, 48) \quad \#=> drand48}
+}
+\end{tabular}
+
+\subsection{Random State Seeding}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{seed} & & $state$.seed($integer$) $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Set an initial seed value into $state$. $integer$ can be an instance of \gmpz,
+  $Fixnum$, or $Bignum$.
+}
+\end{tabular}
+
+\subsection{Integer Random Numbers}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{urandomb} & & $state$.urandomb($n$) $\rightarrow$ $n$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Generates a uniformly distributed random integer in the range $0$ to $2^n -1$,
+  inclusive.
 }
 \end{tabular}
 
