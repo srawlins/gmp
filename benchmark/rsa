@@ -65,8 +65,6 @@ end
 
 print "Calibrating CPU speed..."
 STDOUT.flush
-
-
 t = GMP::time { smsg = rsa_sign(msg[0], p, q, pq, p_i_q, dp, dq) }
 puts "done"
 

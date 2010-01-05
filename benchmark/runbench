@@ -92,7 +92,7 @@ pi_args="10000 100000 1000000"
 pi_weight=1
 
 # base_tests="multiply divide gcd gcdext"
-base_tests="multiply divide"
+base_tests="multiply divide gcd"
 # app_tests="rsa pi"
 app_tests="rsa"
 

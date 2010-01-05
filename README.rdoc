@@ -47,11 +47,11 @@ paragraph at http://gmplib.org/#WHAT :
   contributors to sign paperwork where they allow us to distribute their work."
 
 Only GMP 4 or newer is supported. The following environments have been tested
-by me: gmp gem 0.2.10 on:
+by me: gmp gem 0.4.0 on:
   +-------------------------------------+-------------------+-----------+
   |    Platform                         |       Ruby        |    GMP    |
   +-------------------------------------+-------------------+-----------+
-  | Cygwin on x86                       | (MRI) Ruby 1.8.7  | GMP 4.3.1 |
+  | Cygwin 1.7 on x86                   | (MRI) Ruby 1.8.7  | GMP 4.3.1 |
   | Linux (LinuxMint 7) on x86 (32-bit) | (MRI) Ruby 1.8.7  | GMP 4.3.1 |
   | Mac OS X 10.5.7 on x86 (32-bit)     | (MRI) Ruby 1.8.6  | GMP 4.3.1 |
   | Mac OS X 10.5.7 on x86 (32-bit)     | (MRI) Ruby 1.9.1  | GMP 4.3.1 |
@@ -156,15 +156,19 @@ You can also call them as:
     sqrt!                    change the object into its square root
     sqrtrem                  square root, remainder
     root(n)                  nth root
-    jacobi                   jacobi symbol
-    legendre                 legendre symbol
     probab_prime?            0 if composite, 1 if probably prime, 2 if
                              certainly prime
     nextprime                next *probable* prime
     nextprime!               change the object into its next *probable* prime
-    popcount                 the number of bits equal to 1
-    to_i                     convert to FixNum or BigNum
+    gcd                      greatest common divisor
+    invert(m)                invert mod m
+    jacobi                   jacobi symbol
+    legendre                 legendre symbol
     remove(n)                remove all occurences of factor n
+    popcount                 the number of bits equal to 1
+    sizeinbase(b)            digits in base b
+    size_in_bin              digits in binary
+    to_i                     convert to Fixnum or Bignum
   GMP::Q and GMP::F
     /                        division
   GMP::Q
@@ -272,12 +276,13 @@ Right now, there are only three such plugged in ruby scripts:
   product of the two co-prime GMP::Z objects, p and q, is given by 1 operand.
   
 Results: on my little Intel Core Duo T2400 @ 1.83GHz:
-  +------------+-----------+-------------------------------+
-  |  test      |  GMP      |  ruby gmp gem                 |
-  |  multiply  |  4660     |        2473.8 (47% overhead)  |
-  |  divide    |  2744     |        2253.1 (18% overhead)  |
-  |  rsa       |   515.49  |         506.69 (2% overhead)  |
-  +------------+--------+----------------------------------+
+  +------------+-----------+--------------------------------+
+  |  test      |  GMP      |  ruby gmp gem                  |
+  |  multiply  |  4660     |        2473.8  (47% overhead)  |
+  |  divide    |  2744     |        2253.1  (18% overhead)  |
+  |  gcd       |  1004.5   |         865.13 (14% overhead)  |
+  |  rsa       |   515.49  |         506.69 ( 2% overhead)  |
+  +------------+--------+-----------------------------------+
 
 =Todo
 
