@@ -6,6 +6,7 @@
   * Added documentation for GMP::Z.invert.
   * Added documentation for GMP::RandState (new, seed, urandomb).
   * Cleaned up documentation (fixed GMP   ::   Z spacings).
+  * Added benchmark/gcd
 
 0.2.11:
   * Added GMP::Z.gcd. _not_ tested or documented.
