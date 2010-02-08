@@ -52,9 +52,13 @@ by me: gmp gem 0.4.0 on:
   |    Platform                         |       Ruby        |    GMP    |
   +-------------------------------------+-------------------+-----------+
   | Cygwin 1.7 on x86                   | (MRI) Ruby 1.8.7  | GMP 4.3.1 |
+  |                                     |                   | GMP 4.3.2 |
+  |                                     |                   | GMP 5.0.0 |
+  |-------------------------------------+-------------------+-----------|
   | Linux (LinuxMint 7) on x86 (32-bit) | (MRI) Ruby 1.8.7  | GMP 4.3.1 |
+  |-------------------------------------+-------------------+-----------+
   | Mac OS X 10.5.7 on x86 (32-bit)     | (MRI) Ruby 1.8.6  | GMP 4.3.1 |
-  | Mac OS X 10.5.7 on x86 (32-bit)     | (MRI) Ruby 1.9.1  | GMP 4.3.1 |
+  |                                     | (MRI) Ruby 1.9.1  |           |
   +-------------------------------------+-------------------+-----------+
 
 <b>Note:</b> To get this running on Mac OS X (32-bit), I compiled GMP 4.3.1 with:
@@ -276,6 +280,9 @@ Right now, there are only three such plugged in ruby scripts:
   product of the two co-prime GMP::Z objects, p and q, is given by 1 operand.
   
 Results: on my little Intel Core Duo T2400 @ 1.83GHz:
+  +---------------------------------------------------------+
+  | GMP 4.3.1* compiled with GCC 3.4.4, I think (cygwin did |
+  | it)                                                     |
   +------------+-----------+--------------------------------+
   |  test      |  GMP      |  ruby gmp gem                  |
   |  multiply  |  4660     |        2473.8  (47% overhead)  |
@@ -283,6 +290,19 @@ Results: on my little Intel Core Duo T2400 @ 1.83GHz:
   |  gcd       |  1004.5   |         865.13 (14% overhead)  |
   |  rsa       |   515.49  |         506.69 ( 2% overhead)  |
   +------------+--------+-----------------------------------+
+  | GMP 5.0.0 compiled with GCC 3.4.4, I think (cygwin did  |
+  | it)                                                     |
+  +------------+-----------+--------------------------------+
+  |  test      |  GMP      |  ruby gmp gem                  |
+  |  multiply  |  4905     |        2572.1  (48% overhead)  |
+  |  divide    |  4873     |        3427.4  (30% overhead)  |
+  |  gcd       |  1083.5   |         931.75 (14% overhead)  |
+  |  rsa       |   520.20  |         506.14 ( 3% overhead)  |
+  +------------+--------+-----------------------------------+
+\* GMP 4.3.2 evaluated to almost the same benchmarks.
+
+My guess is that the increase in ruby gmp gem overhead is caused by increased
+efficiency in GMP; the inefficiencies of the gmp gem are relatively greater.
 
 =Todo
 
@@ -313,4 +333,4 @@ still relevant.
 * GMP::* op RubyFloat and RubyFloat op GMP::*
 * sort checks
 * GMP::Q.to_s(base), GMP::F.to_s(base)
-* benchmark gcd, gcdext, rsa, pi
+* benchmark gcdext, pi

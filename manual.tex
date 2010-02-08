@@ -132,6 +132,8 @@ Lastly, GMP. GMP must be compiled and working. "and working" means you ran "make
 check" while installing GMP. The following versions of GMP have been tested:
 \begin{itemize}
   \item GMP 4.3.1
+  \item GMP 4.3.2
+  \item GMP 5.0.0
 \end{itemize}
 
 That's all. I don't intend to test any older versions, maybe 4.3.0 for
@@ -675,6 +677,55 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns $F[n]$, or, the $n$th Fibonacci number.
+}
+\end{tabular}
+
+
+
+\subsection{Integer Logic and Bit Fiddling}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{and} & & $a$ \& $b$ $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns $integer$, the bitwise and of $a$ and $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{ior} & & $a$ \textbar\ $b$ $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns $integer$, the bitwise inclusive or of $a$ and $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{xor} & & $a$ \textasciicircum\ $b$ $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns $integer$, the bitwise exclusive or of $a$ and $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{scan0} & & $n$.scan0($i$) $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Scans $n$, starting from bit $i$, towards more significant bits, until the first 0 bit
+  is found. Return the index of the found bit.
+  \newline\newline
+  If the bit at $i$ is already what's sought, then $i$ is returned.
+  \newline\newline
+  If there's no bit found, then $INT2FIX(ULONG\_MAX)$ is returned. This will happen in
+  scan0 past the end of a negative number.
 }
 \end{tabular}
 
