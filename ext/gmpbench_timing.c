@@ -22,7 +22,7 @@
 /* Return user CPU time measured in milliseconds.  */
 #if !defined (__sun) \
     && (defined (USG) || defined (__SVR4) || defined (_UNICOS) \
-	|| defined (__hpux))
+	|| defined (__hpux) || defined (_WIN32))
 #include <time.h>
 
 int
