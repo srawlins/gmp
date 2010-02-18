@@ -171,6 +171,18 @@ extensions, do the following:\\
 
 There shouldn't be any errors, or warnings.
 
+\section{Testing the gmp gem}
+
+Testing the gmp gem is quite simple. The test/unit\_tests.rb suite uses Unit::Test.
+You can run this test suite with:\\
+\\
+\texttt{cd <gmp gem directory>/test}\\
+\texttt{ruby unit\_tests.rb}\\
+
+All tests should pass. If you don't have the test-unit gem installed, then you may
+run into one error. I'm not sure why this is... I suspect a bug in Ruby's Test::Unit
+that the test-unit gem monkey patches.
+
 \section{GMP and gmp gem basics}
 
 \subsection{Classes}
