@@ -302,7 +302,7 @@ Results: on my little Intel Core Duo T2400 @ 1.83GHz:
   |  divide    |  2744     |        2253.1  (18% overhead)  |
   |  gcd       |  1004.5   |         865.13 (14% overhead)  |
   |  rsa       |   515.49  |         506.69 ( 2% overhead)  |
-  +------------+--------+-----------------------------------+
+  +------------+-----------+--------------------------------+
   | GMP 5.0.0 compiled with GCC 3.4.4, I think (cygwin did  |
   | it)                                                     |
   +------------+-----------+--------------------------------+
@@ -311,6 +311,14 @@ Results: on my little Intel Core Duo T2400 @ 1.83GHz:
   |  divide    |  4873     |        3427.4  (30% overhead)  |
   |  gcd       |  1083.5   |         931.75 (14% overhead)  |
   |  rsa       |   520.20  |         506.14 ( 3% overhead)  |
+  +------------+--------+-----------------------------------+
+  | GMP 5.0.1 compiled with GCC 3.4.5 in MinGW              |
+  +------------+-----------+--------------------------------+
+  |  test      |  GMP      |  ruby gmp gem                  |
+  |  multiply  |  4950     |        xxxx.x  (xx% overhead)  |
+  |  divide    |  4809     |        xxxx.x  (xx% overhead)  |
+  |  gcd       |  1071.3   |         xxx.xx (xx% overhead)  |
+  |  rsa       |   524.96  |         xxx.xx ( x% overhead)  |
   +------------+--------+-----------------------------------+
 \* GMP 4.3.2 evaluated to almost the same benchmarks.
 
