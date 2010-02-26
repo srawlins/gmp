@@ -29,7 +29,7 @@
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
 \multicolumn{2}{r}{\large{Edition 0.4.0}}\\
-\multicolumn{2}{r}{\large{03 January 2010}}
+\multicolumn{2}{r}{\large{26 February 2010}}
 \end{tabular}
 
 \vfill
@@ -39,7 +39,7 @@
 
 \vfill
 This manual describes how to use the gmp Ruby gem, which provides bindings to
-the GNU multiple precision arithmetic library, version 4.3.x.\\
+the GNU multiple precision arithmetic library, version 4.3.x or 5.0.x.\\
 \\
 Copyright 2009 Sam Rawlins.\\
 No license yet.
@@ -116,8 +116,7 @@ of the following versions of Ruby:
 \begin{itemize}
   \item (MRI) Ruby 1.8.6 - tested lightly.
   \item (MRI) Ruby 1.8.7 - tested seriously.
-  \item (MRI) Ruby 1.9.1 - more of a "release candidate" state. Please report
-    bugs.
+  \item (MRI) Ruby 1.9.1 - tested seriously.
 \end{itemize}
 As you can see only Matz's Ruby Interpreter (MRI) is supported. I haven't even
 put a thought into trying other interpreters/VMs. I intend to look into FFI,
@@ -134,6 +133,7 @@ check" while installing GMP. The following versions of GMP have been tested:
   \item GMP 4.3.1
   \item GMP 4.3.2
   \item GMP 5.0.0
+  \item GMP 5.0.1
 \end{itemize}
 
 That's all. I don't intend to test any older versions, maybe 4.3.0 for
@@ -147,6 +147,7 @@ Here is a table of the exact environments on which I have tested the gmp gem:\\\
   Linux (LinuxMint 7) on x86      & (MRI) Ruby 1.8.7 & GMP 4.3.1 \\ \hline
   Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.8.6 & GMP 4.3.1 \\ \hline
   Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.9.1 & GMP 4.3.1 \\ \hline
+  Windows XP on x86 (32-bit)      & (MRI) Ruby 1.9.1 & GMP 5.0.1 \\ \hline
 \end{tabular}
 
 \subsection{Installing}

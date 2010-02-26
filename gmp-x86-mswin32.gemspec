@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.8.1'
   s.requirements = ["GMP compiled and working properly."]
   s.require_paths = ["ext"]
-  s.files  = Dir["ext/*.c"] + Dir["ext/*.h"] + ["ext/extconf.rb"]
+  s.files  = Dir["ext/*.c"] + Dir["ext/*.h"] + ["ext/extconf.rb"] + ["ext/libgmp-10.dll"]
   s.files += Dir["test/*.rb"] + ["test/README"]
   s.files += Dir["benchmark/*"]
   s.files += ["CHANGELOG", "INSTALL", "README.rdoc", "manual.pdf", "manual.tex"]

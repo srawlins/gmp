@@ -1,4 +1,7 @@
 0.4.0:
+  * Support for Windows introduced. gmp-x86-mswin32 gem should be used.
+  * All tests should pass under Windows.
+  * Support for Windows in benchmark started. Still buggy.
   * Added tests for GMP::Z.gcd.
   * Added tests for GMP::Z.invert.
   * Added tests for GMP::RandState (seed, urandomb).
@@ -7,6 +10,7 @@
   * Added documentation for GMP::RandState (new, seed, urandomb).
   * Cleaned up documentation (fixed GMP   ::   Z spacings).
   * Added benchmark/gcd
+  * Unit test results: 69 tests, 533 assertions, 0 failures, 0 errors
 
 0.2.11:
   * Added GMP::Z.gcd. _not_ tested or documented.
