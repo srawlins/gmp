@@ -221,6 +221,8 @@ You can also call them as:
     seed(integer)            seed the generator with a Fixnum or GMP::Z
     urandomb(fixnum)         get uniformly distributed random number between 0
                              and 2^fixnum-1, inclusive
+    urandomm(integer)        get uniformly distributed random number between 0
+                             and integer-1, inclusive
   GMP (timing functions for GMPbench (0.2))
     cputime                  milliseconds of cpu time since Ruby start
     time                     times the execution of a block

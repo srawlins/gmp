@@ -90,7 +90,7 @@ VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
       rb_raise(rb_eArgError, "size must be within [0..128]");
     int rv = gmp_randinit_lc_2exp_size(rs_val, size_val);
     if (rv == 0)
-      rb_raise(rb_eArgError, "could not gmp_randinit_lc_2exp_size with %d", size_val);
+      rb_raise(rb_eArgError, "could not gmp_randinit_lc_2exp_size with %lu", size_val);
   }
   
   if (free_a_val) { mpz_temp_free(a_val); }
@@ -193,7 +193,7 @@ VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg)
 
   mprandstate_get_struct(self,self_val);
   
-   if (FIXNUM_P(arg)) {
+  if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
     mpz_urandomb(res_val, self_val, FIX2INT(arg));
   } else {
@@ -203,6 +203,44 @@ VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg)
   return res;
 }
 
+/*
+ * call-seq:
+ *   rand_state.urandomm(integer)
+ *
+ * From the GMP Manual:
+ *
+ * Generate a uniformly distributed random integer in the range 0 to
+ * _integer-1_, inclusive. _integer_ can be an instance of GMP::Z,
+ *  Fixnum, or Bignum
+ */
+VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg)
+{
+  MP_RANDSTATE *self_val;
+  MP_INT *res_val, *arg_val;
+  int free_arg_val = 0;
+  VALUE res;
+
+  mprandstate_get_struct(self,self_val);
+  
+  if (GMPZ_P(arg)) {
+    mpz_get_struct(arg, arg_val);
+  } else if (FIXNUM_P(arg)) {
+    mpz_temp_alloc(arg_val);
+    mpz_init_set_ui(arg_val, FIX2INT(arg));
+    free_arg_val = 1;
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum(arg_val, arg);
+    free_arg_val = 1;
+  } else {
+    typeerror_as(ZXB, "arg");
+  }
+  
+  mpz_make_struct_init(res, res_val);
+  mpz_urandomm(res_val, self_val, arg_val);
+  if (free_arg_val) { mpz_temp_free(arg_val); }
+  
+  return res;
+}
 
 void init_gmprandstate()
 {
@@ -220,5 +258,5 @@ void init_gmprandstate()
   
   // Integer Random Numbers
   rb_define_method(cGMP_RandState, "urandomb", r_gmprandstate_urandomb, 1);
-  
+  rb_define_method(cGMP_RandState, "urandomm", r_gmprandstate_urandomm, 1);
 }

@@ -28,8 +28,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.4.0}}\\
-\multicolumn{2}{r}{\large{26 February 2010}}
+\multicolumn{2}{r}{\large{Edition 0.4.1}}\\
+\multicolumn{2}{r}{\large{1 March 2010}}
 \end{tabular}
 
 \vfill
@@ -793,11 +793,22 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{urandomb} & & $state$.urandomb($n$) $\rightarrow$ $n$ \\
+\textbf{urandomb} & & $state$.urandomb($n$) $\rightarrow$ $integer$ \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Generates a uniformly distributed random integer in the range $0$ to $2^n -1$,
   inclusive.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{urandomm} & & $state$.urandomm($n$) $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Generates a uniformly distributed random integer in the range $0$ to $n -1$,
+  inclusive. $n$ can be an instance of \gmpz, $Fixnum$, or $Bignum$.
 }
 \end{tabular}
 

@@ -224,6 +224,7 @@ extern VALUE r_gmprandstate_seed(VALUE self, VALUE arg);
 
 // Integer Random Numbers
 extern VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg);
+extern VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg);
 
 
 /* from gmpbench_timing.c */
