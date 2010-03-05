@@ -135,6 +135,12 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
 void Init_gmp() {
   mGMP = rb_define_module("GMP");
   rb_define_const(mGMP, "GMP_VERSION", rb_str_new2(gmp_version));
+  rb_define_const(mGMP, "GMP_CC", rb_str_new2(__GMP_CC));
+  rb_define_const(mGMP, "GMP_CFLAGS", rb_str_new2(__GMP_CFLAGS));
+  rb_define_const(mGMP, "GMP_BITS_PER_LIMB", INT2FIX(mp_bits_per_limb));
+#ifdef MPFR
+  rb_define_const(mGMP, "MPFR_VERSION", rb_str_new2(MPFR_VERSION_STRING));
+#endif /* MPFR */
 
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
   init_gmpz();
@@ -160,34 +166,6 @@ void Init_gmp() {
   
   init_gmpbench_timing();
 
-#ifdef MPFR
-  rb_define_method(cGMP_F, "exp", r_gmpfr_exp, 0);
-  rb_define_method(cGMP_F, "log", r_gmpfr_log, 0);
-  rb_define_method(cGMP_F, "sqrt", r_gmpfr_sqrt, 0);
-  rb_define_method(cGMP_F, "cos", r_gmpfr_cos, 0);
-  rb_define_method(cGMP_F, "sin", r_gmpfr_sin, 0);
-  rb_define_method(cGMP_F, "tan", r_gmpfr_tan, 0);
-  rb_define_method(cGMP_F, "acos", r_gmpfr_acos, 0);
-  rb_define_method(cGMP_F, "asin", r_gmpfr_asin, 0);
-  rb_define_method(cGMP_F, "atan", r_gmpfr_atan, 0);
-  rb_define_method(cGMP_F, "cosh", r_gmpfr_cosh, 0);
-  rb_define_method(cGMP_F, "sinh", r_gmpfr_sinh, 0);
-  rb_define_method(cGMP_F, "tanh", r_gmpfr_tanh, 0);
-  rb_define_method(cGMP_F, "acosh", r_gmpfr_acosh, 0);
-  rb_define_method(cGMP_F, "asinh", r_gmpfr_asinh, 0);
-  rb_define_method(cGMP_F, "atanh", r_gmpfr_atanh, 0);
-  rb_define_method(cGMP_F, "log1p", r_gmpfr_log1p, 0);
-  rb_define_method(cGMP_F, "expm1", r_gmpfr_expm1, 0);
-  rb_define_method(cGMP_F, "log2", r_gmpfr_log2, 0);
-  rb_define_method(cGMP_F, "log10", r_gmpfr_log10, 0);
-
-  rb_define_method(cGMP_F, "nan?", r_gmpfr_nan_p, 0);
-  rb_define_method(cGMP_F, "infinite?", r_gmpfr_inf_p, 0);
-  rb_define_method(cGMP_F, "finite?", r_gmpfr_fin_p, 0);
-  rb_define_method(cGMP_F, "number?", r_gmpfr_number_p, 0);
-
-  rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
-#endif /* MPFR */
   // more
 
   REGISTER_TAKEOVER(and, "&", "old_and")

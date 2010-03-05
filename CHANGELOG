@@ -1,3 +1,9 @@
+0.4.3:
+  * Support for MPFR on Windows introduced. gmp-x86-mswin32 gem should be used.
+  * Removed compilation warnings when using MPFR
+  * Added constants GMP::GMP_CC, GMP::GMP_CFLAGS, and GMP::GMP_BITS_PER_LIMB
+  * Added constant GMP::MPFR_VERSION
+
 0.4.1:
   * Fixed some gem dates
   * Fixed gmp.so in x86-mswin32 gem

@@ -207,6 +207,12 @@ extern VALUE r_gmpf_eq(VALUE self, VALUE arg);
 extern VALUE r_gmpf_cmp(VALUE self, VALUE arg);
 extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 
+// MPFR
+#ifdef MPFR
+  extern VALUE r_gmpfr_log(VALUE self);
+  extern VALUE r_gmpfr_exp(VALUE self);
+#endif /* MPFR */
+
 // _unsorted_
 extern VALUE r_gmpf_sgn(VALUE self);
 extern VALUE r_gmpf_get_prec(VALUE self);

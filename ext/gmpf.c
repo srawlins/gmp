@@ -515,6 +515,138 @@ DEFUN_FLOAT_CMP(gt,>)
 DEFUN_FLOAT_CMP(ge,>=)
 
 
+#ifdef MPFR
+#define MPFR_SINGLE_FUNCTION(name)                                \
+VALUE r_gmpfr_##name(VALUE self)                                  \
+{                                                                 \
+  MP_FLOAT *self_val, *res_val;                                   \
+  unsigned long prec;                                             \
+  VALUE res;                                                      \
+                                                                  \
+  mpf_get_struct_prec(self, self_val, prec);                      \
+  mpf_make_struct_init(res, res_val, prec);                       \
+  mpfr_##name(res_val, self_val, __gmp_default_rounding_mode);    \
+                                                                  \
+  return res;                                                     \
+}
+
+MPFR_SINGLE_FUNCTION(log)
+MPFR_SINGLE_FUNCTION(exp)
+MPFR_SINGLE_FUNCTION(sqrt)
+MPFR_SINGLE_FUNCTION(cos)
+MPFR_SINGLE_FUNCTION(sin)
+MPFR_SINGLE_FUNCTION(tan)
+MPFR_SINGLE_FUNCTION(acos)
+MPFR_SINGLE_FUNCTION(asin)
+MPFR_SINGLE_FUNCTION(atan)
+MPFR_SINGLE_FUNCTION(cosh)
+MPFR_SINGLE_FUNCTION(sinh)
+MPFR_SINGLE_FUNCTION(tanh)
+MPFR_SINGLE_FUNCTION(acosh)
+MPFR_SINGLE_FUNCTION(asinh)
+MPFR_SINGLE_FUNCTION(atanh)
+MPFR_SINGLE_FUNCTION(log1p)
+MPFR_SINGLE_FUNCTION(expm1)
+MPFR_SINGLE_FUNCTION(log2)
+MPFR_SINGLE_FUNCTION(log10)
+
+static VALUE r_gmpfr_nan_p(VALUE self)
+{
+  MP_FLOAT *self_val;
+
+  mpf_get_struct(self, self_val);
+  if (mpfr_nan_p(self_val)) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+static VALUE r_gmpfr_inf_p(VALUE self)
+{
+  MP_FLOAT *self_val;
+
+  mpf_get_struct(self, self_val);
+  if (mpfr_inf_p(self_val)) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+static VALUE r_gmpfr_fin_p(VALUE self)
+{
+  if (r_gmpfr_inf_p(self)) {
+    return Qfalse;
+  }
+  else {
+    return Qtrue;
+  }
+}
+
+static VALUE r_gmpfr_number_p(VALUE self)
+{
+  MP_FLOAT *self_val;
+
+  mpf_get_struct(self, self_val);
+  if (mpfr_number_p(self_val)) {
+    return Qtrue;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
+{
+  MP_FLOAT *self_val, *res_val, *arg_val_f;
+  MP_RAT *arg_val_q;
+  MP_INT *arg_val_z;
+  unsigned long prec;
+  VALUE res;
+
+  mpf_get_struct_prec(self, self_val, prec);
+
+  if (GMPF_P(arg)) {
+    mpf_get_struct(arg, arg_val_f);
+    prec_max(prec, arg_val_f);
+    mpf_make_struct_init(res, res_val, prec);
+    mpfr_pow(res_val, self_val, arg_val_f, __gmp_default_rounding_mode);
+  } else {
+    mpf_make_struct_init(res, res_val, prec);
+
+    if (GMPZ_P(arg)) {
+      mpz_get_struct(arg, arg_val_z);
+      mpf_set_z(res_val, arg_val_z);
+      mpfr_pow(res_val, self_val, res_val, __gmp_default_rounding_mode);
+    } else if (GMPQ_P(arg)) {
+      mpq_get_struct(arg, arg_val_q);
+      mpf_set_q(res_val, arg_val_q);
+      mpfr_pow(res_val, self_val, res_val, __gmp_default_rounding_mode);
+    } else if (FLOAT_P(arg)) {
+      mpf_set_d(res_val, NUM2DBL(arg));
+      mpfr_pow(res_val, self_val, res_val, __gmp_default_rounding_mode);
+    } else if (FIXNUM_P(arg)) {
+      mpfr_pow_si(res_val, self_val, FIX2INT(arg), __gmp_default_rounding_mode);
+    } else if (BIGNUM_P(arg)) {
+      mpz_temp_from_bignum(arg_val_z, arg);
+      mpf_set_z(res_val, arg_val_z);
+      mpz_temp_free(arg_val_z);
+      mpfr_pow(res_val, self_val, res_val, __gmp_default_rounding_mode);
+    } else {
+      typeerror(ZQFXBD);
+    }
+
+  }
+
+  return res;
+}
+
+#endif
+
+
 /**********************************************************************
  *    _unsorted_                                                      *
  **********************************************************************/
@@ -582,6 +714,45 @@ void init_gmpf()
   rb_define_method(cGMP_F, "<",   r_gmpf_cmp_lt, 1);
   rb_define_method(cGMP_F, "<=",  r_gmpf_cmp_le, 1);
   rb_define_method(cGMP_F, "==",  r_gmpf_eq, 1);
+  
+#ifdef MPFR
+  // Basic Arithmetic Functions
+  rb_define_method(cGMP_F, "sqrt", r_gmpfr_sqrt, 0);
+  
+  rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
+  
+  // Comparison Functions
+  rb_define_method(cGMP_F, "nan?", r_gmpfr_nan_p, 0);
+  rb_define_method(cGMP_F, "infinite?", r_gmpfr_inf_p, 0);
+  rb_define_method(cGMP_F, "finite?", r_gmpfr_fin_p, 0);
+  rb_define_method(cGMP_F, "number?", r_gmpfr_number_p, 0);
+  
+  // Special Functions
+  rb_define_method(cGMP_F, "log",   r_gmpfr_log,   0);
+  rb_define_method(cGMP_F, "log2",  r_gmpfr_log2,  0);
+  rb_define_method(cGMP_F, "log10", r_gmpfr_log10, 0);
+  rb_define_method(cGMP_F, "exp",   r_gmpfr_exp,   0);
+  
+  rb_define_method(cGMP_F, "cos",   r_gmpfr_cos,   0);
+  rb_define_method(cGMP_F, "sin",   r_gmpfr_sin,   0);
+  rb_define_method(cGMP_F, "tan",   r_gmpfr_tan,   0);
+  
+  rb_define_method(cGMP_F, "acos",  r_gmpfr_acos,  0);
+  rb_define_method(cGMP_F, "asin",  r_gmpfr_asin,  0);
+  rb_define_method(cGMP_F, "atan",  r_gmpfr_atan,  0);
+  
+  rb_define_method(cGMP_F, "cosh",  r_gmpfr_cosh,  0);
+  rb_define_method(cGMP_F, "sinh",  r_gmpfr_sinh,  0);
+  rb_define_method(cGMP_F, "tanh",  r_gmpfr_tanh,  0);
+  
+  rb_define_method(cGMP_F, "acosh", r_gmpfr_acosh, 0);
+  rb_define_method(cGMP_F, "asinh", r_gmpfr_asinh, 0);
+  rb_define_method(cGMP_F, "atanh", r_gmpfr_atanh, 0);
+  
+  rb_define_method(cGMP_F, "log1p", r_gmpfr_log1p, 0);
+  rb_define_method(cGMP_F, "expm1", r_gmpfr_expm1, 0);
+  
+#endif /* MPFR */
   
   // _unsorted_
   rb_define_method(cGMP_F, "floor",  r_gmpf_floor, 0);
