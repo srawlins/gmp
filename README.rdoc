@@ -63,7 +63,8 @@ by me: gmp gem 0.4.0 on:
   |                                     | (MRI) Ruby 1.9.1  |           |
   +-------------------------------------+-------------------+-----------+
 
-<b>Note:</b> To get this running on Mac OS X (32-bit), I compiled GMP 4.3.1 with:
+<b>Note:</b> To get this running on Mac OS X (32-bit), I compiled GMP 4.3.1
+with:
   ./configure ABI=32 --disable-dependency-tracking
 
 =Authors
@@ -71,9 +72,21 @@ by me: gmp gem 0.4.0 on:
 * Tomasz Wegrzanowski
 * srawlins
 
+=Constants
+
+The GMP module includes the following constants. Mathematical constants, such
+as pi, are defined under class methods of GMP::F, listed below.
+
+  GMP::GMP_VERSION        #=> A string like "5.0.1"
+  GMP::GMP_CC             #=> The compiler used to compile GMP
+  GMP::GMP_CFLAGS         #=> The CFLAGS used to compile GMP
+  GMP::GMP_BITS_PER_LIMB  #=> The number of bits per limb
+  (if MPFR is available)
+  GMP::MPFR_VERSION       #=> A string like "2.4.2"
+
 =Classes
 
-The module GMP is provided with following classes:
+The GMP module is provided with following classes:
 * GMP::Z - infinite precision integer numbers
 * GMP::Q - infinite precision rational numbers
 * GMP::F - arbitrary precision floating point numbers
@@ -186,20 +199,26 @@ You can also call them as:
   class methods of GMP::F
     default_prec             get default precision
     default_prec=            set default precision
+  class methods of GMP::F (only if MPFR is available)
+    const_log2               returns the natural log of 2
+    const_pi                 returns pi
+    const_euler              returns euler
+    const_catalan            returns catalan
   GMP::F
     prec                     get precision
     floor,ceil,trunc         nearest integer, GMP::F is returned, not GMP::Z
     floor!,ceil!,trunc!      in-place nearest integer
   GMP::F (only if MPFR is available)
-    exp                      e^object
-    expm1                    the same as (object.exp) - 1, with better
-                             precision
+    sqrt                     square root of the object
+    **                       power
     log                      natural logarithm of object
     log2                     binary logarithm of object
     log10                    decimal logarithm of object
+    exp                      e^object
     log1p                    the same as (object + 1).log, with better
                              precision
-    sqrt                     square root of the object
+    expm1                    the same as (object.exp) - 1, with better
+                             precision
     cos                      \
     sin                      |
     tan                      |
@@ -216,7 +235,6 @@ You can also call them as:
     infinite?                | type of floating point number
     finite?                  |
     number?                  /
-    **                       power
   GMP::RandState
     seed(integer)            seed the generator with a Fixnum or GMP::Z
     urandomb(fixnum)         get uniformly distributed random number between 0
@@ -253,8 +271,9 @@ If there is no explicit precision, highest precision of all GMP::F arguments is
 used. That doesn't ensure that result will be exact. For details, consult any
 paper about floating point arithmetics.
 
-Default precision can be explicitely set by passing 0 to GMP::F.new(). In
-particular, you can set precision of copy of GMP::F object by:
+Default precision can be explicitely set by passing 0 as the second argument
+for to GMP::F.new(). In particular, you can set precision of copy of GMP::F
+object by:
   new_obj = GMP::F.new(old_obj, 0)
 
 Precision argument, and default_precision will be rounded up to whatever GMP

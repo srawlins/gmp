@@ -209,8 +209,33 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 
 // MPFR
 #ifdef MPFR
+  extern VALUE r_gmpfr_sqrt(VALUE self);
+  
   extern VALUE r_gmpfr_log(VALUE self);
+  extern VALUE r_gmpfr_log2(VALUE self);
+  extern VALUE r_gmpfr_log10(VALUE self);
   extern VALUE r_gmpfr_exp(VALUE self);
+  
+  extern VALUE r_gmpfr_cos(VALUE self);
+  extern VALUE r_gmpfr_sin(VALUE self);
+  extern VALUE r_gmpfr_tan(VALUE self);
+  
+  extern VALUE r_gmpfr_acos(VALUE self);
+  extern VALUE r_gmpfr_asin(VALUE self);
+  extern VALUE r_gmpfr_atan(VALUE self);
+  
+  extern VALUE r_gmpfr_cosh(VALUE self);
+  extern VALUE r_gmpfr_sinh(VALUE self);
+  extern VALUE r_gmpfr_tanh(VALUE self);
+  
+  extern VALUE r_gmpfr_acosh(VALUE self);
+  extern VALUE r_gmpfr_asinh(VALUE self);
+  extern VALUE r_gmpfr_atanh(VALUE self);
+  
+  extern VALUE r_gmpfrsg_const_log2();
+  extern VALUE r_gmpfrsg_const_pi();
+  extern VALUE r_gmpfrsg_const_euler();
+  extern VALUE r_gmpfrsg_const_catalan();
 #endif /* MPFR */
 
 // _unsorted_

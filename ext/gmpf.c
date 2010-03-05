@@ -516,39 +516,64 @@ DEFUN_FLOAT_CMP(ge,>=)
 
 
 #ifdef MPFR
-#define MPFR_SINGLE_FUNCTION(name)                                \
-VALUE r_gmpfr_##name(VALUE self)                                  \
-{                                                                 \
-  MP_FLOAT *self_val, *res_val;                                   \
-  unsigned long prec;                                             \
-  VALUE res;                                                      \
-                                                                  \
-  mpf_get_struct_prec(self, self_val, prec);                      \
-  mpf_make_struct_init(res, res_val, prec);                       \
-  mpfr_##name(res_val, self_val, __gmp_default_rounding_mode);    \
-                                                                  \
-  return res;                                                     \
+
+#define MPFR_SINGLE_FUNCTION(name)                                 \
+VALUE r_gmpfr_##name(VALUE self)                                   \
+{                                                                  \
+  MP_FLOAT *self_val, *res_val;                                    \
+  unsigned long prec;                                              \
+  VALUE res;                                                       \
+                                                                   \
+  mpf_get_struct_prec (self, self_val, prec);                      \
+  mpf_make_struct_init (res, res_val, prec);                       \
+  mpfr_##name (res_val, self_val, __gmp_default_rounding_mode);    \
+                                                                   \
+  return res;                                                      \
 }
 
-MPFR_SINGLE_FUNCTION(log)
-MPFR_SINGLE_FUNCTION(exp)
+#define MPFR_CONST_FUNCTION(name)                        \
+VALUE r_gmpfrsg_##name()                                 \
+{                                                        \
+  MP_FLOAT *res_val;                                     \
+  VALUE res;                                             \
+                                                         \
+  mpf_make_struct (res, res_val);                        \
+  mpf_init (res_val);                                    \
+  mpfr_##name (res_val, __gmp_default_rounding_mode);    \
+                                                         \
+  return res;                                            \
+}
+
 MPFR_SINGLE_FUNCTION(sqrt)
+
+MPFR_SINGLE_FUNCTION(log)
+MPFR_SINGLE_FUNCTION(log2)
+MPFR_SINGLE_FUNCTION(log10)
+MPFR_SINGLE_FUNCTION(exp)
+
 MPFR_SINGLE_FUNCTION(cos)
 MPFR_SINGLE_FUNCTION(sin)
 MPFR_SINGLE_FUNCTION(tan)
+
 MPFR_SINGLE_FUNCTION(acos)
 MPFR_SINGLE_FUNCTION(asin)
 MPFR_SINGLE_FUNCTION(atan)
+
 MPFR_SINGLE_FUNCTION(cosh)
 MPFR_SINGLE_FUNCTION(sinh)
 MPFR_SINGLE_FUNCTION(tanh)
+
 MPFR_SINGLE_FUNCTION(acosh)
 MPFR_SINGLE_FUNCTION(asinh)
 MPFR_SINGLE_FUNCTION(atanh)
+
 MPFR_SINGLE_FUNCTION(log1p)
 MPFR_SINGLE_FUNCTION(expm1)
-MPFR_SINGLE_FUNCTION(log2)
-MPFR_SINGLE_FUNCTION(log10)
+
+MPFR_CONST_FUNCTION(const_log2)
+MPFR_CONST_FUNCTION(const_pi)
+MPFR_CONST_FUNCTION(const_euler)
+MPFR_CONST_FUNCTION(const_catalan)
 
 static VALUE r_gmpfr_nan_p(VALUE self)
 {
@@ -752,6 +777,10 @@ void init_gmpf()
   rb_define_method(cGMP_F, "log1p", r_gmpfr_log1p, 0);
   rb_define_method(cGMP_F, "expm1", r_gmpfr_expm1, 0);
   
+  rb_define_singleton_method(cGMP_F, "const_log2",    r_gmpfrsg_const_log2,    0);
+  rb_define_singleton_method(cGMP_F, "const_pi",      r_gmpfrsg_const_pi,      0);
+  rb_define_singleton_method(cGMP_F, "const_euler",   r_gmpfrsg_const_euler,   0);
+  rb_define_singleton_method(cGMP_F, "const_catalan", r_gmpfrsg_const_catalan, 0);
 #endif /* MPFR */
   
   // _unsorted_

@@ -3,6 +3,7 @@
   * Removed compilation warnings when using MPFR
   * Added constants GMP::GMP_CC, GMP::GMP_CFLAGS, and GMP::GMP_BITS_PER_LIMB
   * Added constant GMP::MPFR_VERSION
+  * Added MPFR constants
 
 0.4.1:
   * Fixed some gem dates
