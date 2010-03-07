@@ -241,6 +241,8 @@ You can also call them as:
                              and 2^fixnum-1, inclusive
     urandomm(integer)        get uniformly distributed random number between 0
                              and integer-1, inclusive
+    mpfr_urandomb(fixnum)    get uniformly distributed random floating-point
+                             number within 0 <= rop < 1
   GMP (timing functions for GMPbench (0.2))
     cputime                  milliseconds of cpu time since Ruby start
     time                     times the execution of a block

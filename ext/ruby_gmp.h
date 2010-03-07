@@ -257,6 +257,11 @@ extern VALUE r_gmprandstate_seed(VALUE self, VALUE arg);
 extern VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg);
 extern VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg);
 
+#ifdef MPFR
+// Float Random Numbers
+extern VALUE r_gmprandstate_mpfr_urandomb(VALUE self);
+#endif /* MPFR */
+
 
 /* from gmpbench_timing.c */
 

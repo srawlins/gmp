@@ -709,8 +709,6 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 }
 \end{tabular}
 
-
-
 \subsection{Integer Logic and Bit Fiddling}
 
 \begin{tabular}{p{\methwidth} l r}
@@ -757,6 +755,35 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   scan0 past the end of a negative number.
 }
 \end{tabular}
+
+\newpage
+\section{Rational Functions}
+
+\subsection{Initializing, Assigning Rationals}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{new} & & GMP::Q.new $\rightarrow$ \textit{rational} \\
+& & GMP::Q.new(\textit{numerator = 0}, \textit{denominator = 1}) $\rightarrow$ \textit{rational} \\
+& & GMP::Q.new(\textit{str}) $\rightarrow$ \textit{rational} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  This method creates a new \textit{GMP::Q} rational number. It takes two optional
+  arguments for the value of the numerator and denominator. These arguments can each be
+  an instance of several classes. Here are some
+  examples:\newline
+  
+  \texttt{GMP::Q.new \qqqquad\qqqquad \#=> 0 (default) \newline
+          GMP::Q.new(1) \qqqquad\qquad\  \#=> 1 (Ruby Fixnum) \newline
+          GMP::Q.new(1,3) \qqqquad\  \#=> 1/3 (Ruby Fixnums) \newline
+          GMP::Q.new("127") \qqqquad\  \#=> 127 (Ruby String)\newline
+          GMP::Q.new(4294967296) \qquad \#=> 4294967296 (Ruby Bignum)\newline
+          GMP::Q.new(GMP::Z.new(31))  \#=> 31 (GMP Integer)}
+}
+\end{tabular}
+\newline\newline
+
+There is also a convenience method available, \texttt{GMP::Q()}.\\
 
 \newpage
 \section{Random Number Functions}

@@ -1,6 +1,10 @@
 #!/usr/bin/env ruby
 
 require 'test_helper'
+
+puts "Standard Tests"
+puts "=============="
+
 require 'tc_z'
 require 'tc_z_basic'
 require 'tc_z_logic'
@@ -37,3 +41,13 @@ class TC_default_prec < Test::Unit::TestCase
     GMP::F.default_prec =  64
   end
 end
+
+begin
+  puts ""
+  puts "Migrated MPFR Tests"
+  puts "==================="
+rescue
+
+end
+
+require 'mpfr_tsqrt'

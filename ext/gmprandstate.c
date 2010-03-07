@@ -242,6 +242,37 @@ VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg)
   return res;
 }
 
+
+#ifdef MPFR
+/**********************************************************************
+ *    MPFR Random Numbers                                             *
+ **********************************************************************/
+
+/*
+ * call-seq:
+ *   rand_state.mpfr_urandomb()
+ *
+ * From the MPFR Manual:
+ *
+ * Generate a uniformly distributed random float in the interval 0 <= rop < 1.
+ */
+VALUE r_gmprandstate_mpfr_urandomb(VALUE self)
+{
+  MP_RANDSTATE *self_val;
+  MP_FLOAT *res_val;
+  VALUE res;
+
+  mprandstate_get_struct (self,self_val);
+  
+  mpf_make_struct (res, res_val);
+  mpf_init (res_val);
+  mpfr_urandomb (res_val, self_val);
+  
+  return res;
+}
+#endif /* MPFR */
+
+
 void init_gmprandstate()
 {
   mGMP = rb_define_module("GMP");
@@ -259,4 +290,9 @@ void init_gmprandstate()
   // Integer Random Numbers
   rb_define_method(cGMP_RandState, "urandomb", r_gmprandstate_urandomb, 1);
   rb_define_method(cGMP_RandState, "urandomm", r_gmprandstate_urandomm, 1);
+  
+#ifdef MPFR
+  // Float Random Numbers
+  rb_define_method(cGMP_RandState, "mpfr_urandomb", r_gmprandstate_mpfr_urandomb, 0);
+#endif /* MPFR */
 }

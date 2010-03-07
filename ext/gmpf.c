@@ -706,8 +706,6 @@ VALUE r_gmpf_get_prec(VALUE self)
 void init_gmpf()
 {
   mGMP = rb_define_module("GMP");
-  // rb_define_module_function(mGMP, "Z", r_gmpmod_z, -1);
-  // rb_define_module_function(mGMP, "Q", r_gmpmod_q, -1);
   rb_define_module_function(mGMP, "F", r_gmpmod_f, -1);
   
   cGMP_F = rb_define_class_under (mGMP, "F", rb_cNumeric);
