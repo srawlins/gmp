@@ -1,7 +1,5 @@
 require 'test_helper'
 
-GMP::GMP_RNDN
-
 class MPFR_TSQRT < Test::Unit::TestCase
   def property1(p, rounding)
     x = GMP::F()
