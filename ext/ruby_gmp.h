@@ -219,6 +219,9 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
   extern VALUE r_gmpfr_cos(VALUE self);
   extern VALUE r_gmpfr_sin(VALUE self);
   extern VALUE r_gmpfr_tan(VALUE self);
+  extern VALUE r_gmpfr_sec(VALUE self);
+  extern VALUE r_gmpfr_csc(VALUE self);
+  extern VALUE r_gmpfr_cot(VALUE self);
   
   extern VALUE r_gmpfr_acos(VALUE self);
   extern VALUE r_gmpfr_asin(VALUE self);

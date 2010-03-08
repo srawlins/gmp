@@ -1,9 +1,11 @@
 0.4.3:
   * Support for MPFR on Windows introduced. gmp-x86-mswin32 gem should be used.
   * Removed compilation warnings when using MPFR
-  * Added constants GMP::GMP_CC, GMP::GMP_CFLAGS, and GMP::GMP_BITS_PER_LIMB
-  * Added constant GMP::MPFR_VERSION
-  * Added MPFR constants
+  * Added constants GMP::GMP_CC, GMP::GMP_CFLAGS, and GMP::GMP_BITS_PER_LIMB.
+  * Added constant GMP::MPFR_VERSION.
+  * Added MPFR rounding constants. These will be changed soon though.
+  * Added MPFR tests adapted straight from the MPFR library, just tsqrt so far.
+  * Added 3x MPFR functions: sec(), csc(), cot().
 
 0.4.1:
   * Fixed some gem dates
