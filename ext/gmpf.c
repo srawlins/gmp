@@ -762,6 +762,9 @@ void init_gmpf()
   rb_define_method(cGMP_F, "cos",   r_gmpfr_cos,   0);
   rb_define_method(cGMP_F, "sin",   r_gmpfr_sin,   0);
   rb_define_method(cGMP_F, "tan",   r_gmpfr_tan,   0);
+  rb_define_method(cGMP_F, "sec",   r_gmpfr_sec,   0);
+  rb_define_method(cGMP_F, "csc",   r_gmpfr_csc,   0);
+  rb_define_method(cGMP_F, "cot",   r_gmpfr_cot,   0);
   
   rb_define_method(cGMP_F, "acos",  r_gmpfr_acos,  0);
   rb_define_method(cGMP_F, "asin",  r_gmpfr_asin,  0);

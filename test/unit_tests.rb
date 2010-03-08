@@ -27,6 +27,7 @@ require 'tc_random'
 begin
   GMP::MPFR_VERSION
   require 'tc_mpfr_random'
+  require 'tc_mpfr_functions'
   require 'mpfr_tsqrt'
 rescue
 
