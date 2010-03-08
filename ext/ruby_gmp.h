@@ -259,7 +259,7 @@ extern VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg);
 
 #ifdef MPFR
 // Float Random Numbers
-extern VALUE r_gmprandstate_mpfr_urandomb(VALUE self);
+extern VALUE r_gmprandstate_mpfr_urandomb(int argc, VALUE *argv, VALUE self);
 #endif /* MPFR */
 
 

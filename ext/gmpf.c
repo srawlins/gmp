@@ -105,7 +105,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
       else
         rb_raise(rb_eRangeError, "prec must be non-negative");
     } else {
-      rb_raise(rb_eTypeError, "prec must be FixNum");
+      rb_raise(rb_eTypeError, "prec must be a Fixnum");
     }
   } else if (GMPF_P(arg)) {
     mpf_get_struct (arg, arg_val_f);

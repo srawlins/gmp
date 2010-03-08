@@ -1,4 +1,5 @@
 require 'test/unit'
+require 'test_unit/assertions'  # Monkey patch
 require 'rbconfig'
 
 ENV['PATH'] = [File.expand_path(

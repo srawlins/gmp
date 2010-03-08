@@ -256,16 +256,33 @@ VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg)
  *
  * Generate a uniformly distributed random float in the interval 0 <= rop < 1.
  */
-VALUE r_gmprandstate_mpfr_urandomb(VALUE self)
+VALUE r_gmprandstate_mpfr_urandomb(int argc, VALUE *argv, VALUE self)
 {
   MP_RANDSTATE *self_val;
   MP_FLOAT *res_val;
   VALUE res;
+  unsigned long prec = 0;
+  
+  if (argc > 1)
+    rb_raise (rb_eArgError, "wrong # of arguments(%d for 0 or 1)", argc);
 
   mprandstate_get_struct (self,self_val);
   
+  if (argc == 1) {
+    if (FIXNUM_P (argv[0])) {
+      if (FIX2INT (argv[0]) >= 0)
+        prec = FIX2INT (argv[0]);
+      else
+        rb_raise (rb_eRangeError, "prec must be non-negative");
+    } else {
+      rb_raise (rb_eTypeError, "prec must be a Fixnum");
+    }
+  }
+  
   mpf_make_struct (res, res_val);
-  mpf_init (res_val);
+  if (prec == 0) { mpf_init (res_val); }
+  else           { mpf_init2 (res_val, prec); }
+  
   mpfr_urandomb (res_val, self_val);
   
   return res;
@@ -293,6 +310,6 @@ void init_gmprandstate()
   
 #ifdef MPFR
   // Float Random Numbers
-  rb_define_method(cGMP_RandState, "mpfr_urandomb", r_gmprandstate_mpfr_urandomb, 0);
+  rb_define_method(cGMP_RandState, "mpfr_urandomb", r_gmprandstate_mpfr_urandomb, -1);
 #endif /* MPFR */
 }

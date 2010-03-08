@@ -140,7 +140,7 @@ static VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
   int arg_val;
   if (FIXNUM_P(arg)) {
     arg_val = FIX2INT(arg);
-    if (arg_val <= 0 || arg_val > 3) {
+    if (arg_val < 0 || arg_val > 3) {
       rb_raise(rb_eRangeError, "rounding mode must be one of the rounding mode constants.");
     }
   } else {
