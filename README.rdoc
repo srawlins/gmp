@@ -83,6 +83,10 @@ as pi, are defined under class methods of GMP::F, listed below.
   GMP::GMP_BITS_PER_LIMB  #=> The number of bits per limb
   (if MPFR is available)
   GMP::MPFR_VERSION       #=> A string like "2.4.2"
+  GMP::GMP_RNDN           #=> The constant representing "round to nearest"
+  GMP::GMP_RNDZ           #=> The constant representing "round toward zero"
+  GMP::GMP_RNDU           #=> The constant representing "round toward plus infinity"
+  GMP::GMP_RNDD           #=> The constant representing "round toward minus infinity"
 
 =Classes
 
@@ -199,16 +203,27 @@ You can also call them as:
   class methods of GMP::F
     default_prec             get default precision
     default_prec=            set default precision
-  class methods of GMP::F (only if MPFR is available)
+  GMP::F
+    prec                     get precision
+    floor,ceil,trunc         nearest integer, GMP::F is returned, not GMP::Z
+    floor!,ceil!,trunc!      in-place nearest integer
+  GMP::RandState
+    seed(integer)            seed the generator with a Fixnum or GMP::Z
+    urandomb(fixnum)         get uniformly distributed random number between 0
+                             and 2^fixnum-1, inclusive
+    urandomm(integer)        get uniformly distributed random number between 0
+                             and integer-1, inclusive
+  GMP (timing functions for GMPbench (0.2))
+    cputime                  milliseconds of cpu time since Ruby start
+    time                     times the execution of a block
+  
+  *only if MPFR is available*
+  class methods of GMP::F
     const_log2               returns the natural log of 2
     const_pi                 returns pi
     const_euler              returns euler
     const_catalan            returns catalan
   GMP::F
-    prec                     get precision
-    floor,ceil,trunc         nearest integer, GMP::F is returned, not GMP::Z
-    floor!,ceil!,trunc!      in-place nearest integer
-  GMP::F (only if MPFR is available)
     sqrt                     square root of the object
     **                       power
     log                      natural logarithm of object
@@ -222,6 +237,9 @@ You can also call them as:
     cos                      \
     sin                      |
     tan                      |
+    sec                      |
+    csc                      |
+    cot                      |
     acos                     |
     asin                     |
     atan                     | trigonometric functions
@@ -236,16 +254,8 @@ You can also call them as:
     finite?                  |
     number?                  /
   GMP::RandState
-    seed(integer)            seed the generator with a Fixnum or GMP::Z
-    urandomb(fixnum)         get uniformly distributed random number between 0
-                             and 2^fixnum-1, inclusive
-    urandomm(integer)        get uniformly distributed random number between 0
-                             and integer-1, inclusive
     mpfr_urandomb(fixnum)    get uniformly distributed random floating-point
                              number within 0 <= rop < 1
-  GMP (timing functions for GMPbench (0.2))
-    cputime                  milliseconds of cpu time since Ruby start
-    time                     times the execution of a block
     
 
 =Testing
@@ -354,7 +364,6 @@ These are inherited from Tomasz. I will go through these and see which are
 still relevant.
 
 * mpz_fits_* and 31 vs. 32 integer variables
-* all appropriate module and class methods if there are any to add
 * fix all sign issues (don't know what these are)
 * floats with precision control
 * to_s vs. inspect

@@ -215,9 +215,15 @@ Library. The x86-mswin32 version of the gmp gem comes with MPFR. This library us
 floating-point type from GMP, and thus the MPFR functions mapped in the gmp gem become
 methods in \texttt{GMP::F}.
 
-There is also one additional constant within \texttt{GMP}:
+There are additional constants within \texttt{GMP} when MPFR is linked:
 \begin{itemize}
   \item \texttt{GMP::MPFR\_VERSION} - The version of MPFR linked into the gmp gem.
+  \item \texttt{GMP::GMP\_RNDN} - Rounding mode representing "round to nearest."
+  \item \texttt{GMP::GMP\_RNDZ} - Rounding mode representing "round toward zero."
+  \item \texttt{GMP::GMP\_RNDU} - Rounding mode representing "round toward positive
+    infinity."
+  \item \texttt{GMP::GMP\_RNDD} - Rounding mode representing "round toward negative
+    infinity."
 \end{itemize}
 
 \newpage

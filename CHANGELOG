@@ -6,6 +6,9 @@
   * Added MPFR rounding constants. These will be changed soon though.
   * Added MPFR tests adapted straight from the MPFR library, just tsqrt so far.
   * Added 3x MPFR functions: sec(), csc(), cot().
+  * Added function existence tests from
+  * Unit test results: 78 tests, 1025 assertions, 0 failures, 0 errors
+  * Unit test results: 72 tests, 593 assertions, 0 failures, 0 errors  (w/o MPFR)
 
 0.4.1:
   * Fixed some gem dates
