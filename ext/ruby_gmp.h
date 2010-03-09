@@ -215,7 +215,8 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
   extern VALUE r_gmpfr_log2(VALUE self);
   extern VALUE r_gmpfr_log10(VALUE self);
   extern VALUE r_gmpfr_exp(VALUE self);
-  
+  extern VALUE r_gmpfr_exp2(VALUE self);
+  extern VALUE r_gmpfr_exp10(VALUE self);
   extern VALUE r_gmpfr_cos(VALUE self);
   extern VALUE r_gmpfr_sin(VALUE self);
   extern VALUE r_gmpfr_tan(VALUE self);
@@ -231,9 +232,16 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
   extern VALUE r_gmpfr_sinh(VALUE self);
   extern VALUE r_gmpfr_tanh(VALUE self);
   
+  extern VALUE r_gmpfr_sech(VALUE self);
+  extern VALUE r_gmpfr_csch(VALUE self);
+  extern VALUE r_gmpfr_coth(VALUE self);
   extern VALUE r_gmpfr_acosh(VALUE self);
   extern VALUE r_gmpfr_asinh(VALUE self);
   extern VALUE r_gmpfr_atanh(VALUE self);
+  
+  extern VALUE r_gmpfr_log1p(VALUE self);
+  extern VALUE r_gmpfr_expm1(VALUE self);
+  extern VALUE r_gmpfr_eint(VALUE self);
   
   extern VALUE r_gmpfrsg_const_log2();
   extern VALUE r_gmpfrsg_const_pi();

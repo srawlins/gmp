@@ -550,7 +550,8 @@ MPFR_SINGLE_FUNCTION(log)
 MPFR_SINGLE_FUNCTION(log2)
 MPFR_SINGLE_FUNCTION(log10)
 MPFR_SINGLE_FUNCTION(exp)
-
+MPFR_SINGLE_FUNCTION(exp2)
+MPFR_SINGLE_FUNCTION(exp10)
 MPFR_SINGLE_FUNCTION(cos)
 MPFR_SINGLE_FUNCTION(sin)
 MPFR_SINGLE_FUNCTION(tan)
@@ -566,12 +567,16 @@ MPFR_SINGLE_FUNCTION(cosh)
 MPFR_SINGLE_FUNCTION(sinh)
 MPFR_SINGLE_FUNCTION(tanh)
 
+MPFR_SINGLE_FUNCTION(sech)
+MPFR_SINGLE_FUNCTION(csch)
+MPFR_SINGLE_FUNCTION(coth)
 MPFR_SINGLE_FUNCTION(acosh)
 MPFR_SINGLE_FUNCTION(asinh)
 MPFR_SINGLE_FUNCTION(atanh)
 
 MPFR_SINGLE_FUNCTION(log1p)
 MPFR_SINGLE_FUNCTION(expm1)
+MPFR_SINGLE_FUNCTION(eint)
 
 MPFR_CONST_FUNCTION(const_log2)
 MPFR_CONST_FUNCTION(const_pi)
@@ -758,7 +763,8 @@ void init_gmpf()
   rb_define_method(cGMP_F, "log2",  r_gmpfr_log2,  0);
   rb_define_method(cGMP_F, "log10", r_gmpfr_log10, 0);
   rb_define_method(cGMP_F, "exp",   r_gmpfr_exp,   0);
-  
+  rb_define_method(cGMP_F, "exp2",  r_gmpfr_exp2,  0);
+  rb_define_method(cGMP_F, "exp10", r_gmpfr_exp10, 0);
   rb_define_method(cGMP_F, "cos",   r_gmpfr_cos,   0);
   rb_define_method(cGMP_F, "sin",   r_gmpfr_sin,   0);
   rb_define_method(cGMP_F, "tan",   r_gmpfr_tan,   0);
@@ -774,12 +780,16 @@ void init_gmpf()
   rb_define_method(cGMP_F, "sinh",  r_gmpfr_sinh,  0);
   rb_define_method(cGMP_F, "tanh",  r_gmpfr_tanh,  0);
   
+  rb_define_method(cGMP_F, "sech",  r_gmpfr_sech,  0);
+  rb_define_method(cGMP_F, "csch",  r_gmpfr_csch,  0);
+  rb_define_method(cGMP_F, "coth",  r_gmpfr_coth,  0);
   rb_define_method(cGMP_F, "acosh", r_gmpfr_acosh, 0);
   rb_define_method(cGMP_F, "asinh", r_gmpfr_asinh, 0);
   rb_define_method(cGMP_F, "atanh", r_gmpfr_atanh, 0);
   
   rb_define_method(cGMP_F, "log1p", r_gmpfr_log1p, 0);
   rb_define_method(cGMP_F, "expm1", r_gmpfr_expm1, 0);
+  rb_define_method(cGMP_F, "eint",  r_gmpfr_eint, 0);
   
   rb_define_singleton_method(cGMP_F, "const_log2",    r_gmpfrsg_const_log2,    0);
   rb_define_singleton_method(cGMP_F, "const_pi",      r_gmpfrsg_const_pi,      0);

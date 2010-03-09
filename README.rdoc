@@ -230,10 +230,13 @@ You can also call them as:
     log2                     binary logarithm of object
     log10                    decimal logarithm of object
     exp                      e^object
+    exp2                     2^object
+    exp10                    10^object
     log1p                    the same as (object + 1).log, with better
                              precision
     expm1                    the same as (object.exp) - 1, with better
                              precision
+    eint                     exponential integral of object
     cos                      \
     sin                      |
     tan                      |
@@ -246,6 +249,9 @@ You can also call them as:
     cosh                     | of the object
     sinh                     |
     tanh                     |
+    sec                      |
+    csc                      |
+    cot                      |
     aconh                    |
     asinh                    |
     atanh                    /
