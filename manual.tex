@@ -502,6 +502,31 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 }
 \end{tabular}
 
+
+\subsection{Integer Exponentiation}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{**} & & \textit{integer} ** \textit{numeric} $\rightarrow$ \textit{numeric} \\
+& & \textit{integer}.pow(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns $integer$ raised to the $numeric$ power.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{powmod} & & \textit{integer}.powmod(\textit{exp}, \textit{mod}) $\rightarrow$ \textit{integer} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns $integer$ raised to the $exp$ power, modulo $mod$. Negative $exp$ is supported
+  if an inverse, $integer^{-1}$ modulo $mod$, exists. If an inverse doesn't exist then a
+  divide by zero exception is raised.
+}
+\end{tabular}
+
 \subsection{Integer Roots}
 
 \begin{tabular}{p{\methwidth} l r}
@@ -517,7 +542,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \begin{tabular}{p{\methwidth} l r}
 \toprule
 \textbf{sqrt} & & \textit{integer}.sqrt $\rightarrow$ \textit{numeric} \\
-& & \textit{integer}.sqrt!(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+& & \textit{integer}.sqrt! $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the truncated integer part of the square root of $integer$.
@@ -559,30 +584,6 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   Returns true if $integer$ is a perfect square, i.e., if the square root of
   $integer$ is an integer. Under this definition both 0 and 1 are considered to be
   perfect squares.
-}
-\end{tabular}
-
-\subsection{Integer Exponentiation}
-
-\begin{tabular}{p{\methwidth} l r}
-\toprule
-\textbf{**} & & \textit{integer} ** \textit{numeric} $\rightarrow$ \textit{numeric} \\
-& & \textit{integer}.pow(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
-\cmidrule(r){2-3}
-& \multicolumn{2}{p{\defnwidth}}{
-  Returns $integer$ raised to the $numeric$ power.
-}
-\end{tabular}
-\newline\newline
-
-\begin{tabular}{p{\methwidth} l r}
-\toprule
-\textbf{powmod} & & \textit{integer}.powmod(\textit{exp}, \textit{mod}) $\rightarrow$ \textit{integer} \\
-\cmidrule(r){2-3}
-& \multicolumn{2}{p{\defnwidth}}{
-  Returns $integer$ raised to the $exp$ power, modulo $mod$. Negative $exp$ is supported
-  if an inverse, $integer^{-1}$ modulo $mod$, exists. If an inverse doesn't exist then a
-  divide by zero exception is raised.
 }
 \end{tabular}
 
@@ -714,6 +715,20 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   Returns $F[n]$, or, the $n$th Fibonacci number.
 }
 \end{tabular}
+
+\subsection{Integer Comparisons}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{comparison} & & $a$ \textless=\textgreater\ $b$ $\rightarrow$ $-1$, $0$, or $1$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns -1 if $a$ is less than $b$.\newline
+  Returns 0 if $a$ is equal to $b$.\newline
+  Returns 1 if $a$ is greater than $b$.
+}
+\end{tabular}
+\newline\newline
 
 \subsection{Integer Logic and Bit Fiddling}
 

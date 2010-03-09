@@ -1,3 +1,7 @@
+0.4.7:
+  * Added 6 MPFR trig methods, and eint
+  * 
+
 0.4.3:
   * Support for MPFR on Windows introduced. gmp-x86-mswin32 gem should be used.
   * Removed compilation warnings when using MPFR
