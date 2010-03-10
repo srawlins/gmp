@@ -110,15 +110,19 @@ extern VALUE r_gmpz_add_self(VALUE self, VALUE arg);
 extern VALUE r_gmpz_sub(VALUE self, VALUE arg);
 extern VALUE r_gmpz_sub_self(VALUE self, VALUE arg);
 extern VALUE r_gmpz_mul(VALUE self, VALUE arg);
+extern VALUE r_gmpz_div(VALUE self, VALUE arg);
 
 // Integer Division
 extern VALUE r_gmpz_mod(VALUE self, VALUE arg);
 
 // Integer Exponentiation
 extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
+extern VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod);
 
 // Number Theoretic Functions
 extern VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self);
+extern VALUE r_gmpz_nextprime(VALUE self);
+extern VALUE r_gmpz_nextprime_self(VALUE self);
 extern VALUE r_gmpz_gcd(VALUE self, VALUE arg);
 extern VALUE r_gmpz_invert(VALUE self, VALUE arg);
 extern VALUE r_gmpz_jacobi(VALUE self, VALUE b);
@@ -130,22 +134,19 @@ extern VALUE r_gmpz_remove(VALUE self, VALUE arg);
 extern VALUE r_gmpz_eq(VALUE self, VALUE arg);
 extern VALUE r_gmpz_cmp(VALUE self, VALUE arg);
 extern VALUE r_gmpz_cmpabs(VALUE self, VALUE arg);
+extern VALUE r_gmpz_sgn(VALUE self);
+extern int mpz_cmp_value(MP_INT *OP, VALUE arg);
+
+// Integer Logic and Bit Fiddling
+extern VALUE r_gmpz_popcount(VALUE self);
+extern VALUE r_gmpz_scan0(VALUE self, VALUE bitnr);
+extern VALUE r_gmpz_scan1(VALUE self, VALUE bitnr);
+extern VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to);
+extern VALUE r_gmpz_getbit(VALUE self, VALUE bitnr);
 
 // Miscelaneous Integer Functions
 extern VALUE r_gmpz_sizeinbase(VALUE self, VALUE base);
 extern VALUE r_gmpz_size_in_bin(VALUE self);
-
-// _unsorted_
-extern VALUE r_gmpz_div(VALUE self, VALUE arg);
-extern VALUE r_gmpz_popcount(VALUE self);
-extern VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to);
-extern VALUE r_gmpz_getbit(VALUE self, VALUE bitnr);
-extern VALUE r_gmpz_scan0(VALUE self, VALUE bitnr);
-extern VALUE r_gmpz_scan1(VALUE self, VALUE bitnr);
-extern VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod);
-extern VALUE r_gmpz_sgn(VALUE self);
-extern int mpz_cmp_value(MP_INT *OP, VALUE arg);
-
 
 
 /* from gmpq.h */

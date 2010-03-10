@@ -720,7 +720,81 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{comparison} & & $a$ \textless=\textgreater\ $b$ $\rightarrow$ $-1$, $0$, or $1$ \\
+\textbf{\textless=\textgreater} & & $a$ \textless=\textgreater\ $b$ $\rightarrow$ $fixnum$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns a negative Fixnum if $a$ is less than $b$.\newline
+  Returns 0 if $a$ is equal to $b$.\newline
+  Returns a positive Fixnum if $a$ is greater than $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{\textless} & & $a$ \textless\ $b$ $\rightarrow$ $boolean$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns true if $a$ is less than $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{\textless=} & & $a$ \textless=\ $b$ $\rightarrow$ $boolean$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns true if $a$ is less than or equal to $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{==} & & $a$ == $b$ $\rightarrow$ $boolean$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns true if $a$ is equal to $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{\textgreater=} & & $a$ \textgreater= $b$ $\rightarrow$ $boolean$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns true if $a$ is greater than or equal to $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{\textgreater} & & $a$ \textgreater\ $b$ $\rightarrow$ $boolean$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns true if $a$ is greater than $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{cmpabs} & & $a$.cmpabs($b$) $\rightarrow$ $fixnum$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns a negative Fixnum if abs($a$) is less than abs($b$).\newline
+  Returns 0 if abs($a$) is equal to abs($b$).\newline
+  Returns a positive Fixnum if abs($a$) is greater than abs($b$).
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{sgn} & & $a$.sgn $\rightarrow$ $-1$, $0$, or $1$ \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns -1 if $a$ is less than $b$.\newline
@@ -728,7 +802,6 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   Returns 1 if $a$ is greater than $b$.
 }
 \end{tabular}
-\newline\newline
 
 \subsection{Integer Logic and Bit Fiddling}
 
@@ -764,6 +837,18 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
+\textbf{popcount} & & $n$.popcount $\rightarrow$ $fixnum$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  If $n>=0$, return the population count of $n$, which is the number of 1 bits in the
+  binary representation. If $n<0$, the number of 1s is infinite, and the return value
+  is the largest possible $mp\_bitcnt\_t$. 
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
 \textbf{scan0} & & $n$.scan0($i$) $\rightarrow$ $integer$ \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
@@ -776,6 +861,64 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   scan0 past the end of a negative number.
 }
 \end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{scan1} & & $n$.scan1($i$) $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Scans $n$, starting from bit $i$, towards more significant bits, until the first 1 bit
+  is found. Return the index of the found bit.
+  \newline\newline
+  If the bit at $i$ is already what's sought, then $i$ is returned.
+  \newline\newline
+  If there's no bit found, then $INT2FIX(ULONG\_MAX)$ is returned. This will happen in
+  scan1 past the end of a negative number.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{[]} & & $n$[$bit\_index$] $\rightarrow$ $0$ or $1$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Tests bit $bit\_index$ in $n$ and return $0$ or $1$ accordingly.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{[]=} & & $n$[$bit\_index$]=$i$ $\rightarrow$ $nil$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Sets bit $bit\_index$ in $n$ to $i$.
+}
+\end{tabular}
+
+\subsection{Miscellaneous Integer Functions}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{odd?} & & $n$.odd? $\rightarrow$ $boolean$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns whether $n$ is odd.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{even?} & & $n$.even? $\rightarrow$ $boolean$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns whether $n$ is even.
+}
+\end{tabular}
+\newline\newline
 
 \newpage
 \section{Rational Functions}
@@ -796,7 +939,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   
   \texttt{GMP::Q.new \qqqquad\qqqquad \#=> 0 (default) \newline
           GMP::Q.new(1) \qqqquad\qquad\  \#=> 1 (Ruby Fixnum) \newline
-          GMP::Q.new(1,3) \qqqquad\  \#=> 1/3 (Ruby Fixnums) \newline
+          GMP::Q.new(1,3) \qqqquad\quad\  \#=> 1/3 (Ruby Fixnums) \newline
           GMP::Q.new("127") \qqqquad\  \#=> 127 (Ruby String)\newline
           GMP::Q.new(4294967296) \qquad \#=> 4294967296 (Ruby Bignum)\newline
           GMP::Q.new(GMP::Z.new(31))  \#=> 31 (GMP Integer)}

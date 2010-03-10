@@ -1467,301 +1467,6 @@ VALUE r_gmpz_eq(VALUE self, VALUE arg)
   }
 }
 
-VALUE r_gmpz_cmpabs(VALUE self, VALUE arg)
-{
-  MP_INT *arg_val_z, *self_val;
-  MP_RAT *arg_val_q;
-  int res;
-
-  mpz_get_struct(self, self_val);
-
-  if (GMPZ_P(arg)) {
-    mpz_get_struct(arg,arg_val_z);
-    return INT2FIX(mpz_cmpabs(self_val, arg_val_z));
-  } else if (FIXNUM_P(arg)) {
-    if (FIX2INT(arg) >= 0)
-      return INT2FIX(mpz_cmpabs_ui(self_val, FIX2INT(arg)));
-    else
-      return INT2FIX(mpz_cmpabs_ui(self_val, -FIX2INT(arg)));
-  } else if (GMPQ_P(arg)) {
-    mpq_get_struct(arg,arg_val_q);
-    mpz_temp_alloc(arg_val_z);
-    mpz_init(arg_val_z);
-    mpz_mul(arg_val_z, self_val, mpq_denref(arg_val_q));
-    res = mpz_cmpabs(arg_val_z, mpq_numref(arg_val_q));
-    mpz_temp_free(arg_val_z);
-    return INT2FIX(res);
-  } else if (GMPF_P(arg)) {
-    not_yet;
-  } else if (BIGNUM_P(arg)) {
-    mpz_temp_from_bignum(arg_val_z, arg);
-    res = mpz_cmpabs(self_val, arg_val_z);
-    mpz_temp_free(arg_val_z);
-    return INT2FIX(res);
-  } else {
-    typeerror(ZQFXB);
-  }
-}
-
-
-/**********************************************************************
- *    Integer Logic and Bit Fiddling                                  *
- **********************************************************************/
-
-/*
- * Document-method: &
- *
- * call-seq:
- *   integer & other
- *
- * From the GMP Manual:
- * 
- * Returns +integer+ bitwise-and +other+.
- */
-DEFUN_INT_LOGIC(and, mpz_and)
-/*
- * Document-method: |
- *
- * call-seq:
- *   integer | other
- *
- * From the GMP Manual:
- * 
- * Returns +integer+ bitwise inclusive-or +other+.
- */
-DEFUN_INT_LOGIC(or, mpz_ior)
-/*
- * Document-method: ^
- *
- * call-seq:
- *   integer ^ other
- *
- * From the GMP Manual:
- * 
- * Returns +integer+ bitwise exclusive-or +other+.
- */
-DEFUN_INT_LOGIC(xor, mpz_xor)
-
-/*
- * call-seq:
- *   integer.scan0(starting_bit)
- *
- * From the GMP Manual:
- * 
- * Scan integer, starting from bit starting_bit, towards more significant bits,
- * until the first 0 bit is found. Return the index of the found bit.
- *
- * If the bit at starting_bit is already what's sought, then starting_bit is
- * returned.
- * 
- * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
- * happen in scan0 past the end of a negative number.
- */
-VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
-{
-  MP_INT *self_val;
-  int bitnr_val;
-  mpz_get_struct(self, self_val);
-  if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
-  } else {
-    typeerror_as(X, "index");
-  }
-  return INT2FIX(mpz_scan0(self_val, bitnr_val));
-}
-
-/*
- * call-seq:
- *   integer.scan1(starting_bit)
- *
- * From the GMP Manual:
- * 
- * Scan integer, starting from bit starting_bit, towards more significant bits,
- * until the first 1 bit is found. Return the index of the found bit.
- *
- * If the bit at starting_bit is already what's sought, then starting_bit is
- * returned.
- *
- * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
- * happen in mpz_scan1 past the end of a nonnegative number.
- */
-VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
-{
-  MP_INT *self_val;
-  int bitnr_val;
-
-  mpz_get_struct(self, self_val);
-
-  if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
-  } else {
-    typeerror_as(X, "index");
-  }
-
-  return INT2FIX(mpz_scan1(self_val, bitnr_val));
-}
-
-/*
- * Document-method: popcount
- *
- * call-seq:
- *   integer.popcount
- *
- * From the GMP Manual:
- * 
- * If <tt>integer>=0</tt>, return the population count of <tt>integer</tt>,
- * which is the number of 1 bits in the binary representation. If
- * <tt>op<0</tt>, the number of 1s is infinite, and the return value is
- * INT2FIX(ULONG_MAX), the largest possible unsigned long.
- */
-VALUE r_gmpz_popcount(VALUE self)
-{
-  MP_INT *self_val;
-  mpz_get_struct(self, self_val);
-  return INT2FIX(mpz_popcount(self_val));
-}
-
-/*
- * call-seq:
- *   integer[index] = x &rarr; nil
- *
- * Sets the bit at index to x.
- */
-VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
-{
-  MP_INT *self_val;
-  int bitnr_val;
-
-  mpz_get_struct (self, self_val);
-
-  if (FIXNUM_P (bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
-  } else {
-    typeerror_as (X, "index");
-  }
-  if (RTEST (set_to)) {
-    mpz_setbit (self_val, bitnr_val);
-  } else {
-    mpz_clrbit (self_val, bitnr_val);
-  }
-  return Qnil;
-}
-
-/*
- * call-seq:
- *   integer[index] &rarr; boolean
- *
- * Gets the bit at index, returned as either true or false.
- */
-VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
-{
-  MP_INT *self_val;
-  int bitnr_val;
-  mpz_get_struct(self, self_val);
-  if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
-  } else {
-    typeerror_as(X, "index");
-  }
-  return mpz_tstbit(self_val, bitnr_val)?Qtrue:Qfalse;
-}
-
-
-/**********************************************************************
- *    Miscellaneous Integer Functions                                 *
- **********************************************************************/
-
-VALUE r_gmpz_sizeinbase(VALUE self, VALUE base)
-{
-  MP_INT *self_val;
-  int base_val;
-  mpz_get_struct (self, self_val);
-  base_val = FIX2INT (base);
-  return INT2FIX (mpz_sizeinbase (self_val, base_val));
-}
-
-VALUE r_gmpz_size_in_bin(VALUE self)
-{
-  MP_INT *self_val;
-  mpz_get_struct (self, self_val);
-  return INT2FIX (mpz_sizeinbase (self_val, 2));
-}
-
-
-/**********************************************************************
- *    Integer Special Functions                                       *
- **********************************************************************/
-
-
-/**********************************************************************
- *    _unsorted_                                                      *
- **********************************************************************/
-
-/*
- * Document-method: com
- *
- * call-seq:
- *   integer.com
- *
- * From the GMP Manual:
- * 
- * Returns the one's complement of +integer+.
- */
-/*
- * Document-method: com!
- *
- * call-seq:
- *   integer.com!
- *
- * From the GMP Manual:
- * 
- * Sets +integer+ to its one's complement.
- */
-DEFUN_INT2INT(com, mpz_com)
-
-/*
- * Document-method: even?
- *
- * call-seq:
- *   integer.even?
- *
- * From the GMP Manual:
- * 
- * Determines whether integer is even. Returns true or false.
- */
-DEFUN_INT_COND_P(is_even,mpz_even_p)
-/*
- * Document-method: odd?
- *
- * call-seq:
- *   integer.odd?
- *
- * From the GMP Manual:
- * 
- * Determines whether integer is odd. Returns true or false.
- */
-DEFUN_INT_COND_P(is_odd,mpz_odd_p)
-
-/*
- * call-seq:
- *   integer.sgn
- *
- * From the GMP Manual:
- * 
- * Returns +1 if +integer+ > 0, 0 if +integer+ == 0, and -1 if +integer+ < 0.
- */
-VALUE r_gmpz_sgn(VALUE self)
-{
-  MP_INT *self_val;
-  mpz_get_struct(self, self_val);
-  return INT2FIX(mpz_sgn(self_val));
-}
-
-DEFUN_INT_F_UL(fshr,mpz_fdiv_q_2exp,"shift size")
-DEFUN_INT_F_UL(tshr,mpz_tdiv_q_2exp,"shift size")
-DEFUN_INT_F_UL(fshrm,mpz_fdiv_r_2exp,"mark size")
-DEFUN_INT_F_UL(tshrm,mpz_tdiv_r_2exp,"mark size")
-
 int mpz_cmp_value(MP_INT *OP, VALUE arg)
 {
   MP_RAT *arg_val_q;
@@ -1843,6 +1548,301 @@ DEFUN_INT_CMP(gt,>)
  * Returns whether +int1+ is greater than or equal to +int2+.
  */
 DEFUN_INT_CMP(ge,>=)
+
+VALUE r_gmpz_cmpabs(VALUE self, VALUE arg)
+{
+  MP_INT *arg_val_z, *self_val;
+  MP_RAT *arg_val_q;
+  int res;
+
+  mpz_get_struct(self, self_val);
+
+  if (GMPZ_P(arg)) {
+    mpz_get_struct(arg,arg_val_z);
+    return INT2FIX(mpz_cmpabs(self_val, arg_val_z));
+  } else if (FIXNUM_P(arg)) {
+    if (FIX2INT(arg) >= 0)
+      return INT2FIX(mpz_cmpabs_ui(self_val, FIX2INT(arg)));
+    else
+      return INT2FIX(mpz_cmpabs_ui(self_val, -FIX2INT(arg)));
+  } else if (GMPQ_P(arg)) {
+    mpq_get_struct(arg,arg_val_q);
+    mpz_temp_alloc(arg_val_z);
+    mpz_init(arg_val_z);
+    mpz_mul(arg_val_z, self_val, mpq_denref(arg_val_q));
+    res = mpz_cmpabs(arg_val_z, mpq_numref(arg_val_q));
+    mpz_temp_free(arg_val_z);
+    return INT2FIX(res);
+  } else if (GMPF_P(arg)) {
+    not_yet;
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum(arg_val_z, arg);
+    res = mpz_cmpabs(self_val, arg_val_z);
+    mpz_temp_free(arg_val_z);
+    return INT2FIX(res);
+  } else {
+    typeerror(ZQFXB);
+  }
+}
+
+/*
+ * call-seq:
+ *   integer.sgn
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +1 if +integer+ > 0, 0 if +integer+ == 0, and -1 if +integer+ < 0.
+ */
+VALUE r_gmpz_sgn(VALUE self)
+{
+  MP_INT *self_val;
+  mpz_get_struct(self, self_val);
+  return INT2FIX(mpz_sgn(self_val));
+}
+
+
+/**********************************************************************
+ *    Integer Logic and Bit Fiddling                                  *
+ **********************************************************************/
+
+/*
+ * Document-method: &
+ *
+ * call-seq:
+ *   integer & other
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +integer+ bitwise-and +other+.
+ */
+DEFUN_INT_LOGIC(and, mpz_and)
+/*
+ * Document-method: |
+ *
+ * call-seq:
+ *   integer | other
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +integer+ bitwise inclusive-or +other+.
+ */
+DEFUN_INT_LOGIC(or, mpz_ior)
+/*
+ * Document-method: ^
+ *
+ * call-seq:
+ *   integer ^ other
+ *
+ * From the GMP Manual:
+ * 
+ * Returns +integer+ bitwise exclusive-or +other+.
+ */
+DEFUN_INT_LOGIC(xor, mpz_xor)
+
+/*
+ * Document-method: com
+ *
+ * call-seq:
+ *   integer.com
+ *
+ * From the GMP Manual:
+ * 
+ * Returns the one's complement of +integer+.
+ */
+/*
+ * Document-method: com!
+ *
+ * call-seq:
+ *   integer.com!
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +integer+ to its one's complement.
+ */
+DEFUN_INT2INT(com, mpz_com)
+
+/*
+ * Document-method: popcount
+ *
+ * call-seq:
+ *   integer.popcount
+ *
+ * From the GMP Manual:
+ * 
+ * If <tt>integer>=0</tt>, return the population count of <tt>integer</tt>,
+ * which is the number of 1 bits in the binary representation. If
+ * <tt>op<0</tt>, the number of 1s is infinite, and the return value is
+ * INT2FIX(ULONG_MAX), the largest possible unsigned long.
+ */
+VALUE r_gmpz_popcount(VALUE self)
+{
+  MP_INT *self_val;
+  mpz_get_struct(self, self_val);
+  return INT2FIX(mpz_popcount(self_val));
+}
+
+/*
+ * call-seq:
+ *   integer.scan0(starting_bit)
+ *
+ * From the GMP Manual:
+ * 
+ * Scan integer, starting from bit starting_bit, towards more significant bits,
+ * until the first 0 bit is found. Return the index of the found bit.
+ *
+ * If the bit at starting_bit is already what's sought, then starting_bit is
+ * returned.
+ * 
+ * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
+ * happen in scan0 past the end of a negative number.
+ */
+VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+  mpz_get_struct(self, self_val);
+  if (FIXNUM_P(bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as(X, "index");
+  }
+  return INT2FIX(mpz_scan0(self_val, bitnr_val));
+}
+
+/*
+ * call-seq:
+ *   integer.scan1(starting_bit)
+ *
+ * From the GMP Manual:
+ * 
+ * Scan integer, starting from bit starting_bit, towards more significant bits,
+ * until the first 1 bit is found. Return the index of the found bit.
+ *
+ * If the bit at starting_bit is already what's sought, then starting_bit is
+ * returned.
+ *
+ * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will
+ * happen in mpz_scan1 past the end of a nonnegative number.
+ */
+VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+
+  mpz_get_struct(self, self_val);
+
+  if (FIXNUM_P(bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as(X, "index");
+  }
+
+  return INT2FIX(mpz_scan1(self_val, bitnr_val));
+}
+
+/*
+ * call-seq:
+ *   integer[index] = x &rarr; nil
+ *
+ * Sets the bit at index to x.
+ */
+VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+
+  mpz_get_struct (self, self_val);
+
+  if (FIXNUM_P (bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as (X, "index");
+  }
+  if (RTEST (set_to)) {
+    mpz_setbit (self_val, bitnr_val);
+  } else {
+    mpz_clrbit (self_val, bitnr_val);
+  }
+  return Qnil;
+}
+
+/*
+ * call-seq:
+ *   integer[index] &rarr; boolean
+ *
+ * Gets the bit at index, returned as either true or false.
+ */
+VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
+{
+  MP_INT *self_val;
+  int bitnr_val;
+  mpz_get_struct(self, self_val);
+  if (FIXNUM_P(bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
+  } else {
+    typeerror_as(X, "index");
+  }
+  return mpz_tstbit(self_val, bitnr_val)?Qtrue:Qfalse;
+}
+
+
+/**********************************************************************
+ *    Miscellaneous Integer Functions                                 *
+ **********************************************************************/
+
+VALUE r_gmpz_sizeinbase(VALUE self, VALUE base)
+{
+  MP_INT *self_val;
+  int base_val;
+  mpz_get_struct (self, self_val);
+  base_val = FIX2INT (base);
+  return INT2FIX (mpz_sizeinbase (self_val, base_val));
+}
+
+VALUE r_gmpz_size_in_bin(VALUE self)
+{
+  MP_INT *self_val;
+  mpz_get_struct (self, self_val);
+  return INT2FIX (mpz_sizeinbase (self_val, 2));
+}
+
+
+/**********************************************************************
+ *    Integer Special Functions                                       *
+ **********************************************************************/
+
+
+/**********************************************************************
+ *    _unsorted_                                                      *
+ **********************************************************************/
+
+/*
+ * Document-method: even?
+ *
+ * call-seq:
+ *   integer.even?
+ *
+ * From the GMP Manual:
+ * 
+ * Determines whether integer is even. Returns true or false.
+ */
+DEFUN_INT_COND_P(is_even,mpz_even_p)
+/*
+ * Document-method: odd?
+ *
+ * call-seq:
+ *   integer.odd?
+ *
+ * From the GMP Manual:
+ * 
+ * Determines whether integer is odd. Returns true or false.
+ */
+DEFUN_INT_COND_P(is_odd,mpz_odd_p)
+
+DEFUN_INT_F_UL(fshr,mpz_fdiv_q_2exp,"shift size")
+DEFUN_INT_F_UL(tshr,mpz_tdiv_q_2exp,"shift size")
+DEFUN_INT_F_UL(fshrm,mpz_fdiv_r_2exp,"mark size")
+DEFUN_INT_F_UL(tshrm,mpz_tdiv_r_2exp,"mark size")
 
 VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
 {
@@ -1931,23 +1931,26 @@ void init_gmpz()
   rb_define_singleton_method(cGMP_Z, "fib",           r_gmpzsg_fib, 1);
   
   // Integer Comparisons
-  rb_define_method(cGMP_Z, "<=>", r_gmpz_cmp, 1);
-  rb_define_method(cGMP_Z, ">",   r_gmpz_cmp_gt, 1);
-  rb_define_method(cGMP_Z, ">=",  r_gmpz_cmp_ge, 1);
-  rb_define_method(cGMP_Z, "<",   r_gmpz_cmp_lt, 1);
-  rb_define_method(cGMP_Z, "<=",  r_gmpz_cmp_le, 1);
+  rb_define_method(cGMP_Z, "<=>",     r_gmpz_cmp, 1);
+  rb_define_method(cGMP_Z, ">",       r_gmpz_cmp_gt, 1);
+  rb_define_method(cGMP_Z, ">=",      r_gmpz_cmp_ge, 1);
+  rb_define_method(cGMP_Z, "==",      r_gmpz_eq, 1);
+  rb_define_method(cGMP_Z, "<",       r_gmpz_cmp_lt, 1);
+  rb_define_method(cGMP_Z, "<=",      r_gmpz_cmp_le, 1);
   rb_define_method(cGMP_Z, "cmpabs",  r_gmpz_cmpabs, 1);
+  rb_define_method(cGMP_Z, "sgn",     r_gmpz_sgn, 0);
   
   // Integer Logic and Bit Fiddling
-  rb_define_method(cGMP_Z, "com", r_gmpz_com, 0);
-  rb_define_method(cGMP_Z, "com!", r_gmpz_com_self, 0);
   rb_define_method(cGMP_Z, "&", r_gmpz_and, 1);
   rb_define_method(cGMP_Z, "|", r_gmpz_or, 1);
   rb_define_method(cGMP_Z, "^", r_gmpz_xor, 1);
-  rb_define_method(cGMP_Z, "[]=", r_gmpz_setbit, 2);
-  rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
+  rb_define_method(cGMP_Z, "com", r_gmpz_com, 0);
+  rb_define_method(cGMP_Z, "com!", r_gmpz_com_self, 0);
+  rb_define_method(cGMP_Z, "popcount",  r_gmpz_popcount, 0);
   rb_define_method(cGMP_Z, "scan0", r_gmpz_scan0, 1);
   rb_define_method(cGMP_Z, "scan1", r_gmpz_scan1, 1);
+  rb_define_method(cGMP_Z, "[]=", r_gmpz_setbit, 2);
+  rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
   
   //Miscellaneous Integer Functions
   rb_define_method(cGMP_Z, "sizeinbase", r_gmpz_sizeinbase, 1);
@@ -1957,12 +1960,9 @@ void init_gmpz()
   // _unsorted_
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
   rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
-  rb_define_method(cGMP_Z, "sgn", r_gmpz_sgn, 0);
-  rb_define_method(cGMP_Z, "==",  r_gmpz_eq, 1);
   rb_define_method(cGMP_Z, ">>",  r_gmpz_fshr, 1);
   rb_define_method(cGMP_Z, "tshr",  r_gmpz_tshr, 1);
   rb_define_method(cGMP_Z, "lastbits_sgn",  r_gmpz_tshrm, 1);
   rb_define_method(cGMP_Z, "lastbits_pos",  r_gmpz_fshrm, 1);
-  rb_define_method(cGMP_Z, "popcount",  r_gmpz_popcount, 0);
 
 }

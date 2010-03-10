@@ -161,6 +161,7 @@ You can also call them as:
     scan0,scan1              starting at bitnr (1st arg), scan for a 0 or 1
                              (respectively), then return the index of the
                              first instance.
+    cmpabs                   comparison of absolute value
     com                      2's complement
     com!                     in-place 2's complement
     &,|,^                    logical operations: and, or, xor
