@@ -46,5 +46,20 @@ class TC_MPFR_Functions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.log1p should be callable.") { @a.log1p }
     assert_nothing_raised("GMP::F.expm1 should be callable.") { @a.expm1 }
     assert_nothing_raised("GMP::F.eint should be callable.") { @a.eint }
+    assert_nothing_raised("GMP::F.li2 should be callable.") { @a.li2 }
+    assert_nothing_raised("GMP::F.gamma should be callable.") { @a.gamma }
+    assert_nothing_raised("GMP::F.lngamma should be callable.") { @a.lngamma }
+    #assert_nothing_raised("GMP::F.lgamma should be callable.") { @a.lgamma }
+    assert_nothing_raised("GMP::F.zeta should be callable.") { @a.zeta }
+    assert_nothing_raised("GMP::F.erf should be callable.") { @a.erf }
+    assert_nothing_raised("GMP::F.erfc should be callable.") { @a.erfc }
+    assert_nothing_raised("GMP::F.j0 should be callable.") { @a.j0 }
+    assert_nothing_raised("GMP::F.j1 should be callable.") { @a.j1 }
+    #assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(-1) }
+    #assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(0) }
+    #assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(1) }
+    #assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(2) }  #WTF!!!
+    assert_nothing_raised("GMP::F.y0 should be callable.") { @a.y0 }
+    assert_nothing_raised("GMP::F.y1 should be callable.") { @a.y1 }
   end
 end

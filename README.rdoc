@@ -238,6 +238,7 @@ You can also call them as:
     expm1                    the same as (object.exp) - 1, with better
                              precision
     eint                     exponential integral of object
+    li2                      real part of the dilogarithm of object
     cos                      \
     sin                      |
     tan                      |
@@ -381,7 +382,7 @@ still relevant.
 * better bignum parser
 * zero-copy method for strings generation
 * put rb_raise into nice macros
-* benchmarks against Python GMP (gmpy? Is this still active?) and Perl GMP
+* benchmarks against Python GMP and Perl GMP
 * dup methods
 * integrate F into system
 * should Z.[] bits be 0/1 or true/false, 0 is true, what might badly surprise users

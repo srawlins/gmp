@@ -23,6 +23,7 @@ require 'tc_division'
 require 'tc_z_jac_leg_rem'
 require 'tc_z_gcd_lcm_invert'
 require 'tc_random'
+require 'tc_hashes'
 
 begin
   GMP::MPFR_VERSION

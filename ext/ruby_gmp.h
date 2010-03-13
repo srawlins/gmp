@@ -82,7 +82,15 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 //should change exception type
 #define not_yet rb_raise(rb_eTypeError,"Not implemented yet")
 
+#ifdef MPFR
+#define mprnd_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, mp_rnd_t, c_var); }
+#define mprnd_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_Rnd, mp_rnd_t, 0, -1, c_var); }
+#endif /* MPFR */
+
 extern VALUE mGMP, cGMP_Z, cGMP_Q, cGMP_F, cGMP_RandState;
+#ifdef MPFR
+extern VALUE cGMP_Rnd;
+#endif /* MPFR */
 
 extern void r_gmpz_free(void *ptr);
 extern void r_gmpq_free(void *ptr);
@@ -119,10 +127,10 @@ extern VALUE r_gmpz_mod(VALUE self, VALUE arg);
 extern VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp);
 extern VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod);
 
+// Integer Roots
+
 // Number Theoretic Functions
 extern VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self);
-extern VALUE r_gmpz_nextprime(VALUE self);
-extern VALUE r_gmpz_nextprime_self(VALUE self);
 extern VALUE r_gmpz_gcd(VALUE self, VALUE arg);
 extern VALUE r_gmpz_invert(VALUE self, VALUE arg);
 extern VALUE r_gmpz_jacobi(VALUE self, VALUE b);
@@ -210,39 +218,51 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 
 // MPFR
 #ifdef MPFR
-  extern VALUE r_gmpfr_sqrt(VALUE self);
+  extern VALUE r_gmpfr_sqrt(int argc, VALUE *argv, VALUE self);
   
-  extern VALUE r_gmpfr_log(VALUE self);
-  extern VALUE r_gmpfr_log2(VALUE self);
-  extern VALUE r_gmpfr_log10(VALUE self);
-  extern VALUE r_gmpfr_exp(VALUE self);
-  extern VALUE r_gmpfr_exp2(VALUE self);
-  extern VALUE r_gmpfr_exp10(VALUE self);
-  extern VALUE r_gmpfr_cos(VALUE self);
-  extern VALUE r_gmpfr_sin(VALUE self);
-  extern VALUE r_gmpfr_tan(VALUE self);
-  extern VALUE r_gmpfr_sec(VALUE self);
-  extern VALUE r_gmpfr_csc(VALUE self);
-  extern VALUE r_gmpfr_cot(VALUE self);
+  extern VALUE r_gmpfr_log(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_log2(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_log10(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_exp(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_exp2(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_exp10(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_cos(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_sin(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_tan(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_sec(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_csc(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_cot(int argc, VALUE *argv, VALUE self);
   
-  extern VALUE r_gmpfr_acos(VALUE self);
-  extern VALUE r_gmpfr_asin(VALUE self);
-  extern VALUE r_gmpfr_atan(VALUE self);
+  extern VALUE r_gmpfr_acos(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_asin(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_atan(int argc, VALUE *argv, VALUE self);
   
-  extern VALUE r_gmpfr_cosh(VALUE self);
-  extern VALUE r_gmpfr_sinh(VALUE self);
-  extern VALUE r_gmpfr_tanh(VALUE self);
+  extern VALUE r_gmpfr_cosh(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_sinh(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_tanh(int argc, VALUE *argv, VALUE self);
   
-  extern VALUE r_gmpfr_sech(VALUE self);
-  extern VALUE r_gmpfr_csch(VALUE self);
-  extern VALUE r_gmpfr_coth(VALUE self);
-  extern VALUE r_gmpfr_acosh(VALUE self);
-  extern VALUE r_gmpfr_asinh(VALUE self);
-  extern VALUE r_gmpfr_atanh(VALUE self);
+  extern VALUE r_gmpfr_sech(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_csch(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_coth(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_acosh(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_asinh(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_atanh(int argc, VALUE *argv, VALUE self);
   
-  extern VALUE r_gmpfr_log1p(VALUE self);
-  extern VALUE r_gmpfr_expm1(VALUE self);
-  extern VALUE r_gmpfr_eint(VALUE self);
+  extern VALUE r_gmpfr_log1p(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_expm1(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_eint(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_li2(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_gamma(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_lngamma(int argc, VALUE *argv, VALUE self);
+  /*extern VALUE r_gmpfr_lgamma(int argc, VALUE *argv, VALUE self);*/
+  extern VALUE r_gmpfr_zeta(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_erf(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_erfc(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_j0(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_j1(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_jn(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_y0(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_y1(int argc, VALUE *argv, VALUE self);
   
   extern VALUE r_gmpfrsg_const_log2();
   extern VALUE r_gmpfrsg_const_pi();

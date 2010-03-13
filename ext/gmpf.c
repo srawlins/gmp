@@ -126,6 +126,37 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   return Qnil;
 }
 
+/* don't pass GMP::F here, it should be handled separately */
+void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
+{
+  MP_RAT *arg_val_q;
+  MP_INT *arg_val_z;
+
+  if (GMPQ_P(arg)) {
+    mpq_get_struct(arg, arg_val_q);
+    mpf_set_q(self_val, arg_val_q);
+  } else if (GMPZ_P(arg)) {
+    mpz_get_struct(arg, arg_val_z);
+    mpf_set_z(self_val, arg_val_z);
+  } else if (FLOAT_P(arg)) {
+    mpf_set_d(self_val, NUM2DBL(arg));
+  } else if (FIXNUM_P(arg)) {
+    mpf_set_si(self_val, FIX2INT(arg));
+  } else if (STRING_P(arg)) {
+    if (mpf_set_str(self_val, STR2CSTR(arg), 10) == -1) {
+      rb_raise(rb_eRuntimeError, "Badly formatted string");
+    }
+  } else if (BIGNUM_P(arg)) {
+#if 1 /* GMP3 code */
+    mpz_temp_from_bignum(arg_val_z, arg);
+    mpf_set_z(self_val, arg_val_z);
+    mpz_temp_free(arg_val_z);
+#endif
+  } else {
+    rb_raise(rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name(rb_class_of(arg)));
+  }
+}
+
 /*
  * call-seq:
  *   GMP::F(arg)
@@ -518,15 +549,41 @@ DEFUN_FLOAT_CMP(ge,>=)
 #ifdef MPFR
 
 #define MPFR_SINGLE_FUNCTION(name)                                 \
-VALUE r_gmpfr_##name(VALUE self)                                   \
+VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)            \
 {                                                                  \
   MP_FLOAT *self_val, *res_val;                                    \
-  unsigned long prec;                                              \
+  VALUE res_prec;                                                  \
+  unsigned long prec, res_prec_value;                              \
   VALUE res;                                                       \
                                                                    \
+  rb_scan_args (argc, argv, "01", &res_prec);                      \
+                                                                   \
   mpf_get_struct_prec (self, self_val, prec);                      \
-  mpf_make_struct_init (res, res_val, prec);                       \
+  if (NIL_P (res_prec)) { res_prec_value = prec; }                 \
+  else { res_prec_value = FIX2INT (res_prec); }                    \
+  mpf_make_struct_init (res, res_val, res_prec_value);             \
   mpfr_##name (res_val, self_val, __gmp_default_rounding_mode);    \
+                                                                   \
+  return res;                                                      \
+}
+
+#define MPFR_SINGLE_1ARG_FUNCTION(name)                            \
+VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)            \
+{                                                                  \
+  MP_FLOAT *self_val, *res_val;                                    \
+  VALUE arg1, res_prec;                                            \
+  unsigned long prec, arg1_val, res_prec_value;                    \
+  VALUE res;                                                       \
+                                                                   \
+  rb_scan_args (argc, argv, "12", &arg1, &res_prec);               \
+                                                                   \
+  mpf_get_struct_prec (self, self_val, prec);                      \
+  if (!FIXNUM_P (arg1)) { typeerror(ZXB); }                        \
+  arg1_val = FIX2LONG (arg1);                                       \
+  if (NIL_P (res_prec)) { res_prec_value = prec; }                 \
+  else { res_prec_value = FIX2INT (res_prec); }                    \
+  mpf_make_struct_init (res, res_val, res_prec_value);             \
+  mpfr_##name (res_val, arg1_val, self_val, __gmp_default_rounding_mode);    \
                                                                    \
   return res;                                                      \
 }
@@ -577,6 +634,18 @@ MPFR_SINGLE_FUNCTION(atanh)
 MPFR_SINGLE_FUNCTION(log1p)
 MPFR_SINGLE_FUNCTION(expm1)
 MPFR_SINGLE_FUNCTION(eint)
+MPFR_SINGLE_FUNCTION(li2)
+MPFR_SINGLE_FUNCTION(gamma)
+MPFR_SINGLE_FUNCTION(lngamma)
+/*MPFR_SINGLE_FUNCTION(lgamma)*/
+MPFR_SINGLE_FUNCTION(zeta)
+MPFR_SINGLE_FUNCTION(erf)
+MPFR_SINGLE_FUNCTION(erfc)
+MPFR_SINGLE_FUNCTION(j0)
+MPFR_SINGLE_FUNCTION(j1)
+MPFR_SINGLE_1ARG_FUNCTION(jn)
+MPFR_SINGLE_FUNCTION(y0)
+MPFR_SINGLE_FUNCTION(y1)
 
 MPFR_CONST_FUNCTION(const_log2)
 MPFR_CONST_FUNCTION(const_pi)
@@ -748,7 +817,7 @@ void init_gmpf()
   
 #ifdef MPFR
   // Basic Arithmetic Functions
-  rb_define_method(cGMP_F, "sqrt", r_gmpfr_sqrt, 0);
+  rb_define_method(cGMP_F, "sqrt", r_gmpfr_sqrt, -1);
   
   rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
   
@@ -759,37 +828,49 @@ void init_gmpf()
   rb_define_method(cGMP_F, "number?", r_gmpfr_number_p, 0);
   
   // Special Functions
-  rb_define_method(cGMP_F, "log",   r_gmpfr_log,   0);
-  rb_define_method(cGMP_F, "log2",  r_gmpfr_log2,  0);
-  rb_define_method(cGMP_F, "log10", r_gmpfr_log10, 0);
-  rb_define_method(cGMP_F, "exp",   r_gmpfr_exp,   0);
-  rb_define_method(cGMP_F, "exp2",  r_gmpfr_exp2,  0);
-  rb_define_method(cGMP_F, "exp10", r_gmpfr_exp10, 0);
-  rb_define_method(cGMP_F, "cos",   r_gmpfr_cos,   0);
-  rb_define_method(cGMP_F, "sin",   r_gmpfr_sin,   0);
-  rb_define_method(cGMP_F, "tan",   r_gmpfr_tan,   0);
-  rb_define_method(cGMP_F, "sec",   r_gmpfr_sec,   0);
-  rb_define_method(cGMP_F, "csc",   r_gmpfr_csc,   0);
-  rb_define_method(cGMP_F, "cot",   r_gmpfr_cot,   0);
+  rb_define_method(cGMP_F, "log",   r_gmpfr_log,   -1);
+  rb_define_method(cGMP_F, "log2",  r_gmpfr_log2,  -1);
+  rb_define_method(cGMP_F, "log10", r_gmpfr_log10, -1);
+  rb_define_method(cGMP_F, "exp",   r_gmpfr_exp,   -1);
+  rb_define_method(cGMP_F, "exp2",  r_gmpfr_exp2,  -1);
+  rb_define_method(cGMP_F, "exp10", r_gmpfr_exp10, -1);
+  rb_define_method(cGMP_F, "cos",   r_gmpfr_cos,   -1);
+  rb_define_method(cGMP_F, "sin",   r_gmpfr_sin,   -1);
+  rb_define_method(cGMP_F, "tan",   r_gmpfr_tan,   -1);
+  rb_define_method(cGMP_F, "sec",   r_gmpfr_sec,   -1);
+  rb_define_method(cGMP_F, "csc",   r_gmpfr_csc,   -1);
+  rb_define_method(cGMP_F, "cot",   r_gmpfr_cot,   -1);
   
-  rb_define_method(cGMP_F, "acos",  r_gmpfr_acos,  0);
-  rb_define_method(cGMP_F, "asin",  r_gmpfr_asin,  0);
-  rb_define_method(cGMP_F, "atan",  r_gmpfr_atan,  0);
+  rb_define_method(cGMP_F, "acos",  r_gmpfr_acos,  -1);
+  rb_define_method(cGMP_F, "asin",  r_gmpfr_asin,  -1);
+  rb_define_method(cGMP_F, "atan",  r_gmpfr_atan,  -1);
   
-  rb_define_method(cGMP_F, "cosh",  r_gmpfr_cosh,  0);
-  rb_define_method(cGMP_F, "sinh",  r_gmpfr_sinh,  0);
-  rb_define_method(cGMP_F, "tanh",  r_gmpfr_tanh,  0);
+  rb_define_method(cGMP_F, "cosh",  r_gmpfr_cosh,  -1);
+  rb_define_method(cGMP_F, "sinh",  r_gmpfr_sinh,  -1);
+  rb_define_method(cGMP_F, "tanh",  r_gmpfr_tanh,  -1);
   
-  rb_define_method(cGMP_F, "sech",  r_gmpfr_sech,  0);
-  rb_define_method(cGMP_F, "csch",  r_gmpfr_csch,  0);
-  rb_define_method(cGMP_F, "coth",  r_gmpfr_coth,  0);
-  rb_define_method(cGMP_F, "acosh", r_gmpfr_acosh, 0);
-  rb_define_method(cGMP_F, "asinh", r_gmpfr_asinh, 0);
-  rb_define_method(cGMP_F, "atanh", r_gmpfr_atanh, 0);
+  rb_define_method(cGMP_F, "sech",  r_gmpfr_sech,  -1);
+  rb_define_method(cGMP_F, "csch",  r_gmpfr_csch,  -1);
+  rb_define_method(cGMP_F, "coth",  r_gmpfr_coth,  -1);
+  rb_define_method(cGMP_F, "acosh", r_gmpfr_acosh, -1);
+  rb_define_method(cGMP_F, "asinh", r_gmpfr_asinh, -1);
+  rb_define_method(cGMP_F, "atanh", r_gmpfr_atanh, -1);
   
-  rb_define_method(cGMP_F, "log1p", r_gmpfr_log1p, 0);
-  rb_define_method(cGMP_F, "expm1", r_gmpfr_expm1, 0);
-  rb_define_method(cGMP_F, "eint",  r_gmpfr_eint, 0);
+  rb_define_method(cGMP_F, "log1p",   r_gmpfr_log1p,   -1);
+  rb_define_method(cGMP_F, "expm1",   r_gmpfr_expm1,   -1);
+  rb_define_method(cGMP_F, "eint",    r_gmpfr_eint,    -1);
+  rb_define_method(cGMP_F, "li2",     r_gmpfr_li2,     -1);
+  rb_define_method(cGMP_F, "gamma",   r_gmpfr_gamma,   -1);
+  rb_define_method(cGMP_F, "lngamma", r_gmpfr_lngamma, -1);
+  /*rb_define_method(cGMP_F, "lgamma",  r_gmpfr_lgamma,   -1);*/
+  rb_define_method(cGMP_F, "zeta", r_gmpfr_zeta,       -1);
+  rb_define_method(cGMP_F, "erf", r_gmpfr_erf,         -1);
+  rb_define_method(cGMP_F, "erfc", r_gmpfr_erfc,       -1);
+  rb_define_method(cGMP_F, "j0", r_gmpfr_j0,           -1);
+  rb_define_method(cGMP_F, "j1", r_gmpfr_j1,           -1);
+  rb_define_method(cGMP_F, "jn", r_gmpfr_jn,           -1);
+  rb_define_method(cGMP_F, "y0", r_gmpfr_y0,           -1);
+  rb_define_method(cGMP_F, "y1", r_gmpfr_y1,           -1);
   
   rb_define_singleton_method(cGMP_F, "const_log2",    r_gmpfrsg_const_log2,    0);
   rb_define_singleton_method(cGMP_F, "const_pi",      r_gmpfrsg_const_pi,      0);

@@ -1601,6 +1601,32 @@ VALUE r_gmpz_sgn(VALUE self)
 }
 
 
+/*
+ * eql? and hash are defined so that GMP::Z objects can be used as keys in
+ * hashes.
+ */
+VALUE r_gmpz_eql(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val;
+  mpz_get_struct(self,self_val);
+  
+  if (GMPZ_P(arg)) {
+    mpz_get_struct(arg, arg_val);
+    return (mpz_cmp (self_val, arg_val) == 0) ? Qtrue : Qfalse;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+VALUE r_gmpz_hash(VALUE self)
+{
+  ID to_s_sym = rb_intern("to_s");
+  ID hash_sym = rb_intern("hash");
+  return rb_funcall(rb_funcall(self, to_s_sym, 0), hash_sym, 0);
+}
+
+
 /**********************************************************************
  *    Integer Logic and Bit Fiddling                                  *
  **********************************************************************/
@@ -1939,6 +1965,9 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "<=",      r_gmpz_cmp_le, 1);
   rb_define_method(cGMP_Z, "cmpabs",  r_gmpz_cmpabs, 1);
   rb_define_method(cGMP_Z, "sgn",     r_gmpz_sgn, 0);
+  
+  rb_define_method(cGMP_Z, "eql?",    r_gmpz_eql, 1);
+  rb_define_method(cGMP_Z, "hash",    r_gmpz_hash, 0);
   
   // Integer Logic and Bit Fiddling
   rb_define_method(cGMP_Z, "&", r_gmpz_and, 1);

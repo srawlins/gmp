@@ -7,6 +7,9 @@
 #include <ruby_gmp.h>
 
 VALUE mGMP, cGMP_Z, cGMP_Q, cGMP_F, cGMP_RandState;
+#ifdef MPFR
+VALUE cGMP_Rnd;
+#endif
 
 void r_gmpz_free(void *ptr)         { mpz_clear (ptr);     free (ptr); }
 void r_gmpq_free(void *ptr)         { mpq_clear (ptr);     free (ptr); }
@@ -53,37 +56,6 @@ static VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
     }
   }
   return Qnil;
-}
-
-/* don't pass GMP::F here, it should be handled separately */
-void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
-{
-  MP_RAT *arg_val_q;
-  MP_INT *arg_val_z;
-
-  if (GMPQ_P(arg)) {
-    mpq_get_struct(arg, arg_val_q);
-    mpf_set_q(self_val, arg_val_q);
-  } else if (GMPZ_P(arg)) {
-    mpz_get_struct(arg, arg_val_z);
-    mpf_set_z(self_val, arg_val_z);
-  } else if (FLOAT_P(arg)) {
-    mpf_set_d(self_val, NUM2DBL(arg));
-  } else if (FIXNUM_P(arg)) {
-    mpf_set_si(self_val, FIX2INT(arg));
-  } else if (STRING_P(arg)) {
-    if (mpf_set_str(self_val, STR2CSTR(arg), 10) == -1) {
-      rb_raise(rb_eRuntimeError, "Badly formatted string");
-    }
-  } else if (BIGNUM_P(arg)) {
-#if 1 /* GMP3 code */
-    mpz_temp_from_bignum(arg_val_z, arg);
-    mpf_set_z(self_val, arg_val_z);
-    mpz_temp_free(arg_val_z);
-#endif
-  } else {
-    rb_raise(rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name(rb_class_of(arg)));
-  }
 }
 
 static VALUE r_gmpz_coerce(VALUE self, VALUE arg)
@@ -209,17 +181,18 @@ void Init_gmp() {
   rb_define_singleton_method (cGMP_F, "default_prec", r_gmpfsg_get_default_prec, 0);
   rb_define_singleton_method (cGMP_F, "default_prec=", r_gmpfsg_set_default_prec, 1);
 #ifdef MPFR
+  cGMP_Rnd = rb_define_class_under (mGMP, "Rnd", rb_cObject);
   rb_define_singleton_method (cGMP_F, "default_rounding_mode", r_gmpfsg_get_default_rounding_mode, 0);
   rb_define_singleton_method (cGMP_F, "default_rounding_mode=", r_gmpfsg_set_default_rounding_mode, 1);
 #endif /* MPFR */
-  rb_define_method(cGMP_F, "coerce", r_gmpf_coerce, 1); // new method - testing
+  rb_define_method (cGMP_F, "coerce", r_gmpf_coerce, 1); // new method - testing
 
 /*  rb_define_method(cGMP_F, "cmpabs",  r_gmpf_cmpabs, 1);*/
   
   cGMP_RandState = rb_define_class_under (mGMP, "RandState", rb_cObject);
-  init_gmprandstate();
+  init_gmprandstate ();
   
-  init_gmpbench_timing();
+  init_gmpbench_timing ();
 
   // more
 
