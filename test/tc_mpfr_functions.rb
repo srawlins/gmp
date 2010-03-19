@@ -55,10 +55,10 @@ class TC_MPFR_Functions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.erfc should be callable.") { @a.erfc }
     assert_nothing_raised("GMP::F.j0 should be callable.") { @a.j0 }
     assert_nothing_raised("GMP::F.j1 should be callable.") { @a.j1 }
-    #assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(-1) }
-    #assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(0) }
-    #assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(1) }
-    #assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(2) }  #WTF!!!
+    assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(-1) }
+    assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(0) }
+    assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(1) }
+    assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(2) }  #WTF!!!
     assert_nothing_raised("GMP::F.y0 should be callable.") { @a.y0 }
     assert_nothing_raised("GMP::F.y1 should be callable.") { @a.y1 }
   end

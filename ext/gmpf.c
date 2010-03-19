@@ -575,11 +575,11 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)            \
   unsigned long prec, arg1_val, res_prec_value;                    \
   VALUE res;                                                       \
                                                                    \
-  rb_scan_args (argc, argv, "12", &arg1, &res_prec);               \
+  rb_scan_args (argc, argv, "11", &arg1, &res_prec);               \
                                                                    \
   mpf_get_struct_prec (self, self_val, prec);                      \
   if (!FIXNUM_P (arg1)) { typeerror(ZXB); }                        \
-  arg1_val = FIX2LONG (arg1);                                       \
+  arg1_val = FIX2LONG (arg1);                                      \
   if (NIL_P (res_prec)) { res_prec_value = prec; }                 \
   else { res_prec_value = FIX2INT (res_prec); }                    \
   mpf_make_struct_init (res, res_val, res_prec_value);             \
