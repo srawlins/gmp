@@ -1,0 +1,1 @@
+xcopy /D /E /I "%GMP_CODE%" %GMP_WIN32%

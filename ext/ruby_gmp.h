@@ -83,8 +83,9 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define not_yet rb_raise(rb_eTypeError,"Not implemented yet")
 
 #ifdef MPFR
-#define mprnd_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, mp_rnd_t, c_var); }
-#define mprnd_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_Rnd, mp_rnd_t, 0, -1, c_var); }
+#define mprnd_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, int, c_var); }
+#define mprnd_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_Rnd, int, 0, 0, c_var); }
+#define GMPRND_P(value)   (rb_obj_is_instance_of(value, cGMP_Rnd) == Qtrue)
 #endif /* MPFR */
 
 extern VALUE mGMP, cGMP_Z, cGMP_Q, cGMP_F, cGMP_RandState;
@@ -308,5 +309,8 @@ extern void init_gmpq();
 extern void init_gmpf();
 extern void init_gmprandstate();
 extern void init_gmpbench_timing();
+#ifdef MPFR
+extern void init_gmprnd();
+#endif /* MPFR */
 
 #endif

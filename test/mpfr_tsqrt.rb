@@ -61,7 +61,7 @@ class MPFR_TSQRT < Test::Unit::TestCase
     z = x**2 + y**2
     z = x / z.sqrt
     assert_between(-1, 1, z, "-1 <= x/sqrt(x^2+y^2) <= 1 should hold.")
-    GMP::F.default_rounding_mode = GMP.const_get(current_rounding_mode)
+    GMP::F.default_rounding_mode = current_rounding_mode
   end
   
   def property2(p, rounding)
@@ -70,7 +70,7 @@ class MPFR_TSQRT < Test::Unit::TestCase
     x = @rand_state.mpfr_urandomb(p)
     y = (x ** 2).sqrt
     assert_true(x == y, "sqrt(x^2) = x should hold.")
-    GMP::F.default_rounding_mode = GMP.const_get(current_rounding_mode)
+    GMP::F.default_rounding_mode = current_rounding_mode
   end
   
   def test_prec

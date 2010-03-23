@@ -70,7 +70,6 @@ VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
 {
   MP_FLOAT *res_val;
   VALUE res;
-
   (void)klass;
 
   if (argc > 2)

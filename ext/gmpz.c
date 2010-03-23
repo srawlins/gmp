@@ -233,7 +233,6 @@ VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
 {
   MP_INT *res_val;
   VALUE res;
-
   (void)klass;
 
   if (argc > 1)
