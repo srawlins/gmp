@@ -21,20 +21,20 @@ class MPFR_TSQRT < Test::Unit::TestCase
   
   def special
     x = GMP::F(0b1010000010100011011001010101010010001100001101011101110001011001 / 2, 64)  # Ruby 0b does not support e,
-    y = x.sqrt(32)                                                                          # ie 0b11e-2 = 0.75 doesnt work
-    #skip(2405743844, y, "Error for n^2+n+1/2 with n=2405743843")  # Pending
+    y = x.sqrt(GMP::GMP_RNDN, 32)                                                           # ie 0b11e-2 = 0.75 doesnt work
+    #assert_equal(2405743844, y, "Error for n^2+n+1/2 with n=2405743843")  # Pending
     
     x = GMP::F(0b10100000101000110110010101010100100011000011010111011100010110001 / 4, 65)
-    y = x.sqrt(32)
+    y = x.sqrt(GMP::GMP_RNDN, 32)
     #assert_equal(2405743844, y, "Error for n^2+n+1/4 with n=2405743843")  # Pending
     
     x = GMP::F(0b101000001010001101100101010101001000110000110101110111000101100011 / 8, 66)
-    y = x.sqrt(32)
+    y = x.sqrt(GMP::GMP_RNDN, 32)
     #assert_equal(2405743844, y, "Error for n^2+n+1/4+1/8 with n=2405743843")  # Pending
     
     x = GMP::F(0b101000001010001101100101010101001000110000110101110111000101100001 / 8, 66)
-    y = x.sqrt(32)
-    assert_equal(2405743843, y, "Error for n^2+n+1/8 with n=2405743843")  # Pending
+    y = x.sqrt(GMP::GMP_RNDN, 32)
+    assert_equal(2405743843, y, "Error for n^2+n+1/8 with n=2405743843")
     
     #####
     ##### Inexact flag test. Not implemented.
@@ -45,7 +45,7 @@ class MPFR_TSQRT < Test::Unit::TestCase
     # Not an accurate test at all. Reassigning z generates a new mpfr object.
     x = GMP::F(1)
     z = GMP::F(-1)
-    z = x.sqrt
+    z = x.sqrt(GMP::GMP_RNDN)
     
     # z = GMP::F(0.1011010100000100100100100110011001011100100100000011000111011001011101101101110000110100001000100001100001011000E1, 160)
     # x = z.sqrt
@@ -54,23 +54,17 @@ class MPFR_TSQRT < Test::Unit::TestCase
   end
   
   def property1(p, rounding)
-    current_rounding_mode = GMP::F.default_rounding_mode
-    GMP::F.default_rounding_mode = rounding
     x = @rand_state.mpfr_urandomb(p)
     y = @rand_state.mpfr_urandomb(p)
     z = x**2 + y**2
-    z = x / z.sqrt
+    z = x / z.sqrt(rounding)
     assert_between(-1, 1, z, "-1 <= x/sqrt(x^2+y^2) <= 1 should hold.")
-    GMP::F.default_rounding_mode = current_rounding_mode
   end
   
   def property2(p, rounding)
-    current_rounding_mode = GMP::F.default_rounding_mode
-    GMP::F.default_rounding_mode = rounding
     x = @rand_state.mpfr_urandomb(p)
-    y = (x ** 2).sqrt
+    y = (x ** 2).sqrt(rounding)
     assert_true(x == y, "sqrt(x^2) = x should hold.")
-    GMP::F.default_rounding_mode = current_rounding_mode
   end
   
   def test_prec

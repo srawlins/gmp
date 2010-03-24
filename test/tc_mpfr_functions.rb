@@ -58,8 +58,31 @@ class TC_MPFR_Functions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(-1) }
     assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(0) }
     assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(1) }
-    assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(2) }  #WTF!!!
+    assert_nothing_raised("GMP::F.jn should be callable.") { @a.jn(2) }
     assert_nothing_raised("GMP::F.y0 should be callable.") { @a.y0 }
     assert_nothing_raised("GMP::F.y1 should be callable.") { @a.y1 }
+    assert_nothing_raised("GMP::F.yn should be callable.") { @a.yn(-1) }
+    assert_nothing_raised("GMP::F.yn should be callable.") { @a.yn(0) }
+    assert_nothing_raised("GMP::F.yn should be callable.") { @a.yn(1) }
+    assert_nothing_raised("GMP::F.yn should be callable.") { @a.yn(2) }
+  end
+  
+  def test_function_parameters
+    functions = [:sqrt, :log, :log2, :log10, :exp, :exp2, :exp10,
+                 :cos, :sin, :tan, :sec, :csc, :cot, :acos, :asin, :atan,
+                 :cosh, :sinh, :tanh, :sech, :csch, :coth,
+                 :acosh, :asinh, :atanh,
+                 :log1p, :expm1, :eint, :li2, :gamma, :lngamma,
+                 :zeta, :erf, :erfc,
+                 :j0, :j1, :y0, :y1
+                ]
+    
+    functions.each do |f|
+      assert_nothing_raised("GMP::F.#{f} can be called with 1 argument, the rounding_mode.") { @a.send(f, GMP::GMP_RNDN) }
+      assert_nothing_raised("GMP::F.#{f} can be called with 1 argument, the rounding_mode.") { @a.send(f, GMP::GMP_RNDZ) }
+      assert_nothing_raised("GMP::F.#{f} can be called with 2 args, rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 32) }
+      assert_nothing_raised("GMP::F.#{f} can be called with 2 args, rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 128) }
+      assert_nothing_raised("GMP::F.#{f} can be called with 2 args, rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 200) }
+    end
   end
 end

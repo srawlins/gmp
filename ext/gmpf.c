@@ -551,13 +551,16 @@ DEFUN_FLOAT_CMP(ge,>=)
 VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)            \
 {                                                                  \
   MP_FLOAT *self_val, *res_val;                                    \
-  VALUE res_prec;                                                  \
+  VALUE rnd_mode, res_prec;                                        \
   unsigned long prec, res_prec_value;                              \
+  mp_rnd_t rnd_mode_value;                                         \
   VALUE res;                                                       \
                                                                    \
-  rb_scan_args (argc, argv, "01", &res_prec);                      \
+  rb_scan_args (argc, argv, "02", &rnd_mode, &res_prec);           \
                                                                    \
   mpf_get_struct_prec (self, self_val, prec);                      \
+  if (NIL_P (rnd_mode)) { rnd_mode_value = __gmp_default_rounding_mode; }    \
+  else { rnd_mode_value = r_get_rounding_mode(rnd_mode); }         \
   if (NIL_P (res_prec)) { res_prec_value = prec; }                 \
   else { res_prec_value = FIX2INT (res_prec); }                    \
   mpf_make_struct_init (res, res_val, res_prec_value);             \
@@ -645,6 +648,7 @@ MPFR_SINGLE_FUNCTION(j1)
 MPFR_SINGLE_1ARG_FUNCTION(jn)
 MPFR_SINGLE_FUNCTION(y0)
 MPFR_SINGLE_FUNCTION(y1)
+MPFR_SINGLE_1ARG_FUNCTION(yn)
 
 MPFR_CONST_FUNCTION(const_log2)
 MPFR_CONST_FUNCTION(const_pi)
@@ -870,6 +874,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "jn", r_gmpfr_jn,           -1);
   rb_define_method(cGMP_F, "y0", r_gmpfr_y0,           -1);
   rb_define_method(cGMP_F, "y1", r_gmpfr_y1,           -1);
+  rb_define_method(cGMP_F, "yn", r_gmpfr_yn,           -1);
   
   rb_define_singleton_method(cGMP_F, "const_log2",    r_gmpfrsg_const_log2,    0);
   rb_define_singleton_method(cGMP_F, "const_pi",      r_gmpfrsg_const_pi,      0);

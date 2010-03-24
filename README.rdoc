@@ -239,6 +239,17 @@ You can also call them as:
                              precision
     eint                     exponential integral of object
     li2                      real part of the dilogarithm of object
+    gamma                    Gamma fucntion of object
+    lngamma                  logarithm of the Gamma function of object
+    zeta                     Reimann Zeta function of object
+    erf                      error function of object
+    erfc                     complementary error function of object
+    j0                       first kind Bessel function of order 0 of object
+    j1                       first kind Bessel function of order 1 of object
+    jn                       first kind Bessel function of order n of object
+    y0                       second kind Bessel function of order 0 of object
+    y1                       second kind Bessel function of order 1 of object
+    yn                       second kind Bessel function of order n of object
     cos                      \
     sin                      |
     tan                      |

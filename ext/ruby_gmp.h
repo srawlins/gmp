@@ -269,6 +269,8 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
   extern VALUE r_gmpfrsg_const_pi();
   extern VALUE r_gmpfrsg_const_euler();
   extern VALUE r_gmpfrsg_const_catalan();
+  
+  extern mp_rnd_t r_get_rounding_mode(VALUE rnd);
 #endif /* MPFR */
 
 // _unsorted_

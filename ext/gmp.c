@@ -136,7 +136,35 @@ static VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
   }
   
   return Qnil;
-}  
+}
+
+mp_rnd_t r_get_rounding_mode(VALUE rnd)
+{
+  VALUE mode;
+  
+  if (GMPRND_P(rnd)) {
+    mode = rb_funcall (rnd, rb_intern("mode"), 0);
+    if (FIX2INT(mode) < 0 || FIX2INT(mode) > 3) {
+      rb_raise(rb_eRangeError, "rounding mode must be one of the rounding mode constants.");
+    }
+  } else {
+    rb_raise(rb_eTypeError, "rounding mode must be one of the rounding mode constants.");
+  }
+  
+  switch (FIX2INT(mode)) {
+    case 0:
+      return GMP_RNDN;
+    case 1:
+      return GMP_RNDZ;
+    case 2:
+      return GMP_RNDU;
+    case 3:
+      return GMP_RNDD;
+    default:
+      return GMP_RNDN;
+  }
+}
+
 #endif /* MPFR */
 
 #include "gmpf.h"
