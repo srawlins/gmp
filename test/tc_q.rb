@@ -24,4 +24,16 @@ class TC_Q < Test::Unit::TestCase
     a = GMP::Q.new(1,2)
     assert_equal(GMP::Q.new(a), a, "GMP::Q.new(x : Q) should initialize to x")
   end
+  
+  def test_to_s
+    assert_equal("1/2", GMP::Q(1,2).to_s, "GMP::Q should to_s properly.")
+    assert_equal("1/4294967296", GMP::Q(1,2**32).to_s, "GMP::Q should to_s properly.")
+    assert_equal("1/4294967296", GMP::Q(1,2**32).to_s, "GMP::Q should to_s properly.")
+    assert_equal("-22/7", GMP::Q(-22,7).to_s, "GMP::Q should to_s properly.")
+    assert_equal("-22/7", GMP::Q(22,-7).to_s, "GMP::Q should to_s properly.")
+    assert_equal("22/7", GMP::Q(-22,-7).to_s, "GMP::Q should to_s properly.")
+    assert_equal("0", GMP::Q(0,1).to_s, "GMP::Q should to_s properly.")
+    assert_equal("0", GMP::Q(0,2000).to_s, "GMP::Q should to_s properly.")
+    assert_equal("0", GMP::Q(0,-2000).to_s, "GMP::Q should to_s properly.")
+  end
 end

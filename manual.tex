@@ -28,8 +28,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.4.3}}\\
-\multicolumn{2}{r}{\large{8 March 2010}}
+\multicolumn{2}{r}{\large{Edition 0.4.7}}\\
+\multicolumn{2}{r}{\large{25 March 2010}}
 \end{tabular}
 
 \vfill
@@ -159,12 +159,8 @@ Or you may install the gem from gemcutter:\\
 \\
 \texttt{gem install gmp}\\
 
-Or you may install the gem from github (old):\\
-\\
-\texttt{gem install srawlins-gmp}\\
-
-At this time, the gem does not self-compile (how does that work?). To compile the C
-extensions, do the following:\\
+At this time, the gem does self-compiles. If required libraries cannot be found, you may
+compile the C extensions manually with:\\
 \\
 \texttt{cd <gmp gem directory>/ext}\\
 \texttt{ruby extconf.rb}\\
@@ -181,16 +177,15 @@ You can run this test suite with:\\
 \texttt{ruby unit\_tests.rb}\\
 
 All tests should pass. If you don't have the test-unit gem installed, then you may
-run into one error. I'm not sure why this is... I suspect a bug in Ruby's Test::Unit
-that the test-unit gem monkey patches.
+run into one error.
 
 \section{GMP and gmp gem basics}
 
 \subsection{Classes}
 The gmp gem includes the namespace \texttt{GMP} and four classes within \texttt{GMP}:
 \begin{itemize}
-  \item \texttt{GMP::Z} - Methods for signed integer arithmetic. There are at least 45
-    methods here (still accounting).
+  \item \texttt{GMP::Z} - Methods for signed integer arithmetic. There are about 64
+    methods here.
   \item \texttt{GMP::Q} - Methods for rational number arithmetic. There are at least 11
     methods here (still accounting).
   \item \texttt{GMP::F} - Methods for floating-point arithmetic. There are at least 6
@@ -199,7 +194,7 @@ The gmp gem includes the namespace \texttt{GMP} and four classes within \texttt{
     methods here.
 \end{itemize}
 
-In addition to the above four classes, there is also one constant within \texttt{GMP}:
+In addition to the above four classes, there are also four constants within \texttt{GMP}:
 \begin{itemize}
   \item \texttt{GMP::GMP\_VERSION} - The version of GMP linked into the gmp gem
   \item \texttt{GMP::GMP\_CC} - The compiler that compiled GMP linked into the gmp gem
@@ -802,6 +797,26 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   Returns 1 if $a$ is greater than $b$.
 }
 \end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{eql?} & & $a$.eql?($b$) $\rightarrow$ $boolean$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Used when comparing objects as Hash keys.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{hash} & & $a$.hash $\rightarrow$ $string$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Used when comparing objects as Hash keys.
+}
+\end{tabular}
 
 \subsection{Integer Logic and Bit Fiddling}
 
@@ -831,6 +846,18 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns $integer$, the bitwise exclusive or of $a$ and $b$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{com} & & $integer$.com $\rightarrow$ $complement$ \\
+& & $integer$.com! $\rightarrow$ $complement$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the one's complement of $integer$. The destructive method sets $integer$ to
+  the one's complement of $integer$.
 }
 \end{tabular}
 \newline\newline
@@ -919,6 +946,25 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 }
 \end{tabular}
 \newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{sizeinbase} & & $n$.sizeinbase($b$) $\rightarrow$ $digits$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the number of digits in base $b$. $b$ can vary between 2 and 62.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{size\_in\_bin} & & $n$.size\_in\_bin $\rightarrow$ $digits$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the number of digits in $n$'s binary representation.
+}
+\end{tabular}
 
 \newpage
 \section{Rational Functions}

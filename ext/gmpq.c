@@ -159,17 +159,18 @@ VALUE r_gmpq_to_s(VALUE self)
   int sizeinbase;
   int offset;
 
-  Data_Get_Struct(self, MP_RAT, self_val);
+  //Data_Get_Struct (self, MP_RAT, self_val);
+  mpq_get_struct(self, self_val)
 
-  if (mpz_cmp_ui(mpq_denref(self_val), 1) == 0) {
-    str = mpz_get_str(NULL, 10, mpq_numref (self_val));
-    res = rb_str_new2(str);
+  if (mpz_cmp_ui (mpq_denref (self_val), 1) == 0) {
+    str = mpz_get_str (NULL, 10, mpq_numref (self_val));
+    res = rb_str_new2 (str);
     free (str);
     return res;
   }
 
-  self_val_num = mpq_numref(self_val);
-  self_val_den = mpq_denref(self_val);
+  self_val_num = mpq_numref (self_val);
+  self_val_den = mpq_denref (self_val);
 
   sizeinbase = mpz_sizeinbase (self_val_num, 10) + mpz_sizeinbase (self_val_den, 10) + 3;
   str = malloc (sizeinbase);

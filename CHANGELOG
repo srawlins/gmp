@@ -5,6 +5,8 @@
     mode, and ieee754 reader methods.
   * Added 4 MPFR "constants". Their values can change based on precision and
     rounding mode. const_log2, const_pi, const_euler, const_catalan.
+  * Added GMP::Z.eql? and GMP::Z.hash to allow GMP::Z objects to be proper keys
+    in a hash
 
 0.4.3:
   * Support for MPFR on Windows introduced. gmp-x86-mswin32 gem should be used.

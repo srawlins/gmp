@@ -57,17 +57,30 @@
  *   remove         r_gmpz_remove           mpz_remove
  *   fac            r_gmpz_fac              mpz_fac_ui
  *   fib            r_gmpz_fib              mpz_fib_ui
+ *   <=>
+ *   <
+ *   <=
+ *   ==
+ *   >=
+ *   >
+ *   cmpabs
+ *   sgn
+ *   eql?           r_gmpz_eql              ------------
+ *   hash           r_gmpz_hash
+ *   and
+ *   ior
+ *   xor
  *   com            r_gmpz_com              mpz_com
  *   com!           r_gmpz_com_self         mpz_com
- *   []=            r_gmpz_setbit           mpz_setbit
- *   []             r_gmpz_getbit           mpz_tstbit
+ *   popcount       r_gmpz_popcount
  *   scan0          r_gmpz_scan0            mpz_scan0
  *   scan1          r_gmpz_scan1            mpz_scan1
+ *   []=            r_gmpz_setbit           mpz_setbit
+ *   []             r_gmpz_getbit           mpz_tstbit
  *   even?          r_gmpz_is_even          mpz_even
  *   odd?           r_gmpz_is_odd           mpz_odd
  *   sizeinbase     r_gmpz_sizeinbase       mpz_sizeinbase
  *   size_in_bin    r_gmpz_size_in_bin      mpz_sizeinbits
- *   ...
  */
 
 /**********************************************************************
@@ -1815,6 +1828,29 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
  *    Miscellaneous Integer Functions                                 *
  **********************************************************************/
 
+/*
+ * Document-method: even?
+ *
+ * call-seq:
+ *   integer.even?
+ *
+ * From the GMP Manual:
+ * 
+ * Determines whether integer is even. Returns true or false.
+ */
+DEFUN_INT_COND_P(is_even,mpz_even_p)
+/*
+ * Document-method: odd?
+ *
+ * call-seq:
+ *   integer.odd?
+ *
+ * From the GMP Manual:
+ * 
+ * Determines whether integer is odd. Returns true or false.
+ */
+DEFUN_INT_COND_P(is_odd,mpz_odd_p)
+
 VALUE r_gmpz_sizeinbase(VALUE self, VALUE base)
 {
   MP_INT *self_val;
@@ -1840,29 +1876,6 @@ VALUE r_gmpz_size_in_bin(VALUE self)
 /**********************************************************************
  *    _unsorted_                                                      *
  **********************************************************************/
-
-/*
- * Document-method: even?
- *
- * call-seq:
- *   integer.even?
- *
- * From the GMP Manual:
- * 
- * Determines whether integer is even. Returns true or false.
- */
-DEFUN_INT_COND_P(is_even,mpz_even_p)
-/*
- * Document-method: odd?
- *
- * call-seq:
- *   integer.odd?
- *
- * From the GMP Manual:
- * 
- * Determines whether integer is odd. Returns true or false.
- */
-DEFUN_INT_COND_P(is_odd,mpz_odd_p)
 
 DEFUN_INT_F_UL(fshr,mpz_fdiv_q_2exp,"shift size")
 DEFUN_INT_F_UL(tshr,mpz_tdiv_q_2exp,"shift size")
@@ -1981,13 +1994,13 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
   
   //Miscellaneous Integer Functions
+  rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
+  rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
   rb_define_method(cGMP_Z, "sizeinbase", r_gmpz_sizeinbase, 1);
   rb_define_alias( cGMP_Z, "size_in_base", "sizeinbase");
   rb_define_method(cGMP_Z, "size_in_bin", r_gmpz_size_in_bin, 0);
   
   // _unsorted_
-  rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
-  rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
   rb_define_method(cGMP_Z, ">>",  r_gmpz_fshr, 1);
   rb_define_method(cGMP_Z, "tshr",  r_gmpz_tshr, 1);
   rb_define_method(cGMP_Z, "lastbits_sgn",  r_gmpz_tshrm, 1);
