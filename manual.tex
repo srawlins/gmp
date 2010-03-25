@@ -497,7 +497,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 }
 \end{tabular}
 
-
+\newpage
 \subsection{Integer Exponentiation}
 
 \begin{tabular}{p{\methwidth} l r}
@@ -925,6 +925,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 }
 \end{tabular}
 
+\newpage
 \subsection{Miscellaneous Integer Functions}
 
 \begin{tabular}{p{\methwidth} l r}
@@ -994,6 +995,33 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \newline\newline
 
 There is also a convenience method available, \texttt{GMP::Q()}.\\
+
+\subsection{Converting Rationals}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{to\_d} & & \textit{rational}.to\_d $\rightarrow$ \textit{float} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns \textit{rational} as an Float if \textit{rational} fits in a Float.
+
+  Otherwise returns the least significant part of \texttt{rational}, with the same sign as
+  \textit{rational}.
+  
+  If \textit{rational} is too big to fit in a Float, the returned result is probably not
+  very useful.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{to\_s} & & \textit{rational}.to\_s $\rightarrow$ \textit{str} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Converts \textit{rational} to a string.
+}
+\end{tabular}
 
 \newpage
 \section{Random Number Functions}

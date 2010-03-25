@@ -1,5 +1,7 @@
 #include <mprnd.h>
 
+#ifdef MPFR
+
 VALUE r_mprnd_initialize(int argc, VALUE *argv, VALUE self);
 
 VALUE r_mprndsg_new(int argc, VALUE *argv, VALUE klass)
@@ -71,3 +73,5 @@ void init_gmprnd()
   rb_define_const(mGMP, "GMP_RNDU", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(2)));
   rb_define_const(mGMP, "GMP_RNDD", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(3)));
 }
+
+#endif /* MPFR */

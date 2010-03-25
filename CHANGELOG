@@ -7,6 +7,11 @@
     rounding mode. const_log2, const_pi, const_euler, const_catalan.
   * Added GMP::Z.eql? and GMP::Z.hash to allow GMP::Z objects to be proper keys
     in a hash
+  * "Completed" documentation of GMP::Z.
+  * Started documentation of GMP::Q.
+  * Tests now for GMP::Q.to_s.
+  * Unit test results: 84 tests, 1378 assertions, 0 failures, 0 errors
+  * Unit test results: 74 tests, 719 assertions, 0 failures, 0 errors (w/o MPFR)
 
 0.4.3:
   * Support for MPFR on Windows introduced. gmp-x86-mswin32 gem should be used.
