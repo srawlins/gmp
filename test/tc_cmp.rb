@@ -61,7 +61,7 @@ class TC_Cmp < Test::Unit::TestCase
   def test_cmp_z_int
     assert_equal(@a <=> @e, -1, "GMP::Z should <=> correctly with Fixnum")
     assert_equal(@e <=> @a,  1, "Fixnum should <=> correctly with GMP::Z")
-    assert_equal(@a <=> @f, -1, "GMP::Z should <=> correctly with Bignum")
+    assert_equal(-1, @a <=> @f, "GMP::Z should <=> correctly with Bignum")
     assert_equal(@f <=> @a,  1, "Bignum should <=> correctly with GMP::Z")
   end
 
@@ -69,6 +69,6 @@ class TC_Cmp < Test::Unit::TestCase
     assert_equal(@c <=> @e, -1, "GMP::Q should <=> correctly with Fixnum")
     assert_equal(@e <=> @c,  1, "Fixnum should <=> correctly with GMP::Q")
     assert_equal(@c <=> @f, -1, "GMP::Q should <=> correctly with Bignum")
-    assert_equal(@f <=> @c,  1, "Bignum should <=> correctly with GMP::Q")
+    assert_equal(1, @f <=> @c, "Bignum should <=> correctly with GMP::Q")
   end
 end

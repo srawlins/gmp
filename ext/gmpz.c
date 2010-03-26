@@ -114,9 +114,9 @@ static VALUE r_gmpz_##fname(VALUE self, VALUE exp)       \
   unsigned long exp_val;                                 \
                                                          \
   if (FIXNUM_P(exp)) {                                   \
-    if (FIX2INT(exp) < 0)                                \
+    if (FIX2NUM(exp) < 0)                                \
       rb_raise(rb_eRangeError, argname " out of range"); \
-    exp_val = FIX2INT(exp);                              \
+    exp_val = FIX2NUM(exp);                              \
   } else if (GMPZ_P(exp)) {                              \
     mpz_get_struct(exp, res_val);                        \
     if (!mpz_fits_ulong_p(res_val))                      \
@@ -148,7 +148,7 @@ static VALUE r_gmpz_##fname(VALUE self, VALUE arg)    \
 {                                                     \
   MP_INT *self_val, *arg_val, *res_val;               \
   VALUE res;                                          \
-  int arg_val_i;                                      \
+  long arg_val_i;                                     \
                                                       \
   mpz_get_struct(self, self_val);                     \
   mpz_make_struct_init(res, res_val);                 \
@@ -159,7 +159,7 @@ static VALUE r_gmpz_##fname(VALUE self, VALUE arg)    \
       rb_raise (rb_eZeroDivError, "divided by 0");    \
     gmp_fname (res_val, self_val, arg_val);           \
   } else if (FIXNUM_P(arg)) {                         \
-    arg_val_i = FIX2INT(arg);                         \
+    arg_val_i = FIX2NUM(arg);                         \
     if (arg_val_i > 0) {                              \
       gmp_fname##_ui (res_val, self_val, arg_val_i);  \
     } else if (arg_val_i == 0) {                      \
@@ -185,50 +185,50 @@ static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
   MP_INT *self_val, *arg_val, *res_val;            \
   VALUE res;                                       \
                                                    \
-  mpz_get_struct(self, self_val);                  \
+  mpz_get_struct (self, self_val);                 \
                                                    \
-  mpz_make_struct(res, res_val);                   \
-  if (GMPZ_P(arg)) {                               \
-    mpz_get_struct(arg,arg_val);                   \
-    mpz_init(res_val);                             \
-    mpz_fname(res_val, self_val, arg_val);         \
-  } else if (FIXNUM_P(arg)) {                      \
-    mpz_init_set_si(res_val, FIX2INT(arg));        \
-    mpz_fname(res_val, self_val, res_val);         \
-  } else if (BIGNUM_P(arg)) {                      \
-    mpz_init(res_val);                             \
-    mpz_set_bignum(res_val, arg);                  \
-    mpz_fname(res_val, self_val, res_val);         \
+  mpz_make_struct (res, res_val);                  \
+  if (GMPZ_P (arg)) {                              \
+    mpz_get_struct (arg,arg_val);                  \
+    mpz_init (res_val);                            \
+    mpz_fname (res_val, self_val, arg_val);        \
+  } else if (FIXNUM_P (arg)) {                     \
+    mpz_init_set_si (res_val, FIX2NUM (arg));      \
+    mpz_fname (res_val, self_val, res_val);        \
+  } else if (BIGNUM_P (arg)) {                     \
+    mpz_init (res_val);                            \
+    mpz_set_bignum (res_val, arg);                 \
+    mpz_fname (res_val, self_val, res_val);        \
   } else  {                                        \
-    typeerror(ZXB);                                \
+    typeerror (ZXB);                               \
   }                                                \
   return res;                                      \
 }
 
-#define DEFUN_INT_SINGLETON_UI(fname,mpz_fname)           \
-static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)     \
-{                                                         \
-  MP_INT *arg_val_z, *res_val;                            \
-  unsigned long arg_val_ul;                               \
-  VALUE res;                                              \
-                                                          \
-  (void)klass;                                            \
-                                                          \
-  if (FIXNUM_P(arg)) {                                    \
-    arg_val_ul = FIX2INT (arg);                           \
-  } else if (GMPZ_P(arg)) {                               \
-    mpz_get_struct(arg, arg_val_z);                       \
-    if (!mpz_fits_ulong_p (arg_val_z))                    \
-      rb_raise(rb_eRangeError, "argument out of range");  \
-    arg_val_ul = mpz_get_ui(arg_val_z);                   \
-    if (arg_val_ul == 0)                                  \
-      rb_raise(rb_eRangeError, "argument out of range");  \
-  } else {                                                \
-    typeerror_as(ZX, "argument");                         \
-  }                                                       \
-  mpz_make_struct_init(res, res_val);                     \
-  mpz_fname(res_val, arg_val_ul);                         \
-  return res;                                             \
+#define DEFUN_INT_SINGLETON_UI(fname,mpz_fname)              \
+static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)        \
+{                                                            \
+  MP_INT *arg_val_z, *res_val;                               \
+  unsigned long arg_val_ul;                                  \
+  VALUE res;                                                 \
+                                                             \
+  (void)klass;                                               \
+                                                             \
+  if (FIXNUM_P (arg)) {                                      \
+    arg_val_ul = FIX2NUM (arg);                              \
+  } else if (GMPZ_P (arg)) {                                 \
+    mpz_get_struct (arg, arg_val_z);                         \
+    if (!mpz_fits_ulong_p (arg_val_z))                       \
+      rb_raise (rb_eRangeError, "argument out of range");    \
+    arg_val_ul = mpz_get_ui (arg_val_z);                     \
+    if (arg_val_ul == 0)                                     \
+      rb_raise (rb_eRangeError, "argument out of range");    \
+  } else {                                                   \
+    typeerror_as (ZX, "argument");                           \
+  }                                                          \
+  mpz_make_struct_init (res, res_val);                       \
+  mpz_fname (res_val, arg_val_ul);                           \
+  return res;                                                \
 }
 
 /**********************************************************************
@@ -289,7 +289,7 @@ void mpz_set_value(MP_INT *target, VALUE source)
     mpz_get_struct(source, source_val);
     mpz_set(target, source_val);
   } else if (FIXNUM_P(source)) {
-    mpz_set_si(target, NUM2INT(source));
+    mpz_set_si(target, FIX2NUM(source));
   } else if (STRING_P(source)) {
     mpz_set_str(target, STR2CSTR(source), 0);
   } else if (BIGNUM_P(source)) {
@@ -422,7 +422,7 @@ VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self)
   rb_scan_args(argc, argv, "01", &base);
   if (NIL_P(base)) { base = INT2FIX(10); }           /* default value */
   if (FIXNUM_P(base)) {
-    base_val = FIX2INT(base);
+    base_val = FIX2NUM(base);
     if ((base_val >=   2 && base_val <= 62) ||
         (base_val >= -36 && base_val <= -2)) {
       /* good base */
@@ -482,10 +482,10 @@ VALUE r_gmpz_add(VALUE self, VALUE arg)
     mpz_add(res_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
-    if (FIX2INT(arg) > 0)
-      mpz_add_ui(res_val, self_val, FIX2INT(arg));
+    if (FIX2NUM(arg) > 0)
+      mpz_add_ui(res_val, self_val, FIX2NUM(arg));
     else
-      mpz_sub_ui(res_val, self_val, -FIX2INT(arg));
+      mpz_sub_ui(res_val, self_val, -FIX2NUM(arg));
   } else if (GMPQ_P(arg)) {
     return r_gmpq_add(arg, self);
   } else if (GMPF_P(arg)) {
@@ -523,10 +523,10 @@ VALUE r_gmpz_add_self(VALUE self, VALUE arg)
     mpz_get_struct(arg,arg_val);
     mpz_add(self_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
-    if (FIX2INT(arg) > 0)
-      mpz_add_ui(self_val, self_val, FIX2INT(arg));
+    if (FIX2NUM(arg) > 0)
+      mpz_add_ui(self_val, self_val, FIX2NUM(arg));
     else
-      mpz_sub_ui(self_val, self_val, -FIX2INT(arg));
+      mpz_sub_ui(self_val, self_val, -FIX2NUM(arg));
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val, arg);
     mpz_add(self_val, self_val, arg_val);
@@ -564,10 +564,10 @@ VALUE r_gmpz_sub(VALUE self, VALUE arg)
     mpz_sub (res_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
-    if (FIX2INT(arg) > 0)
-      mpz_sub_ui (res_val, self_val, FIX2INT(arg));
+    if (FIX2NUM(arg) > 0)
+      mpz_sub_ui (res_val, self_val, FIX2NUM(arg));
     else
-      mpz_add_ui (res_val, self_val, -FIX2INT(arg));
+      mpz_add_ui (res_val, self_val, -FIX2NUM(arg));
   } else if (GMPQ_P(arg)) {
     mpq_make_struct_init(res, res_val_q);
     mpq_get_struct(arg,arg_val_q);
@@ -611,10 +611,10 @@ VALUE r_gmpz_sub_self(VALUE self, VALUE arg)
     mpz_get_struct(arg, arg_val);
     mpz_sub (self_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
-    if (FIX2INT(arg) > 0)
-      mpz_sub_ui (self_val, self_val, FIX2INT(arg));
+    if (FIX2NUM(arg) > 0)
+      mpz_sub_ui (self_val, self_val, FIX2NUM(arg));
     else
-      mpz_add_ui (self_val, self_val, -FIX2INT(arg));
+      mpz_add_ui (self_val, self_val, -FIX2NUM(arg));
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val, arg);
     mpz_sub (self_val, self_val, arg_val);
@@ -649,7 +649,7 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
     mpz_mul(res_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
-    mpz_mul_si(res_val, self_val, FIX2INT(arg));
+    mpz_mul_si(res_val, self_val, FIX2NUM(arg));
   } else if (GMPQ_P(arg)) {
     return r_gmpq_mul(arg, self);
   } else if (GMPF_P(arg)) {
@@ -759,11 +759,11 @@ VALUE r_gmpz_div(VALUE self, VALUE arg)
     mpq_set_den (res_val_q, arg_val_z);
     mpq_canonicalize (res_val_q);
   } else if (FIXNUM_P (arg)) {
-    if (FIX2INT (arg) == 0)
+    if (FIX2NUM (arg) == 0)
       rb_raise (rb_eZeroDivError, "divided by 0");
     mpq_make_struct_init (res, res_val_q);
     mpq_set_num (res_val_q, self_val);
-    mpz_set_ui (mpq_denref (res_val_q), FIX2INT (arg));
+    mpz_set_ui (mpq_denref (res_val_q), FIX2NUM (arg));
     mpq_canonicalize (res_val_q);
   } else if (GMPQ_P (arg)) {
     mpq_get_struct (arg, arg_val_q);
@@ -922,7 +922,7 @@ VALUE r_gmpz_mod(VALUE self, VALUE arg)
     mpz_mod(res_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
-    mpz_mod_ui(res_val, self_val, FIX2INT(arg));
+    mpz_mod_ui(res_val, self_val, FIX2NUM(arg));
   } else if (BIGNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
     mpz_set_bignum(res_val, arg);
@@ -974,11 +974,11 @@ VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
       rb_raise(rb_eRangeError, "modulus must be positive");
     }
   } else if (FIXNUM_P(mod)) {
-    if (FIX2INT(mod) <= 0) {
+    if (FIX2NUM(mod) <= 0) {
       rb_raise(rb_eRangeError, "modulus must be positive");
     }
     mpz_temp_alloc(mod_val);
-    mpz_init_set_ui(mod_val, FIX2INT(mod));
+    mpz_init_set_ui(mod_val, FIX2NUM(mod));
     free_mod_val = 1;
   } else if (BIGNUM_P(mod)) {
     mpz_temp_from_bignum(mod_val, mod);
@@ -1000,13 +1000,13 @@ VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
     }
     mpz_powm(res_val, self_val, exp_val, mod_val);
   } else if (FIXNUM_P(exp)) {
-    if (FIX2INT(exp) < 0)
+    if (FIX2NUM(exp) < 0)
     {
       if (free_mod_val)
         mpz_temp_free(mod_val);
       rb_raise(rb_eRangeError, "exponent must be nonnegative");
     }
-    mpz_powm_ui(res_val, self_val, FIX2INT(exp), mod_val);
+    mpz_powm_ui(res_val, self_val, FIX2NUM(exp), mod_val);
   } else if (BIGNUM_P(exp)) {
     mpz_temp_from_bignum(exp_val, exp);
     mpz_powm(res_val, self_val, exp_val, mod_val);
@@ -1147,7 +1147,7 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
     reps = INT2FIX(5);
   }
   if (FIXNUM_P(reps)) {
-    reps_val = FIX2INT (reps);
+    reps_val = FIX2NUM (reps);
   } else {
     typeerror_as(X, "reps");
   }
@@ -1199,7 +1199,7 @@ VALUE r_gmpz_gcd(VALUE self, VALUE arg)
     mpz_gcd (res_val, self_val, arg_val);
   } else if (FIXNUM_P (arg)) {
     mpz_make_struct_init (res, res_val);
-    mpz_gcd_ui (res_val, self_val, FIX2INT(arg));
+    mpz_gcd_ui (res_val, self_val, FIX2NUM(arg));
   } else if (BIGNUM_P (arg)) {
     mpz_make_struct_init (res, res_val);
     mpz_set_bignum (res_val, arg);
@@ -1223,7 +1223,7 @@ VALUE r_gmpz_invert(VALUE self, VALUE arg)
     mpz_invert (res_val, self_val, arg_val);
   } else if (FIXNUM_P (arg)) {
     mpz_temp_alloc(arg_val);
-    mpz_init_set_ui(arg_val, FIX2INT(arg));
+    mpz_init_set_ui(arg_val, FIX2NUM(arg));
     mpz_make_struct_init (res, res_val);
     mpz_invert (res_val, self_val, arg_val);
   } else if (BIGNUM_P (arg)) {
@@ -1284,7 +1284,7 @@ VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
     mpz_get_struct(a, a_val);
   } else if (FIXNUM_P(a)) {
     mpz_temp_alloc(a_val);
-    mpz_init_set_ui(a_val, FIX2INT(a));
+    mpz_init_set_ui(a_val, FIX2NUM(a));
     free_a_val = 1;
   } else if (BIGNUM_P(a)) {
     mpz_temp_from_bignum(a_val, a);
@@ -1300,12 +1300,12 @@ VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
     if (mpz_even_p(b_val))
       rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is even.");
   } else if (FIXNUM_P(b)) {
-    if (FIX2INT(b) <= 0)
+    if (FIX2NUM(b) <= 0)
       rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is non-positive.");
-    if (FIX2INT(b) % 2 == 0)
+    if (FIX2NUM(b) % 2 == 0)
       rb_raise(rb_eRangeError, "Cannot take Jacobi symbol (a/b) where b is even.");
     mpz_temp_alloc(b_val);
-    mpz_init_set_ui(b_val, FIX2INT(b));
+    mpz_init_set_ui(b_val, FIX2NUM(b));
     free_b_val = 1;
   } else if (BIGNUM_P(b)) {
     mpz_temp_from_bignum(b_val, b);
@@ -1380,10 +1380,10 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
     if (mpz_sgn(arg_val) != 1)
       rb_raise(rb_eRangeError, "argument must be positive");
   } else if (FIXNUM_P(arg)) {
-    if (FIX2INT(arg) <= 0)
+    if (FIX2NUM(arg) <= 0)
       rb_raise(rb_eRangeError, "argument must be positive");
     mpz_temp_alloc(arg_val);
-    mpz_init_set_ui(arg_val, FIX2INT(arg));
+    mpz_init_set_ui(arg_val, FIX2NUM(arg));
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val, arg);
     if (mpz_sgn(arg_val) != 1) {
@@ -1459,7 +1459,7 @@ VALUE r_gmpz_eq(VALUE self, VALUE arg)
     mpz_get_struct(arg, arg_val_z);
     return (mpz_cmp (self_val, arg_val_z)==0) ? Qtrue : Qfalse;
   } else if (FIXNUM_P(arg)) {
-    return (mpz_cmp_si (self_val, FIX2INT(arg))==0) ? Qtrue : Qfalse;
+    return (mpz_cmp_si (self_val, FIX2NUM(arg))==0) ? Qtrue : Qfalse;
   } else if (GMPQ_P(arg)) {
     mpq_get_struct(arg, arg_val_q);
     if (mpz_cmp_ui(mpq_denref(arg_val_q), 1)==0)
@@ -1489,7 +1489,7 @@ int mpz_cmp_value(MP_INT *OP, VALUE arg)
     mpz_get_struct(arg,arg_val_z);
     return mpz_cmp(OP,arg_val_z);
   } else if (FIXNUM_P(arg)) {
-    return mpz_cmp_si(OP, FIX2INT(arg));
+    return mpz_cmp_si(OP, FIX2NUM(arg));
   } else if (GMPQ_P(arg)) {
     mpq_get_struct(arg,arg_val_q);
     mpz_temp_alloc(arg_val_z);
@@ -1573,10 +1573,10 @@ VALUE r_gmpz_cmpabs(VALUE self, VALUE arg)
     mpz_get_struct(arg,arg_val_z);
     return INT2FIX(mpz_cmpabs(self_val, arg_val_z));
   } else if (FIXNUM_P(arg)) {
-    if (FIX2INT(arg) >= 0)
-      return INT2FIX(mpz_cmpabs_ui(self_val, FIX2INT(arg)));
+    if (FIX2NUM(arg) >= 0)
+      return INT2FIX(mpz_cmpabs_ui(self_val, FIX2NUM(arg)));
     else
-      return INT2FIX(mpz_cmpabs_ui(self_val, -FIX2INT(arg)));
+      return INT2FIX(mpz_cmpabs_ui(self_val, -FIX2NUM(arg)));
   } else if (GMPQ_P(arg)) {
     mpq_get_struct(arg,arg_val_q);
     mpz_temp_alloc(arg_val_z);
@@ -1740,7 +1740,7 @@ VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
   int bitnr_val;
   mpz_get_struct(self, self_val);
   if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
+    bitnr_val = FIX2NUM (bitnr);
   } else {
     typeerror_as(X, "index");
   }
@@ -1770,7 +1770,7 @@ VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
   mpz_get_struct(self, self_val);
 
   if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
+    bitnr_val = FIX2NUM (bitnr);
   } else {
     typeerror_as(X, "index");
   }
@@ -1792,7 +1792,7 @@ VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
   mpz_get_struct (self, self_val);
 
   if (FIXNUM_P (bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
+    bitnr_val = FIX2NUM (bitnr);
   } else {
     typeerror_as (X, "index");
   }
@@ -1816,7 +1816,7 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
   int bitnr_val;
   mpz_get_struct(self, self_val);
   if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2INT (bitnr);
+    bitnr_val = FIX2NUM (bitnr);
   } else {
     typeerror_as(X, "index");
   }
@@ -1856,7 +1856,7 @@ VALUE r_gmpz_sizeinbase(VALUE self, VALUE base)
   MP_INT *self_val;
   int base_val;
   mpz_get_struct (self, self_val);
-  base_val = FIX2INT (base);
+  base_val = FIX2NUM (base);
   return INT2FIX (mpz_sizeinbase (self_val, base_val));
 }
 
@@ -1889,9 +1889,9 @@ VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
 
   if (FIXNUM_P(base) && FIXNUM_P(exp))
   {
-    if (FIX2INT(base) < 0)
+    if (FIX2NUM(base) < 0)
       rb_raise (rb_eRangeError, "base must not be negative");
-    if (FIX2INT(exp) < 0) 
+    if (FIX2NUM(exp) < 0) 
       rb_raise (rb_eRangeError, "exponent must not be negative");
     mpz_make_struct_init (res, res_val);
     mpz_ui_pow_ui (res_val, base, exp);

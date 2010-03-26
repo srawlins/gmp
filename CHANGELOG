@@ -1,3 +1,6 @@
+0.4.19:
+  * Added FIX2NUM macro to help support x86_64.
+
 0.4.7:
   * Added 6 MPFR trig methods, plus eint, li2, gamma, lngamma, zeta, erf, erfc,
     j0, j1, jn, y0, y1, and yn.

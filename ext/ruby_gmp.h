@@ -70,6 +70,14 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define mpf_temp_free(var) { mpf_clear(var); free(var); }
 #define prec_max(prec,var) {if(mpf_get_prec(var) > prec) prec = mpf_get_prec(var); }
 
+#if SIZEOF_INT < SIZEOF_LONG
+/* 64-bit */
+#define FIX2NUM(x) FIX2LONG(x)
+#else
+/* 32-bit */
+#define FIX2NUM(x) FIX2INT(x)
+#endif
+
 #define EXPECTED_ZQFXBD "Expected GMP::Z, GMP::Q, GMP::F, Fixnum, Bignum or Float"
 #define EXPECTED_ZQFXB "Expected GMP::Z, GMP::Q, GMP::F, Fixnum or Bignum"
 #define EXPECTED_ZXB "Expected GMP::Z, Fixnum or Bignum"

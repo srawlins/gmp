@@ -10,11 +10,11 @@ class TC_Z_Basic < Test::Unit::TestCase
   end
 
   def test_add
-    assert_equal(@a + @b, 100   + 200,   "GMP::Z should add correctly")
-    assert_equal(@a + 2,  100   + 2,     "GMP::Z should add correctly")
-    assert_equal(@a + @c, 100   + 2**32, "GMP::Z should add correctly")
-    assert_equal( 2 + @a, 2     + 100,   "GMP::Z should add correctly")
-    assert_equal(@c + @a, 2**32 + 100,   "GMP::Z should add correctly")
+    assert_equal(100   + 200,   @a + @b, "GMP::Z should add correctly")
+    assert_equal(100   + 2,     @a + 2,  "GMP::Z should add correctly")
+    assert_equal(100   + 2**32, @a + @c, "GMP::Z should add correctly")
+    assert_equal(  2   + 100,   2 + @a,  "GMP::Z should add correctly")
+    assert_equal(2**32 + 100,   @c + @a, "GMP::Z should add correctly")
   end
 
   def test_sub

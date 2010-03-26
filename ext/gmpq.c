@@ -557,7 +557,7 @@ int mpq_cmp_value(MP_RAT *OP, VALUE arg)
   } else if (FIXNUM_P(arg)) {
     mpz_temp_alloc(tmp_z);
     mpz_init(tmp_z);
-    mpz_mul_si(tmp_z, mpq_denref(OP), FIX2INT(arg));
+    mpz_mul_si(tmp_z, mpq_denref(OP), FIX2NUM(arg));
     res = mpz_cmp(mpq_numref(OP), tmp_z);
     mpz_temp_free(tmp_z);
     return res;

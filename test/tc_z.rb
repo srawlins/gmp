@@ -19,7 +19,7 @@ class TC_Z < Test::Unit::TestCase
   end
 
   def test_init_bignum
-    assert_equal(GMP::Z.new(2**32), 2**32, "GMP::Z.new(x : Bignum) should initialize to x")
+    assert_equal(2**32, GMP::Z.new(2**32), "GMP::Z.new(x : Bignum) should initialize to x")
   end
 
   def test_cmp_z

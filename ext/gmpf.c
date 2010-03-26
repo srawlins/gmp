@@ -140,7 +140,7 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
   } else if (FLOAT_P(arg)) {
     mpf_set_d(self_val, NUM2DBL(arg));
   } else if (FIXNUM_P(arg)) {
-    mpf_set_si(self_val, FIX2INT(arg));
+    mpf_set_si(self_val, FIX2NUM(arg));
   } else if (STRING_P(arg)) {
     if (mpf_set_str(self_val, STR2CSTR(arg), 10) == -1) {
       rb_raise(rb_eRuntimeError, "Badly formatted string");
@@ -266,7 +266,7 @@ VALUE r_gmpf_add(VALUE self, VALUE arg)
     mpf_add (res_val, res_val, self_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_si (res_val, FIX2INT(arg));
+    mpf_set_si (res_val, FIX2NUM(arg));
     mpf_add (res_val, res_val, self_val);
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val_z, arg);
@@ -324,7 +324,7 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
     mpf_sub(res_val, self_val, res_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_si(res_val, FIX2INT(arg));
+    mpf_set_si(res_val, FIX2NUM(arg));
     mpf_sub(res_val, self_val, res_val);
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val_z, arg);
@@ -382,7 +382,7 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
     mpf_mul(res_val, self_val, res_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_si(res_val, FIX2INT(arg));
+    mpf_set_si(res_val, FIX2NUM(arg));
     mpf_mul(res_val, self_val, res_val);
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val_z, arg);
@@ -440,7 +440,7 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
     mpf_div(res_val, self_val, res_val);
   } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
     mpf_make_struct_init(res, res_val, prec);
-    mpf_set_si(res_val, FIX2INT(arg));
+    mpf_set_si(res_val, FIX2NUM(arg));
     mpf_div(res_val, self_val, res_val);
   } else if (BIGNUM_P(arg)) {
     mpz_temp_from_bignum(arg_val_z, arg);
