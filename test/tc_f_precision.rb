@@ -102,7 +102,8 @@ class TC_precision < Test::Unit::TestCase
       GMP::F.default_prec = 100
       assert_equal(128, GMP::F.default_prec, "GMP::F.default_prec should be assignable.")
       GMP::F.default_prec = 130
-      assert_equal(160, GMP::F.default_prec, "GMP::F.default_prec should be assignable.")
+      adjusted = (130*1.0/GMP::GMP_BITS_PER_LIMB).ceil*GMP::GMP_BITS_PER_LIMB
+      assert_equal(adjusted, GMP::F.default_prec, "GMP::F.default_prec should be assignable.")
       GMP::F.default_prec = 1000
       assert_equal(1024, GMP::F.default_prec, "GMP::F.default_prec should be assignable.")
       assert_raise(RangeError) { GMP::F.default_prec = -64 }

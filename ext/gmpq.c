@@ -222,7 +222,7 @@ VALUE r_gmpq_add(VALUE self, VALUE arg)
   } else if (FIXNUM_P(arg)) {
     res_val_num = mpq_numref(res_val);
     mpz_set(mpq_denref(res_val), mpq_denref(self_val));
-    mpz_mul_si(res_val_num, mpq_denref(self_val), FIX2INT(arg));
+    mpz_mul_si(res_val_num, mpq_denref(self_val), FIX2NUM(arg));
     mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
   } else if (GMPF_P(arg)) {
     return r_gmpf_add(arg,self);
@@ -273,7 +273,7 @@ VALUE r_gmpq_sub(VALUE self, VALUE arg)
   } else if (FIXNUM_P(arg)) {
     res_val_num = mpq_numref(res_val);
     mpz_set (mpq_denref(res_val), mpq_denref(self_val));
-    mpz_mul_si (res_val_num, mpq_denref(self_val), -FIX2INT(arg));
+    mpz_mul_si (res_val_num, mpq_denref(self_val), -FIX2NUM(arg));
     mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
   } else if (GMPF_P(arg)) {
     mpf_get_struct_prec (arg, arg_val_f, prec);
@@ -329,20 +329,20 @@ VALUE r_gmpq_mul(VALUE self, VALUE arg)
     mpz_temp_free(tmp_z);
   } else if (FIXNUM_P(arg)) {
 #if GMP >= 4
-    if (FIX2INT(arg) > 0) {
-      tmp_ui = mpz_gcd_ui(0, mpq_denref(self_val), FIX2INT(arg));
-    } else if (FIX2INT(arg) < 0) {
-      tmp_ui = mpz_gcd_ui(0, mpq_denref(self_val), -FIX2INT(arg));
+    if (FIX2NUM(arg) > 0) {
+      tmp_ui = mpz_gcd_ui(0, mpq_denref(self_val), FIX2NUM(arg));
+    } else if (FIX2NUM(arg) < 0) {
+      tmp_ui = mpz_gcd_ui(0, mpq_denref(self_val), -FIX2NUM(arg));
     } else {
       mpz_set_ui(mpq_numref(res_val), 0);
       mpz_set_ui(mpq_denref(res_val), 1);
       return res;
     }
     mpz_divexact_ui(mpq_denref(res_val), mpq_denref(self_val), tmp_ui);
-    mpz_mul_ui(mpq_numref(res_val), mpq_numref(self_val), FIX2INT(arg)/tmp_ui);
+    mpz_mul_ui(mpq_numref(res_val), mpq_numref(self_val), FIX2NUM(arg)/tmp_ui);
 #else
     mpz_set(mpq_denref(res_val), mpq_denref(self_val));
-    mpz_mul_si(mpq_numref(res_val), mpq_numref(self_val), FIX2INT(arg));
+    mpz_mul_si(mpq_numref(res_val), mpq_numref(self_val), FIX2NUM(arg));
     mpq_canonicalize(res_val);
 #endif
   } else if (GMPF_P(arg)) {
@@ -397,15 +397,15 @@ VALUE r_gmpq_div(VALUE self, VALUE arg)
     mpz_mul(mpq_denref(res_val), mpq_denref(res_val), mpq_denref(self_val));
     mpz_temp_free(tmp_z);
   } else if (FIXNUM_P(arg)) {
-    if (FIX2INT(arg) == 0)
+    if (FIX2NUM(arg) == 0)
       rb_raise(rb_eZeroDivError, "divided by 0");
-    if (FIX2INT(arg) > 0) {
-      tmp_ui = mpz_gcd_ui(0, mpq_numref(self_val), FIX2INT(arg));
+    if (FIX2NUM(arg) > 0) {
+      tmp_ui = mpz_gcd_ui(0, mpq_numref(self_val), FIX2NUM(arg));
     } else {
-      tmp_ui = mpz_gcd_ui(0, mpq_numref(self_val), -FIX2INT(arg));
+      tmp_ui = mpz_gcd_ui(0, mpq_numref(self_val), -FIX2NUM(arg));
     }
     mpz_divexact_ui(mpq_numref(res_val), mpq_numref(self_val), tmp_ui);
-    mpz_mul_ui(mpq_denref(res_val), mpq_denref(self_val), FIX2INT(arg)/tmp_ui);
+    mpz_mul_ui(mpq_denref(res_val), mpq_denref(self_val), FIX2NUM(arg)/tmp_ui);
   } else if (GMPF_P(arg)) {
     mpf_get_struct_prec(arg, arg_val_f, prec);
     mpf_make_struct_init(res, res_val_f, prec);

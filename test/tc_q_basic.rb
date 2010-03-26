@@ -14,8 +14,8 @@ class TC_Q_Basic < Test::Unit::TestCase
     assert_equal(@a + @c, GMP::Q(540,  11),        "GMP::Q should add GMP::Z correctly")
     assert_equal(@c + @a, GMP::Q(540,  11),        "GMP::Z should add GMP::Q correctly")
     assert_equal(@a +  2, GMP::Q(122,  11),        "GMP::Z should add Fixnum correctly")
-    assert_equal(@a + @d, GMP::Q(47244640356, 11), "GMP::Z should add Bignum correctly")
-    assert_equal( 2 + @a, GMP::Q(122,  11),        "Fixnum should add GMP::Q correctly")
+    assert_equal(GMP::Q(47244640356, 11), @a + @d, "GMP::Z should add Bignum correctly")
+    assert_equal(GMP::Q(122,  11),         2 + @a, "Fixnum should add GMP::Q correctly")
     assert_equal(@d + @a, GMP::Q(47244640356, 11), "Bignum should add GMP::Q correctly")
   end
 
