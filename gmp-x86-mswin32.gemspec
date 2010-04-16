@@ -16,8 +16,9 @@ Gem::Specification.new do |s|
   s.requirements = ["GMP compiled and working properly."]
   s.require_paths = ["lib"]
   s.files  = Dir["ext/*.c"] + Dir["ext/*.h"] + ["ext/extconf.rb"]
+  s.files += Dir["lib/gmp.rb"]
   s.files += ["ext/libgmp-10.dll"] + ["ext/libmpfr-1.dll"] + ["ext/gmp.so"]
-  s.files += Dir["test/*.rb"] + ["test/README"]
+  s.files += Dir["test/*.rb"] + ["test/README"] + Dir["test/test_unit/*.rb"]
   s.files += Dir["benchmark/*"] - Dir["benchmark/gexpr"]
   s.files += ["CHANGELOG", "INSTALL", "README.rdoc", "manual.pdf", "manual.tex"]
 end

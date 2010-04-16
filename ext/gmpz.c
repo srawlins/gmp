@@ -19,9 +19,13 @@
  *   to_i           r_gmpz_to_i             mpz_get_i
  *   to_s           r_gmpz_to_s             mpz_get_s
  *   +              r_gmpz_add              mpz_add
+ *   \------------------------              mpz_add_ui
  *   add!           r_gmpz_add_self         mpz_add
+ *   \-----------------------------         mpz_add_ui
  *   -              r_gmpz_sub              mpz_sub
+ *   \------------------------              mpz_sub_ui
  *   sub!           r_gmpz_sub_self         mpz_sub
+ *   \-----------------------------         mpz_sub_ui
  *   *              r_gmpz_mul              mpz_mul
  *   /              r_gmpz_div              ...
  *   tdiv           r_gmpz_tdiv             mpz_tdiv_q
@@ -87,6 +91,12 @@
  *    Macros                                                          *
  **********************************************************************/
 
+/*
+ * DEFUN_INT2INT defines two functions. The first takes a GMP::Z as
+ * self, calls mpz_fname on the contained mpz_t, whose arguments are
+ * exactly (0) the return argument and (1) self. The second is the same
+ * destructive method.
+ */
 #define DEFUN_INT2INT(fname,mpz_fname)         \
 static VALUE r_gmpz_##fname(VALUE self)        \
 {                                              \
@@ -106,6 +116,12 @@ static VALUE r_gmpz_##fname##_self(VALUE self) \
   return self;                                 \
 }
 
+/*
+ * DEFUNN_INT_F_UL defines a function that takes a GMP::Z as self,
+ * and a FIXNUM or GMP::Z as exp. It calls mpz_fname on the contained
+ * mpz_t, whose arguments are (0) the return argument, (1) self, and
+ * (2) exp_value. exp must fit into a ulong.
+ */
 #define DEFUN_INT_F_UL(fname,mpz_fname,argname)          \
 static VALUE r_gmpz_##fname(VALUE self, VALUE exp)       \
 {                                                        \

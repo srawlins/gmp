@@ -188,10 +188,6 @@ void Init_gmp() {
   rb_define_const(mGMP, "MPFR_VERSION", rb_str_new2(MPFR_VERSION_STRING));
   rb_define_const(mGMP, "MPFR_PREC_MIN", INT2FIX(MPFR_PREC_MIN));
   rb_define_const(mGMP, "MPFR_PREC_MAX", INT2FIX(MPFR_PREC_MAX));
-  // rb_define_const(mGMP, "GMP_RNDN", INT2FIX(0));
-  // rb_define_const(mGMP, "GMP_RNDZ", INT2FIX(1));
-  // rb_define_const(mGMP, "GMP_RNDU", INT2FIX(2));
-  // rb_define_const(mGMP, "GMP_RNDD", INT2FIX(3));
 #endif /* MPFR */
 
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
