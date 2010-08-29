@@ -13,7 +13,11 @@ VALUE cGMP_Rnd;
 
 void r_gmpz_free(void *ptr)         { mpz_clear (ptr);     free (ptr); }
 void r_gmpq_free(void *ptr)         { mpq_clear (ptr);     free (ptr); }
+#ifdef MPFR
+void r_gmpf_free(void *ptr)         { mpfr_clear (ptr);     free (ptr); }
+#else
 void r_gmpf_free(void *ptr)         { mpf_clear (ptr);     free (ptr); }
+#endif
 void r_gmprandstate_free(void *ptr) { gmp_randclear (ptr); free (ptr); }
 
 static void mpq_str_set(MP_RAT *ROP, char *str)

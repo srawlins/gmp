@@ -44,14 +44,12 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define mpq_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_RAT, c_var); }
 #define mpf_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_FLOAT, c_var); }
 #define mprandstate_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_RANDSTATE, c_var); }
-#define mpf_get_struct_prec(ruby_var,c_var,prec) { mpf_get_struct(ruby_var,c_var); prec = mpf_get_prec(c_var); }
 #define mpz_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_Z, MP_INT, 0, r_gmpz_free, c_var); }
 #define mpq_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_Q, MP_RAT, 0, r_gmpq_free, c_var); }
 #define mpf_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_F, MP_FLOAT, 0, r_gmpf_free, c_var); }
 #define mprandstate_make_struct(ruby_var,c_var) { ruby_var = Data_Make_Struct(cGMP_RandState, MP_RANDSTATE, 0, r_gmprandstate_free, c_var); }
 #define mpz_make_struct_init(ruby_var,c_var) { mpz_make_struct(ruby_var,c_var); mpz_init (c_var); }
 #define mpq_make_struct_init(ruby_var,c_var) { mpq_make_struct(ruby_var,c_var); mpq_init (c_var); }
-#define mpf_make_struct_init(ruby_var,c_var,prec) { mpf_make_struct(ruby_var,c_var); mpf_init2 (c_var,prec); }
 #define BIGNUM_P(value) (TYPE(value) == T_BIGNUM)
 #define FLOAT_P(value)  (TYPE(value) == T_FLOAT)
 #define STRING_P(value) (TYPE(value) == T_STRING)
@@ -66,9 +64,33 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
   { mpz_temp_alloc(var); mpz_init_set_str(var, STR2CSTR(rb_funcall(var_bignum, rb_intern("to_s"), 0)), 0); }
 #define mpz_temp_free(var) { mpz_clear(var); free(var); }
 #define mpf_temp_alloc(var) { var=malloc(sizeof(MP_FLOAT)); }
+#define prec_max(prec,var) {if(mpf_get_prec(var) > prec) prec = mpf_get_prec(var); }
+
+#if defined(MPFR) && defined(HAVE_MPFR_H)
+#define mpf_get_struct_prec(ruby_var,c_var,prec) { mpf_get_struct(ruby_var,c_var); prec = mpfr_get_prec(c_var); }
+#define mpf_make_struct_init(ruby_var,c_var,prec) { mpf_make_struct(ruby_var,c_var); mpfr_init2 (c_var,prec); }
+#define mpf_temp_init(var,prec) { mpf_temp_alloc(var); mpfr_init2(var,prec); }
+#define mpf_temp_free(var) { mpfr_clear(var); free(var); }
+#define r_mpf_init(var1) (mpfr_init(var1))
+#define r_mpf_init2(var1, var2) (mpfr_init2(var1, var2))
+#define r_mpf_set_z(var1, var2) (mpfr_set_z(var1, var2, __gmp_default_rounding_mode))
+#define r_mpf_set_q(var1, var2) (mpfr_set_q(var1, var2, __gmp_default_rounding_mode))
+#define r_mpf_set_d(var1, var2) (mpfr_set_d(var1, var2, __gmp_default_rounding_mode))
+#define r_mpf_set_str(var1, var2, var3) (mpfr_set_str(var1, var2, var3, __gmp_default_rounding_mode))
+#define r_mpf_cmp(var1, var2) (mpfr_cmp(var1, var2))
+#else
+#define mpf_get_struct_prec(ruby_var,c_var,prec) { mpf_get_struct(ruby_var,c_var); prec = mpf_get_prec(c_var); }
+#define mpf_make_struct_init(ruby_var,c_var,prec) { mpf_make_struct(ruby_var,c_var); mpf_init2 (c_var,prec); }
 #define mpf_temp_init(var,prec) { mpf_temp_alloc(var); mpf_init2(var,prec); }
 #define mpf_temp_free(var) { mpf_clear(var); free(var); }
-#define prec_max(prec,var) {if(mpf_get_prec(var) > prec) prec = mpf_get_prec(var); }
+#define r_mpf_init(var1) (mpf_init(var1))
+#define r_mpf_init2(var1, var2) (mpf_init2(var1, var2))
+#define r_mpf_set_z(var1, var2) (mpf_set_z(var1, var2))
+#define r_mpf_set_q(var1, var2) (mpf_set_q(var1, var2))
+#define r_mpf_set_d(var1, var2) (mpf_set_d(var1, var2))
+#define r_mpf_set_str(var1, var2, var3) (mpf_set_str(var1, var2, var3))
+#define r_mpf_cmp(var1, var2) (mpf_cmp(var1, var2))
+#endif
 
 #if SIZEOF_INT < SIZEOF_LONG
 /* 64-bit */
@@ -80,6 +102,7 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 
 #define EXPECTED_ZQFXBD "Expected GMP::Z, GMP::Q, GMP::F, Fixnum, Bignum or Float"
 #define EXPECTED_ZQFXB "Expected GMP::Z, GMP::Q, GMP::F, Fixnum or Bignum"
+#define EXPECTED_ZFXBD "Expected GMP::Z, GMP::F, Fixnum, Bignum or Float"
 #define EXPECTED_ZXB "Expected GMP::Z, Fixnum or Bignum"
 #define EXPECTED_ZX "Expected GMP::Z or Fixnum"
 #define EXPECTED_X "Expected Fixnum"

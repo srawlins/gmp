@@ -47,8 +47,8 @@ class MPFR_TSQRT < Test::Unit::TestCase
     z = GMP::F(-1)
     z = x.sqrt(GMP::GMP_RNDN)
     
-    # z = GMP::F(0.1011010100000100100100100110011001011100100100000011000111011001011101101101110000110100001000100001100001011000E1, 160)
-    # x = z.sqrt
+    #z = GMP::F(0.1011010100000100100100100110011001011100100100000011000111011001011101101101110000110100001000100001100001011000E1, 160)
+    #x = z.sqrt
     # z = x.sqrt
     # x.prec = 53
   end
@@ -63,8 +63,14 @@ class MPFR_TSQRT < Test::Unit::TestCase
   
   def property2(p, rounding)
     x = @rand_state.mpfr_urandomb(p)
-    y = (x ** 2).sqrt(rounding)
-    assert_true(x == y, "sqrt(x^2) = x should hold.")
+    y = (x * x).sqrt(rounding)
+    assert_true(x == y, "sqrt(#{x.to_s}^2) should be #{x.to_s}, but is #{y.to_s} (rounding: #{GMP::F.default_rounding_mode.inspect}, prec: #{p.to_s}).")
+  end
+  
+  def check3(as, rounding, qs)
+    q = GMP::F(as, 53)
+    q = q.sqrt(rounding)
+    assert_equal(qs, q.to_s, "Sqrt of -0.0 should be 0.0.")
   end
   
   def test_prec
@@ -78,5 +84,15 @@ class MPFR_TSQRT < Test::Unit::TestCase
                   160,
                   "796887792767063979679855997149887366668464780637")
     special
+    #check_nan
+    
+    (2...200).each do |p|
+      200.times do
+        #check_inexact p
+      end
+    end
+    #check_float
+    
+    check3("-0.0", GMP::GMP_RNDN, "0.0")
   end
 end

@@ -1,1 +1,1 @@
-xcopy /D /E /I "%GMP_CODE%" %GMP_WIN32%
+xcopy "%GMP_CODE%" %GMP_WIN32% /D /E /I /EXCLUDE:win32_copy_excludes.txt
