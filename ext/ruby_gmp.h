@@ -250,6 +250,8 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 
 // MPFR
 #ifdef MPFR
+  extern void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, unsigned long base);
+  
   extern VALUE r_gmpfr_sqrt(int argc, VALUE *argv, VALUE self);
   
   extern VALUE r_gmpfr_log(int argc, VALUE *argv, VALUE self);

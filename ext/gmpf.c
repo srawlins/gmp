@@ -72,8 +72,8 @@ VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
   VALUE res;
   (void)klass;
 
-  if (argc > 2)
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0, 1 or 2)", argc);
+  if (argc > 4)
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0, 1 2, 3, or 4)", argc);
 
   mpf_make_struct (res, res_val);
   rb_obj_call_init(res, argc, argv);
@@ -90,11 +90,12 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   mpf_get_struct (self, self_val);
 
   if (argc==0) {
-    r_mpf_init (self_val);
 #ifdef MPFR
-    mpfr_set_si(self_val, 0, __gmp_default_rounding_mode);
+    mpfr_init (self_val);
+    mpfr_set_si (self_val, 0, __gmp_default_rounding_mode);
 #else
-    mpf_set_si(self_val, 0);
+    r_mpf_init (self_val);
+    mpf_set_si (self_val, 0);
 #endif
     return Qnil;
   }
@@ -105,9 +106,12 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
     if (FIXNUM_P(argv[1])) {
       if (FIX2INT(argv[1]) >= 0)
         prec = FIX2INT(argv[1]);
-      else
+      else {
+        r_mpf_init (self_val);
         rb_raise(rb_eRangeError, "prec must be non-negative");
+      }
     } else {
+      r_mpf_init (self_val);
       rb_raise(rb_eTypeError, "prec must be a Fixnum");
     }
   } else if (GMPF_P(arg)) {
@@ -115,15 +119,37 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
     prec = mpf_get_prec (arg_val_f);
   }
 #ifdef MPFR
-  if (prec == 0)
-    r_mpf_init (self_val);
-  else
-    r_mpf_init2 (self_val, prec);
-#else
+  int base = 10;
   if (prec == 0)
     mpfr_init (self_val);
   else
     mpfr_init2 (self_val, prec);
+  
+  if (STRING_P(argv[0])) {
+    if (argc >= 3) {
+      if (FIXNUM_P(argv[2])) {
+        if (FIX2INT(argv[2]) >= 2 && FIX2INT(argv[2]) <= 36)
+          base = FIX2INT(argv[2]);
+        else
+          rb_raise(rb_eRangeError, "base must be between 2 and 36");
+      }
+      else {
+        rb_raise(rb_eTypeError, "base must be a Fixnum");
+      }
+    }
+    if (argc == 4) {
+      // FIGURE IT OUT. ACCEPT A ROUNDING MODE!
+    }
+    
+    mpf_set_value2 (self_val, arg, base);
+    return Qnil;
+  }
+
+#else
+  if (prec == 0)
+    r_mpf_init (self_val);
+  else
+    r_mpf_init2 (self_val, prec);
 #endif
 
   if (GMPF_P(arg)) {
@@ -155,7 +181,7 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
   } else if (FIXNUM_P(arg)) {
     mpf_set_si(self_val, FIX2NUM(arg));
   } else if (STRING_P(arg)) {
-    result = r_mpf_set_str(self_val, STR2CSTR(arg), 10);
+    result = mpfr_set_str(self_val, STR2CSTR(arg), 10, __gmp_default_rounding_mode);
     if (result == -1) {
       rb_raise(rb_eRuntimeError, "Badly formatted string");
     }
@@ -192,6 +218,19 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
     rb_raise(rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name(rb_class_of(arg)));
   }
 }
+
+#ifdef MPFR
+void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, unsigned long base)
+{
+  int result;
+
+  result = mpfr_set_str(self_val, STR2CSTR(arg), base, __gmp_default_rounding_mode);
+  
+  if (result == -1) {
+    rb_raise(rb_eRuntimeError, "Badly formatted string");
+  }
+}
+#endif
 
 /*
  * call-seq:
@@ -483,7 +522,7 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
  *
  * Returns +float+ raised to the +integer+ power. +integer+ must be
  * * Fixnum or Bignum
- * * positive
+ * * non-negative
  */
 VALUE r_gmpf_pow(VALUE self, VALUE arg)
 {
@@ -494,10 +533,10 @@ VALUE r_gmpf_pow(VALUE self, VALUE arg)
 
   mpf_get_struct_prec (self, self_val, prec);
 
-  if (FIXNUM_P(arg) || BIGNUM_P(arg)) {
-    if (INT2NUM(arg) >= 0) {
+  if (FIXNUM_P(arg)) {
+    if (FIX2NUM(arg) >= 0) {
       mpf_make_struct_init(res, res_val, prec);
-      mpf_pow_ui(res_val, self_val, INT2NUM(arg));
+      mpf_pow_ui(res_val, self_val, FIX2NUM(arg));
     } else {
       rb_raise(rb_eRangeError, "power must be non-negative");
     }
@@ -727,20 +766,11 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)            \
                                                                    \
   mpf_get_struct_prec (self, self_val, prec);                      \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }    \
-  else { rnd_mode_val = r_get_rounding_mode(rnd_mode);  \
-    rb_warn("Inside MPFR_SINGLE_FUNCTION, received rnd_mode=%i", rnd_mode_val); }         \
+  else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }           \
   if (NIL_P (res_prec)) { res_prec_value = prec; }                 \
   else { res_prec_value = FIX2INT (res_prec); }                    \
-  rb_warn("Inside MPFR_SINGLE_FUNCTION, prec=%u", (int)prec);  \
-  rb_warn("Inside MPFR_SINGLE_FUNCTION, res_prec_value=%u", (int)res_prec_value);  \
   mpf_make_struct_init (res, res_val, res_prec_value);             \
   mpfr_##name (res_val, self_val, rnd_mode_val);                   \
-  \
-  char *str;    \
-  mp_exp_t exponent;  \
-  str = mpfr_get_str(NULL, &exponent, 10, 0, res_val, __gmp_default_rounding_mode);  \
-  rb_warn("After mpfr_##name , str=%s", str);  \
-  mpfr_free_str(str);  \
                                                                    \
   return res;                                                      \
 }

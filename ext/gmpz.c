@@ -85,6 +85,7 @@
  *   odd?           r_gmpz_is_odd           mpz_odd
  *   sizeinbase     r_gmpz_sizeinbase       mpz_sizeinbase
  *   size_in_bin    r_gmpz_size_in_bin      mpz_sizeinbits
+ *   size           r_gmpz_size             mpz_size
  */
 
 /**********************************************************************
@@ -1888,6 +1889,24 @@ VALUE r_gmpz_size_in_bin(VALUE self)
  *    Integer Special Functions                                       *
  **********************************************************************/
 
+/*
+ * Document-method: size
+ *
+ * call-seq:
+ *   integer.size
+ *
+ * From the GMP Manual:
+ * 
+ * Return the size of <tt>integer</tt> measured in number of limbs. If
+ * <tt>integer</tt> is zero, the returned value will be zero. 
+ */
+VALUE r_gmpz_size(VALUE self)
+{
+  MP_INT *self_val;
+  mpz_get_struct(self, self_val);
+  return INT2FIX(mpz_size(self_val));
+}
+
 
 /**********************************************************************
  *    _unsorted_                                                      *
@@ -1910,7 +1929,7 @@ VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
     if (FIX2NUM(exp) < 0) 
       rb_raise (rb_eRangeError, "exponent must not be negative");
     mpz_make_struct_init (res, res_val);
-    mpz_ui_pow_ui (res_val, base, exp);
+    mpz_ui_pow_ui (res_val, FIX2NUM(base), FIX2NUM(exp));
     return res;
   }
   return r_gmpz_pow (r_gmpzsg_new(1, &base, klass), exp);
@@ -1998,23 +2017,26 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "hash",    r_gmpz_hash, 0);
   
   // Integer Logic and Bit Fiddling
-  rb_define_method(cGMP_Z, "&", r_gmpz_and, 1);
-  rb_define_method(cGMP_Z, "|", r_gmpz_or, 1);
-  rb_define_method(cGMP_Z, "^", r_gmpz_xor, 1);
-  rb_define_method(cGMP_Z, "com", r_gmpz_com, 0);
-  rb_define_method(cGMP_Z, "com!", r_gmpz_com_self, 0);
-  rb_define_method(cGMP_Z, "popcount",  r_gmpz_popcount, 0);
-  rb_define_method(cGMP_Z, "scan0", r_gmpz_scan0, 1);
-  rb_define_method(cGMP_Z, "scan1", r_gmpz_scan1, 1);
-  rb_define_method(cGMP_Z, "[]=", r_gmpz_setbit, 2);
-  rb_define_method(cGMP_Z, "[]", r_gmpz_getbit, 1);
+  rb_define_method(cGMP_Z, "&",        r_gmpz_and, 1);
+  rb_define_method(cGMP_Z, "|",        r_gmpz_or, 1);
+  rb_define_method(cGMP_Z, "^",        r_gmpz_xor, 1);
+  rb_define_method(cGMP_Z, "com",      r_gmpz_com, 0);
+  rb_define_method(cGMP_Z, "com!",     r_gmpz_com_self, 0);
+  rb_define_method(cGMP_Z, "popcount", r_gmpz_popcount, 0);
+  rb_define_method(cGMP_Z, "scan0",    r_gmpz_scan0, 1);
+  rb_define_method(cGMP_Z, "scan1",    r_gmpz_scan1, 1);
+  rb_define_method(cGMP_Z, "[]=",      r_gmpz_setbit, 2);
+  rb_define_method(cGMP_Z, "[]",       r_gmpz_getbit, 1);
   
-  //Miscellaneous Integer Functions
+  // Miscellaneous Integer Functions
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
   rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
   rb_define_method(cGMP_Z, "sizeinbase", r_gmpz_sizeinbase, 1);
   rb_define_alias( cGMP_Z, "size_in_base", "sizeinbase");
   rb_define_method(cGMP_Z, "size_in_bin", r_gmpz_size_in_bin, 0);
+  
+  // Integer Special Functions
+  rb_define_method(cGMP_Z, "size", r_gmpz_size, 0);
   
   // _unsorted_
   rb_define_method(cGMP_Z, ">>",  r_gmpz_fshr, 1);
