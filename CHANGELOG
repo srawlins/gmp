@@ -7,7 +7,10 @@
   * Fixed GMP::Z#pow (note that GMP::Z.pow has always worked.)
   * Added many tests from MPFR's tsqrt.c. This actually exposed a lot of bugs in
     the gem.
-  * Implemented mpz_size as GMP::Z.size. Not tested yet.
+  * Added GMP::Z.size (mpz_size). Not tested yet.
+  * Added GMP::Z.addmul! (mpz_addmul) with tests.
+  * Unit test results: 90 tests, 1500 assertions, 0 failures, 0 errors
+  * Unit test results: 79 tests, 742 assertions, 0 failures, 0 errors (w/o MPFR)
 
 0.4.7:
   * Added 6 MPFR trig methods, plus eint, li2, gamma, lngamma, zeta, erf, erfc,

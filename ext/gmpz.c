@@ -27,6 +27,9 @@
  *   sub!           r_gmpz_sub_self         mpz_sub
  *   \-----------------------------         mpz_sub_ui
  *   *              r_gmpz_mul              mpz_mul
+ *   \------------------------              mpz_mul_si
+ *   addmul!        r_gmpz_addmul_self      mpz_addmul
+ *   \--------------------------------      mpz_addmul_ui
  *   /              r_gmpz_div              ...
  *   tdiv           r_gmpz_tdiv             mpz_tdiv_q
  *   tmod           r_gmpz_tmod             mpz_tdiv_r
@@ -679,6 +682,57 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
     typeerror(ZQFXB);
   }
   return res;
+}
+
+/*
+ * call-seq:
+ *   a.addmul!(b, c)
+ *
+ * From the GMP Manual:
+ * 
+ * Sets +a+ to +a+ plus +b+ times +c+.
+ */
+VALUE r_gmpz_addmul_self(VALUE self, VALUE b, VALUE c)
+{
+  MP_INT *self_val, *b_val, *c_val;
+  int free_b_val = 0;
+
+  if (GMPZ_P(b)) {
+    mpz_get_struct(b, b_val);
+  } else if (FIXNUM_P(b)) {
+    mpz_temp_alloc(b_val);
+    mpz_init_set_si(b_val, FIX2NUM(b));
+    free_b_val = 1;
+  } else if (BIGNUM_P(b)) {
+    mpz_temp_from_bignum(b_val, b);
+    free_b_val = 1;
+  } else {
+    typeerror_as(ZXB, "addend");
+  }
+  mpz_get_struct(self, self_val);
+
+  if (GMPZ_P(c)) {
+    mpz_get_struct(c, c_val);
+    mpz_addmul(self_val, b_val, c_val);
+  } else if (FIXNUM_P(c)) {
+    if (FIX2NUM(c) < 0)
+    {
+      if (free_b_val) { mpz_temp_free(b_val); }
+      rb_raise(rb_eRangeError, "multiplicand (Fixnum) must be nonnegative");
+    }
+    mpz_addmul_ui(self_val, b_val, FIX2NUM(c));
+  } else if (BIGNUM_P(c)) {
+    mpz_temp_from_bignum(c_val, c);
+    mpz_addmul(self_val, b_val, c_val);
+    mpz_temp_free(c_val);
+  } else {
+    if (free_b_val)
+      mpz_temp_free(b_val);
+    typeerror_as(ZXB, "multiplicand");
+  }
+  if (free_b_val)
+    mpz_temp_free(b_val);
+  return self;
 }
 
 /*
@@ -1953,17 +2007,18 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, -1);
   
   // Integer Arithmetic
-  rb_define_method(cGMP_Z, "+",    r_gmpz_add, 1);
-  rb_define_method(cGMP_Z, "add!", r_gmpz_add_self, 1);
-  rb_define_method(cGMP_Z, "-",    r_gmpz_sub, 1);  
-  rb_define_method(cGMP_Z, "sub!", r_gmpz_sub_self, 1);
-  rb_define_method(cGMP_Z, "*",    r_gmpz_mul, 1);
-  rb_define_method(cGMP_Z, "<<",   r_gmpz_shl, 1);
-  rb_define_method(cGMP_Z, "neg",  r_gmpz_neg, 0);
-  rb_define_method(cGMP_Z, "neg!", r_gmpz_neg_self, 0);
-  rb_define_method(cGMP_Z, "-@",   r_gmpz_neg, 0);
-  rb_define_method(cGMP_Z, "abs",  r_gmpz_abs, 0);
-  rb_define_method(cGMP_Z, "abs!", r_gmpz_abs_self, 0);
+  rb_define_method(cGMP_Z, "+",       r_gmpz_add, 1);
+  rb_define_method(cGMP_Z, "add!",    r_gmpz_add_self, 1);
+  rb_define_method(cGMP_Z, "-",       r_gmpz_sub, 1);  
+  rb_define_method(cGMP_Z, "sub!",    r_gmpz_sub_self, 1);
+  rb_define_method(cGMP_Z, "*",       r_gmpz_mul, 1);
+  rb_define_method(cGMP_Z, "addmul!", r_gmpz_addmul_self, 2);
+  rb_define_method(cGMP_Z, "<<",      r_gmpz_shl, 1);
+  rb_define_method(cGMP_Z, "neg",     r_gmpz_neg, 0);
+  rb_define_method(cGMP_Z, "neg!",    r_gmpz_neg_self, 0);
+  rb_define_method(cGMP_Z, "-@",      r_gmpz_neg, 0);
+  rb_define_method(cGMP_Z, "abs",     r_gmpz_abs, 0);
+  rb_define_method(cGMP_Z, "abs!",    r_gmpz_abs_self, 0);
   
   // Integer Division
   rb_define_method(cGMP_Z, "/",    r_gmpz_div, 1);

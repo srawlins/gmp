@@ -2,8 +2,10 @@
 
 require 'test_helper'
 
+require 'tc_constants'
 require 'tc_z'
 require 'tc_z_basic'
+require 'tc_z_addmul'
 require 'tc_z_logic'
 require 'tc_q'
 require 'tc_cmp'
@@ -27,6 +29,7 @@ require 'tc_hashes'
 
 begin
   GMP::MPFR_VERSION
+  require 'tc_mpfr_constants'
   require 'tc_mpfr_random'
   require 'tc_mpfr_functions'
   require 'tc_mpfr_rounding'
