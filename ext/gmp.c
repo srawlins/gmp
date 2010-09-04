@@ -137,6 +137,11 @@ static VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
     case 3:
       mpfr_set_default_rounding_mode (GMP_RNDD);
       break;
+#if MPFR_VERSION_MAJOR>2
+    case 4:
+      mpfr_set_default_rounding_mode (MPFR_RNDA);
+      break;
+#endif
   }
   
   return Qnil;
@@ -164,6 +169,10 @@ mp_rnd_t r_get_rounding_mode(VALUE rnd)
       return GMP_RNDU;
     case 3:
       return GMP_RNDD;
+#if MPFR_VERSION_MAJOR>2
+    case 4:
+      return MPFR_RNDA;
+#endif
     default:
       return GMP_RNDN;
   }

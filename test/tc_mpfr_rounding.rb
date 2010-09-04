@@ -2,6 +2,11 @@ require 'test_helper'
 
 class TC_MPFR_Rounding < Test::Unit::TestCase
   def setup
+    if GMP::MPFR_VERSION < "3.0.0"
+      @prefix = "GMP"
+    else
+      @prefix = "MPFR"
+    end
   end
 
   def test_rounding_mode
@@ -12,10 +17,10 @@ class TC_MPFR_Rounding < Test::Unit::TestCase
   end
   
   def test_rounding_name
-    assert_equal("GMP_RNDN", GMP::GMP_RNDN.name, "GMP::Rnd.name should be correct.")
-    assert_equal("GMP_RNDZ", GMP::GMP_RNDZ.name, "GMP::Rnd.name should be correct.")
-    assert_equal("GMP_RNDU", GMP::GMP_RNDU.name, "GMP::Rnd.name should be correct.")
-    assert_equal("GMP_RNDD", GMP::GMP_RNDD.name, "GMP::Rnd.name should be correct.")
+    assert_equal(@prefix+"_RNDN", GMP::GMP_RNDN.name, "GMP::Rnd.name should be correct.")
+    assert_equal(@prefix+"_RNDZ", GMP::GMP_RNDZ.name, "GMP::Rnd.name should be correct.")
+    assert_equal(@prefix+"_RNDU", GMP::GMP_RNDU.name, "GMP::Rnd.name should be correct.")
+    assert_equal(@prefix+"_RNDD", GMP::GMP_RNDD.name, "GMP::Rnd.name should be correct.")
   end
   
   def test_rounding_ieee754

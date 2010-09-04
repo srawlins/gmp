@@ -20,4 +20,8 @@ module Test::Unit::Assertions
   def assert_between(expected_low, expected_high, actual, message=nil)
     assert_true(actual <= expected_high && actual >= expected_low, message)
   end
+
+  def assert_true(actual, message=nil)
+    assert(true, message)
+  end
 end

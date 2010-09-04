@@ -4,6 +4,7 @@ require 'test_helper'
 # Things are tested both ways because the implementation is asymetrical
 class TC_Z_Addmul < Test::Unit::TestCase
   def setup
+    @_64bit = 1_000_000_000_000.is_a? Fixnum
   end
 
   def test_z
@@ -45,29 +46,47 @@ class TC_Z_Addmul < Test::Unit::TestCase
   def test_fixnum
     five = GMP::Z(5)
     five.addmul!(7, 7)  # <= 5 + 49
-    assert_equal(54, five, "GMP::Z should addmul GMP::Z correctly")
+    assert_equal(54, five, "GMP::Z should addmul Fixnum correctly")
     five = GMP::Z(5)
     five.addmul!(-20, 2)  # <= 5 + -40
-    assert_equal(-35, five, "GMP::Z should addmul GMP::Z correctly")
+    assert_equal(-35, five, "GMP::Z should addmul Fixnum correctly")
     m20 = GMP::Z(2)**20 - 1  # 1_048_575
     m20.addmul!(-524_287, 2)  # <= 1_048_575 + -1_048_574
-    assert_equal(1, m20, "GMP::Z should addmul GMP::Z correctly")
+    assert_equal(1, m20, "GMP::Z should addmul Fixnum correctly")
+    if @_64bit
+      neg_m40 = -GMP::Z(2)**40  # -1_099_511_627_776
+      neg_m40.addmul!( 1_000_000_000_000,  1)  # <= -1_099_511_627_776 + 1_000_000_000_000
+      assert_equal(GMP::Z(-99_511_627_776), neg_m40, "GMP::Z should addmul 64-bit Fixnum correctly")
+    end
   end
 
   def test_bignum
-    neg_m40 = -GMP::Z(2)**40  # -1_099_511_627_776
-    neg_m40.addmul!( 1_000_000_000_000,  1)  # <= -1_099_511_627_776 + 1_000_000_000_000
-    assert_equal(GMP::Z(-99_511_627_776), neg_m40, "GMP::Z should addmul GMP::Z correctly")
-    neg_m40.addmul!(10,      9_000_000_000)  # <= -   99_511_627_776 +    90_000_000_000
-    assert_equal(GMP::Z(- 9_511_627_776), neg_m40, "GMP::Z should addmul GMP::Z correctly")
-    neg_m40.addmul!( 3_000_000_000,      3)  # <= -    9_511_627_776 +     9_000_000_000
-    assert_equal(GMP::Z(-   511_627_776), neg_m40, "GMP::Z should addmul GMP::Z correctly")
+    if ! @_64bit
+      neg_m40 = -GMP::Z(2)**40  # -1_099_511_627_776
+      neg_m40.addmul!( 1_000_000_000_000,  1)  # <= -1_099_511_627_776 + 1_000_000_000_000
+      assert_equal(GMP::Z(-99_511_627_776), neg_m40, "GMP::Z should addmul Bignum correctly")
+      neg_m40.addmul!(10,      9_000_000_000)  # <= -   99_511_627_776 +    90_000_000_000
+      assert_equal(GMP::Z(- 9_511_627_776), neg_m40, "GMP::Z should addmul Bignum correctly")
+      neg_m40.addmul!( 3_000_000_000,      3)  # <= -    9_511_627_776 +     9_000_000_000
+      assert_equal(GMP::Z(-   511_627_776), neg_m40, "GMP::Z should addmul Bignum correctly")
+    else
+      m70 = GMP::Z(2)**70 - 1  # 1_180_591_620_717_411_303_423
+      m70.addmul!(-11*10_000_000_000, 10_000_000_000)
+      assert_equal(GMP::Z(80_591_620_717_411_303_423), m70, "GMP::Z should addmul 64-bit Bignum correctly")
+      m70.addmul!(-1_000_000_000, 8*10_000_000_000)
+      assert_equal(GMP::Z(   591_620_717_411_303_423), m70, "GMP::Z should addmul 64-bit Bignum correctly")
+    end
   end
 
   def test_raise
-    assert_raise(RangeError) { GMP::Z(123).addmul!(456, -7) }
-    assert_nothing_raised(RangeError) { GMP::Z(123).addmul!(456, -7_000_000_000) }
-    assert_nothing_raised(RangeError) { GMP::Z(123).addmul!(456, 7) }
-    assert_nothing_raised(RangeError) { GMP::Z(123).addmul!(456, GMP::Z(-7)) }
+    if ! @_64bit
+      assert_raise(RangeError) { GMP::Z(123).addmul!(456, -7) }
+      assert_nothing_raised(RangeError) { GMP::Z(123).addmul!(456, -7_000_000_000) }
+    else
+      assert_raise(RangeError) { GMP::Z(123).addmul!(456, -7_000_000_000) }
+      assert_nothing_raised(RangeError) { GMP::Z(123).addmul!(456, -7_000_000_000_000_000_000) }
+    end
+      assert_nothing_raised(RangeError) { GMP::Z(123).addmul!(456, 7) }
+      assert_nothing_raised(RangeError) { GMP::Z(123).addmul!(456, GMP::Z(-7)) }
   end
 end
