@@ -311,7 +311,8 @@ void mpz_set_value(MP_INT *target, VALUE source)
   } else if (FIXNUM_P(source)) {
     mpz_set_si(target, FIX2NUM(source));
   } else if (STRING_P(source)) {
-    mpz_set_str(target, STR2CSTR(source), 0);
+    //mpz_set_str(target, STR2CSTR(source), 0);
+    mpz_set_str(target, StringValuePtr(source), 0);
   } else if (BIGNUM_P(source)) {
     mpz_set_bignum(target, source);
   } else {
@@ -817,7 +818,11 @@ VALUE r_gmpz_div(VALUE self, VALUE arg)
   MP_RAT *arg_val_q, *res_val_q;
   MP_FLOAT *arg_val_f, *res_val_f;
   VALUE res;
+#if defined(MPFR) && MPFR_VERSION_MAJOR>2
+  mpfr_prec_t prec;
+#else
   unsigned int prec;
+#endif
 
   mpz_get_struct (self,self_val);
 
@@ -1441,7 +1446,11 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
 {
   MP_INT *self_val, *arg_val, *res_val;
   VALUE res;
+#if __GNU_MP_VERSION>2
+  unsigned long removed_val;
+#else
   int   removed_val;
+#endif
   int free_arg_val = 0;
 
   mpz_get_struct(self, self_val);

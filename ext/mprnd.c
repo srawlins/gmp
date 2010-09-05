@@ -21,7 +21,7 @@ VALUE r_mprnd_initialize(int argc, VALUE *argv, VALUE self)
   VALUE mode, name, ieee754;
   mode = argv[0];
   (void)argc;
-  char *prefix;
+  const char *prefix;
   char name_val[10];
   if (MPFR_VERSION_MAJOR < 3)
     prefix = "GMP";
