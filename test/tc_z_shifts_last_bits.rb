@@ -1,4 +1,4 @@
-require 'test_helper'
+require './test_helper'
 
 class TC_shifts_last_bits < Test::Unit::TestCase
   def setup

@@ -1,6 +1,6 @@
-require 'test_helper'
-
-# Tested: [Z op Z, Z op FixNum, Z op BigNum, FixNum op Z, BigNum op Z]
+# Tested: [Z op (Z,Z), Z op (Z,Fixnum), Z op (Z,Bignum),
+#          Z op (Fixnum,Z), Z op (Fixnum,Fixnum), Z op (Fixnum,Bignum)
+#          Z op (Bignum,Z), Z op (Bignum,Bignum), Z op (Bignum,Fixnum)]
 # Things are tested both ways because the implementation is asymetrical
 class TC_Z_Addmul < Test::Unit::TestCase
   def setup

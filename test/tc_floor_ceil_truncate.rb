@@ -1,4 +1,4 @@
-require 'test_helper'
+require './test_helper'
 
 class TC_floor_ceil_truncate < Test::Unit::TestCase
   def setup

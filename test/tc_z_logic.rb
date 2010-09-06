@@ -1,4 +1,4 @@
-require 'test_helper'
+require './test_helper'
 
 class TC_Z_Logic < Test::Unit::TestCase
   def setup

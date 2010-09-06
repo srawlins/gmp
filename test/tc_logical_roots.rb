@@ -1,5 +1,3 @@
-require 'test_helper'
-
 class TC_logical_roots < Test::Unit::TestCase
   def setup
     @a = GMP::Z.new(100)

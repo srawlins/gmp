@@ -1,4 +1,4 @@
-require 'test_helper'
+require './test_helper'
 
 class TC_Z < Test::Unit::TestCase
   def test_init_null

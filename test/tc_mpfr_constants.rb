@@ -1,5 +1,3 @@
-require 'test_helper'
-
 class TC_MPFR_Constants < Test::Unit::TestCase
   def test_mpfr_constants
     assert_instance_of(String,   GMP::MPFR_VERSION,  "GMP::MPFR_VERSION should be a String")

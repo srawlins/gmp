@@ -5,6 +5,7 @@ require 'mkmf'
 dir_config('gmp')
 dir_config('mpfr')
 
+use_if_mpfr = ! ARGV.include?('-no-mpfr')
 ok = true
 unless have_header('gmp.h')
   $stderr.puts "can't find gmp.h, try --with-gmp-include=<path>"
@@ -16,10 +17,12 @@ unless have_library('gmp', '__gmpz_init')
   ok = false
 end
 
+if use_if_mpfr
 if (have_header('mpfr.h') and
     have_header('mpf2mpfr.h') and
     have_library('mpfr', 'mpfr_init'))
   $CFLAGS += ' -DMPFR'
+end
 end
 
 $CFLAGS += ' -Wall -W -O6 -g'

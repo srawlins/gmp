@@ -156,8 +156,8 @@ VALUE r_gmpq_to_s(VALUE self)
   MP_INT *self_val_num, *self_val_den;
   char *str;
   VALUE res;
-  int sizeinbase;
-  int offset;
+  size_t sizeinbase;
+  size_t offset;
 
   //Data_Get_Struct (self, MP_RAT, self_val);
   mpq_get_struct(self, self_val)
@@ -255,7 +255,7 @@ VALUE r_gmpq_sub(VALUE self, VALUE arg)
   MP_INT *arg_val_z, *res_val_num;
   MP_FLOAT *arg_val_f, *res_val_f;
   VALUE res;
-  unsigned int prec;
+  mpfr_prec_t prec;
 
   mpq_get_struct(self, self_val);
   mpq_make_struct_init(res, res_val);

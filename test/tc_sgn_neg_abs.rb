@@ -1,5 +1,3 @@
-require 'test_helper'
-
 class TC_sgn_neg_abs < Test::Unit::TestCase
   def setup
     @a=GMP::Z.new(10)

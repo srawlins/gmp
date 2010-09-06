@@ -1,5 +1,3 @@
-require 'test_helper'
-
 class TC_MPFR_Random < Test::Unit::TestCase
   def setup
   end

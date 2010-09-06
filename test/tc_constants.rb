@@ -1,4 +1,4 @@
-require 'test_helper'
+require './test_helper'
 
 class TC_Constants < Test::Unit::TestCase
   def test_constants

@@ -1,4 +1,4 @@
-require 'test_helper'
+require './test_helper'
 
 class TC_fib_fac_nextprime < Test::Unit::TestCase
   def setup

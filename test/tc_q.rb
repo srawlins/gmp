@@ -1,5 +1,3 @@
-require 'test_helper'
-
 class TC_Q < Test::Unit::TestCase
   def test_init_null
     assert_equal(GMP::Q.new(), 0, "GMP::Q.new() should initialize to 0")
