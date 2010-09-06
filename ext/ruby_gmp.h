@@ -40,6 +40,18 @@ typedef __mpf_struct MP_FLOAT;
 */
 typedef __gmp_randstate_struct MP_RANDSTATE;
 
+/*
+ * Here, MPFR is not included, so we are pure GMP. In GMP, mpf_get_prec returns
+ * an unsigned long int, so we will too.
+ */
+#ifndef MPFR
+typedef unsigned long mpfr_prec_t;
+/*
+ * Here, MPFR is not included, so we are pure GMP. In GMP, mpf_get_prec returns
+ * an unsigned long int, so we will too.
+ */
+#endif
+
 #define mpz_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_INT, c_var); }
 #define mpq_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_RAT, c_var); }
 #define mpf_get_struct(ruby_var,c_var) { Data_Get_Struct(ruby_var, MP_FLOAT, c_var); }
@@ -70,9 +82,9 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define mpz_temp_free(var) { mpz_clear(var); free(var); }
 #define mpf_temp_alloc(var) { var=malloc(sizeof(MP_FLOAT)); }
 #if defined(MPFR) && defined(HAVE_MPFR_H)
-#define prec_max(prec,var) {if(mpf_get_prec(var) > prec) prec = mpf_get_prec(var); }
-#else
 #define prec_max(prec,var) {if(mpfr_get_prec(var) > prec) prec = mpfr_get_prec(var); }
+#else
+#define prec_max(prec,var) {if(mpf_get_prec(var) > prec) prec = mpf_get_prec(var); }
 #endif
 
 #if defined(MPFR) && defined(HAVE_MPFR_H)
@@ -101,13 +113,13 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define r_mpf_cmp(var1, var2) (mpf_cmp(var1, var2))
 #endif
 
-//#if SIZEOF_INT < SIZEOF_LONG
+#if SIZEOF_INT < SIZEOF_LONG
 /* 64-bit */
-//#define FIX2NUM(x) FIX2LONG(x)
-//#else
+#define FIX2NUM(x) FIX2LONG(x)
+#else
 /* 32-bit */
 #define FIX2NUM(x) FIX2INT(x)
-//#endif
+#endif
 
 #define EXPECTED_ZQFXBD "Expected GMP::Z, GMP::Q, GMP::F, Fixnum, Bignum or Float"
 #define EXPECTED_ZQFXB "Expected GMP::Z, GMP::Q, GMP::F, Fixnum or Bignum"
@@ -259,7 +271,7 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 
 // MPFR
 #ifdef MPFR
-  extern void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, unsigned long base);
+  extern void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base);
   
   extern VALUE r_gmpfr_sqrt(int argc, VALUE *argv, VALUE self);
   

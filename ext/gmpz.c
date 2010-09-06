@@ -443,7 +443,7 @@ VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self)
   rb_scan_args(argc, argv, "01", &base);
   if (NIL_P(base)) { base = INT2FIX(10); }           /* default value */
   if (FIXNUM_P(base)) {
-    base_val = FIX2NUM(base);
+    base_val = FIX2INT(base);
     if ((base_val >=   2 && base_val <= 62) ||
         (base_val >= -36 && base_val <= -2)) {
       /* good base */
@@ -1217,17 +1217,17 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
   MP_INT *self_val;
   int reps_val;
   VALUE reps;
-  mpz_get_struct(self, self_val);
-  rb_scan_args(argc, argv, "01", &reps);
+  mpz_get_struct (self, self_val);
+  rb_scan_args (argc, argv, "01", &reps);
   if(NIL_P(reps)){
-    reps = INT2FIX(5);
+    reps = INT2FIX (5);
   }
-  if (FIXNUM_P(reps)) {
-    reps_val = FIX2NUM (reps);
+  if (FIXNUM_P (reps)) {
+    reps_val = FIX2INT (reps);
   } else {
-    typeerror_as(X, "reps");
+    typeerror_as (X, "reps");
   }
-  return INT2FIX(mpz_probab_prime_p(self_val, reps_val));
+  return INT2FIX (mpz_probab_prime_p(self_val, reps_val));
 }
 
 /*
@@ -1818,13 +1818,13 @@ VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
 {
   MP_INT *self_val;
   int bitnr_val;
-  mpz_get_struct(self, self_val);
-  if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2NUM (bitnr);
+  mpz_get_struct (self, self_val);
+  if (FIXNUM_P (bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
   } else {
-    typeerror_as(X, "index");
+    typeerror_as (X, "index");
   }
-  return INT2FIX(mpz_scan0(self_val, bitnr_val));
+  return INT2FIX (mpz_scan0 (self_val, bitnr_val));
 }
 
 /*
@@ -1847,15 +1847,15 @@ VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
   MP_INT *self_val;
   int bitnr_val;
 
-  mpz_get_struct(self, self_val);
+  mpz_get_struct (self, self_val);
 
-  if (FIXNUM_P(bitnr)) {
-    bitnr_val = FIX2NUM (bitnr);
+  if (FIXNUM_P (bitnr)) {
+    bitnr_val = FIX2INT (bitnr);
   } else {
-    typeerror_as(X, "index");
+    typeerror_as (X, "index");
   }
 
-  return INT2FIX(mpz_scan1(self_val, bitnr_val));
+  return INT2FIX (mpz_scan1 (self_val, bitnr_val));
 }
 
 /*
@@ -1867,11 +1867,14 @@ VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
 VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
 {
   MP_INT *self_val;
-  int bitnr_val;
+  unsigned long bitnr_val;
 
   mpz_get_struct (self, self_val);
 
   if (FIXNUM_P (bitnr)) {
+    if (FIX2NUM (bitnr) < 0) {
+      rb_raise(rb_eRangeError, "index must be nonnegative");
+    }
     bitnr_val = FIX2NUM (bitnr);
   } else {
     typeerror_as (X, "index");
@@ -1893,7 +1896,7 @@ VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
 VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
 {
   MP_INT *self_val;
-  int bitnr_val;
+  unsigned long bitnr_val;
   mpz_get_struct(self, self_val);
   if (FIXNUM_P(bitnr)) {
     bitnr_val = FIX2NUM (bitnr);
@@ -1936,7 +1939,7 @@ VALUE r_gmpz_sizeinbase(VALUE self, VALUE base)
   MP_INT *self_val;
   int base_val;
   mpz_get_struct (self, self_val);
-  base_val = FIX2NUM (base);
+  base_val = FIX2INT (base);
   return INT2FIX (mpz_sizeinbase (self_val, base_val));
 }
 

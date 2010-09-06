@@ -221,11 +221,10 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
 }
 
 #ifdef MPFR
-void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, unsigned long base)
+void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
 {
   int result;
 
-  //result = mpfr_set_str(self_val, STR2CSTR(arg), base, __gmp_default_rounding_mode);
   result = mpfr_set_str(self_val, StringValuePtr(arg), base, __gmp_default_rounding_mode);
   
   if (result == -1) {
@@ -362,11 +361,7 @@ VALUE r_gmpf_add(VALUE self, VALUE arg)
   MP_RAT *arg_val_q;
   MP_INT *arg_val_z;
   VALUE res;
-#if defined(MPFR) && MPFR_VERSION_MAJOR>2
   mpfr_prec_t prec;
-#else
-  unsigned long prec;
-#endif
 
   mpf_get_struct_prec (self, self_val, prec);
 
@@ -424,11 +419,7 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
   MP_RAT *arg_val_q;
   MP_INT *arg_val_z;
   VALUE res;
-#if defined(MPFR) && MPFR_VERSION_MAJOR>2
   mpfr_prec_t prec;
-#else
-  unsigned long prec;
-#endif
 
   mpf_get_struct_prec (self, self_val, prec);
 
@@ -486,7 +477,8 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
   MP_RAT *arg_val_q;
   MP_INT *arg_val_z;
   VALUE res;
-  unsigned long prec;
+  //unsigned long prec;
+  mpfr_prec_t prec;
 
   mpf_get_struct_prec (self, self_val, prec);
 
@@ -539,7 +531,8 @@ VALUE r_gmpf_pow(VALUE self, VALUE arg)
   MP_FLOAT *self_val, *res_val;
   VALUE res;
   
-  unsigned long prec;
+  //unsigned long prec;
+  mpfr_prec_t prec;
 
   mpf_get_struct_prec (self, self_val, prec);
 
@@ -629,7 +622,7 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
   MP_RAT *arg_val_q;
   MP_INT *arg_val_z;
   VALUE res;
-  unsigned long prec;
+  mpfr_prec_t prec;
 
   mpf_get_struct_prec (self, self_val, prec);
 
@@ -925,7 +918,7 @@ static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
   MP_FLOAT *self_val, *res_val, *arg_val_f;
   MP_RAT *arg_val_q;
   MP_INT *arg_val_z;
-  unsigned long prec;
+  mpfr_prec_t prec;
   VALUE res;
 
   mpf_get_struct_prec(self, self_val, prec);
