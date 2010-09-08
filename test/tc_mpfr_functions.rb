@@ -11,6 +11,11 @@ class TC_MPFR_Functions < Test::Unit::TestCase
   end
   
   def test_function_existence
+    assert_nothing_raised("GMP::F.nan? should be callable.") { @a.nan? }
+    assert_nothing_raised("GMP::F.infinite? should be callable.") { @a.infinite? }
+    assert_nothing_raised("GMP::F.finite? should be callable.") { @a.finite? }
+    assert_nothing_raised("GMP::F.number? should be callable.") { @a.number? }
+
     assert_nothing_raised("GMP::F.sqrt should be callable.") { @a.sqrt }
     
     assert_nothing_raised("GMP::F.log should be callable.") { @a.log }

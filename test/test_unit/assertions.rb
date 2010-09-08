@@ -22,6 +22,10 @@ module Test::Unit::Assertions
   end
 
   def assert_true(actual, message=nil)
-    assert(true, message)
+    assert(actual, message)
+  end
+
+  def assert_false(actual, message=nil)
+    assert(!actual, message)
   end
 end

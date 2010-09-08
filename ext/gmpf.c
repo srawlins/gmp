@@ -799,6 +799,19 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)            \
   return res;                                                      \
 }
 
+#define MPFR_SINGLE_BOOLEAN_FUNCTION(name)  \
+static VALUE r_gmpfr_##name(VALUE self)     \
+{                                           \
+  MP_FLOAT *self_val;                       \
+                                            \
+  mpf_get_struct(self, self_val);           \
+  if (mpfr_##name (self_val))               \
+    return Qtrue;                           \
+  else                                      \
+    return Qfalse;                          \
+}
+
+
 #define MPFR_CONST_FUNCTION(name)                        \
 VALUE r_gmpfrsg_##name()                                 \
 {                                                        \
@@ -864,32 +877,8 @@ MPFR_CONST_FUNCTION(const_pi)
 MPFR_CONST_FUNCTION(const_euler)
 MPFR_CONST_FUNCTION(const_catalan)
 
-static VALUE r_gmpfr_nan_p(VALUE self)
-{
-  MP_FLOAT *self_val;
-
-  mpf_get_struct(self, self_val);
-  if (mpfr_nan_p(self_val)) {
-    return Qtrue;
-  }
-  else {
-    return Qfalse;
-  }
-}
-
-static VALUE r_gmpfr_inf_p(VALUE self)
-{
-  MP_FLOAT *self_val;
-
-  mpf_get_struct(self, self_val);
-  if (mpfr_inf_p(self_val)) {
-    return Qtrue;
-  }
-  else {
-    return Qfalse;
-  }
-}
-
+MPFR_SINGLE_BOOLEAN_FUNCTION(nan_p)
+MPFR_SINGLE_BOOLEAN_FUNCTION(inf_p)
 static VALUE r_gmpfr_fin_p(VALUE self)
 {
   if (r_gmpfr_inf_p(self)) {
@@ -899,19 +888,8 @@ static VALUE r_gmpfr_fin_p(VALUE self)
     return Qtrue;
   }
 }
-
-static VALUE r_gmpfr_number_p(VALUE self)
-{
-  MP_FLOAT *self_val;
-
-  mpf_get_struct(self, self_val);
-  if (mpfr_number_p(self_val)) {
-    return Qtrue;
-  }
-  else {
-    return Qfalse;
-  }
-}
+MPFR_SINGLE_BOOLEAN_FUNCTION(number_p)
+MPFR_SINGLE_BOOLEAN_FUNCTION(zero_p)
 
 static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
 {
@@ -1044,8 +1022,29 @@ void init_gmpf()
   
   
 #ifdef MPFR
+  /* To implement; new in MPFR 3.0.0:
+   *
+   * mpfr_buildopt_tls_p
+   * mpfr_buildopt_decimal_p
+   * mpfr_regular_p
+   * mpfr_set_zero
+   * mpfr_digamma
+   * mpfr_ai
+   * mpfr_set_flt
+   * mpfr_get_flt
+   * mpfr_urandom
+   * mpfr_set_z_2exp
+   */
   // Basic Arithmetic Functions
   rb_define_method(cGMP_F, "sqrt", r_gmpfr_sqrt, -1);
+  // "rec_sqrt", r_gmpfr_rec_sqrt
+  // "cbrt", r_gmpfr_cbrt
+  // "root", r_gmpfr_root
+  // "neg", r_gmpfr_neg
+  // "abs", r_gmpfr_abs
+  // "dim", r_gmpfr_dim
+  // "mul_2", r_gmpfr_mul_2
+  // "div_2", r_gmpfr_div_2
   
   //rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
   
@@ -1054,6 +1053,11 @@ void init_gmpf()
   rb_define_method(cGMP_F, "infinite?", r_gmpfr_inf_p, 0);
   rb_define_method(cGMP_F, "finite?", r_gmpfr_fin_p, 0);
   rb_define_method(cGMP_F, "number?", r_gmpfr_number_p, 0);
+  rb_define_method(cGMP_F, "zero?", r_gmpfr_zero_p, 0);
+  //"regular?", r_gmpfr_regular_p  !! 3.0.0
+  //"sgn", r_gmpfr_sgn
+  //"lessgreater", r_gmpfr_lessgreater_p
+  //"unordered", r_gmpfr_unordered_p
   
   // Special Functions
   rb_define_method(cGMP_F, "log",   r_gmpfr_log,   -1);
@@ -1065,6 +1069,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "cos",   r_gmpfr_cos,   -1);
   rb_define_method(cGMP_F, "sin",   r_gmpfr_sin,   -1);
   rb_define_method(cGMP_F, "tan",   r_gmpfr_tan,   -1);
+  // "sin_cos", r_gmpfr_sin_cos
   rb_define_method(cGMP_F, "sec",   r_gmpfr_sec,   -1);
   rb_define_method(cGMP_F, "csc",   r_gmpfr_csc,   -1);
   rb_define_method(cGMP_F, "cot",   r_gmpfr_cot,   -1);
@@ -1072,10 +1077,13 @@ void init_gmpf()
   rb_define_method(cGMP_F, "acos",  r_gmpfr_acos,  -1);
   rb_define_method(cGMP_F, "asin",  r_gmpfr_asin,  -1);
   rb_define_method(cGMP_F, "atan",  r_gmpfr_atan,  -1);
+  // "atan2", r_gmpfr_atan2
   
   rb_define_method(cGMP_F, "cosh",  r_gmpfr_cosh,  -1);
   rb_define_method(cGMP_F, "sinh",  r_gmpfr_sinh,  -1);
   rb_define_method(cGMP_F, "tanh",  r_gmpfr_tanh,  -1);
+
+  // "sinh_cosh", r_gmpfr_sinh_cosh
   
   rb_define_method(cGMP_F, "sech",  r_gmpfr_sech,  -1);
   rb_define_method(cGMP_F, "csch",  r_gmpfr_csch,  -1);
@@ -1084,6 +1092,8 @@ void init_gmpf()
   rb_define_method(cGMP_F, "asinh", r_gmpfr_asinh, -1);
   rb_define_method(cGMP_F, "atanh", r_gmpfr_atanh, -1);
   
+  // "fac", r_gmpfr_fac
+
   rb_define_method(cGMP_F, "log1p",   r_gmpfr_log1p,   -1);
   rb_define_method(cGMP_F, "expm1",   r_gmpfr_expm1,   -1);
   rb_define_method(cGMP_F, "eint",    r_gmpfr_eint,    -1);
@@ -1091,6 +1101,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "gamma",   r_gmpfr_gamma,   -1);
   rb_define_method(cGMP_F, "lngamma", r_gmpfr_lngamma, -1);
   /*rb_define_method(cGMP_F, "lgamma",  r_gmpfr_lgamma,   -1);*/
+  // "digamma", r_gmpfr_digamma  !! 3.0.0
   rb_define_method(cGMP_F, "zeta", r_gmpfr_zeta,       -1);
   rb_define_method(cGMP_F, "erf", r_gmpfr_erf,         -1);
   rb_define_method(cGMP_F, "erfc", r_gmpfr_erfc,       -1);
@@ -1100,11 +1111,20 @@ void init_gmpf()
   rb_define_method(cGMP_F, "y0", r_gmpfr_y0,           -1);
   rb_define_method(cGMP_F, "y1", r_gmpfr_y1,           -1);
   rb_define_method(cGMP_F, "yn", r_gmpfr_yn,           -1);
+
+  // "fma", r_gmpfr_fma
+  // "fms", r_gmpfr_fms
+  // "agm", r_gmpfr_agm
+  // "hypot", r_gmpfr_hypot
+  // "ai", r_gmpfr_ai  !! 3.0.0
   
   rb_define_singleton_method(cGMP_F, "const_log2",    r_gmpfrsg_const_log2,    0);
   rb_define_singleton_method(cGMP_F, "const_pi",      r_gmpfrsg_const_pi,      0);
   rb_define_singleton_method(cGMP_F, "const_euler",   r_gmpfrsg_const_euler,   0);
   rb_define_singleton_method(cGMP_F, "const_catalan", r_gmpfrsg_const_catalan, 0);
+
+  // Integer and Remainder Related Functions
+  // "integer?", r_gmpfr_integer_p
 #endif /* MPFR */
   
   // _unsorted_
