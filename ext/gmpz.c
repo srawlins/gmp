@@ -510,7 +510,11 @@ VALUE r_gmpz_add(VALUE self, VALUE arg)
   } else if (GMPQ_P(arg)) {
     return r_gmpq_add(arg, self);
   } else if (GMPF_P(arg)) {
+#ifndef MPFR
     return r_gmpf_add(arg, self);
+#else
+    return rb_funcall(arg, rb_intern("+"), 1, self);
+#endif
   } else if (BIGNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
     mpz_init(res_val);
@@ -674,7 +678,11 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
   } else if (GMPQ_P(arg)) {
     return r_gmpq_mul(arg, self);
   } else if (GMPF_P(arg)) {
+#ifndef MPFR
     return r_gmpf_mul(arg, self);
+#else
+    return rb_funcall(arg, rb_intern("*"), 1, self);
+#endif
   } else if (BIGNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
     mpz_set_bignum(res_val, arg);

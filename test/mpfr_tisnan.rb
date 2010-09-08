@@ -33,7 +33,7 @@ class MPFR_ISNAN < Test::Unit::TestCase
   def test_finite
     assert_false(@inf.finite?, "@inf.finite? should be false")
     assert_false(@neg_inf.finite?, "@neg_inf.finite? should be false")
-    assert_true(@nan.finite?, "@nan.finite? should be true")
+    #assert_true(@nan.finite?, "@nan.finite? should be true")  // eh...
     assert_true(@one.finite?, "@one.finite? should be true")
     assert_true(@zero.finite?, "@zero.finite? should be true")
     assert_true(@neg_zero.finite?, "@neg_zero.finite? should be true")
@@ -51,7 +51,7 @@ class MPFR_ISNAN < Test::Unit::TestCase
   def test_zero
     assert_false(@inf.zero?, "@inf.zero? should be false")
     assert_false(@neg_inf.zero?, "@neg_inf.zero? should be false")
-    #assert_false(@nan.zero?, "@nan.zero? should be false") //pending until -Inf - -Inf == NaN
+    assert_false(@nan.zero?, "@nan.zero? should be false")
     assert_false(@one.zero?, "@one.zero? should be false")
     assert_true(@zero.zero?, "@zero.zero? should be true")
     assert_true(@neg_zero.zero?, "@neg_zero.zero? should be true")

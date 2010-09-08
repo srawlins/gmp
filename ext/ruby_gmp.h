@@ -259,9 +259,14 @@ extern VALUE r_gmpf_to_d(VALUE self);
 extern VALUE r_gmpf_to_s(VALUE self);
 
 // Float Arithmetic
+#ifndef MPFR
 extern VALUE r_gmpf_add(VALUE self, VALUE arg);
-extern VALUE r_gmpf_sub(VALUE self, VALUE arg);
 extern VALUE r_gmpf_mul(VALUE self, VALUE arg);
+#else
+extern VALUE r_gmpfr_add(int argc, VALUE *argv, VALUE self);
+extern VALUE r_gmpfr_mul(int argc, VALUE *argv, VALUE self);
+#endif
+extern VALUE r_gmpf_sub(VALUE self, VALUE arg);
 extern VALUE r_gmpf_div(VALUE self, VALUE arg);
 
 // Float Comparison

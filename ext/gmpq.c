@@ -225,7 +225,11 @@ VALUE r_gmpq_add(VALUE self, VALUE arg)
     mpz_mul_si(res_val_num, mpq_denref(self_val), FIX2NUM(arg));
     mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
   } else if (GMPF_P(arg)) {
+#ifndef MPFR
     return r_gmpf_add(arg,self);
+#else
+    return rb_funcall(arg, rb_intern("+"), 1, self);
+#endif
   } else if (BIGNUM_P(arg)) {
     res_val_num = mpq_numref(res_val);
     mpz_set(mpq_denref(res_val), mpq_denref(self_val));
@@ -346,7 +350,11 @@ VALUE r_gmpq_mul(VALUE self, VALUE arg)
     mpq_canonicalize(res_val);
 #endif
   } else if (GMPF_P(arg)) {
+#ifndef MPFR
     return r_gmpf_mul(arg, self);
+#else
+    return rb_funcall(arg, rb_intern("*"), 1, self);
+#endif
   } else if (BIGNUM_P(arg)) {
     mpz_temp_alloc(tmp_z);
     mpz_set_bignum(tmp_z, arg);

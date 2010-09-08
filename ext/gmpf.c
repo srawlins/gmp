@@ -343,6 +343,7 @@ VALUE r_gmpf_to_s(VALUE self)
  *    Float Arithmetic                                                *
  **********************************************************************/
 
+#ifndef MPFR
 /*
  * call-seq:
  *   float + other
@@ -400,6 +401,72 @@ VALUE r_gmpf_add(VALUE self, VALUE arg)
 
   return res;
 }
+#else
+/*
+ * call-seq:
+ *   float + other
+ *
+ * Returns the sum of +float+ and +other+. +other+ can be
+ * * GMP::Z
+ * * Fixnum
+ * * GMP::Q
+ * * GMP::F
+ * * Bignum
+ * * Float
+ */
+#define DEFUN_F_ZQXFBD2F(fname)                                 \
+VALUE r_gmpfr_##fname(int argc, VALUE *argv, VALUE self)        \
+{                                                               \
+  MP_FLOAT *self_val, *res_val, *arg_val_f;                     \
+  MP_RAT *arg_val_q;                                            \
+  MP_INT *arg_val_z;                                            \
+  VALUE arg, res, res_prec, rnd_mode;                           \
+  mpfr_prec_t prec, res_prec_val;                               \
+  mp_rnd_t rnd_mode_val;                                        \
+                                                                \
+  rb_scan_args (argc, argv, "12", &arg, &rnd_mode, &res_prec);  \
+                                                                \
+  mpf_get_struct_prec (self, self_val, prec);                   \
+  if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }    \
+  else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }        \
+  if (NIL_P (res_prec)) { res_prec_val = prec; }                \
+  else { res_prec_val = FIX2INT (res_prec); }                   \
+  mpf_make_struct_init (res, res_val, res_prec_val);            \
+                                                                \
+  if (GMPF_P (arg)) {                                           \
+    mpf_get_struct (arg, arg_val_f);                            \
+    prec_max (prec, arg_val_f);                                 \
+    mpf_make_struct_init (res, res_val, prec);                  \
+    mpfr_##fname (res_val, self_val, arg_val_f, rnd_mode_val);  \
+  } else if (GMPQ_P (arg)) {                                    \
+    mpq_get_struct (arg, arg_val_q);                            \
+    mpf_make_struct_init (res, res_val, prec);                  \
+    mpfr_##fname##_q (res_val, self_val, arg_val_q, rnd_mode_val);  \
+  } else if (GMPZ_P (arg)) {                                    \
+    mpz_get_struct (arg, arg_val_z);                            \
+    mpf_make_struct_init (res, res_val, prec);                  \
+    mpfr_##fname##_z (res_val, self_val, arg_val_z, rnd_mode_val);  \
+  } else if (FLOAT_P (arg)) {                                   \
+    mpf_make_struct_init (res, res_val, prec);                  \
+    mpfr_##fname##_d (res_val, self_val, NUM2DBL (arg), rnd_mode_val);  \
+  } else if (FIXNUM_P (arg)) {                                  \
+    mpf_make_struct_init(res, res_val, prec);                   \
+    mpfr_##fname##_si (res_val, self_val, FIX2NUM (arg), rnd_mode_val);  \
+  } else if (BIGNUM_P (arg)) {                                  \
+    mpz_temp_from_bignum(arg_val_z, arg);                       \
+    mpf_make_struct_init(res, res_val, prec);                   \
+    mpfr_##fname##_z (res_val, self_val, arg_val_z, rnd_mode_val);  \
+    mpz_temp_free (arg_val_z);                                  \
+  } else {                                                      \
+    typeerror(ZQFXBD);                                          \
+  }                                                             \
+                                                                \
+  return res;                                                   \
+}
+
+DEFUN_F_ZQXFBD2F(add)
+DEFUN_F_ZQXFBD2F(mul)
+#endif
 
 /*
  * call-seq:
@@ -756,26 +823,26 @@ DEFUN_FLOAT_CMP(ge,>=)
 
 #ifdef MPFR
 
-#define MPFR_SINGLE_FUNCTION(name)                                 \
-VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)            \
-{                                                                  \
-  MP_FLOAT *self_val, *res_val;                                    \
-  VALUE rnd_mode, res_prec;                                        \
-  unsigned long prec, res_prec_value;                              \
-  mp_rnd_t rnd_mode_val;                                           \
-  VALUE res;                                                       \
-                                                                   \
-  rb_scan_args (argc, argv, "02", &rnd_mode, &res_prec);           \
-                                                                   \
-  mpf_get_struct_prec (self, self_val, prec);                      \
+#define MPFR_SINGLE_FUNCTION(name)                             \
+VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)        \
+{                                                              \
+  MP_FLOAT *self_val, *res_val;                                \
+  VALUE rnd_mode, res_prec;                                    \
+  mpfr_prec_t prec, res_prec_value;                            \
+  mp_rnd_t rnd_mode_val;                                       \
+  VALUE res;                                                   \
+                                                               \
+  rb_scan_args (argc, argv, "02", &rnd_mode, &res_prec);       \
+                                                               \
+  mpf_get_struct_prec (self, self_val, prec);                  \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }    \
-  else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }           \
-  if (NIL_P (res_prec)) { res_prec_value = prec; }                 \
-  else { res_prec_value = FIX2INT (res_prec); }                    \
-  mpf_make_struct_init (res, res_val, res_prec_value);             \
-  mpfr_##name (res_val, self_val, rnd_mode_val);                   \
-                                                                   \
-  return res;                                                      \
+  else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }       \
+  if (NIL_P (res_prec)) { res_prec_value = prec; }             \
+  else { res_prec_value = FIX2INT (res_prec); }                \
+  mpf_make_struct_init (res, res_val, res_prec_value);         \
+  mpfr_##name (res_val, self_val, rnd_mode_val);               \
+                                                               \
+  return res;                                                  \
 }
 
 #define MPFR_SINGLE_1ARG_FUNCTION(name)                            \
@@ -783,7 +850,7 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)            \
 {                                                                  \
   MP_FLOAT *self_val, *res_val;                                    \
   VALUE arg1, res_prec;                                            \
-  unsigned long prec, arg1_val, res_prec_value;                    \
+  mpfr_prec_t prec, arg1_val, res_prec_value;                      \
   VALUE res;                                                       \
                                                                    \
   rb_scan_args (argc, argv, "11", &arg1, &res_prec);               \
@@ -826,6 +893,7 @@ VALUE r_gmpfrsg_##name()                                 \
 }
 
 MPFR_SINGLE_FUNCTION(sqrt)
+MPFR_SINGLE_FUNCTION(rec_sqrt)
 
 MPFR_SINGLE_FUNCTION(log)
 MPFR_SINGLE_FUNCTION(log2)
@@ -890,6 +958,9 @@ static VALUE r_gmpfr_fin_p(VALUE self)
 }
 MPFR_SINGLE_BOOLEAN_FUNCTION(number_p)
 MPFR_SINGLE_BOOLEAN_FUNCTION(zero_p)
+#if MPFR_VERSION_MAJOR > 2
+MPFR_SINGLE_BOOLEAN_FUNCTION(regular_p)
+#endif
 
 static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
 {
@@ -930,7 +1001,6 @@ static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
     } else {
       typeerror(ZQFXBD);
     }
-
   }
 
   return res;
@@ -989,15 +1059,17 @@ void init_gmpf()
   rb_define_alias(cGMP_F, "to_f", "to_d");
   
   // Float Arithmetic
-  rb_define_method(cGMP_F, "+", r_gmpf_add, 1);
   rb_define_method(cGMP_F, "-", r_gmpf_sub, 1);
-  rb_define_method(cGMP_F, "*", r_gmpf_mul, 1);
   rb_define_method(cGMP_F, "/", r_gmpf_div, 1);
-#ifdef MPFR
-  rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
-#else
+#ifndef MPFR
+  rb_define_method(cGMP_F, "+", r_gmpf_add, 1);
+  rb_define_method(cGMP_F, "*", r_gmpf_mul, 1);
   rb_define_method(cGMP_F, "**", r_gmpf_pow, 1);
   rb_define_alias(cGMP_F, "pow", "**");
+#else
+  rb_define_method(cGMP_F, "+", r_gmpfr_add, -1);
+  rb_define_method(cGMP_F, "*", r_gmpfr_mul, -1);
+  rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
 #endif
   rb_define_method(cGMP_F, "-@", r_gmpf_neg, 0);
   rb_define_method(cGMP_F, "neg!", r_gmpf_neg_self, 0);
@@ -1026,7 +1098,6 @@ void init_gmpf()
    *
    * mpfr_buildopt_tls_p
    * mpfr_buildopt_decimal_p
-   * mpfr_regular_p
    * mpfr_set_zero
    * mpfr_digamma
    * mpfr_ai
@@ -1054,7 +1125,9 @@ void init_gmpf()
   rb_define_method(cGMP_F, "finite?", r_gmpfr_fin_p, 0);
   rb_define_method(cGMP_F, "number?", r_gmpfr_number_p, 0);
   rb_define_method(cGMP_F, "zero?", r_gmpfr_zero_p, 0);
-  //"regular?", r_gmpfr_regular_p  !! 3.0.0
+#if MPFR_VERSION_MAJOR > 2
+  rb_define_method(cGMP_F, "regular?", r_gmpfr_regular_p, 0);
+#endif
   //"sgn", r_gmpfr_sgn
   //"lessgreater", r_gmpfr_lessgreater_p
   //"unordered", r_gmpfr_unordered_p
