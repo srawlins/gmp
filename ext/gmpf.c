@@ -932,6 +932,9 @@ MPFR_SINGLE_FUNCTION(li2)
 MPFR_SINGLE_FUNCTION(gamma)
 MPFR_SINGLE_FUNCTION(lngamma)
 /*MPFR_SINGLE_FUNCTION(lgamma)*/
+#if MPFR_VERSION_MAJOR > 2
+MPFR_SINGLE_FUNCTION(digamma)
+#endif
 MPFR_SINGLE_FUNCTION(zeta)
 MPFR_SINGLE_FUNCTION(erf)
 MPFR_SINGLE_FUNCTION(erfc)
@@ -1101,7 +1104,6 @@ void init_gmpf()
    * mpfr_buildopt_tls_p
    * mpfr_buildopt_decimal_p
    * mpfr_set_zero
-   * mpfr_digamma
    * mpfr_ai
    * mpfr_set_flt
    * mpfr_get_flt
@@ -1176,7 +1178,9 @@ void init_gmpf()
   rb_define_method(cGMP_F, "gamma",   r_gmpfr_gamma,   -1);
   rb_define_method(cGMP_F, "lngamma", r_gmpfr_lngamma, -1);
   /*rb_define_method(cGMP_F, "lgamma",  r_gmpfr_lgamma,   -1);*/
-  // "digamma", r_gmpfr_digamma  !! 3.0.0
+#if MPFR_VERSION_MAJOR > 2
+  rb_define_method(cGMP_F, "digamma", r_gmpfr_digamma, -1);
+#endif
   rb_define_method(cGMP_F, "zeta", r_gmpfr_zeta,       -1);
   rb_define_method(cGMP_F, "erf", r_gmpfr_erf,         -1);
   rb_define_method(cGMP_F, "erfc", r_gmpfr_erfc,       -1);

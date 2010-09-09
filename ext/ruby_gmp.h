@@ -317,6 +317,9 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
   extern VALUE r_gmpfr_gamma(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_lngamma(int argc, VALUE *argv, VALUE self);
   /*extern VALUE r_gmpfr_lgamma(int argc, VALUE *argv, VALUE self);*/
+#if MPFR_VERSION_MAJOR > 2
+  extern VALUE r_gmpfr_digamma(int argc, VALUE *argv, VALUE self);
+#endif
   extern VALUE r_gmpfr_zeta(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_erf(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_erfc(int argc, VALUE *argv, VALUE self);

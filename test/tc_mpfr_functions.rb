@@ -15,6 +15,9 @@ class TC_MPFR_Functions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.infinite? should be callable.") { @a.infinite? }
     assert_nothing_raised("GMP::F.finite? should be callable.") { @a.finite? }
     assert_nothing_raised("GMP::F.number? should be callable.") { @a.number? }
+    if GMP::MPFR_VERSION >= "3.0.0"
+    assert_nothing_raised("GMP::F.regular? should be callable.") { @a.regular? }
+    end
 
     assert_nothing_raised("GMP::F.sqrt should be callable.") { @a.sqrt }
     assert_nothing_raised("GMP::F.rec_sqrt should be callable.") { @a.rec_sqrt }
@@ -55,6 +58,9 @@ class TC_MPFR_Functions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.gamma should be callable.") { @a.gamma }
     assert_nothing_raised("GMP::F.lngamma should be callable.") { @a.lngamma }
     #assert_nothing_raised("GMP::F.lgamma should be callable.") { @a.lgamma }
+    if GMP::MPFR_VERSION >= "3.0.0"
+    assert_nothing_raised("GMP::F.digamma should be callable.") { @a.digamma }
+    end
     assert_nothing_raised("GMP::F.zeta should be callable.") { @a.zeta }
     assert_nothing_raised("GMP::F.erf should be callable.") { @a.erf }
     assert_nothing_raised("GMP::F.erfc should be callable.") { @a.erfc }
@@ -82,13 +88,14 @@ class TC_MPFR_Functions < Test::Unit::TestCase
                  :zeta, :erf, :erfc,
                  :j0, :j1, :y0, :y1
                 ]
+    functions += [:digamma] if GMP::MPFR_VERSION >= "3.0.0"
     
     functions.each do |f|
-      assert_nothing_raised("GMP::F.#{f} can be called with 1 argument, the rounding_mode.") { @a.send(f, GMP::GMP_RNDN) }
-      assert_nothing_raised("GMP::F.#{f} can be called with 1 argument, the rounding_mode.") { @a.send(f, GMP::GMP_RNDZ) }
-      assert_nothing_raised("GMP::F.#{f} can be called with 2 args, rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 32) }
-      assert_nothing_raised("GMP::F.#{f} can be called with 2 args, rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 128) }
-      assert_nothing_raised("GMP::F.#{f} can be called with 2 args, rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 200) }
+      assert_nothing_raised("GMP::F.#{f} can be called w/ 1 arg: rounding_mode.") { @a.send(f, GMP::GMP_RNDN) }
+      assert_nothing_raised("GMP::F.#{f} can be called w/ 1 arg: rounding_mode.") { @a.send(f, GMP::GMP_RNDZ) }
+      assert_nothing_raised("GMP::F.#{f} can be called w/ 2 args: rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 32) }
+      assert_nothing_raised("GMP::F.#{f} can be called w/ 2 args: rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 128) }
+      assert_nothing_raised("GMP::F.#{f} can be called w/ 2 args: rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 200) }
     end
   end
 end
