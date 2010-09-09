@@ -5,6 +5,8 @@
   * Added MPFR method GMP::F.zero? (mpfr_zero_p) with tests.
   * Added MPFR method GMP::F.regular? (mpfr_regular_p) with tests (MPFR 3.0.0
     only).
+  * Added MPFR methods GMP::F.rec_sqrt (mpfr_rec_sqrt) and GMP::F.cbrt
+    (mpfr_rec_cbrt), both heavily tested.
 
 0.4.19:
   * Added FIX2NUM macro to help support x86_64.
