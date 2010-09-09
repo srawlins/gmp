@@ -2,8 +2,8 @@
 source ~/.rvm/scripts/rvm
 
 extconf_opts=""
-if [[ $1 == -* ]]; then
-  if [ "$1" == "-no-mpfr" ]; then
+if [[ $1 == --* ]]; then
+  if [ "$1" == "--no-mpfr" ]; then
     extconf_opts="$extconf_opts $1"
   fi
   shift
@@ -22,7 +22,7 @@ if [ $# -gt 1 ]; then
 fi
 
 if [ $# -gt 2 ]; then
-  mpfr_dir="--with-mpfr-dir=$3"
+  mpfr_dir="--with-mpfr-dir=/usr/local/mpfr-$3"
 fi
 
 make clean
@@ -47,6 +47,6 @@ echo "GMP:  `ruby -r './gmp' -e \"puts GMP::GMP_VERSION\"`"
 if [ -z `echo "$extconf_opts" | grep "no-mpfr"` ]; then
   echo "MPFR: `ruby -r './gmp' -e \"puts GMP::MPFR_VERSION\"`"
 else
-  echo "MPFR: -no-mpfr"
+  echo "MPFR: --no-mpfr"
 fi
 

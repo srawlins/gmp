@@ -34,6 +34,7 @@ begin
   require './tc_mpfr_functions'
   require './tc_mpfr_rounding'
   require './mpfr_tisnan'
+  require './mpfr_trec_sqrt'
   require './mpfr_tsqrt'
 rescue
 

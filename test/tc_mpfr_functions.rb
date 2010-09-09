@@ -17,6 +17,8 @@ class TC_MPFR_Functions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.number? should be callable.") { @a.number? }
 
     assert_nothing_raised("GMP::F.sqrt should be callable.") { @a.sqrt }
+    assert_nothing_raised("GMP::F.rec_sqrt should be callable.") { @a.rec_sqrt }
+    assert_nothing_raised("GMP::F.cbrt should be callable.") { @a.cbrt }
     
     assert_nothing_raised("GMP::F.log should be callable.") { @a.log }
     assert_nothing_raised("GMP::F.log2 should be callable.") { @a.log2 }
@@ -71,7 +73,8 @@ class TC_MPFR_Functions < Test::Unit::TestCase
   end
   
   def test_function_parameters
-    functions = [:sqrt, :log, :log2, :log10, :exp, :exp2, :exp10,
+    functions = [:sqrt, :rec_sqrt, :cbrt,
+                 :log, :log2, :log10, :exp, :exp2, :exp10,
                  :cos, :sin, :tan, :sec, :csc, :cot, :acos, :asin, :atan,
                  :cosh, :sinh, :tanh, :sech, :csch, :coth,
                  :acosh, :asinh, :atanh,

@@ -5,7 +5,7 @@ require 'mkmf'
 dir_config('gmp')
 dir_config('mpfr')
 
-use_if_mpfr = ! ARGV.include?('-no-mpfr')
+use_if_mpfr = ! ARGV.include?('--no-mpfr')
 ok = true
 unless have_header('gmp.h')
   $stderr.puts "can't find gmp.h, try --with-gmp-include=<path>"

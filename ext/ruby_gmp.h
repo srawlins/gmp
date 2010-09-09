@@ -279,6 +279,8 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
   extern void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base);
   
   extern VALUE r_gmpfr_sqrt(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_rec_sqrt(int argc, VALUE *argv, VALUE self);
+  extern VALUE r_gmpfr_cbrt(int argc, VALUE *argv, VALUE self);
   
   extern VALUE r_gmpfr_log(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_log2(int argc, VALUE *argv, VALUE self);

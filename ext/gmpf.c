@@ -102,7 +102,8 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
 
   arg = argv[0];
 
-  if (argc == 2) {
+  //argc >= 2 ==> argv[0] is value, argv[1] is prec
+  if (argc >= 2) {
     if (FIXNUM_P(argv[1])) {
       if (FIX2INT(argv[1]) >= 0)
         prec = FIX2INT(argv[1]);
@@ -894,6 +895,7 @@ VALUE r_gmpfrsg_##name()                                 \
 
 MPFR_SINGLE_FUNCTION(sqrt)
 MPFR_SINGLE_FUNCTION(rec_sqrt)
+MPFR_SINGLE_FUNCTION(cbrt)
 
 MPFR_SINGLE_FUNCTION(log)
 MPFR_SINGLE_FUNCTION(log2)
@@ -1107,9 +1109,9 @@ void init_gmpf()
    * mpfr_set_z_2exp
    */
   // Basic Arithmetic Functions
-  rb_define_method(cGMP_F, "sqrt", r_gmpfr_sqrt, -1);
-  // "rec_sqrt", r_gmpfr_rec_sqrt
-  // "cbrt", r_gmpfr_cbrt
+  rb_define_method(cGMP_F, "sqrt",     r_gmpfr_sqrt,     -1);
+  rb_define_method(cGMP_F, "rec_sqrt", r_gmpfr_rec_sqrt, -1);
+  rb_define_method(cGMP_F, "cbrt",     r_gmpfr_cbrt,     -1);
   // "root", r_gmpfr_root
   // "neg", r_gmpfr_neg
   // "abs", r_gmpfr_abs
