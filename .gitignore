@@ -4,6 +4,8 @@ manual.toc
 results*
 .yardoc
 benchmark/gexpr
+benchmark/gexpr.exe
 benchmark/res*
 benchmark/RES-*
 ext/Makefile
+ext/*.o
