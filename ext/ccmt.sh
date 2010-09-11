@@ -42,11 +42,13 @@ cd ../test
 ruby unit_tests.rb
 cd ../ext
 
-echo "RUBY: `ruby -v`"
-echo "GMP:  `ruby -r './gmp' -e \"puts GMP::GMP_VERSION\"`"
+echo "RUBY:   `ruby -v`"
+echo "GMP:    `ruby -r './gmp' -e \"puts GMP::GMP_VERSION\"`"
+echo "GMP_CC: `ruby -r './gmp' -e \"puts GMP::GMP_CC\"`"
 if [ -z `echo "$extconf_opts" | grep "no-mpfr"` ]; then
-  echo "MPFR: `ruby -r './gmp' -e \"puts GMP::MPFR_VERSION\"`"
+  echo "MPFR:   `ruby -r './gmp' -e \"puts GMP::MPFR_VERSION\"`"
 else
-  echo "MPFR: --no-mpfr"
+  echo "MPFR:   --no-mpfr"
 fi
+
 

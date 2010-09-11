@@ -182,7 +182,6 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
   } else if (FIXNUM_P(arg)) {
     mpf_set_si(self_val, FIX2NUM(arg));
   } else if (STRING_P(arg)) {
-    //result = mpfr_set_str(self_val, STR2CSTR(arg), 10, __gmp_default_rounding_mode);
     result = mpfr_set_str(self_val, StringValuePtr(arg), 10, __gmp_default_rounding_mode);
     if (result == -1) {
       rb_raise(rb_eRuntimeError, "Badly formatted string");
@@ -205,7 +204,7 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
   } else if (FIXNUM_P(arg)) {
     mpf_set_si(self_val, FIX2NUM(arg));
   } else if (STRING_P(arg)) {
-    result = r_mpf_set_str(self_val, STR2CSTR(arg), 10);
+    result = r_mpf_set_str(self_val, StringValuePtr(arg), 10);
     if (result == -1) {
       rb_raise(rb_eRuntimeError, "Badly formatted string");
     }
