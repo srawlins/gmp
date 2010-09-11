@@ -1,0 +1,126 @@
+#!/usr/bin/env ruby
+
+require '../ext/gmp'
+
+A = 13591409
+B = 545140134
+C = 640320
+D = 12
+
+BITS_PER_DIGIT  = 3.32192809488736234787
+DIGITS_PER_ITER = 14.1816474627254776555
+DOUBLE_PREC     = 53
+INIT_FACS       = 32
+
+def my_sqrt_ui(r, x)
+  prec0 = r.prec
+  if prec0 < DOUBLE_PREC
+    r = GMP::F(Math.sqrt(x))
+    return
+  end
+
+  bits = 0
+  prec = prec0
+  while prec > DOUBLE_PREC
+    bit = prec & 1
+    prec = (prec+bit)/2
+    bits = bits*2 + bit
+  end
+
+  @t1.prec_raw=DOUBLE_PREC
+  @t1 = GMP::F(1/Math.sqrt(x))
+
+  while prec < prec0
+    prec *= 2
+    break if prec >= prec0
+    @t2.prec_raw=prec
+    @t2 = @t1 * @t1       # half x half -> full
+    @t2 *= x
+    @t2 = 1 - @t2
+    @t2.prec_raw=prec/2
+    @t2.div_2exp(@t2, 1)
+    @t2 *= @t1            # half x half -> half
+    @t1.prec_raw=prec
+    @t1 += @t2
+
+    prec -= bits & 1
+    bits /= 2
+  end
+
+  @t2.prec_raw=prec0/2
+  @t2 = @t1 * x
+  r = @t2 * @t2         # half * half -> full
+  r = x - r
+  @t1 *= r              # half * half -> half
+  @t1.div_2exp(@t1, 1)
+  r = @t1+@t2
+end
+
+def my_div(r, y, x)
+  prec0 = r.prec
+  if prec0 <= DOUBLE_PREC
+    r = GMP::F(y.to_f / x.to_f)
+    return
+  end
+
+  bits = 0
+  prec = prec0
+  while prec > DOUBLE_PREC
+    bit = prec & 1
+    prec = (prec+bit)/2
+    bits = bits*2 + bit
+  end
+
+  @t1.prec_raw=DOUBLE_PREC
+  @t1 = 1 / x
+
+  while prec < prec0
+    prec *= 2
+    if prec < prec0
+      @t2.prec_raw=prec
+      @t2 = x * @t1        # full x half -> full
+      @t2 = 1 - @t2
+      @t2.prec_raw=prec/2
+      @t2 *= @t1           # half * half -> half
+      @t1.prec_raw=prec
+      @t1 += @t2
+    else
+      prec = prec0
+      @t2.prec_raw=prec/2
+      @t2 = @t1 * y        # half * half -> half
+      r = x * @t2          # full * half -> full
+      r = y - r
+      t1 *= r              # half * half -> half
+      r = t1 + t2
+      break
+    end
+
+    prec -= bits & 1
+    bits /= 2
+  end
+end
+
+def min(x,y); x < y ? x : y; end
+def max(x,y); x > y ? x : y; end
+
+Fac_t = Struct.new(max_facs, num_facs, fac, pow)
+Sieve_t = Struct.new(fac, pow, nxt);
+
+sieve = Sieve_t.new
+ftmp = Fac_t.new
+fmul = Fac_t.new
+
+def fac_show(f)
+  (0...(f.num_facs)).each do |f|
+    if f.pow[i] == 1
+      print "#{f.fac[i]} "
+    else
+      print "#{f.fac[i]}^#{f.pow[i]} "
+    end
+  end
+  puts ""
+end
+
+def fac_reset(f)
+  f.num_facs = 0
+end

@@ -50,7 +50,6 @@ static VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
       mpq_get_struct(argv[0], arg_val);
       mpq_set (self_val, arg_val);
     } else if (argc == 1 && STRING_P(argv[0])) {
-      //mpq_str_set (self_val, STR2CSTR(argv[0]));
       mpq_str_set (self_val, StringValuePtr(argv[0]));
     } else {
       mpz_set_value (mpq_numref(self_val), argv[0]);

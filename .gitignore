@@ -2,3 +2,6 @@ manual.aux
 manual.log
 manual.toc
 .yardoc
+benchmark/gexpr
+benchmark/res*
+ext/Makefile

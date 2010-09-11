@@ -31,27 +31,5 @@ TODO:
   more number theoretic functions
   random numbers
   range errors
+  mpz_size
   full coverage?
-
-  
-MPFR-derived tests
-==================
-
-tsqrt.c => mpfr_tsqrt.rb
-------------------------
-_done_  128.times do property1, property1, property2
-_done_  check_diverse(...)
-_done_  special
-_TODO_  check_nan
-_TODO_  198.times do 200.times do check_inexact(...)
-_TODO_  check_float(...)
-_TODO_  check3(...)
-_TODO_  11x check4(...)
-_TODO_  10x check4(...)
-_TODO_  10x check4(...)
-_TODO_  10x check4(...)
-_TODO_  10x check4(...)
-_TODO_  test_generic(...)
-_TODO_  data_check(...)
-_TODO_  bad_cases(...)
-

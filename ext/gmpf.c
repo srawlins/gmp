@@ -1033,15 +1033,39 @@ DEFUN_FLOAT2FLOAT(ceil,mpf_ceil)
 VALUE r_gmpf_sgn(VALUE self)
 {
   MP_FLOAT *self_val;
-  mpf_get_struct(self, self_val);
-  return INT2FIX(mpf_sgn(self_val));
+  mpf_get_struct (self, self_val);
+  return INT2FIX (mpf_sgn (self_val));
 }
 
 VALUE r_gmpf_get_prec(VALUE self)
 {
   MP_FLOAT *self_val;
-  mpf_get_struct(self, self_val);
-  return INT2NUM(mpf_get_prec(self_val));
+  mpf_get_struct (self, self_val);
+  return INT2NUM (mpf_get_prec (self_val));
+}
+
+VALUE r_gmpf_set_prec(VALUE self, VALUE arg)
+{
+  MP_FLOAT *self_val;
+  if (FIXNUM_P(arg)) {
+    mpf_get_struct (self, self_val);
+    mpf_set_prec (self_val, FIX2NUM (arg));
+    return Qnil;
+  } else {
+    typeerror(X);
+  }
+}
+
+VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg)
+{
+  MP_FLOAT *self_val;
+  if (FIXNUM_P(arg)) {
+    mpf_get_struct (self, self_val);
+    mpf_set_prec_raw (self_val, FIX2NUM (arg));
+    return Qnil;
+  } else {
+    typeerror(X);
+  }
 }
 
 
@@ -1057,6 +1081,8 @@ void init_gmpf()
   rb_define_singleton_method(cGMP_F, "new", r_gmpfsg_new, -1);
   rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
   rb_define_method(cGMP_F, "prec", r_gmpf_get_prec, 0);
+  rb_define_method(cGMP_F, "prec=", r_gmpf_set_prec, 1);
+  rb_define_method(cGMP_F, "prec_raw=", r_gmpf_set_prec_raw, 1);
   
   // Converting Floats
   rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, 0);

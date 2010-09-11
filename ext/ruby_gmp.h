@@ -253,6 +253,9 @@ extern VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass);
 extern VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self);
 extern void mpf_set_value(MP_FLOAT *self_val, VALUE arg);
 extern VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module);
+extern VALUE r_gmpf_get_prec(VALUE self);
+extern VALUE r_gmpf_set_prec(VALUE self, VALUE arg);
+extern VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg);
 
 // Converting Floats
 extern VALUE r_gmpf_to_d(VALUE self);
@@ -339,7 +342,6 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 
 // _unsorted_
 extern VALUE r_gmpf_sgn(VALUE self);
-extern VALUE r_gmpf_get_prec(VALUE self);
 
 
 /* from gmprandstate.h */
