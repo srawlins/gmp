@@ -1,8 +1,9 @@
 manual.aux
 manual.log
 manual.toc
-test_results*
+results*
 .yardoc
 benchmark/gexpr
 benchmark/res*
+benchmark/RES-*
 ext/Makefile

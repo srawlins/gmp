@@ -13,7 +13,8 @@ sleep 1
              "#{no_mpfr!='' ? gmp_mpfr.sub(/ .*/, '') : gmp_mpfr.sub(/ /, '-')}")
       if ARGV[0] == "--benchmark"
         Dir.chdir('../benchmark')
-        system("LIBS=-lgmp ./runbench -n | " +
+
+        system("rvm use #{ruby_v}; LIBS=-lgmp ./runbench -n | " +
                "tee ../results-benchmark-#{ruby_v}-" +
                "#{no_mpfr!='' ? gmp_mpfr.sub(/ .*/, '') : gmp_mpfr.sub(/ /, '-')}")
         Dir.chdir('../ext')
