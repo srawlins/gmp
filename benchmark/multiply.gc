@@ -26,9 +26,22 @@ end
 STDOUT.flush
 
 t0 = GMP::cputime
-iterations.times do
+#iterations.times do
+#  z = x * y
+#end
+parts = 512
+foo = iterations / parts
+bar = iterations % parts
+foo.times do
+  parts.times do
+    z = x * y
+  end
+  GC.start
+end
+bar.times do
   z = x * y
 end
+
 ti = GMP::cputime - t0
   
 puts "done!"
