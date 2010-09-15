@@ -20,7 +20,13 @@
 \def\qqqquad{\quad\quad\quad\quad}
 \def\cc{\colon\colon}
 \def\gmpz{\textit{GMP::Z}}
-\def\gmprandstate{\textit{GMP::RandState\ }}
+\def\gmpq{\textit{GMP::Q}}
+\def\gmpf{\textit{GMP::F}}
+\def\gmprandstate{\textit{GMP::RandState}}
+\def\gmpzs{\textit{GMP::Z}\ }
+\def\gmpqs{\textit{GMP::Q}\ }
+\def\gmpfs{\textit{GMP::F}\ }
+\def\gmprandstates{\textit{GMP::RandState\ }}
 \frenchspacing
 \begin{document}
 
@@ -28,8 +34,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.4.7}}\\
-\multicolumn{2}{r}{\large{25 March 2010}}
+\multicolumn{2}{r}{\large{Edition 0.5.3}}\\
+\multicolumn{2}{r}{\large{13 September 2010}}
 \end{tabular}
 
 \vfill
@@ -76,37 +82,59 @@ SPARCv7, SuperSPARC, generic SPARCv8, UltraSPARC, DEC VAX, and Zilog Z8000.
 Some optimizations also for Cray vector systems, Clipper, IBM ROMP (RT), and
 Pyramid AP/XP.\\
 \\
-For up-to-date information on GMP, please see the GMP web pages at\\
-\setlength{\parindent}{0.25in}
-\texttt{http://gmplib.org/}
-\setlength{\parindent}{0in}
-\\
+For up-to-date information on GMP, please see the GMP web pages at 
+\url{http://gmplib.org/}\\
 
-The latest version of the library is available at\\
-\setlength{\parindent}{0.25in}
-\texttt{ftp://ftp.gnu.org/gnu/gmp/}\\
-\setlength{\parindent}{0in}
-\\
+The latest version of the library is available at 
+\url{ftp://ftp.gnu.org/gnu/gmp/}\\
 
-Many sites around the world mirror '\texttt{ftp.gnu.org}', please use a mirror
-near you, see \texttt{http://www.gnu.org/order/ftp.html} for a full list.\\
+Many sites around the world mirror '\url{ftp.gnu.org}', please use a mirror
+near you, see \url{http://www.gnu.org/order/ftp.html} for a full list.\\
 \\
 There are three public mailing lists of interest. One for release
 announcements, one for general questions and discussions about usage of the GMP
-library, and one for bug reports. For more information, see\\
-\\
-\texttt{http://gmplib.org/mailman/listinfo/}.\\
-\\
+library, and one for bug reports. For more information, see 
+\url{http://gmplib.org/mailman/listinfo/}.\\
+
 The proper place for bug reports is gmp-bugs@gmplib.org. See Chapter 4
 [Reporting Bugs], page 28 for information about reporting bugs.
 
+\newpage
+\section{Introduction to MPFR}
+
+The gmp gem optionally interacts with the MPFR library as well. This entire page
+is copied verbatim from the MPFR manual.\\\\
+
+The MPFR library is a C library for multiple-precision floating-point
+computations with correct rounding. MPFR has continuously been supported by the
+INRIA and the current main authors come from the Caramel and Arénaire
+project-teams at Loria (Nancy, France) and LIP (Lyon, France) respectively; see
+more on the credit page. MPFR is based on the GMP multiple-precision library.\\
+
+The main goal of MPFR is to provide a library for multiple-precision
+floating-point computation which is both efficient and has a well-defined
+semantics. It copies the good ideas from the ANSI/IEEE-754 standard for
+double-precision floating-point arithmetic (53-bit mantissa).\\
+
+MPFR is free. It is distributed under the GNU Lesser General Public License
+(GNU Lesser GPL), version 3 or later (2.1 or later for MPFR versions until
+2.4.x). The library has been registered in France by the Agence de Protection
+des Programmes under the number IDDN FR 001 120020 00 R P 2000 000 10800, on 15
+March 2000. This license guarantees your freedom to share and change MPFR, to
+make sure MPFR is free for all its users. Unlike the ordinary General Public
+License, the Lesser GPL enables developers of non-free programs to use MPFR in
+their programs. If you have written a new function for MPFR or improved an
+existing one, please share your work!
+
+\newpage
 \section{Introduction to the gmp gem}
 
 The gmp Ruby gem is a Ruby library that provides bindings to GMP. The gem is
 incomplete, and will likely only include a subset of the GMP functions. It is
-built as a C extension for ruby, interacting with gmp.h. The gmp gem is not
-endorsed or supported by GNU or the GMP team. The gmp gem also does not ship
-with GMP, so GMP must be compiled separately.
+built as a C extension for Ruby, interacting with gmp.h. The gmp gem is not
+endorsed or supported by GNU or the GMP team (or MPFR team). The gmp gem also
+does not ship with GMP (or MPFR), so GMP (and MPFR) must be compiled
+separately.
 
 \section{Installing the gmp gem}
 
@@ -117,6 +145,7 @@ of the following versions of Ruby:
   \item (MRI) Ruby 1.8.6 - tested lightly.
   \item (MRI) Ruby 1.8.7 - tested seriously.
   \item (MRI) Ruby 1.9.1 - tested seriously.
+  \item (MRI) Ruby 1.9.2 - tested seriously.
 \end{itemize}
 As you can see only Matz's Ruby Interpreter (MRI) is supported. I haven't even
 put a thought into trying other interpreters/VMs. I intend to look into FFI,
@@ -124,22 +153,53 @@ which supposedly will allow me to load this extension into JRuby and Rubinius,
 not sure about others...\\
 
 Next is the platform, the combination of the architecture (processor) and OS.
-As far as I can tell, if you can compile GMP and Ruby on a given platform, you
-can use the gmp gem there too. Please report problems with that hypothesis.\\
+As far as I can tell, if you can compile GMP and Ruby (and optionally MPFR) on
+a given platform, you can use the gmp gem there too. Please report problems
+with that hypothesis.\\
 
-Lastly, GMP. GMP must be compiled and working. "and working" means you ran "make
-check" while installing GMP. The following versions of GMP have been tested:
+Lastly, GMP (and MPFR). GMP (and MPFR) must be compiled and working. "And working" means
+you ran "make check" after compiling GMP (and MPFR), and it 'check's out. The following
+versions of GMP (and MPFR) have been tested:
 \begin{itemize}
-  \item GMP 4.3.1
-  \item GMP 4.3.2
-  \item GMP 5.0.0
-  \item GMP 5.0.1
+  \item GMP 4.3.1 (with MPFR 2.4.2)
+  \item GMP 4.3.2 (with MPFR 2.4.2 and 3.0.0)
+  \item GMP 5.0.0 (with MPFR 3.0.0)
+  \item GMP 5.0.1 (with MPFR 3.0.0)
 \end{itemize}
 
-That's all. I don't intend to test any older versions, maybe 4.3.0 for
-completeness.\\
+That's all. I don't intend to test any older versions.\\
 
-Here is a table of the exact environments on which I have tested the gmp gem:\\\\
+\newpage
+Here is a table of the exact environments on which I have tested the gmp gem.
+The (MPFR) version denotes that the gmp gem was tested both with and without
+the given version of MPFR:\\\\
+
+\begin{tabular}{lrrr} \hline
+             Platform                      &       Ruby       &    GMP    & (MPFR)  \\ \midrule[1pt]
+  Linux (Ubuntu NR 10.04) on x86 (32-bit)  & (MRI) Ruby 1.8.7 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.8.7 & GMP 5.0.1 & (3.0.0) \\
+                                           & (MRI) Ruby 1.9.1 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.9.1 & GMP 5.0.1 & (3.0.0) \\
+                                           & (MRI) Ruby 1.9.2 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.9.2 & GMP 5.0.1 & (3.0.0) \\ \hline
+  Linux (Ubuntu 10.04) on x86\_64 (64-bit) & (MRI) Ruby 1.8.7 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.8.7 & GMP 5.0.1 & (3.0.0) \\
+                                           & (MRI) Ruby 1.9.1 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.9.1 & GMP 5.0.1 & (3.0.0) \\
+                                           & (MRI) Ruby 1.9.2 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.9.2 & GMP 5.0.1 & (3.0.0) \\ \hline
+  Mac OS X 10.6.4 on x86\_64 (64-bit)      & (MRI) Ruby 1.8.7 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.8.7 & GMP 5.0.1 & (3.0.0) \\
+                                           & (MRI) Ruby 1.9.1 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.9.1 & GMP 5.0.1 & (3.0.0) \\
+                                           & (MRI) Ruby 1.9.2 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.9.2 & GMP 5.0.1 & (3.0.0) \\ \hline
+  Windows XP on x86 (32-bit)               & (MRI) Ruby 1.9.1 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.9.1 & GMP 5.0.1 & (3.0.0) \\ \hline
+\end{tabular}\\\\
+
+In addition, I \textit{used to test} on the following environments, in versions
+0.4.7 and earlier of the gmp gem:\\\\
 
 \begin{tabular}{lrr} \hline
              Platform             &       Ruby       &    GMP    \\ \midrule[1pt]
@@ -147,7 +207,6 @@ Here is a table of the exact environments on which I have tested the gmp gem:\\\
   Linux (LinuxMint 7) on x86      & (MRI) Ruby 1.8.7 & GMP 4.3.1 \\ \hline
   Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.8.6 & GMP 4.3.1 \\ \hline
   Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.9.1 & GMP 4.3.1 \\ \hline
-  Windows XP on x86 (32-bit)      & (MRI) Ruby 1.9.1 & GMP 5.0.1 \\ \hline
 \end{tabular}
 
 \subsection{Installing}
@@ -155,11 +214,12 @@ You may clone the gmp gem's git repository with:\\
 \\
 \texttt{git clone git://github.com/srawlins/gmp.git}\\
 
-Or you may install the gem from gemcutter:\\
+Or you may install the gem from gemcutter (rubygems.org):\\
 \\
 \texttt{gem install gmp}\\
 
-At this time, the gem does self-compiles. If required libraries cannot be found, you may
+\newpage
+At this time, the gem self-compiles. If required libraries cannot be found, you may
 compile the C extensions manually with:\\
 \\
 \texttt{cd <gmp gem directory>/ext}\\
@@ -180,9 +240,9 @@ All tests should pass. If you don't have the test-unit gem installed, then you m
 run into one error. It would look like:\\
 \\
 \texttt{  1) Error:}\\
-\texttt{test_z_div(TC_division):}\\
+\texttt{test\_z\_div(TC\_division):}\\
 \texttt{TypeError: GMP::Q can't be coerced into Float}\\
-\texttt{    C:/Ruby191/devkit/msys/1.0.11/projects/gmp_gem/test/tc_division.rb:18:in `test_z_div'}\\
+\texttt{    C:/Ruby191/devkit/msys/1.0.11/projects/gmp\_gem/test/tc\_division.rb:18:in `test\_z\_div'}\\
 
 \section{GMP and gmp gem basics}
 
@@ -224,6 +284,18 @@ There are additional constants within \texttt{GMP} when MPFR is linked:
     infinity."
   \item \texttt{GMP::GMP\_RNDD} - Rounding mode representing "round toward negative
     infinity."
+  \item \texttt{GMP::MPFR\_RNDN} - Rounding mode representing "round to nearest."\\
+    (MPFR version 3.0.0 or higher only)
+  \item \texttt{GMP::MPFR\_RNDZ} - Rounding mode representing "round toward zero."\\
+    (MPFR version 3.0.0 or higher only)
+  \item \texttt{GMP::MPFR\_RNDU} - Rounding mode representing "round toward positive
+    infinity."\\
+    (MPFR version 3.0.0 or higher only)
+  \item \texttt{GMP::MPFR\_RNDD} - Rounding mode representing "round toward negative
+    infinity."\\
+    (MPFR version 3.0.0 or higher only)
+  \item \texttt{GMP::MPFR\_RNDZ} - Rounding mode representing "round away from zero."\\
+    (MPFR version 3.0.0 or higher only)
 \end{itemize}
 
 \newpage
@@ -238,8 +310,8 @@ There are additional constants within \texttt{GMP} when MPFR is linked:
 & & GMP::Z.new(\textit{str}) $\rightarrow$ \textit{integer} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  This method creates a new \textit{GMP::Z} integer. It takes one optional argument for
-  the value of the integer. This argument can be one of several classes. Here are some
+  This method creates a new \gmpzs integer. It takes one optional argument for the value
+  of the integer. This argument can be one of several classes. Here are some
   examples:\newline
   
   \texttt{GMP::Z.new \qqqquad\qqqquad \#=> 0 (default) \newline
@@ -284,8 +356,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   \textit{integer}.
   \newline
   
-  If \textit{integer} is too big to fit in a Fixnum, the returned result is probably not
-  very useful. To find out if the value will fit, use the function
+  If \textit{integer} is too big to fit in a \textit{Fixnum}, the returned result is
+  probably not very useful. To find out if the value will fit, use the function
   \textit{mpz\_fits\_slong\_p} (\textbf{Unimplemented}).
 }
 \end{tabular}
@@ -327,8 +399,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the sum of \textit{integer} and \textit{numeric}. \textit{numeric} can be an
-  instance of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
-  \textit{Bignum}.
+  instance of \gmpz, \textit{Fixnum}, \gmpq, \gmpf, or \textit{Bignum}.
 }
 \end{tabular}
 \newline\newline
@@ -340,8 +411,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Sums \textit{integer} and \textit{numeric}, in place. \textit{numeric} can be an
-  instance of \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or
-  \textit{Bignum}.
+  instance of \gmpz, \textit{Fixnum}, \gmpq, \gmpf, or \textit{Bignum}.
 }
 \end{tabular}
 \newline\newline
@@ -354,8 +424,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the difference of \textit{integer} and \textit{numeric}. The destructive method
   calculates the difference in place. \textit{numeric} can be an instance of
-  \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or \textit{Bignum}.
-  Here are some examples:\newline
+  \gmpz, \textit{Fixnum}, \gmpq, \gmpf, or \textit{Bignum}. Here are some
+  examples:\newline
   
   \texttt{seven     = GMP::Z(7) \newline
           nine \    = GMP::Z(9) \newline
@@ -381,7 +451,19 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the product of \textit{integer} and \textit{numeric}. The destructive method
   calculates the product in place. \textit{numeric} can be an instance of
-  \textit{GMP::Z}, \textit{Fixnum}, \textit{GMP::Q}, \textit{GMP::F}, or \textit{Bignum}.
+  \gmpz, \textit{Fixnum}, \gmpq, \gmpf, or \textit{Bignum}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{addmul!} & & \textit{integer}.addmul!(\textit{a}, \textit{b}) $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Sets \textit{integer} to the sum of \textit{integer} and the product of \textit{a} and
+  \textit{b}. This destructive method calculates the result in place. Both \textit{a} and
+  \textit{b} can be an instance of \gmpz, \textit{Fixnum}, or \textit{Bignum}.
 }
 \end{tabular}
 \newline\newline
@@ -429,7 +511,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the division of $integer$ by $numeric$, truncated. $numeric$ can be an instance
-  of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always $GMP::Z$.
+  of \gmpz, $Fixnum$, $Bignum$. The return object's class is always \gmpz.
 }
 \end{tabular}
 \newline\newline
@@ -440,7 +522,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the division of $integer$ by $numeric$, floored. $numeric$ can be an instance
-  of $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always $GMP::Z$.
+  of \gmpz, $Fixnum$, $Bignum$. The return object's class is always \gmpz.
 }
 \end{tabular}
 \newline\newline
@@ -451,7 +533,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the ceiling division of $integer$ by $numeric$. $numeric$ can be an instance of
-  $GMP::Z$, $Fixnum$, $Bignum$. The return object's class is always $GMP::Z$.
+  \gmpz, $Fixnum$, $Bignum$. The return object's class is always \gmpz.
 }
 \end{tabular}
 \newline\newline
@@ -462,8 +544,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the remainder after truncated division of $integer$ by $numeric$. $numeric$ can
-  be an instance of $GMP::Z$, $Fixnum$, or $Bignum$. The return object's class is always
-  $GMP::Z$.
+  be an instance of \gmpz, $Fixnum$, or $Bignum$. The return object's class is always
+  \gmpz.
 }
 \end{tabular}
 \newline\newline
@@ -474,8 +556,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the remainder after floored division of $integer$ by $numeric$. $numeric$ can
-  be an instance of $GMP::Z$, $Fixnum$, or $Bignum$. The return object's class is always
-  $GMP::Z$.
+  be an instance of \gmpz, $Fixnum$, or $Bignum$. The return object's class is always
+  \gmpz.
 }
 \end{tabular}
 \newline\newline
@@ -486,8 +568,8 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
   Returns the remainder after ceilinged division of $integer$ by $numeric$. $numeric$ can
-  be an instance of $GMP::Z$, $Fixnum$, or $Bignum$. The return object's class is always
-  $GMP::Z$.
+  be an instance of \gmpz, $Fixnum$, or $Bignum$. The return object's class is always
+  \gmpz.
 }
 \end{tabular}
 \newline\newline
@@ -509,9 +591,11 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \toprule
 \textbf{**} & & \textit{integer} ** \textit{numeric} $\rightarrow$ \textit{numeric} \\
 & & \textit{integer}.pow(\textit{numeric}) $\rightarrow$ \textit{numeric} \\
+& & GMP::Z.pow(\textit{integer}, \textit{numeric}) $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Returns $integer$ raised to the $numeric$ power.
+  Returns $integer$ raised to the $numeric$ power. In the singleton method (\textit{GMP::Z.pow()}),
+  \textit{integer} can be either a \gmpz, $Fixnum$, $Bignum$, or $String$.
 }
 \end{tabular}
 \newline\newline
@@ -819,7 +903,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 \textbf{hash} & & $a$.hash $\rightarrow$ $string$ \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Used when comparing objects as Hash keys.
+  Used when comparing objects as $Hash$ keys.
 }
 \end{tabular}
 
@@ -972,6 +1056,18 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 }
 \end{tabular}
 
+\subsection{Integer Special Functions}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{size} & & $integer$.size $\rightarrow$ $fixnum$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the size of \textit{integer} measured in number of limbs. If \textit{integer}
+  is zero, then the returned value will be zero.
+}
+\end{tabular}
+
 \newpage
 \section{Rational Functions}
 
@@ -984,7 +1080,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 & & GMP::Q.new(\textit{str}) $\rightarrow$ \textit{rational} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  This method creates a new \textit{GMP::Q} rational number. It takes two optional
+  This method creates a new \gmpq rational number. It takes two optional
   arguments for the value of the numerator and denominator. These arguments can each be
   an instance of several classes. Here are some
   examples:\newline
@@ -1027,6 +1123,242 @@ There is also a convenience method available, \texttt{GMP::Q()}.\\
   Converts \textit{rational} to a string.
 }
 \end{tabular}
+
+\newpage
+\section{Floating-point Functions}
+
+\subsection{Initializing, Assigning Floats}
+
+\subsection{Floating-point Special Functions (MPFR Only)}
+
+Every method below accepts two additional parameters in addition to any required parameters. These are $rnd_mode$, the rounding mode to use in calculation, which defaults to \textit{GMP::GMP\_RNDN}, and $res_prec$, the precision of the result, which defaults to the \textit{f.prec}, the precision of $f$.\\
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{log}   & & $f$.log(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{log2}  & & $f$.log2(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{log10} & & $f$.log10(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the natural log, $\log_2$, and $\log_10$ of $f$, respectively. Returns $-Inf$ if $f$ is $-0$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{exp}   & & $f$.exp(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{exp2}  & & $f$.exp2(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{exp10} & & $f$.exp10(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the exponential of $f$, $2$ to the power of $f$, and $10$ to the power of $f$, respectively.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{cos} & & $f$.cos(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{sin} & & $f$.sin(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{tan} & & $f$.tan(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the cosine, sine, and tangent of $f$, respectively.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{sec} & & $f$.sec(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{csc} & & $f$.csc(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{cot} & & $f$.cot(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the secant, cosecant, and cotangent of $f$, respectively.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{acos} & & $f$.acos(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{asin} & & $f$.asin(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{atan} & & $f$.atan(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the arc-cosine, arc-sine, and arc-tangent of $f$, respectively.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{cosh} & & $f$.cosh(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{sinh} & & $f$.sinh(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{tanh} & & $f$.tanh(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the hyperbolic cosine, sine, and tangent of $f$, respectively.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{sech} & & $f$.sech(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{csch} & & $f$.csch(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{coth} & & $f$.coth(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the hyperbolic secant, cosecant, and cotangent of $f$, respectively.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{acosh} & & $f$.acosh(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{asinh} & & $f$.asinh(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{atanh} & & $f$.atanh(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the hyperbolic arc-cosine, arc-sine, and arc-tangent of $f$, respectively.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{log1p} & & $f$.log1p(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the logarithm of 1 plus $f$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{expm1} & & $f$.expm1(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the exponential of $f$ minus 1.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{eint} & & $f$.eint(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the exponential integral of $f$. For positive $f$, the exponential integral is
+  the sum of Euler's constant, of the logarithm of $f$, and of the sum for $k$ from $1$
+  to infinity of $f$ to the power $k$, divided by $k$ and factorial($k$). For negative
+  $f$, this method returns NaN.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{li2} & & $f$.li2(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the real part of the dilogarithm of $f$. MPFR defines the dilogarithm as the
+  integral of $-\log(1-t)/t$ from 0 to $f$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{gamma} & & $f$.gamma(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the value of the Gamma function on $f$. When $f$ is a negative integer, this
+  method returns NaN.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{lngamma} & & $f$.lngamma(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the value of the logarithm of the Gamma function on $f$. When
+  $-2k-1 \leq f \leq -2k$, $k$ being a non-negative integer, this method returns NaN.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{digamma} & & $f$.digamma(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the value of the Digamma (sometimes called Psi) function on $f$. When $f$ is
+  negative, this method returns NaN.\newline
+  \newline
+  Only available in MPFR version 3.0.0 or later.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{zeta} & & $f$.zeta(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the value of the Riemann Zeta function on $f$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{erf}  & & $f$.erf(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{erfc} & & $f$.erfc(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the value of the error function on $f$ (respectively the complementary error
+  function on $f$).
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{j0} & & $f$.j0(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{j1} & & $f$.j1(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{jn} & & $f$.jn(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the value of the first kind Bessel function of order $0$ (respectively $1$ and
+  $n$) on $f$. When $f$ is NaN, this method returns NaN. When $f$ is +Inf or -Inf, this
+  method returns $+0$. When $f$ is zero, this method returns +Inf or -Inf, depending on
+  the parity and sign of $n$, and the sign of $f$.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{y0} & & $f$.y0(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{y1} & & $f$.y1(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\textbf{yn} & & $f$.yn(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns the value of the second kind Bessel function of order $0$ (respectively $1$ and
+  $n$) on $f$. When $f$ is NaN or negative, this method returns NaN. When $f$ is +Inf,
+  this method returns $+0$. When $f$ is zero, this method returns +Inf or -Inf, depending
+  on the parity and sign of $n$.
+}
+\end{tabular}
+
 
 \newpage
 \section{Random Number Functions}

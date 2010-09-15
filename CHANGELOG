@@ -7,6 +7,9 @@
     only).
   * Added MPFR methods GMP::F.rec_sqrt (mpfr_rec_sqrt) and GMP::F.cbrt
     (mpfr_rec_cbrt), both heavily tested.
+  * Added MPFR method GMP::F.digamma (mpfr_digamma), not tested.
+  * Added GMP::F.prec= (mpf_set_prec) and GMP::F.prec_raw= (mpf_set_prec_raw),
+    neither tested yet.
 
 0.4.19:
   * Added FIX2NUM macro to help support x86_64.

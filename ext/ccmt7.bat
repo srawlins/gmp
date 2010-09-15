@@ -1,26 +1,33 @@
 @ECHO OFF
 REM Usage: ccmt.bat [no-mpfr] [gmp-version [mpfr-version]]
 
-set GMP_DIR=--with-gmp-dir=\Ruby191\devkit\msys\1.0.11\usr\local
-set MPFR_DIR=--with-mpfr-dir=\Ruby191\devkit\msys\1.0.11\usr\local\mpfr-3.0.0
+set DEVKIT=devkit
 set EXTCONF_OPTS=
 set OLD_PATH=%PATH%
 
-IF NOT "%1" EQU "no-mpfr" GOTO CheckGMP
+IF NOT "%1" EQU "no-mpfr" GOTO CheckDevkit
 set EXTCONF_OPTS=--%1
 SHIFT
 
+:CheckDevkit
+IF NOT "%~1"=="devkit" GOTO CheckGMP
+SHIFT
+set DEVKIT=devkit-%1
+SHIFT
+
 :CheckGMP
+set GMP_DIR=--with-gmp-dir=\Ruby191\%DEVKIT%\local
+set MPFR_DIR=--with-mpfr-dir=\Ruby191\%DEVKIT%\local\mpfr-3.0.0
 echo EXTCONF_OPTS=%EXTCONF_OPTS%
 IF "%~1"=="" GOTO CheckMPFR
-set GMP_DIR=--with-gmp-dir=\Ruby191\devkit\msys\1.0.11\usr\local\gmp-%1
-set PATH=C:\Ruby191\devkit\msys\1.0.11\usr\local\gmp-%1\bin;%PATH%
+set GMP_DIR=--with-gmp-dir=\Ruby191\%DEVKIT%\local\gmp-%1
+set PATH=C:\Ruby191\%DEVKIT%\local\gmp-%1\bin;%PATH%
 SHIFT
 
 :CheckMPFR
 IF "%~1"=="" GOTO MakeClean
-set MPFR_DIR=--with-mpfr-dir=\Ruby191\devkit\msys\1.0.11\usr\local\mpfr-%1
-set PATH=C:\Ruby191\devkit\msys\1.0.11\usr\local\mpfr-%1\bin;%PATH%
+set MPFR_DIR=--with-mpfr-dir=\Ruby191\%DEVKIT%\local\mpfr-%1
+set PATH=C:\Ruby191\%DEVKIT%\local\mpfr-%1\bin;%PATH%
 SHIFT
 
 :MakeClean
