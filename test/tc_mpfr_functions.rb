@@ -4,10 +4,32 @@ class TC_MPFR_Functions < Test::Unit::TestCase
   end
   
   def test_const_existence
-    assert_nothing_raised("GMP::F#const_log2 should be callable.") { GMP::F.const_log2 }
-    assert_nothing_raised("GMP::F#const_pi should be callable.") { GMP::F.const_pi }
-    assert_nothing_raised("GMP::F#const_euler should be callable.") { GMP::F.const_euler }
-    assert_nothing_raised("GMP::F#const_catalan should be callable.") { GMP::F.const_catalan }
+    #assert_nothing_raised("GMP::F#const_log2 should be callable.") { GMP::F.const_log2 }
+    #assert_nothing_raised("GMP::F#const_pi should be callable.") { GMP::F.const_pi }
+    #assert_nothing_raised("GMP::F#const_euler should be callable.") { GMP::F.const_euler }
+    #assert_nothing_raised("GMP::F#const_catalan should be callable.") { GMP::F.const_catalan }
+    constants = ["const_log2", "const_pi", "const_euler", "const_catalan"]
+
+    constants.each do |c|
+      assert_nothing_raised("GMP::F##{c} can be called.") {
+        GMP::F.send(c)
+      }
+      assert_nothing_raised("GMP::F##{c} can be called w/ 1 arg: rounding_mode.") {
+        GMP::F.send(c, GMP::GMP_RNDN)
+      }
+      assert_nothing_raised("GMP::F##{c} can be called w/ 1 arg: rounding_mode.") {
+        GMP::F.send(c, GMP::GMP_RNDZ)
+      }
+      assert_nothing_raised("GMP::F##{c} can be called w/ 2 args: rounding_mode, prec.") {
+        GMP::F.send(c, GMP::GMP_RNDN, 32)
+      }
+      assert_nothing_raised("GMP::F##{c} can be called w/ 2 args: rounding_mode, prec.") {
+        GMP::F.send(c, GMP::GMP_RNDN, 128)
+      }
+      assert_nothing_raised("GMP::F##{c} can be called w/ 2 args: rounding_mode, prec.") {
+        GMP::F.send(c, GMP::GMP_RNDN, 200)
+      }
+    end
   end
   
   def test_function_existence

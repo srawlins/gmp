@@ -1,0 +1,138 @@
+Initialization, Assignment... may not provide...?
+
+mpz_init     (mpz_t x)
+mpz_inits    (mpz_t x, ...)
+mpz_init2    (mpz_t x, mp_bitcnt_t n)
+mpz_clear    (mpz_t x)
+mpz_clears   (mpz_t x, ...)
+mpz_realloc2 (mpz_t x, mp_bitcnt_t n)
+
+mpz_set     (mpz_t rop, mpz_t op)
+mpz_set_ui  (mpz_t rop, unsigned long int op)
+mpz_set_si  (mpz_t rop, signed long int op)
+mpz_set_d   (mpz_t rop, double op)
+mpz_set_q   (mpz_t rop, mpq_t op)
+mpz_set_f   (mpz_t rop, mpf_t op)
+mpz_set_str (mpz_t rop, char *str, int base)
+mpz_swap    (mpz_t rop1, mpz_t rop2)
+
+mpz_init_set     (mpz_t rop, mpz_t op)
+mpz_init_set_ui  (mpz_t rop, unsigned long int op)
+mpz_init_set_si  (mpz_t rop, signed long int op)
+mpz_init_set_d   (mpz_t rop, double op)
+mpz_init_set_str (mpz_t rop, char *str, int base)
+
+Converting Integers... may not provide...?
+
+unsigned long int  mpz_get_ui  (mpz_t op)
+  signed long int  mpz_get_si  (mpz_t op)
+           double  mpz_get_d   (mpz_t op)
+           double  mpz_get_d_2exp  (signed long int *exp, mpz_t op)
+           char *  mpz_get_str     (char *str, int base, mpz_t op)
+
+>>> ELSE!!! LETS CONVERT
+>>>
+>>> Z => GMP::Z, X => Fixnum, B => Bignum, Q => GMP::Q, F => GMP::F, D => Float
+
+>>> mpz_t__mpz_t__or__ui__to__mpz_t__returns__void  #=> GMP.foo(Z, ZXB, ZXB+) => nil
+void  mpz_add       (mpz_t rop, mpz_t op1, mpz_t op2)
+void  mpz_add_ui    (mpz_t rop, mpz_t op1, unsigned long int op2)
+void  mpz_addmul    (mpz_t rop, mpz_t op1, mpz_t op2)
+void  mpz_addmul_ui (mpz_t rop, mpz_t op1, unsigned long int op2)
+void  mpz_submul    (mpz_t rop, mpz_t op1, mpz_t op2)
+void  mpz_submul_ui (mpz_t rop, mpz_t op1, unsigned long int op2)
+
+>>> mpz_t__or__ui__mpz_t__or__ui__to__mpz_t__returns__void  #=> GMP.foo(Z, ZXB+, ZXB+) => nil
+void  mpz_sub    (mpz_t rop, mpz_t op1, mpz_t op2)
+void  mpz_sub_ui (mpz_t rop, mpz_t op1, unsigned long int op2)
+void  mpz_ui_sub (mpz_t rop, unsigned long int op1, mpz_t op2)
+
+>>> mpz_t__mpz_t__or__si__or__ui__to__mpz_t__returns__void  #=> GMP.foo(Z, ZXB, ZXB) => nil
+void  mpz_mul    (mpz_t rop, mpz_t op1, mpz_t op2)
+void  mpz_mul_si (mpz_t rop, mpz_t op1, long int op2)
+void  mpz_mul_ui (mpz_t rop, mpz_t op1, unsigned long int op2)
+
+>>> mpz_t__mp_bitcnt_t__to__mpz_t__returns__void  #=> GMP.foo(Z, ZXB, X) => nil
+void  mpz_mul_2exp (mpz_t rop, mpz_t op1, mp_bitcnt_t op2)
+void  mpz_cdiv_q_2exp (mpz_t q, mpz_t n, mp_bitcnt_t b)
+void  mpz_cdiv_r_2exp (mpz_t r, mpz_t n, mp_bitcnt_t b)
+void  mpz_fdiv_q_2exp (mpz_t q, mpz_t n, mp_bitcnt_t b)
+void  mpz_fdiv_r_2exp (mpz_t r, mpz_t n, mp_bitcnt_t b)
+void  mpz_tdiv_q_2exp (mpz_t q, mpz_t n, mp_bitcnt_t b)
+void  mpz_tdiv_r_2exp (mpz_t r, mpz_t n, mp_bitcnt_t b)
+
+>>> mpz_t__to__mpz_t__returns__void  #=> GMP.foo(Z, Z) => nil
+void  mpz_neg  (mpz_t rop, mpz_t op)
+void  mpz_abs  (mpz_t rop, mpz_t op)
+void  mpz_sqrt (mpz_t rop, mpz_t op)
+
+>>> mpz_t__mpz_t__or__ui__to__mpz_t__returns__void__or__ui  #=> GMP.foo(Z, ZXB, ZXB+) => nil or X
+void               mpz_cdiv_q    (mpz_t q, mpz_t n, mpz_t d)
+void               mpz_cdiv_r    (mpz_t r, mpz_t n, mpz_t d)
+unsigned long int  mpz_cdiv_q_ui (mpz_t q, mpz_t n, unsigned long int d)
+unsigned long int  mpz_cdiv_r_ui (mpz_t r, mpz_t n, unsigned long int d)
+void               mpz_fdiv_q    (mpz_t q, mpz_t n, mpz_t d)
+void               mpz_fdiv_r    (mpz_t r, mpz_t n, mpz_t d)
+unsigned long int  mpz_fdiv_q_ui (mpz_t q, mpz_t n, unsigned long int d)
+unsigned long int  mpz_fdiv_r_ui (mpz_t r, mpz_t n, unsigned long int d)
+void               mpz_tdiv_q    (mpz_t q, mpz_t n, mpz_t d)
+void               mpz_tdiv_r    (mpz_t r, mpz_t n, mpz_t d)
+unsigned long int  mpz_tdiv_q_ui (mpz_t q, mpz_t n, unsigned long int d)
+unsigned long int  mpz_tdiv_r_ui (mpz_t r, mpz_t n, unsigned long int d)
+void               mpz_mod       (mpz_t r, mpz_t n, mpz_t d)
+unsigned long int  mpz_mod_ui    (mpz_t r, mpz_t n, unsigned long int d)
+
+>>> mpz_t__mpz_t__or__ui__to__mpz_t__mpz_t__returns__void__or__ui  #=> GMP.foo(Z, Z, ZXB, ZXB+) => nil or X
+void               mpz_cdiv_qr    (mpz_t q, mpz_t r, mpz_t n, mpz_t d)
+unsigned long int  mpz_cdiv_qr_ui (mpz_t q, mpz_t r, mpz_t n, unsigned long int d)
+void               mpz_fdiv_qr    (mpz_t q, mpz_t r, mpz_t n, mpz_t d)
+unsigned long int  mpz_fdiv_qr_ui (mpz_t q, mpz_t r, mpz_t n, unsigned long int d)
+void               mpz_tdiv_qr    (mpz_t q, mpz_t r, mpz_t n, mpz_t d)
+unsigned long int  mpz_tdiv_qr_ui (mpz_t q, mpz_t r, mpz_t n, unsigned long int d)
+
+>>> mpz_t__ui__to__none__returns__ui  #=> GMP.foo(ZXB, XB+) => X
+unsigned long int  mpz_cdiv_ui (mpz_t n, unsigned long int d)
+unsigned long int  mpz_fdiv_ui (mpz_t n, unsigned long int d)
+unsigned long int  mpz_tdiv_ui (mpz_t n, unsigned long int d)
+
+>>> mpz_t__mpz_t__or__ui__to__mpz_t__returns__void  #=> GMP.foo(Z, ZXB, ZXB+) => nil
+void  mpz_divexact    (mpz_t r, mpz_t n, mpz_t d)
+void  mpz_divexact_ui (mpz_t r, mpz_t n, unsigned long int d)
+
+>>> mpz_t__mpz_t__or__ui__to__none__returns__int  #=> GMP.foo(ZXB, ZXB+) => X
+int  mpz_divisible_p (mpz_t n, mpz_t d)
+int  mpz_divisible_ui_p (mpz_t n, unsigned long int d)
+
+>>> mpz_t__mp_bitcnt_t__to__none__returns__int  #=> GMP.foo(ZXB, X) => X
+int  mpz_divisible_2exp_p (mpz_t n, mp_bitcnt_t b)
+
+>>> mpz_t__mpz_t__or__ui__mpz_t__or__ui__to__none__returns__int  #=> GMP.foo(ZXB, ZXB+, ZXB+) => X
+int  mpz_congruent_p (mpz_t n, mpz_t c, mpz_t d)
+int  mpz_congruent_ui_p (mpz_t n, unsigned long int c, unsigned long int d)
+
+>>> mpz_t__mpz_t__mp_bitcnt_t__to__none__returns__int  #=> GMP.foo(ZXB, ZXB, X) => X
+int  mpz_congruent_2exp_p (mpz_t n, mpz_t c, mp_bitcnt_t b)
+
+>>> mpz_t__mpz_t__or__ui__mpz_t__to__mpz_t__returns__void  #=> GMP.foo(Z, ZXB, ZXB+, ZXB) => nil
+void  mpz_powm (mpz_t rop, mpz_t base, mpz_t exp, mpz_t mod)
+void  mpz_powm_ui (mpz_t rop, mpz_t base, unsigned long int exp, mpz_t mod)
+
+>>> mpz_t__mpz_t__mpz_t__to__mpz_t__returns__void  #=> GMP.foo(Z, ZXB, ZXB, ZXB) => nil
+void  mpz_powm_sec (mpz_t rop, mpz_t base, mpz_t exp, mpz_t mod)
+
+>>> mpz_t__or__ui__ui__to__mpz_t__returns__void  #=> GMP.foo(Z, ZXB+, XB+) => nil
+void  mpz_pow_ui    (mpz_t rop, mpz_t base, unsigned long int exp)
+void  mpz_ui_pow_ui (mpz_t rop, unsigned long int base, unsigned long int exp)
+
+>>> mpz_t__ui__to__mpz_t__returns__int  #=> GMP.foo(Z, ZXB, XB+) => X
+int  mpz_root (mpz_t rop, mpz_t op, unsigned long int n)
+
+>>> mpz_t__ui__to__mpz_t__mpz_t__returns__void  #=> GMP.foo(Z, Z, ZXB, XB+) => nil
+void  mpz_rootrem (mpz_t root, mpz_t rem, mpz_t u, unsigned long int n)
+
+>>> mpz_t__to__mpz_t__mpz_t__returns__void  #=> GMP.foo(Z, Z, ZXB) => nil
+void  mpz_sqrtrem (mpz_t rop1, mpz_t rop2, mpz_t op)
+
+>>> mpz_t__to__none__returns__int  #=> GMP.foo(ZXB) => X
+int  mpz_perfect_power_p (mpz_t op)
+int  mpz_perfect_square_p (mpz_t op)

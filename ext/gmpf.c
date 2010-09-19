@@ -879,17 +879,26 @@ static VALUE r_gmpfr_##name(VALUE self)     \
 }
 
 
-#define MPFR_CONST_FUNCTION(name)                        \
-VALUE r_gmpfrsg_##name()                                 \
-{                                                        \
-  MP_FLOAT *res_val;                                     \
-  VALUE res;                                             \
-                                                         \
-  mpf_make_struct (res, res_val);                        \
-  mpf_init (res_val);                                    \
-  mpfr_##name (res_val, __gmp_default_rounding_mode);    \
-                                                         \
-  return res;                                            \
+#define MPFR_CONST_FUNCTION(name)                            \
+VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
+{                                                            \
+  (void)self;                                                \
+  MP_FLOAT *res_val;                                         \
+  VALUE res;                                                 \
+  VALUE rnd_mode, prec;                                      \
+  mp_rnd_t rnd_mode_val;                                     \
+  mpfr_prec_t prec_val;                                      \
+                                                             \
+  rb_scan_args (argc, argv, "02", &rnd_mode, &prec);         \
+                                                             \
+  if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }    \
+  else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }     \
+  if (NIL_P (prec)) { prec_val = mpfr_get_default_prec(); }  \
+  else { prec_val = FIX2INT (prec); }                        \
+  mpf_make_struct_init (res, res_val, prec_val);             \
+  mpfr_##name (res_val, rnd_mode_val);                       \
+                                                             \
+  return res;                                                \
 }
 
 MPFR_SINGLE_FUNCTION(sqrt)
@@ -1222,10 +1231,10 @@ void init_gmpf()
   // "hypot", r_gmpfr_hypot
   // "ai", r_gmpfr_ai  !! 3.0.0
   
-  rb_define_singleton_method(cGMP_F, "const_log2",    r_gmpfrsg_const_log2,    0);
-  rb_define_singleton_method(cGMP_F, "const_pi",      r_gmpfrsg_const_pi,      0);
-  rb_define_singleton_method(cGMP_F, "const_euler",   r_gmpfrsg_const_euler,   0);
-  rb_define_singleton_method(cGMP_F, "const_catalan", r_gmpfrsg_const_catalan, 0);
+  rb_define_singleton_method(cGMP_F, "const_log2",    r_gmpfrsg_const_log2,    -1);
+  rb_define_singleton_method(cGMP_F, "const_pi",      r_gmpfrsg_const_pi,      -1);
+  rb_define_singleton_method(cGMP_F, "const_euler",   r_gmpfrsg_const_euler,   -1);
+  rb_define_singleton_method(cGMP_F, "const_catalan", r_gmpfrsg_const_catalan, -1);
 
   // Integer and Remainder Related Functions
   // "integer?", r_gmpfr_integer_p
