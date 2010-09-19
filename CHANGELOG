@@ -10,6 +10,10 @@
   * Added MPFR method GMP::F.digamma (mpfr_digamma), not tested.
   * Added GMP::F.prec= (mpf_set_prec) and GMP::F.prec_raw= (mpf_set_prec_raw),
     neither tested yet.
+  * Added a dramatic amount of content to the manual. 26 pages.
+  * Unit test results: 98 tests, 11974 assertions, 0 failures, 0 errors
+  * Unit test results: 98 tests, 11961 assertions, 0 failures, 0 errors (MPFR 2.4.2)
+  * Unit test results: 79 tests, 742 assertions, 0 failures, 0 errors (w/o MPFR)
 
 0.4.19:
   * Added FIX2NUM macro to help support x86_64.

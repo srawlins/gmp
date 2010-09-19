@@ -1430,4 +1430,101 @@ Every method below accepts two additional parameters in addition to any required
 }
 \end{tabular}
 
+
+\newpage
+\section{Benchmarking}
+
+Starting with, I believe, GMP 5.0.0, their benchmarking suite was updated to version 0.2,
+a significant improvement over version 0.1. The suite consists of 3 parts.\\\\
+
+First is six individual programs that will benchmark a single concept. These are
+\texttt{multiply}, \texttt{divide}, \texttt{gcd}, \texttt{gcdext}, \texttt{rsa}, and
+\texttt{pi}.
+
+Second is gexpr.c, a nifty little program (compiled with \texttt{gcc -o gexpr gexpr.c},
+or\\ \texttt{gcc -o gexpr gexpr.c -lm} on some systems). They use this basically for
+weighing the results of individual tests and stringifying them to a certain precision.
+
+Third is runbench, a shell script that runs each of the six benchmark programs, each
+several times with a different set of arguments. It compiles the results, using gexpr
+to carefully calculate a final "score" for each benchmark, each benchmark family
+(\texttt{rsa} and \texttt{pi} are separated as "app" benchmarks.), and for the suite as a
+whole.
+
+\subsection{gmp gem benchmarking}
+
+The structure described above lends itself perfectly to some simple modifications that
+allow me to benchmark the gmp gem. Instead of using the C programs that are the
+individual benchmarks, I have converted them into Ruby programs, and called them the same
+names. When runbench executes "multiply" for example, it is running a Ruby program that
+does the same general thing as "multiply" the C program. This allows me to benchmark the
+gmp gem, and I can even compare the results with those of benchmarking GMP itself. I have
+done so below.
+
+\newpage
+\subsection{Benchmark Results}
+
+I've benchmarked an array of Ruby-version/GMP-version combinations, which can be compared
+with results of the actual GMPbench benchmark, in order to understand the overhead that
+Ruby and the Ruby C Extension API impose on the GMP library. The benchmarks listed were
+all executed on an Apple MacBook "5.1." booting three operating systems with rEFIt 0.14.
+Because not all of the marks from GMPbench have been ported to the Ruby gmp gem, results
+for 'base' and 'app' are not listed; they cannot be compared with GMPbench results.\\
+
+\begin{LARGE}MacBook, Intel Core 2 Duo, 2 GHz, 2 GB DDR3\end{LARGE}\\
+
+Mac OS X 10.6.4, x86 (32-bit)\\
+Ruby and GMP compiled with gcc 4.2.1 (Apple Inc. build 5664)\\
+\begin{tabular}{|l|l|r|r|r|r|}
+  \hline
+  GMP   & bench    & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & C \\
+  \hline
+  4.3.2 & multiply &  7696.5    &     7482.8 &     7608.2 & 16789   \\
+        & divide   &  7304.3    &     7148.0 &     7199.4 &  9872.5 \\
+        & gcd      &  2388.4    &     2412.1 &     2470.9 &  2938.9 \\
+        & rsa      &  2042.3    &     2058.0 &     2065.9 &  2136.7 \\
+  \hline
+  5.0.1 & multiply &  8142.6    &     7886.0 &     7952.7 & 17925   \\
+        & divide   & 10256      &    10088   &    10124   & 16069   \\
+        & gcd      &  2498.1    &     2547.0 &     2574.2 &  3063.7 \\
+        & rsa      &  2132.4    &     2157.4 &     2167.9 &  2229.2 \\
+  \hline
+\end{tabular}\\\\
+
+Ubuntu 10.04, Kernel 2.6.32-24, x86\_64 (64-bit)\\
+Ruby and GMP compiled with gcc 4.4.3 (Ubuntu 4.4.3-4ubuntu5)\\
+\begin{tabular}{|l|l|r|r|r|r|}
+  \hline
+  GMP   & bench    & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & C \\
+  \hline
+  4.3.2 & multiply &     7708.5 &     6757.6 &     7551.5 & 16727   \\
+        & divide   &     7545.3 &     7648.5 &     7493.0 & xxx     \\
+        & gcd      &     2450.9 &     2471.6 &     2462.2 &  2997.6 \\
+        & rsa      &     2011.8 &     2068.6 &     2065.9 &  2126.3 \\
+  \hline
+  5.0.1 & multiply & x &  7131.5 &  7590.0 & 17695   \\
+        & divide   & x & 10917   & 10692   & 15629   \\
+        & gcd      & x &  2530.8 &  2515.9 &  2925.1 \\
+        & rsa      & x &  2128.6 &  2189.8 &  2233.4 \\
+  \hline
+\end{tabular}\\\\
+
+Windows 7 (64-bit)\\
+Ruby and GMP compiled with gcc 4.5.0 (tdm-1)\\
+\begin{tabular}{|l|l|r|r|r|r|}
+  \hline
+  GMP & bench & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & C \\
+  \hline
+  4.3.2 & multiply & 3514.7  & 3649.4 & 3631.9 & 6448.7 \\
+        & divide   & 2996.7  & 3082.0 & 3065.2 & 3717.5 \\
+        & gcd      & 1142.8  & 1183.3 & 1203.6 & 1359.4 \\
+        & rsa      & 719.41  & 730.05 & 736.03 & 757.97 \\
+  \hline
+  5.0.1 & multiply & 3702.9  & 3824.1 & 3763.8 & 6835.2 \\
+        & divide   & 4549.7  & 4600.9 & 4609.2 & 6497.4 \\
+        & gcd      & 1204.9  & 1233.4 & 1235.0 & 1394.2 \\
+        & rsa      & 729.68  & 735.13 & 728.56 & 754.72 \\
+  \hline
+\end{tabular}\\
+
 \end{document}
