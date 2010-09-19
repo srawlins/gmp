@@ -2,6 +2,7 @@
   * Now supporting GMP 5.0.1 (I now test with GMP 4.3.2 and 5.0.1).
   * Now supporting MPFR 3.0.0 (I now test with MPFR 2.4.2 and 3.0.0).
   * Now supporting Ruby 1.9.2. A few changes had to be made.
+  * Now supporting 64-bit (mostly Linux right now).
   * Added MPFR method GMP::F.zero? (mpfr_zero_p) with tests.
   * Added MPFR method GMP::F.regular? (mpfr_regular_p) with tests (MPFR 3.0.0
     only).
