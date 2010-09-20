@@ -1019,6 +1019,77 @@ static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
   return res;
 }
 
+/**********************************************************************
+ *    Rounding Related Functions                                      *
+ **********************************************************************/
+
+VALUE r_gmpfsg_get_default_rounding_mode(VALUE klass)
+{
+  (void)klass;
+  const char *rounding_string_val;
+  rounding_string_val = mpfr_print_rnd_mode (mpfr_get_default_rounding_mode ());
+  if ( rounding_string_val == NULL ) {
+    return Qnil;
+  }
+  else {
+    return rb_const_get (mGMP, rb_intern (rounding_string_val));
+  }
+}
+
+VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
+{
+  (void)klass;
+  VALUE mode;
+  if (GMPRND_P(arg)) {
+    mode = rb_funcall (arg, rb_intern("mode"), 0);
+    if (FIX2INT(mode) < 0 || FIX2INT(mode) > 3) {
+      rb_raise(rb_eRangeError, "rounding mode must be one of the rounding mode constants.");
+    }
+  } else {
+    rb_raise(rb_eTypeError, "rounding mode must be one of the rounding mode constants.");
+  }
+  
+  switch (FIX2INT(mode)) {
+    case 0:
+      mpfr_set_default_rounding_mode (GMP_RNDN); break;
+    case 1:
+      mpfr_set_default_rounding_mode (GMP_RNDZ); break;
+    case 2:
+      mpfr_set_default_rounding_mode (GMP_RNDU); break;
+    case 3:
+      mpfr_set_default_rounding_mode (GMP_RNDD); break;
+#if MPFR_VERSION_MAJOR>2
+    case 4:
+      mpfr_set_default_rounding_mode (MPFR_RNDA); break;
+#endif
+  }
+  
+  return Qnil;
+}
+ 
+VALUE r_gmpf_can_round(VALUE self, VALUE err, VALUE rnd1, VALUE rnd2, VALUE prec)
+{
+  MP_FLOAT *self_val;
+  mp_exp_t err_val;
+  mpfr_rnd_t rnd1_val, rnd2_val;
+  mpfr_prec_t prec_val;
+  
+  mpf_get_struct(self, self_val);
+  if (FIXNUM_P(err)) {
+    err_val = FIX2INT(err);
+  } else {
+    typeerror_as(X, "err");
+  }
+  rnd1_val = r_get_rounding_mode(rnd1);
+  rnd2_val = r_get_rounding_mode(rnd2);
+  prec_val = FIX2INT (prec);
+  
+  if (mpfr_can_round (self_val, err_val, rnd1_val, rnd2_val, prec_val))
+    return Qtrue;
+  else
+    return Qfalse;
+}
+
 #endif
 
 
@@ -1238,6 +1309,11 @@ void init_gmpf()
 
   // Integer and Remainder Related Functions
   // "integer?", r_gmpfr_integer_p
+  
+  // Rounding Related Functions
+  rb_define_singleton_method (cGMP_F, "default_rounding_mode", r_gmpfsg_get_default_rounding_mode, 0);
+  rb_define_singleton_method (cGMP_F, "default_rounding_mode=", r_gmpfsg_set_default_rounding_mode, 1);
+  rb_define_method(cGMP_F, "can_round?",  r_gmpf_can_round, 4);
 #endif /* MPFR */
   
   // _unsorted_

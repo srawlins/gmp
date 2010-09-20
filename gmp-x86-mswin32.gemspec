@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = "gmp - providing Ruby bindings to the GMP library."
   s.email = ["Tomasz.Wegrzanowski@gmail.com", "sam.rawlins@gmail.com"]
   
-  s.extensions = ["ext/extconf.rb"]
+  #s.extensions = ["ext/extconf.rb"]
   s.platform = Gem::Platform::CURRENT
   s.has_rdoc = "yard"
   s.homepage = "http://github.com/srawlins/gmp"

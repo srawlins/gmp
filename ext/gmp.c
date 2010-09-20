@@ -98,55 +98,6 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
 }
 
 #ifdef MPFR
-static VALUE r_gmpfsg_get_default_rounding_mode(VALUE klass)
-{
-  (void)klass;
-  const char *rounding_string_val;
-  rounding_string_val = mpfr_print_rnd_mode (mpfr_get_default_rounding_mode ());
-  if ( rounding_string_val == NULL ) {
-    return Qnil;
-  }
-  else {
-    return rb_const_get (mGMP, rb_intern (rounding_string_val));
-  }
-}
-
-static VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
-{
-  (void)klass;
-  VALUE mode;
-  if (GMPRND_P(arg)) {
-    mode = rb_funcall (arg, rb_intern("mode"), 0);
-    if (FIX2INT(mode) < 0 || FIX2INT(mode) > 3) {
-      rb_raise(rb_eRangeError, "rounding mode must be one of the rounding mode constants.");
-    }
-  } else {
-    rb_raise(rb_eTypeError, "rounding mode must be one of the rounding mode constants.");
-  }
-  
-  switch (FIX2INT(mode)) {
-    case 0:
-      mpfr_set_default_rounding_mode (GMP_RNDN);
-      break;
-    case 1:
-      mpfr_set_default_rounding_mode (GMP_RNDZ);
-      break;
-    case 2:
-      mpfr_set_default_rounding_mode (GMP_RNDU);
-      break;
-    case 3:
-      mpfr_set_default_rounding_mode (GMP_RNDD);
-      break;
-#if MPFR_VERSION_MAJOR>2
-    case 4:
-      mpfr_set_default_rounding_mode (MPFR_RNDA);
-      break;
-#endif
-  }
-  
-  return Qnil;
-}
-
 mp_rnd_t r_get_rounding_mode(VALUE rnd)
 {
   VALUE mode;
@@ -193,12 +144,12 @@ mp_rnd_t r_get_rounding_mode(VALUE rnd)
 
 void Init_gmp() {
   mGMP = rb_define_module("GMP");
-  rb_define_const(mGMP, "GMP_VERSION", rb_str_new2(gmp_version));
-  rb_define_const(mGMP, "GMP_CC", rb_str_new2(__GMP_CC));
-  rb_define_const(mGMP, "GMP_CFLAGS", rb_str_new2(__GMP_CFLAGS));
+  rb_define_const(mGMP, "GMP_VERSION",       rb_str_new2(gmp_version));
+  rb_define_const(mGMP, "GMP_CC",            rb_str_new2(__GMP_CC));
+  rb_define_const(mGMP, "GMP_CFLAGS",        rb_str_new2(__GMP_CFLAGS));
   rb_define_const(mGMP, "GMP_BITS_PER_LIMB", INT2FIX(mp_bits_per_limb));
 #ifdef MPFR
-  rb_define_const(mGMP, "MPFR_VERSION", rb_str_new2(MPFR_VERSION_STRING));
+  rb_define_const(mGMP, "MPFR_VERSION",  rb_str_new2(MPFR_VERSION_STRING));
   rb_define_const(mGMP, "MPFR_PREC_MIN", INT2FIX(MPFR_PREC_MIN));
   rb_define_const(mGMP, "MPFR_PREC_MAX", INT2FIX(MPFR_PREC_MAX));
 #endif /* MPFR */
@@ -220,8 +171,6 @@ void Init_gmp() {
   rb_define_singleton_method (cGMP_F, "default_prec=", r_gmpfsg_set_default_prec, 1);
 #ifdef MPFR
   cGMP_Rnd = rb_define_class_under (mGMP, "Rnd", rb_cObject);
-  rb_define_singleton_method (cGMP_F, "default_rounding_mode", r_gmpfsg_get_default_rounding_mode, 0);
-  rb_define_singleton_method (cGMP_F, "default_rounding_mode=", r_gmpfsg_set_default_rounding_mode, 1);
   init_gmprnd ();
 #endif /* MPFR */
   rb_define_method (cGMP_F, "coerce", r_gmpf_coerce, 1); // new method - testing
