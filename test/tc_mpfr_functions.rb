@@ -4,10 +4,6 @@ class TC_MPFR_Functions < Test::Unit::TestCase
   end
   
   def test_const_existence
-    #assert_nothing_raised("GMP::F#const_log2 should be callable.") { GMP::F.const_log2 }
-    #assert_nothing_raised("GMP::F#const_pi should be callable.") { GMP::F.const_pi }
-    #assert_nothing_raised("GMP::F#const_euler should be callable.") { GMP::F.const_euler }
-    #assert_nothing_raised("GMP::F#const_catalan should be callable.") { GMP::F.const_catalan }
     constants = ["const_log2", "const_pi", "const_euler", "const_catalan"]
 
     constants.each do |c|
@@ -54,6 +50,7 @@ class TC_MPFR_Functions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.cos should be callable.") { @a.cos }
     assert_nothing_raised("GMP::F.sin should be callable.") { @a.sin }
     assert_nothing_raised("GMP::F.tan should be callable.") { @a.tan }
+    assert_nothing_raised("GMP::F.sin_cos should be callable.") { @a.sin_cos }
     assert_nothing_raised("GMP::F.sec should be callable.") { @a.sec }
     assert_nothing_raised("GMP::F.csc should be callable.") { @a.csc }
     assert_nothing_raised("GMP::F.cot should be callable.") { @a.cot }
@@ -103,7 +100,8 @@ class TC_MPFR_Functions < Test::Unit::TestCase
   def test_function_parameters
     functions = [:sqrt, :rec_sqrt, :cbrt,
                  :log, :log2, :log10, :exp, :exp2, :exp10,
-                 :cos, :sin, :tan, :sec, :csc, :cot, :acos, :asin, :atan,
+                 :cos, :sin, :tan, :sin_cos, :sec, :csc, :cot,
+                 :acos, :asin, :atan,
                  :cosh, :sinh, :tanh, :sech, :csch, :coth,
                  :acosh, :asinh, :atanh,
                  :log1p, :expm1, :eint, :li2, :gamma, :lngamma,
@@ -119,5 +117,8 @@ class TC_MPFR_Functions < Test::Unit::TestCase
       assert_nothing_raised("GMP::F.#{f} can be called w/ 2 args: rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 128) }
       assert_nothing_raised("GMP::F.#{f} can be called w/ 2 args: rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 200) }
     end
+    assert_nothing_raised("GMP::F.sin_cos can be called w/ 3 args: rounding_mode, prec, prec.") { @a.sin_cos(GMP::GMP_RNDN,  64,  64) }
+    assert_nothing_raised("GMP::F.sin_cos can be called w/ 3 args: rounding_mode, prec, prec.") { @a.sin_cos(GMP::GMP_RNDN, 128,  64) }
+    assert_nothing_raised("GMP::F.sin_cos can be called w/ 3 args: rounding_mode, prec, prec.") { @a.sin_cos(GMP::GMP_RNDN,  64, 128) }
   end
 end

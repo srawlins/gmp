@@ -914,6 +914,31 @@ MPFR_SINGLE_FUNCTION(exp10)
 MPFR_SINGLE_FUNCTION(cos)
 MPFR_SINGLE_FUNCTION(sin)
 MPFR_SINGLE_FUNCTION(tan)
+
+VALUE r_gmpfr_sin_cos(int argc, VALUE *argv, VALUE self)
+{
+  MP_FLOAT *self_val, *sin_val, *cos_val;
+  VALUE rnd_mode, sin_prec, cos_prec;
+  mpfr_prec_t prec, sin_prec_val, cos_prec_val;
+  mp_rnd_t rnd_mode_val;
+  VALUE sinn, coss;
+  
+  rb_scan_args (argc, argv, "03", &rnd_mode, &sin_prec, &cos_prec);
+  
+  mpf_get_struct_prec (self, self_val, prec);
+  if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }
+  else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }
+  if (NIL_P (sin_prec)) { sin_prec_val = prec; }
+  else { sin_prec_val = FIX2INT (sin_prec); }
+  if (NIL_P (cos_prec)) { cos_prec_val = sin_prec_val; }
+  else { cos_prec_val = FIX2INT (cos_prec); }
+  mpf_make_struct_init (sinn, sin_val, sin_prec_val);
+  mpf_make_struct_init (coss, cos_val, cos_prec_val);
+  mpfr_sin_cos (sin_val, cos_val, self_val, rnd_mode_val);
+  
+  return rb_ary_new3(2, sinn, coss);
+}
+
 MPFR_SINGLE_FUNCTION(sec)
 MPFR_SINGLE_FUNCTION(csc)
 MPFR_SINGLE_FUNCTION(cot)
@@ -1242,23 +1267,22 @@ void init_gmpf()
   //"unordered", r_gmpfr_unordered_p
   
   // Special Functions
-  rb_define_method(cGMP_F, "log",   r_gmpfr_log,   -1);
-  rb_define_method(cGMP_F, "log2",  r_gmpfr_log2,  -1);
-  rb_define_method(cGMP_F, "log10", r_gmpfr_log10, -1);
-  rb_define_method(cGMP_F, "exp",   r_gmpfr_exp,   -1);
-  rb_define_method(cGMP_F, "exp2",  r_gmpfr_exp2,  -1);
-  rb_define_method(cGMP_F, "exp10", r_gmpfr_exp10, -1);
-  rb_define_method(cGMP_F, "cos",   r_gmpfr_cos,   -1);
-  rb_define_method(cGMP_F, "sin",   r_gmpfr_sin,   -1);
-  rb_define_method(cGMP_F, "tan",   r_gmpfr_tan,   -1);
-  // "sin_cos", r_gmpfr_sin_cos
-  rb_define_method(cGMP_F, "sec",   r_gmpfr_sec,   -1);
-  rb_define_method(cGMP_F, "csc",   r_gmpfr_csc,   -1);
-  rb_define_method(cGMP_F, "cot",   r_gmpfr_cot,   -1);
-  
-  rb_define_method(cGMP_F, "acos",  r_gmpfr_acos,  -1);
-  rb_define_method(cGMP_F, "asin",  r_gmpfr_asin,  -1);
-  rb_define_method(cGMP_F, "atan",  r_gmpfr_atan,  -1);
+  rb_define_method(cGMP_F, "log",     r_gmpfr_log,     -1);
+  rb_define_method(cGMP_F, "log2",    r_gmpfr_log2,    -1);
+  rb_define_method(cGMP_F, "log10",   r_gmpfr_log10,   -1);
+  rb_define_method(cGMP_F, "exp",     r_gmpfr_exp,     -1);
+  rb_define_method(cGMP_F, "exp2",    r_gmpfr_exp2,    -1);
+  rb_define_method(cGMP_F, "exp10",   r_gmpfr_exp10,   -1);
+  rb_define_method(cGMP_F, "cos",     r_gmpfr_cos,     -1);
+  rb_define_method(cGMP_F, "sin",     r_gmpfr_sin,     -1);
+  rb_define_method(cGMP_F, "tan",     r_gmpfr_tan,     -1);
+  rb_define_method(cGMP_F, "sin_cos", r_gmpfr_sin_cos, -1);
+  rb_define_method(cGMP_F, "sec",     r_gmpfr_sec,     -1);
+  rb_define_method(cGMP_F, "csc",     r_gmpfr_csc,     -1);
+  rb_define_method(cGMP_F, "cot",     r_gmpfr_cot,     -1);
+  rb_define_method(cGMP_F, "acos",    r_gmpfr_acos,    -1);
+  rb_define_method(cGMP_F, "asin",    r_gmpfr_asin,    -1);
+  rb_define_method(cGMP_F, "atan",    r_gmpfr_atan,    -1);
   // "atan2", r_gmpfr_atan2
   
   rb_define_method(cGMP_F, "cosh",  r_gmpfr_cosh,  -1);
