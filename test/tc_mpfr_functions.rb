@@ -1,6 +1,7 @@
 class TC_MPFR_Functions < Test::Unit::TestCase
   def setup
     @a = GMP::F(1)
+    @b = GMP::F(2)
   end
   
   def test_const_existence
@@ -54,15 +55,15 @@ class TC_MPFR_Functions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.sec should be callable.") { @a.sec }
     assert_nothing_raised("GMP::F.csc should be callable.") { @a.csc }
     assert_nothing_raised("GMP::F.cot should be callable.") { @a.cot }
-    
     assert_nothing_raised("GMP::F.acos should be callable.") { @a.acos }
     assert_nothing_raised("GMP::F.asin should be callable.") { @a.asin }
     assert_nothing_raised("GMP::F.atan should be callable.") { @a.atan }
+    assert_nothing_raised("GMP::F.atan2 should be callable.") { @a.atan2(@b) }
     
     assert_nothing_raised("GMP::F.cosh should be callable.") { @a.cosh }
     assert_nothing_raised("GMP::F.sinh should be callable.") { @a.sinh }
     assert_nothing_raised("GMP::F.tanh should be callable.") { @a.tanh }
-
+    assert_nothing_raised("GMP::F.sinh_cosh should be callable.") { @a.sinh_cosh }
     assert_nothing_raised("GMP::F.sech should be callable.") { @a.sech }
     assert_nothing_raised("GMP::F.csch should be callable.") { @a.csch }
     assert_nothing_raised("GMP::F.coth should be callable.") { @a.coth }
@@ -95,30 +96,37 @@ class TC_MPFR_Functions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.yn should be callable.") { @a.yn(0) }
     assert_nothing_raised("GMP::F.yn should be callable.") { @a.yn(1) }
     assert_nothing_raised("GMP::F.yn should be callable.") { @a.yn(2) }
+    
+    assert_nothing_raised("GMP::F.agm should be callable.") { @a.agm(@b) }
+    assert_nothing_raised("GMP::F.hypot should be callable.") { @a.hypot(@b) }
   end
   
   def test_function_parameters
-    functions = [:sqrt, :rec_sqrt, :cbrt,
-                 :log, :log2, :log10, :exp, :exp2, :exp10,
-                 :cos, :sin, :tan, :sin_cos, :sec, :csc, :cot,
-                 :acos, :asin, :atan,
-                 :cosh, :sinh, :tanh, :sech, :csch, :coth,
-                 :acosh, :asinh, :atanh,
-                 :log1p, :expm1, :eint, :li2, :gamma, :lngamma,
-                 :zeta, :erf, :erfc,
-                 :j0, :j1, :y0, :y1
-                ]
-    functions += [:digamma] if GMP::MPFR_VERSION >= "3.0.0"
+    single_functions = [:sqrt, :rec_sqrt, :cbrt,
+                        :log, :log2, :log10, :exp, :exp2, :exp10,
+                        :cos, :sin, :tan, :sin_cos, :sec, :csc, :cot,
+                        :acos, :asin, :atan,
+                        :cosh, :sinh, :tanh, :sech, :csch, :coth,
+                        :acosh, :asinh, :atanh,
+                        :log1p, :expm1, :eint, :li2, :gamma, :lngamma,
+                        :zeta, :erf, :erfc,
+                        :j0, :j1, :y0, :y1
+                       ]
+    single_functions += [:digamma] if GMP::MPFR_VERSION >= "3.0.0"
+    double_functions = [:sin_cos, :sinh_cosh]
+    single_mpf_functions = [:atan2, :agm, :hypot]
     
-    functions.each do |f|
+    (single_functions + double_functions).each do |f|
       assert_nothing_raised("GMP::F.#{f} can be called w/ 1 arg: rounding_mode.") { @a.send(f, GMP::GMP_RNDN) }
       assert_nothing_raised("GMP::F.#{f} can be called w/ 1 arg: rounding_mode.") { @a.send(f, GMP::GMP_RNDZ) }
       assert_nothing_raised("GMP::F.#{f} can be called w/ 2 args: rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 32) }
       assert_nothing_raised("GMP::F.#{f} can be called w/ 2 args: rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 128) }
       assert_nothing_raised("GMP::F.#{f} can be called w/ 2 args: rounding_mode, prec.") { @a.send(f, GMP::GMP_RNDN, 200) }
     end
-    assert_nothing_raised("GMP::F.sin_cos can be called w/ 3 args: rounding_mode, prec, prec.") { @a.sin_cos(GMP::GMP_RNDN,  64,  64) }
-    assert_nothing_raised("GMP::F.sin_cos can be called w/ 3 args: rounding_mode, prec, prec.") { @a.sin_cos(GMP::GMP_RNDN, 128,  64) }
-    assert_nothing_raised("GMP::F.sin_cos can be called w/ 3 args: rounding_mode, prec, prec.") { @a.sin_cos(GMP::GMP_RNDN,  64, 128) }
+    double_functions.each do |f|
+      assert_nothing_raised("GMP::F.#{f} can be called w/ 3 args: rounding_mode, prec, prec.") { @a.send(f, GMP::GMP_RNDN,  64,  64) }
+      assert_nothing_raised("GMP::F.#{f} can be called w/ 3 args: rounding_mode, prec, prec.") { @a.send(f, GMP::GMP_RNDN, 128,  64) }
+      assert_nothing_raised("GMP::F.#{f} can be called w/ 3 args: rounding_mode, prec, prec.") { @a.send(f, GMP::GMP_RNDN,  64, 128) }
+    end
   end
 end

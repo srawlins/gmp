@@ -5,7 +5,8 @@
   * Added GMP constant GMP_NUMB_MAX
   * Added GMP method GMP::Z.gcdext.
   * GMP::Z.gcd and GMP::Z.gcdext are now heavily tested via GMP's tests.
-  * Added MPFR method GMP::F.sin_cos (mpfr_sin_cos), not tested.
+  * Added MPFR methods GMP::F.sin[h]_cos[h] (mpfr_sin[h]_cos[h]), not tested.
+  * Added MPFR methods GMP::F.atan2, .agm, and .hypot, not tested.
 
 0.5.3:
   * Now supporting GMP 5.0.1 (I now test with GMP 4.3.2 and 5.0.1).
