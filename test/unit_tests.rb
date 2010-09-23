@@ -27,6 +27,8 @@ require './tc_z_gcd_lcm_invert'
 require './tc_random'
 require './tc_hashes'
 
+require './gmp_tgcd'
+
 begin
   GMP::MPFR_VERSION
   require './tc_mpfr_constants'

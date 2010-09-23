@@ -1293,6 +1293,45 @@ VALUE r_gmpz_gcd(VALUE self, VALUE arg)
   return res;
 }
 
+VALUE r_gmpz_gcdext(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val, *res_val, *s_val, *t_val;
+  VALUE res, s, t, ary;
+  int free_arg_val = 0;
+
+  mpz_get_struct (self,self_val);
+
+  if (GMPZ_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_make_struct_init (s, s_val);
+    mpz_make_struct_init (t, t_val);
+    mpz_get_struct (arg, arg_val);
+    mpz_gcdext (res_val, s_val, t_val, self_val, arg_val);
+  } else if (FIXNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_make_struct_init (s, s_val);
+    mpz_make_struct_init (t, t_val);
+    mpz_temp_alloc(arg_val);
+    mpz_init_set_ui(arg_val, FIX2NUM(arg));
+    free_arg_val = 1;
+    mpz_gcdext (res_val, s_val, t_val, self_val, arg_val);
+  } else if (BIGNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_make_struct_init (s, s_val);
+    mpz_make_struct_init (t, t_val);
+    mpz_set_bignum (res_val, arg);
+    mpz_gcdext (res_val, s_val, t_val, res_val, self_val);
+  } else {
+    typeerror (ZXB);
+  }
+  
+  if (free_arg_val)
+    mpz_temp_free(arg_val);
+  
+  ary = rb_ary_new3(3, res, s, t);
+  return ary;
+}
+
 VALUE r_gmpz_invert(VALUE self, VALUE arg)
 {
   MP_INT *self_val, *arg_val, *res_val;
@@ -2069,6 +2108,7 @@ void init_gmpz()
   rb_define_alias(           cGMP_Z, "next_prime",    "nextprime");
   rb_define_alias(           cGMP_Z, "next_prime!",   "nextprime!");
   rb_define_method(          cGMP_Z, "gcd",           r_gmpz_gcd, 1);
+  rb_define_method(          cGMP_Z, "gcdext",        r_gmpz_gcdext, 1);
   rb_define_method(          cGMP_Z, "invert",        r_gmpz_invert, 1);
   rb_define_method(          cGMP_Z, "jacobi",        r_gmpz_jacobi, 1);
   rb_define_singleton_method(cGMP_Z, "jacobi",        r_gmpzsg_jacobi, 2);

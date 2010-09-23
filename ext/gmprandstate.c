@@ -242,6 +242,35 @@ VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg)
   return res;
 }
 
+/*
+ * call-seq:
+ *   rand_state.rrandomb(fixnum)
+ *
+ * From the GMP Manual:
+ *
+ * Generate a random integer with long strings of zeros and ones in the binary
+ * representation. Useful for testing functions and algorithms, since this kind
+ * of random numbers have proven to be more likely to trigger corner-case bugs.
+ * The random number will be in the range 0 to 2^n-1, inclusive. 
+ */
+VALUE r_gmprandstate_rrandomb(VALUE self, VALUE arg)
+{
+  MP_RANDSTATE *self_val;
+  MP_INT *res_val;
+  VALUE res;
+
+  mprandstate_get_struct(self,self_val);
+  
+  if (FIXNUM_P(arg)) {
+    mpz_make_struct_init(res, res_val);
+    mpz_rrandomb(res_val, self_val, FIX2INT(arg));
+  } else {
+    typeerror(X);
+  }
+  
+  return res;
+}
+
 
 #ifdef MPFR
 /**********************************************************************
@@ -307,6 +336,7 @@ void init_gmprandstate()
   // Integer Random Numbers
   rb_define_method(cGMP_RandState, "urandomb", r_gmprandstate_urandomb, 1);
   rb_define_method(cGMP_RandState, "urandomm", r_gmprandstate_urandomm, 1);
+  rb_define_method(cGMP_RandState, "rrandomb", r_gmprandstate_rrandomb, 1);
   
 #ifdef MPFR
   // Float Random Numbers

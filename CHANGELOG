@@ -1,3 +1,11 @@
+0.5.23:
+  * Added MPFR method GMP::F.can_round? (mpfr_can_round), not tested.
+  * MPFR const_ functions now accept an optional rounding mode and precision.
+  * Added GMP method GMP::RandState.rrandomb (gmpz_rrandomb)
+  * Added GMP constant GMP_NUMB_MAX
+  * Added GMP method GMP::Z.gcdext.
+  * GMP::Z.gcd and GMP::Z.gcdext are now heavily tested via GMP's tests.
+
 0.5.3:
   * Now supporting GMP 5.0.1 (I now test with GMP 4.3.2 and 5.0.1).
   * Now supporting MPFR 3.0.0 (I now test with MPFR 2.4.2 and 3.0.0).

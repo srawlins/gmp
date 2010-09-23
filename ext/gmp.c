@@ -148,6 +148,7 @@ void Init_gmp() {
   rb_define_const(mGMP, "GMP_CC",            rb_str_new2(__GMP_CC));
   rb_define_const(mGMP, "GMP_CFLAGS",        rb_str_new2(__GMP_CFLAGS));
   rb_define_const(mGMP, "GMP_BITS_PER_LIMB", INT2FIX(mp_bits_per_limb));
+  rb_define_const(mGMP, "GMP_NUMB_MAX",      ULONG2NUM(GMP_NUMB_MAX));
 #ifdef MPFR
   rb_define_const(mGMP, "MPFR_VERSION",  rb_str_new2(MPFR_VERSION_STRING));
   rb_define_const(mGMP, "MPFR_PREC_MIN", INT2FIX(MPFR_PREC_MIN));
