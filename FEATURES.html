@@ -1,0 +1,143 @@
+<!--A table to show wtf I have completed, etc. For every function that I try to port, there are several tasks to check off. This is that.-->
+
+<html>
+  <head>
+    <script type="text/javascript" src="http://extjs-public.googlecode.com/svn/tags/extjs-3.2.1/release/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="http://extjs-public.googlecode.com/svn/tags/extjs-3.2.1/release/ext-all.js"></script>
+    <link rel="stylesheet" href="http://extjs-public.googlecode.com/svn/tags/extjs-3.2.1/release/resources/css/ext-all.css"></script>
+    <style>
+body {
+  padding: 32px;
+}
+    </style>
+    <script>
+/*!
+ * Ext JS Library 3.2.1
+ * Copyright(c) 2006-2010 Ext JS, Inc.
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
+Ext.onReady(function(){
+
+    // NOTE: This is an example showing simple state management. During development,
+    // it is generally best to disable state management as dynamically-generated ids
+    // can change across page loads, leading to unpredictable results.  The developer
+    // should ensure that stable state ids are set for stateful components in real apps.    
+    Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+
+    // sample static data for the store
+    var myData = [
+        /* method,             function,                         manual, yard, testB, testO */
+        ['GMP::Z.init',   "mpz_init",                                "yes","yes","yes","no"],
+        ['GMP::Z#swap',   "mpz_swap",                                   "","yes",   "","no"],
+        ['GMP::Z#to_i',   "mpz_get_si",                              "yes","yes",   "","no"],
+        ['GMP::Z#to_d',   "mpz_get_d",                               "yes","yes",   "","no"],
+        ['GMP::Z#to_s',   "mpz_get_str",                             "yes","yes",   "","no"],
+        ['GMP::Z#+',      "mpz_add<br />mpz_add_ui<br />mpz_sub_ui", "yes","yes","yes","no"],
+        ['GMP::Z#add!',   "mpz_add<br />mpz_add_ui<br />mpz_sub_ui", "yes","yes","yes","no"],
+        ['GMP::Z#-',      "mpz_sub<br />mpz_sub_ui<br />mpz_add_ui", "yes","yes","yes","no"],
+        ['GMP::Z#sub!',   "mpz_sub<br />mpz_sub_ui<br />mpz_add_ui", "yes","yes","yes","no"],
+        ['GMP::Z#*',      "mpz_mul<br />mpz_mul_si",                 "yes","yes","yes","no"],
+        ['GMP::Z#addmul!',"mpz_addmul<br /mpz_addmul_ui",               "","yes",   "","no"]
+    ];
+
+    /**
+     * Custom function used for column renderer
+     * @param {Object} val
+     */
+    function change(val){
+        if(val > 0){
+            return '<span style="color:green;">' + val + '</span>';
+        }else if(val < 0){
+            return '<span style="color:red;">' + val + '</span>';
+        }
+        return val;
+    }
+
+    /**
+     * Custom function used for column renderer
+     * @param {Object} val
+     */
+    function pctChange(val){
+        if(val > 0){
+            return '<span style="color:green;">' + val + '%</span>';
+        }else if(val < 0){
+            return '<span style="color:red;">' + val + '%</span>';
+        }
+        return val;
+    }
+    
+    /**
+     * Custom function used for column renderer
+     * @param {Object} val
+     */
+    function shouldExist(val){
+        if(val == ''){
+            return '<span style="background-color:#FFCCCC;">&nbsp;<i>missing</i>&nbsp;</span>';
+        }
+        return val;
+    }
+    
+    /**
+     * Custom function used for column renderer
+     * @param {Object} val
+     */
+    function shouldYes(val){
+        if(val == ''){
+            return '<span style="background-color:#FFCCCC;">&nbsp;<i>missing</i>&nbsp;</span>';
+        }else if(typeof val != "string"){
+            return val;
+        } else if(val.match(/no/i)){
+            return '<span style="color:red;">' + val + '</span>';
+        } else if(val.match(/yes/i)){
+            return '<span style="color:green;">' + val + '</span>';
+        }
+        return val;
+    }
+
+    // create the data store
+    var store = new Ext.data.ArrayStore({
+        fields: [
+           {name: 'method'},
+           {name: 'function'},
+           {name: 'manual'},
+           {name: 'yard'},
+           {name: 'testBasic'},
+           {name: 'testOriginal'}
+        ]
+    });
+
+    // manually load local data
+    store.loadData(myData);
+
+    // create the Grid
+    var grid = new Ext.grid.GridPanel({
+        store: store,
+        columns: [
+            {id:'method',header: 'Ruby method', width: 140, sortable: true, dataIndex: 'method'},
+            {header: 'C function',                 width: 110, sortable: true, renderer: shouldExist, dataIndex: 'function'},
+            {header: 'Documented in manual.pdf?',  width: 160, sortable: true, renderer: shouldYes, dataIndex: 'manual'},
+            {header: 'Documented in YARD?',        width: 130, sortable: true, renderer: shouldYes, dataIndex: 'yard'},
+            {header: 'Tested basically?',          width: 100, sortable: true, renderer: shouldYes, dataIndex: 'testBasic'},
+            {header: 'Tested using original lib?', width: 140, sortable: true, renderer: shouldYes, dataIndex: 'testOriginal'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'method',
+        height: 350,
+        width: 890,
+        title: 'GMP::Z',
+        // config options for stateful behavior
+        stateful: true,
+        stateId: 'grid'        
+    });
+    
+    // render the grid to the specified div in the page
+    grid.render('grid-example');
+});
+    </script>
+  </head>
+  <body>
+    <div id='grid-example'>
+    </div>
+  </body>
+</html>

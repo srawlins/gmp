@@ -10,22 +10,13 @@
  * Instances of this class can store variables of the type mpz_t. This class
  * also contains many methods that act as the functions for mpz_t variables,
  * as well as a few methods that attempt to make this library more Ruby-ish.
- *
+ */
+ 
+/*
  * The following list is just a simple checklist for me, really. A better
  * reference should be found in the rdocs.
  *
  *   Ruby method    C Extension function    GMP function
- *   to_d           r_gmpz_to_d             mpz_get_d
- *   to_i           r_gmpz_to_i             mpz_get_i
- *   to_s           r_gmpz_to_s             mpz_get_s
- *   +              r_gmpz_add              mpz_add
- *   \------------------------              mpz_add_ui
- *   add!           r_gmpz_add_self         mpz_add
- *   \-----------------------------         mpz_add_ui
- *   -              r_gmpz_sub              mpz_sub
- *   \------------------------              mpz_sub_ui
- *   sub!           r_gmpz_sub_self         mpz_sub
- *   \-----------------------------         mpz_sub_ui
  *   *              r_gmpz_mul              mpz_mul
  *   \------------------------              mpz_mul_si
  *   addmul!        r_gmpz_addmul_self      mpz_addmul
@@ -257,10 +248,9 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)        \
 
 /*
  * call-seq:
- *   GMP::Z.new(arg = 0)
+ *   GMP::Z.new(value = 0)
  *
- * Creates a new GMP::Z integer, with +arg+ as its value, converting where
- * necessary.
+ * Creates a new GMP::Z integer, with _value_ as its value, converting where necessary.
  */
 VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
 {
@@ -293,8 +283,8 @@ VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
  * call-seq:
  *   a = b
  *
- * Sets the value of +a+ to the value of +b+. +b+ may be one of the following
- * classes:
+ * Sets the value of _a_ to the value of _b_. _b_ must be an instance of one of the
+ * following classes:
  *
  * * GMP::Z
  * * Fixnum
@@ -321,9 +311,9 @@ void mpz_set_value(MP_INT *target, VALUE source)
 
 /*
  * call-seq:
- *   GMP::Z(arg)
+ *   GMP::Z(value)
  *
- * A convenience method for +GMP::Z.new(arg)+.
+ * A convenience method for +GMP::Z.new(value)+.
  */
 VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module)
 {
@@ -333,9 +323,9 @@ VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module)
 
 /*
  * call-seq:
- *   int1.swap int2
+ *   a.swap b
  *
- * Efficiently swaps the contents of +int1+ with +int2+.
+ * Efficiently swaps the contents of _a_ with _b_. _b_ must be an instance of GMP::Z.
  */
 VALUE r_gmpz_swap(VALUE self, VALUE arg)
 {
@@ -356,16 +346,15 @@ VALUE r_gmpz_swap(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   integer.to_i
+ *   a.to_i
  *
- * Returns +integer+ as an Fixnum if +integer+ fits in a Fixnum.
+ * Returns _a_ as an Fixnum if _a_ fits into a Fixnum.
  *
- * Otherwise returns the least significant part of +integer+, with the same
- * sign as +integer+.
+ * Otherwise returns the least significant part of _a_, with the same sign as _a_.
  *
- * If +integer+ is too big to fit in a Fixnum, the returned result is probably
- * not very useful. To find out if the value will fit, use the function
- * mpz_fits_slong_p (<b>Unimplemented</b>).
+ * If _a_ is too big to fit in a Fixnum, the returned result is probably not very useful.
+ * To find out if the value will fit, use the function +mpz_fits_slong_p+
+ * (<b>Unimplemented</b>).
  */
 VALUE r_gmpz_to_i(VALUE self)
 {
@@ -384,16 +373,15 @@ VALUE r_gmpz_to_i(VALUE self)
 
 /*
  * call-seq:
- *   integer.to_d
+ *   a.to_d
  *
- * Returns +integer+ as an Float if +integer+ fits in a Float.
+ * Returns _a_ as a Float if _a_ fits in a Float.
  *
- * Otherwise returns the least significant part of +integer+, with the same
- * sign as +integer+.
+ * Otherwise returns the least significant part of _a_, with the same sign as _a_.
  *
- * If +integer+ is too big to fit in a Float, the returned result is probably
- * not very useful. To find out if the value will fit, use the function
- * mpz_fits_slong_p (<b>Unimplemented</b>).
+ * If _a_ is too big to fit in a Float, the returned result is probably not very useful.
+ * To find out if the value will fit, use the function +mpz_fits_slong_p+
+ * (<b>Unimplemented</b>).
  */
 VALUE r_gmpz_to_d(VALUE self)
 {
@@ -407,20 +395,23 @@ VALUE r_gmpz_to_d(VALUE self)
  * Document-method: to_s
  *
  * call-seq:
- *   integer.to_s(base = 10)
+ *   a.to_s(base = 10)
+ *   a.to_s(:bin)
+ *   a.to_s(:oct)
+ *   a.to_s(:dec)
+ *   a.to_s(:hex)
  *
- * Returns +integer+, as a Ruby string. If +base+ is not provided, then
- * the string will be the decimal representation.
+ * Returns _a_, as a Ruby String. If _base_ is not provided, then the decimal
+ * representation will be returned.
  *
  * From the GMP Manual:
  *
- * Convert +integer+ to a string of digits in base +base+. The +base+ argument
- * may vary from 2 to 62 or from -2 to -36.
+ * Convert _a_ to a string of digits in base _base_. The _base_ argument may vary from 2
+ * to 62 or from -2 to -36.
  *
- * For +base+ in the range 2..36, digits and lower-case letters are used; for
- * -2..-36, digits and upper-case letters are used; for 37..62, digits,
- * upper-case letters, and lower-case letters (in that significance order) are
- * used.
+ * For _base_ in the range 2..36, digits and lower-case letters are used; for -2..-36,
+ * digits and upper-case letters are used; for 37..62, digits, upper-case letters, and
+ * lower-case letters (in that significance order) are used.
  */
 VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self)
 {
@@ -480,9 +471,9 @@ VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self)
 
 /*
  * call-seq:
- *   +(other)
+ *   a + b
  *
- * Adds this GMP::Z to other. Other can be
+ * Adds _a_ to _b_. _b_ must be an instance of one of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -527,10 +518,9 @@ VALUE r_gmpz_add(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   add!(other)
+ *   a.add!(_b_)
  *
- * Adds this GMP::Z to other, and sets this GMP::Z's value to the result. Other
- * can be
+ * Adds _a_ to _b_ in-place, setting _a_ to the sum. _b_ must be an instance of one of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -563,9 +553,9 @@ VALUE r_gmpz_add_self(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   -(other)
+ *   a - b
  *
- * Subtracts other from this GMP::Z. Other can be
+ * Subtracts _b_ from _a_. _b_ must be an instance of one of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -615,10 +605,10 @@ VALUE r_gmpz_sub(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   sub!(other)
+ *   a.sub!(b)
  *
- * Subtracts other from this GMP::Z, and sets this GMP::Z's value to the
- * result. Other can be
+ * Subtracts _b_ from _a_ in-place, setting _a_ to the difference. _b_ must be an
+ * instance of one of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -651,9 +641,9 @@ VALUE r_gmpz_sub_self(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   *(other)
+ *   a * b
  *
- * Multiplies this GMP::Z with other. Other can be
+ * Multiplies _a_ with _b_. _a_ must be an instance of one of
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -696,9 +686,10 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
  * call-seq:
  *   a.addmul!(b, c)
  *
- * From the GMP Manual:
- * 
- * Sets +a+ to +a+ plus +b+ times +c+.
+ * Sets _a_ to _a_ plus _b_ times _c_. _b_ and _c_ must each be an instance of one of
+ * * GMP::Z
+ * * Fixnum
+ * * Bignum
  */
 VALUE r_gmpz_addmul_self(VALUE self, VALUE b, VALUE c)
 {
@@ -881,7 +872,7 @@ VALUE r_gmpz_div(VALUE self, VALUE arg)
  * Document-method: tdiv
  *
  * call-seq:
- *   n.tdiv d
+ *   n.tdiv(d)
  *
  * From the GMP Manual:
  * 
@@ -898,7 +889,7 @@ DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
  * Document-method: tmod
  *
  * call-seq:
- *   n.tmod d
+ *   n.tmod(d)
  *
  * From the GMP Manual:
  * 
@@ -918,14 +909,12 @@ DEFUN_INT_DIV(tmod, mpz_tdiv_r)
  * Document-method: fdiv
  *
  * call-seq:
- *   n.fdiv d
+ *   n.fdiv(d)
  *
- * From the GMP Manual:
- * 
- * Divide n by d, forming a quotient q. fdiv rounds q down towards -infinity.
+ * Divide _n_ by _d_, forming a quotient _q_. fdiv rounds _q_ down towards -infinity.
  * The f stands for “floor”.
  *
- * q will satisfy n=q*d+r.
+ * _q_ will satisfy _n=q*d+r_.
  *
  * This function calculates only the quotient.
  */
@@ -934,7 +923,7 @@ DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
  * Document-method: fmod
  *
  * call-seq:
- *   n.fmod d
+ *   n.fmod(d)
  *
  * From the GMP Manual:
  * 
@@ -953,7 +942,7 @@ DEFUN_INT_DIV(fmod, mpz_fdiv_r)
  * Document-method: cdiv
  *
  * call-seq:
- *   n.cdiv d
+ *   n.cdiv(d)
  *
  * From the GMP Manual:
  * 
@@ -969,7 +958,7 @@ DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
  * Document-method: cmod
  *
  * call-seq:
- *   n.cmod d
+ *   n.cmod(d)
  *
  * From the GMP Manual:
  * 
@@ -1535,17 +1524,14 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
  * call-seq:
  *   GMP::Z.fac(n)
  *
- * From the GMP Manual:
- * 
- * Returns <tt>n!</tt>, the factorial of +n+.
+ * Returns _n!_, the factorial of _n_.
  *
  * Examples:
- *
- * GMP::Z.fac(0)  #=>  1
- * GMP::Z.fac(1)  #=>  1
- * GMP::Z.fac(2)  #=>  2
- * GMP::Z.fac(3)  #=>  6
- * GMP::Z.fac(4)  #=> 24
+ * * GMP::Z.fac(0)  #=>  1
+ * * GMP::Z.fac(1)  #=>  1
+ * * GMP::Z.fac(2)  #=>  2
+ * * GMP::Z.fac(3)  #=>  6
+ * * GMP::Z.fac(4)  #=> 24
  */
 DEFUN_INT_SINGLETON_UI(fac, mpz_fac_ui)
 /*
@@ -1554,19 +1540,16 @@ DEFUN_INT_SINGLETON_UI(fac, mpz_fac_ui)
  * call-seq:
  *   GMP::Z.fib(n)
  *
- * From the GMP Manual:
- * 
- * Returns <tt>F[n]</tt>, the +n+th Fibonacci number.
+ * Returns _F[n]_, the _n_th Fibonacci number.
  *
  * Examples:
- *
- * GMP::Z.fib(1)  #=>  1
- * GMP::Z.fib(2)  #=>  1
- * GMP::Z.fib(3)  #=>  2
- * GMP::Z.fac(4)  #=>  3
- * GMP::Z.fac(5)  #=>  5
- * GMP::Z.fac(6)  #=>  8
- * GMP::Z.fac(7)  #=> 13
+ * * GMP::Z.fib(1)  #=>  1
+ * * GMP::Z.fib(2)  #=>  1
+ * * GMP::Z.fib(3)  #=>  2
+ * * GMP::Z.fac(4)  #=>  3
+ * * GMP::Z.fac(5)  #=>  5
+ * * GMP::Z.fac(6)  #=>  8
+ * * GMP::Z.fac(7)  #=> 13
  */
 DEFUN_INT_SINGLETON_UI(fib, mpz_fib_ui)
 
@@ -1574,6 +1557,13 @@ DEFUN_INT_SINGLETON_UI(fib, mpz_fib_ui)
 /**********************************************************************
  *    Integer Comparisons                                             *
  **********************************************************************/
+
+/*
+ * call-seq:
+ *   a == b
+ * 
+ * Returns whether _a_ is equal to _b_.
+ */
 
 VALUE r_gmpz_eq(VALUE self, VALUE arg)
 {
@@ -1773,11 +1763,12 @@ VALUE r_gmpz_hash(VALUE self)
  * Document-method: &
  *
  * call-seq:
- *   integer & other
+ *   a & b
  *
- * From the GMP Manual:
- * 
- * Returns +integer+ bitwise-and +other+.
+ * Returns _a_ bitwise-and _b_. _b_ must be an instance of one of the following:
+ * * GMP::Z
+ * * Fixnum
+ * * Bignum
  */
 DEFUN_INT_LOGIC(and, mpz_and)
 /*
