@@ -7,25 +7,9 @@
  *
  * GMP Multiple Precision Rational Number.
  *
- * Instances of this class can store variables of the type mpq_t. This class
- * also contains many methods that act as the functions for mpq_t variables,
- * as well as a few methods that attempt to make this library more Ruby-ish.
- *
- * The following list is just a simple checklist for me, really. A better
- * reference should be found in the rdocs.
- *
- *   Ruby method  C Extension function  GMP function
- *   to_d         r_gmpq_to_d           mpq_get_d
- *   to_s         r_gmpq_to_s           ?
- *   add          r_gmpq_add            mpq_add
- *   sub          r_gmpq_sub            mpq_sub
- *   mul          r_gmpq_mul            mpq_mul
- *   div          r_gmpq_div            mpq_div
- *   -@           r_gmpq_neg            mpq_neg
- *   neg          r_gmpq_neg            mpq_neg
- *   neg!         r_gmpq_neg_self       mpq_neg
- *   abs          r_gmpq_abs            mpq_abs
- *   abs!         r_gmpq_abs_self       mpq_abs
+ * Instances of this class can store variables of the type mpq_t. This class also
+ * contains many methods that act as the functions for mpq_t variables, as well as a few
+ * methods that attempt to make this library more Ruby-ish.
  */
 
 /**********************************************************************
@@ -53,6 +37,30 @@ static VALUE r_gmpq_##fname(VALUE self)                           \
   return res;                                                     \
 }
 
+/*
+ * DEFUN_RAT2RAT defines two functions. The first takes a GMP::Q as self, calls mpq_fname
+ * on the contained mpq_t, whose arguments are exactly (0) the return argument and (1)
+ * self. The second is the same destructive method.
+ */
+#define DEFUN_RAT2RAT(fname,mpq_fname)         \
+static VALUE r_gmpq_##fname(VALUE self)        \
+{                                              \
+  MP_RAT *self_val, *res_val;                  \
+  VALUE res;                                   \
+  mpq_get_struct(self, self_val);              \
+  mpq_make_struct_init(res, res_val);          \
+  mpq_fname(res_val, self_val);                \
+  return res;                                  \
+}                                              \
+                                               \
+static VALUE r_gmpq_##fname##_self(VALUE self) \
+{                                              \
+  MP_RAT *self_val;                            \
+  mpq_get_struct(self, self_val);              \
+  mpq_fname(self_val, self_val);               \
+  return self;                                 \
+}
+
 
 /**********************************************************************
  *    Initializing Rationals                                          *
@@ -62,7 +70,7 @@ static VALUE r_gmpq_##fname(VALUE self)                           \
  * call-seq:
  *   GMP::Q.new(arg)
  *
- * Creates a new GMP::Q rational, with arg as its value, converting where
+ * Creates a new GMP::Q rational, with _arg_ as its value, converting where
  * necessary.
  */
 VALUE r_gmpqsg_new(int argc, VALUE *argv, VALUE klass)
@@ -86,7 +94,7 @@ VALUE r_gmpqsg_new(int argc, VALUE *argv, VALUE klass)
  * call-seq:
  *   GMP::Q(arg)
  *
- * A convenience method for +GMP::Q.new(arg)+.
+ * A convenience method for GMP::Q.new(arg).
  */
 VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
 {
@@ -96,9 +104,9 @@ VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
 
 /*
  * call-seq:
- *   rat1.swap rat2
+ *   p.swap(q)
  *
- * Efficiently swaps the contents of +rat1+ with +rat2+.
+ * Efficiently swaps the contents of _p_ with _q_.
  */
 VALUE r_gmpq_swap(VALUE self, VALUE arg)
 {
@@ -122,17 +130,16 @@ VALUE r_gmpq_swap(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   rational.to_d
+ *   p.to_d
  *
- * Returns +rational+ as an Float if +rational+ fits in a Float.
+ * Returns _p_ as an Float if _p_ fits in a Float.
  *
- * Otherwise returns the least significant part of +rational+, with the same
- * sign as +rational+.
+ * Otherwise returns the least significant part of _p_, with the same sign as _p_.
  *
- * If the exponent from the conversion is too big or too small to fit a double
- * then the result is system dependent. For too big an infinity is returned
- * when available. For too small 0.0 is normally returned. Hardware overflow,
- * underflow and denorm traps may or may not occur. 
+ * If the exponent from the conversion is too big or too small to fit a double then the
+ * result is system dependent. For too big an infinity is returned when available. For
+ * too small 0.0 is normally returned. Hardware overflow, underflow and denorm traps may
+ * or may not occur.
  */
 VALUE r_gmpq_to_d(VALUE self)
 {
@@ -143,12 +150,10 @@ VALUE r_gmpq_to_d(VALUE self)
 }
 
 /*
- * Document-method: to_s
- *
  * call-seq:
- *   rational.to_s
+ *   p.to_s
  *
- * Returns the decimal representation of +rational+, as a Ruby string.
+ * Returns the decimal representation of _p_, as a String.
  */
 VALUE r_gmpq_to_s(VALUE self)
 {
@@ -192,9 +197,9 @@ VALUE r_gmpq_to_s(VALUE self)
 
 /*
  * call-seq:
- *   rat1 + rat2
+ *   p + q
  *
- * Adds +rat1+ to +rat2+. +rat2+ can be
+ * Adds _p_ to _q_. _q_ must be an instance of one of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -244,9 +249,9 @@ VALUE r_gmpq_add(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   rat1 - rat2
+ *   p - q
  *
- * Subtracts +rat2+ from +rat1+. +rat2+ can be
+ * Subtracts _p_ from _q_. _q_ must be an instance of one of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -299,9 +304,9 @@ VALUE r_gmpq_sub(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   rat1 * rat2
+ *   p * q
  *
- * Multiplies +rat1+ with +rat2+. +rat2+ can be
+ * Multiplies _p_ with _q_. _q_ must be an instance of one of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -371,9 +376,9 @@ VALUE r_gmpq_mul(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   rat1 / rat2
+ *   p / q
  *
- * Divides +rat1+ by +rat2+. +rat2+ can be
+ * Divides _p_ by _q_. _q_ must be an instance of one of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -441,81 +446,41 @@ DEFUN_RAT2INT(ceil,mpz_cdiv_q)
  * Document-method: neg
  *
  * call-seq:
- *   -rational
- *   rational.neg
+ *   a.neg
+ *   -a
  *
- * From the GMP Manual:
- * 
- * Returns -+rational+.
+ * Returns -_a_.
  */
-VALUE r_gmpq_neg(VALUE self)
-{
-  MP_RAT *self_val, *res_val;
-  VALUE res;
-  mpq_get_struct(self, self_val);
-  mpq_make_struct_init(res, res_val);
-  mpq_neg (res_val, self_val);
-  return res;
-}
-
 /*
  * Document-method: neg!
  *
  * call-seq:
- *   rational.neg!
+ *   a.neg!
  *
- * From the GMP Manual:
- * 
- * Sets +rational+ to -+rational+.
+ * Sets _a_ to -_a_.
  */
-VALUE r_gmpq_neg_self(VALUE self)
-{
-  MP_RAT *self_val;
-  mpq_get_struct(self, self_val);
-  mpz_neg (mpq_numref(self_val), mpq_numref(self_val));
-  return Qnil;
-}
+DEFUN_RAT2RAT(neg, mpq_neg)
 
 /*
- * Document-method: abs
- *
  * call-seq:
- *   rational.abs
+ *   p.abs
  *
- * From the GMP Manual:
- * 
- * Returns the absolute value of +rational+.
+ * Returns the absolute value of _p_.
  */
-VALUE r_gmpq_abs(VALUE self)
-{
-  MP_RAT *self_val, *res_val;
-  VALUE res;
-  mpq_get_struct(self, self_val);
-  mpq_make_struct_init(res, res_val);
-  mpz_abs (mpq_numref(res_val), mpq_numref(self_val));
-  mpz_set (mpq_denref(res_val), mpq_denref(self_val));
-
-  return res;
-}
+/*
+ * call-seq:
+ *   p.abs!
+ *
+ * Sets _p_ to its absolute value.
+ */
+DEFUN_RAT2RAT(abs, mpq_abs)
 
 /*
- * Document-method: abs!
- *
  * call-seq:
- *   rational.abs!
+ *   p.inv
  *
- * From the GMP Manual:
- * 
- * Sets +rational+ to its absolute value.
+ * Returns 1/<i>p</i>.
  */
-VALUE r_gmpq_abs_self(VALUE self)
-{
-  MP_RAT *self_val;
-  mpq_get_struct(self, self_val);
-  mpz_abs (mpq_numref(self_val), mpq_numref(self_val));
-  return Qnil;
-}
-
 VALUE r_gmpq_inv(VALUE self)
 {
   MP_RAT *self_val, *res_val;
@@ -530,6 +495,12 @@ VALUE r_gmpq_inv(VALUE self)
   return res;
 }
 
+/*
+ * call-seq:
+ *   p.inv!
+ *
+ * Sets _p_ to 1/<i>p</i>.
+ */
 VALUE r_gmpq_inv_self(VALUE self)
 {
   MP_RAT *self_val;
@@ -704,11 +675,9 @@ static VALUE r_gmpq_cmpabs(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   rational.sgn
+ *   p.sgn
  *
- * From the GMP Manual:
- * 
- * Returns +1 if +rational+ > 0, 0 if +rational+ == 0, and -1 if +rational+ < 0.
+ * Returns +1 if _p_ > 0, 0 if _p_ == 0, and -1 if _p_ < 0.
  */
 VALUE r_gmpq_sgn(VALUE self)
 {
@@ -761,16 +730,17 @@ void init_gmpq()
   rb_define_method(cGMP_Q, "to_s", r_gmpq_to_s, 0);
   
   // Rational Arithmetic
-  rb_define_method(cGMP_Q, "+", r_gmpq_add, 1);
-  rb_define_method(cGMP_Q, "-", r_gmpq_sub, 1);
-  rb_define_method(cGMP_Q, "*", r_gmpq_mul, 1);
-  rb_define_method(cGMP_Q, "/", r_gmpq_div, 1);
-  rb_define_method(cGMP_Q, "-@", r_gmpq_neg, 0);
+  rb_define_method(cGMP_Q, "+",    r_gmpq_add, 1);
+  rb_define_method(cGMP_Q, "-",    r_gmpq_sub, 1);
+  rb_define_method(cGMP_Q, "*",    r_gmpq_mul, 1);
+  rb_define_method(cGMP_Q, "/",    r_gmpq_div, 1);
+  rb_define_method(cGMP_Q, "-@",   r_gmpq_neg, 0);
+  rb_define_alias( cGMP_Q, "neg",  "-@");
   rb_define_method(cGMP_Q, "neg!", r_gmpq_neg_self, 0);
-  rb_define_method(cGMP_Q, "inv", r_gmpq_inv, 0);
-  rb_define_method(cGMP_Q, "inv!", r_gmpq_inv_self, 0);
-  rb_define_method(cGMP_Q, "abs", r_gmpq_abs, 0);
+  rb_define_method(cGMP_Q, "abs",  r_gmpq_abs, 0);
   rb_define_method(cGMP_Q, "abs!", r_gmpq_abs_self, 0);
+  rb_define_method(cGMP_Q, "inv",  r_gmpq_inv, 0);
+  rb_define_method(cGMP_Q, "inv!", r_gmpq_inv_self, 0);
 
   // Comparing Rationals
   rb_define_method(cGMP_Q, "<=>", r_gmpq_cmp, 1);

@@ -224,10 +224,6 @@ extern VALUE r_gmpq_add(VALUE self, VALUE arg);
 extern VALUE r_gmpq_sub(VALUE self, VALUE arg);
 extern VALUE r_gmpq_mul(VALUE self, VALUE arg);
 extern VALUE r_gmpq_div(VALUE self, VALUE arg);
-extern VALUE r_gmpq_neg(VALUE self);
-extern VALUE r_gmpq_neg_self(VALUE self);
-extern VALUE r_gmpq_abs(VALUE self);
-extern VALUE r_gmpq_abs_self(VALUE self);
 extern VALUE r_gmpq_inv(VALUE self);
 extern VALUE r_gmpq_inv_self(VALUE self);
 

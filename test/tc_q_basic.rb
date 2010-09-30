@@ -32,8 +32,8 @@ class TC_Q_Basic < Test::Unit::TestCase
     assert_equal(@a * @c, GMP::Q(4000,  11),       "GMP::Q should multiply GMP::Z correctly")
     assert_equal(@c * @a, GMP::Q(4000,  11),       "GMP::Z should multiply GMP::Q correctly")
     assert_equal(@a *  2, GMP::Q(200,  11),        "GMP::Z should multiply Fixnum correctly")
-    # assert_equal(@a * @d, GMP::Q(429496729600, 11),"GMP::Z should multiply Bignum correctly")  # SEGFAULT
+    #assert_equal(@a * @d, GMP::Q(429496729600, 11),"GMP::Z should multiply Bignum correctly")  # SEGFAULT
     assert_equal( 2 * @a, GMP::Q(200,  11),        "Fixnum should multiply GMP::Q correctly")
-    # assert_equal(@d * @a, GMP::Q(429496729600, 11),"Bignum should multiply GMP::Q correctly")  # SEGFAULT
+    #assert_equal(@d * @a, GMP::Q(429496729600, 11),"Bignum should multiply GMP::Q correctly")  # SEGFAULT
   end
 end

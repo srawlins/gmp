@@ -388,6 +388,11 @@ efficiency in GMP; the inefficiencies of the gmp gem are relatively greater.
 
 =Todo
 
+* GMP::Z#to_d_2exp, #submul!, #divisible?, #congruent?, #rootrem, #lcm, #kronecker, #bin,
+  #fib2, #lucnum, #lucnum2, #hamdist, #combit, #fits_x?
+* GMP::Q#to_s(base), GMP::F#to_s(base) (test it!)
+* benchmark gcdext, pi
+
 These are inherited from Tomasz. I will go through these and see which are
 still relevant, and which I understand.
 
@@ -410,5 +415,3 @@ still relevant, and which I understand.
 * check if different sorting of operatations gives better cache usage
 * GMP::* op RubyFloat and RubyFloat op GMP::*
 * sort checks
-* GMP::Q.to_s(base), GMP::F.to_s(base) (test it!)
-* benchmark gcdext, pi
