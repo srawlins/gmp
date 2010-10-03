@@ -18,7 +18,8 @@ until ARGV.empty?
 end
 
 mpfr.each do |no_mpfr|
-  %w(1.8.7 1.9.1 1.9.2).each do |ruby_v|
+  #%w(1.8.7 1.9.1 1.9.2 ree).each do |ruby_v|
+  %w(ree).each do |ruby_v|
     ["5.0.1 3.0.0", "4.3.2 2.4.2", "4.3.1 2.4.2"].each do |gmp_mpfr|
       system("./ccmt.sh #{no_mpfr} #{ruby_v} #{gmp_mpfr} 2>&1 | " +
              "tee ../results-test-#{ruby_v}-" +

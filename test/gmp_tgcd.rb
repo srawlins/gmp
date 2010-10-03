@@ -10,7 +10,7 @@ class GMP_TGCD < Test::Unit::TestCase
     g1, s, t = op1.gcdext(op2)
     
     if ref# and ref != g1
-      assert_true(ref == g1)
+      assert_true(ref == g1, "GMP::Z#gcdext should work...")
     end
     
     gcdext_valid_p(op1, op2, g1, s)
@@ -22,7 +22,7 @@ class GMP_TGCD < Test::Unit::TestCase
     temp1 *= op1
     temp2 *= op2
     temp1 += temp2
-    assert_true(g1 == g2 || g2 == temp1)
+    assert_true(g1 == g2 || g2 == temp1, "gcdext should work...")
   end
   
   def gcdext_valid_p(a, b, g, s)
@@ -49,7 +49,9 @@ class GMP_TGCD < Test::Unit::TestCase
     temp3 = b.tmod(g)
     assert_true(temp3.sgn == 0, "When [g, s, t] = a.gcdext(b), g must divide b.")
     
-    assert_true(s.cmpabs(GMP::Z(1)) == 0 || (s*2).abs.cmpabs(temp2) <= 0)
+    if GMP::GMP_VERSION > "4.3.1"
+    assert_true(s.cmpabs(GMP::Z(1)) == 0 || (s*2).abs.cmpabs(temp2) <= 0, "GMP::Z#gcdext should work: #{s}.cmpabs(1)==0 or (#{s*2}.abs.cmpabs(#{temp2})<=0")
+    end
     
     temp2 = s * a
     temp2 = g - temp2
@@ -57,7 +59,9 @@ class GMP_TGCD < Test::Unit::TestCase
     temp2 = temp2.tdiv(b)
     assert_true(temp3.sgn == 0, "When [g, s, t] = a.gcdext(b), g must divide a.")
     
-    assert_true(temp2.cmpabs(GMP::Z(1)) == 0 || (temp2*2).abs.cmpabs(temp1) <= 0)
+    if GMP::GMP_VERSION > "4.3.1"
+    assert_true(temp2.cmpabs(GMP::Z(1)) == 0 || (temp2*2).abs.cmpabs(temp1) <= 0, "GMP::Z#gcdext should work...")
+    end
   end
 
   def test_gcdext
