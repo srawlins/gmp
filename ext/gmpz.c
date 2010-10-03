@@ -172,6 +172,14 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)        \
   return res;                                                \
 }
 
+#define DEFUN_INT_COND_P(fname,mpz_fname)       \
+static VALUE r_gmpz_##fname(VALUE self)         \
+{                                               \
+  MP_INT *self_val;                             \
+  mpz_get_struct (self, self_val);              \
+  return mpz_fname (self_val) ? Qtrue : Qfalse; \
+}
+
 /**********************************************************************
  *    Initializing, Assigning Integers                                *
  **********************************************************************/
@@ -1007,6 +1015,47 @@ VALUE r_gmpz_mod(VALUE self, VALUE arg)
     typeerror(ZXB);
   }
   return res;
+}
+
+/*
+ * call-seq:
+ *   a.divisible?(b)
+ *
+ * @since 0.5.23
+ *
+ * Returns true if _a_ is divisible by _b_. _b_ can be an instance any of the following:
+ * * GMP::Z
+ * * Fixnum
+ * * Bignum
+ */
+static VALUE r_gmpz_divisible(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val;
+  int res;
+  mpz_get_struct (self, self_val);
+  
+  if (FIXNUM_P (arg) && FIX2NUM (arg) > 0) {
+    mpz_temp_alloc(arg_val);
+    mpz_init_set_ui(arg_val, FIX2NUM(arg));
+    res = mpz_divisible_ui_p (self_val, FIX2NUM (arg));
+    mpz_temp_free(arg_val);
+  } else if (FIXNUM_P (arg)) {
+    mpz_temp_alloc(arg_val);
+    mpz_make_struct_init (arg, arg_val);
+    mpz_init_set_si(arg_val, FIX2NUM(arg));
+    res = mpz_divisible_p (self_val, arg_val);
+    mpz_temp_free(arg_val);
+  } else if (BIGNUM_P (arg)) {
+    mpz_temp_from_bignum(arg_val, arg);
+    res = mpz_divisible_p (self_val, arg_val);
+    mpz_temp_free(arg_val);
+  } else if (GMPZ_P (arg)) {
+    mpz_get_struct(arg, arg_val);
+    res = mpz_divisible_p (self_val, arg_val);
+  } else {
+    typeerror_as (ZXB, "argument");
+  }
+  return (res != 0) ? Qtrue : Qfalse;
 }
 
 
@@ -2118,6 +2167,7 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "cdiv",         r_gmpz_cdiv, 1);
   rb_define_method(cGMP_Z, "cmod",         r_gmpz_cmod, 1);
   rb_define_method(cGMP_Z, "%",            r_gmpz_mod, 1);
+  rb_define_method(cGMP_Z, "divisible?",   r_gmpz_divisible, 1);
   
   // Integer Exponentiation
   rb_define_singleton_method(cGMP_Z, "pow",    r_gmpzsg_pow, 2);
