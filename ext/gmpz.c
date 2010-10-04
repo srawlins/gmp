@@ -1352,7 +1352,7 @@ VALUE r_gmpz_gcd(VALUE self, VALUE arg)
  * Returns the greatest common divisor of _a_ and _b_, in addition to _s_ and _t_, the
  * coefficients satisfying <i>a*s + b*t = g</i>. _g_ is always positive, even if one or
  * both of _a_ and _b_ are negative. _s_ and _t_ are chosen such that
- * <i>abs(s) <= abs(b)</i> and <i>abs(t) <= abs(a)</i>. 
+ * <i>abs(s) <= abs(b)</i> and <i>abs(t) <= abs(a)</i>.
  */
 VALUE r_gmpz_gcdext(VALUE self, VALUE arg)
 {

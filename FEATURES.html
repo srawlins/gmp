@@ -21,6 +21,10 @@ body {
 #mpq-grid {
   margin-bottom: 32px;
 }
+
+#mpf-grid {
+  margin-bottom: 32px;
+}
     </style>
     <script>
 /*!
@@ -107,8 +111,8 @@ Ext.onReady(function(){
          'GMP::Z#&gt;<br />GMP::Z#&gt;=',   "mpz_cmp<br />mpz_cmp_si<br />mpz_cmp_ui", "yes","yes",   "", "no"],
         ['GMP::Z#cmpabs',                   "mpz_cmpabs",                              "yes","yes",   "", "no"],
         ['GMP::Z#sgn',                      "mpz_sgn",                                 "yes","yes",   "", "no"],
-        ['GMP::Z#eql?',                     "mpz_cmp",                                  "no","yes",   "","n/a"],
-        ['GMP::Z#hash',                     "mpz_cmp",                                  "no","yes",   "","n/a"],
+        ['GMP::Z#eql?',                     "mpz_get_str",                              "no","yes",   "","n/a"],
+        ['GMP::Z#hash',                     "mpz_get_str",                              "no","yes",   "","n/a"],
         ['GMP::Z#&',                        "mpz_and",                                 "yes","yes",   "", "no"],
         ['GMP::Z#|',                        "mpz_ior",                                 "yes","yes",   "", "no"],
         ['GMP::Z#^',                        "mpz_xor",                                 "yes","yes",   "", "no"],
@@ -155,12 +159,39 @@ Ext.onReady(function(){
          'GMP::Q#&gt;<br />GMP::Q#&gt;=',   "mpq_cmp<br />mpq_cmp_si<br />mpq_cmp_ui",  "no", "no",   "", "no"],
         ['GMP::Q#cmpabs',                   "mpq_cmpabs",                               "no", "no",   "", "no"],
         ['GMP::Q#sgn',                      "mpq_sgn",                                  "no","yes",   "", "no"],
-        ['GMP::Z#eql?',                     "mpz_cmp",                                  "no","yes",   "","n/a"],
-        ['GMP::Z#hash',                     "mpz_cmp",                                  "no","yes",   "","n/a"],
-        ['GMP::Z#sizeinbase<br />' +
-         'GMP::Z#size_in_base',             "mpz_sizeinbase",                          "yes","yes",   "", "no"],
-        ['GMP::Z#size_in_bin',              "mpz_sizeinbase",                          "yes","yes",   "", "no"],
-        ['GMP::Z#size',                     "mpz_size",                                "yes","yes",   "", "no"]
+        ['GMP::Q#num',                      "mpq_get_num",                              "no", "no", "no", "no"],
+        ['GMP::Q#den',                      "mpq_get_den",                              "no", "no", "no", "no"],
+        ['',                                "mpq_set_num",                              "no", "no", "no", "no"],
+        ['',                                "mpq_set_den",                              "no", "no", "no", "no"]
+    ];
+    
+    var mpfData = [
+        /* method,                          function,                                manual, yard, testB, testO */
+        ['GMP::F.new',                      "mpq_init",                                 "no",   "","yes", "no"],
+        ['',                                "mpf_swap",                                 "no", "no", "no", "no"],
+        ['GMP::F#to_d',                     "mpf_get_d",                                "no","yes",   "", "no"],
+        ['GMP::F#to_s',                     "mpf_get_str",                              "no","yes",   "", "no"],
+        ['GMP::F#+',                        "mpf_add",                                  "no","yes",   "", "no"],
+        ['GMP::F#-',                        "mpf_sub",                                  "no","yes",   "", "no"],
+        ['GMP::F#*',                        "mpf_mul",                                  "no","yes",   "", "no"],
+        ['GMP::F#/',                        "mpf_div",                                  "no","yes",   "", "no"],
+        ['GMP::F#-@<br />' +
+         'GMP::F#neg<br />GMP::F#neg!',     "mpf_neg",                                  "no","yes",   "", "no"],
+        ['GMP::F#abs<br />GMP::F#abs!',     "mpf_abs",                                  "no","yes",   "", "no"],
+        ['GMP::F#==<br />GMP::F#<=><br />' +
+         'GMP::F#&lt;<br />GMP::F#&lt;=<br />' +
+         'GMP::F#&gt;<br />GMP::F#&gt;=',   "mpf_cmp<br />mpf_cmp_si<br />mpf_cmp_ui",  "no", "no",   "", "no"],
+        ['',                                "mpf_reldiff",                              "no", "no", "no", "no"],
+        ['GMP::F#sgn',                      "mpf_sgn",                                  "no","yes",   "", "no"],
+        ['GMP::F#ceil',                     "mpf_ceil",                                 "no","yes",   "", "no"],
+        ['GMP::F#floor',                    "mpf_floor",                                "no","yes",   "", "no"],
+        ['GMP::F#trunc',                    "mpf_trunc",                                "no","yes",   "", "no"],
+        ['',                                "mpf_fits_ulong_p",                         "no", "no", "no", "no"],
+        ['',                                "mpf_fits_slong_p",                         "no", "no", "no", "no"],
+        ['',                                "mpf_fits_uint_p",                          "no", "no", "no", "no"],
+        ['',                                "mpf_fits_sint_p",                          "no", "no", "no", "no"],
+        ['',                                "mpf_fits_ushort_p",                        "no", "no", "no", "no"],
+        ['',                                "mpf_fits_sshort_p",                        "no", "no", "no", "no"]
     ];
 
     /**
@@ -242,10 +273,23 @@ Ext.onReady(function(){
            {name: 'testOriginal'}
         ]
     });
+    
+    // create the MPQ data store
+    var mpfStore = new Ext.data.ArrayStore({
+        fields: [
+           {name: 'method'},
+           {name: 'function'},
+           {name: 'manual'},
+           {name: 'yard'},
+           {name: 'testBasic'},
+           {name: 'testOriginal'}
+        ]
+    });
 
     // manually load local data
     mpzStore.loadData(mpzData);
     mpqStore.loadData(mpqData);
+    mpfStore.loadData(mpfData);
 
     // create the MPZ Grid
     var mpzGrid = new Ext.grid.GridPanel({
@@ -260,7 +304,7 @@ Ext.onReady(function(){
         ],
         stripeRows: true,
         autoExpandColumn: 'method',
-        height: 300,
+        height: 260,
         width: 820,
         title: 'GMP::Z',
         // config options for stateful behavior
@@ -289,9 +333,38 @@ Ext.onReady(function(){
         ],
         stripeRows: true,
         autoExpandColumn: 'method',
-        height: 300,
+        height: 260,
         width: 820,
         title: 'GMP::Q',
+        // config options for stateful behavior
+        stateful: true,
+        stateId: 'grid',
+        viewConfig: {
+          getRowClass: function(record, rowIndex, rp, ds){
+            if(record.data.method == ""){
+              return 'x-grid3-row-unimplemented';
+            }
+            return 'x-grid3-row';
+          }
+        }
+    });
+    
+    // create the MPZ Grid
+    var mpfGrid = new Ext.grid.GridPanel({
+        store: mpfStore,
+        columns: [
+            {id:'method',header: 'Ruby method', width: 140, sortable: true, dataIndex: 'method'},
+            {header: 'C function',            width: 130, sortable: true, renderer: shouldExist, dataIndex: 'function'},
+            {header: "Doc'd in manual.pdf?",  width: 140, sortable: true, renderer: shouldYes, dataIndex: 'manual'},
+            {header: "Doc'd in YARD?",        width: 100, sortable: true, renderer: shouldYes, dataIndex: 'yard'},
+            {header: 'Basic Tests?',          width: 100, sortable: true, renderer: shouldYes, dataIndex: 'testBasic'},
+            {header: 'Original Tests?',       width: 100, sortable: true, renderer: shouldYes, dataIndex: 'testOriginal'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'method',
+        height: 260,
+        width: 820,
+        title: 'GMP::F',
         // config options for stateful behavior
         stateful: true,
         stateId: 'grid',
@@ -308,11 +381,13 @@ Ext.onReady(function(){
     // render the grid to the specified div in the page
     mpzGrid.render('mpz-grid');
     mpqGrid.render('mpq-grid');
+    mpfGrid.render('mpf-grid');
 });
     </script>
   </head>
   <body>
-    <div id='mpz-grid'></div>
+    <div id="mpz-grid"></div>
     <div id='mpq-grid'></div>
+    <div id='mpf-grid'></div>
   </body>
 </html>

@@ -1,6 +1,6 @@
 @ECHO OFF
 set GMP_DIR=gmp-5.0.1
-set MPFR_DIR=mpfr-2.4.2
+set MPFR_DIR=mpfr-3.0.0
 
 :CheckGMP
 IF "%~1"=="" GOTO CheckMPFR

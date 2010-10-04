@@ -10,17 +10,6 @@
  * Instances of this class can store variables of the type mpf_t. This class
  * also contains many methods that act as the functions for mpf_t variables,
  * as well as a few methods that attempt to make this library more Ruby-ish.
- *
- * The following list is just a simple checklist for me, really. A better
- * reference should be found in the rdocs.
- *
- *   Ruby method    C Extension function    GMP function
- *   to_d           r_gmpf_to_d             mpf_get_d
- *   to_s           r_gmpf_to_s             mpf_get_s
- *   +              r_gmpf_add              mpf_add
- *   -              r_gmpf_sub              mpf_sub
- *   *              r_gmpf_mul              mpf_mul
- *   /              r_gmpf_div              mpf_div
  */
 
 /**********************************************************************
@@ -250,6 +239,12 @@ VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
  *    Converting Floats                                               *
  **********************************************************************/
 
+/*
+ * call-seq:
+ *   x.to_d
+ *
+ * Returns _x_ as a Float.
+ */
 VALUE r_gmpf_to_d(VALUE self)
 {
   MP_FLOAT *self_val;
@@ -260,12 +255,10 @@ VALUE r_gmpf_to_d(VALUE self)
 
 #ifdef MPFR
 /*
- * Document-method: to_s
- *
  * call-seq:
- *   float.to_s
+ *   x.to_s
  *
- * Returns the decimal representation of +float+, as a string.
+ * Returns the decimal representation of _x_, as a String.
  */
 VALUE r_gmpf_to_s(VALUE self)
 {
@@ -301,12 +294,10 @@ VALUE r_gmpf_to_s(VALUE self)
 }
 #else
 /*
- * Document-method: to_s
- *
  * call-seq:
- *   float.to_s
+ *   x.to_s
  *
- * Returns the decimal representation of +float+, as a string.
+ * Returns the decimal representation of _x_, as a string.
  */
 VALUE r_gmpf_to_s(VALUE self)
 {
@@ -346,9 +337,9 @@ VALUE r_gmpf_to_s(VALUE self)
 #ifndef MPFR
 /*
  * call-seq:
- *   float + other
+ *   x + y
  *
- * Returns the sum of +float+ and +other+. +other+ can be
+ * Returns the sum of _x_ and _y_. _y_ must be an instance of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -404,9 +395,9 @@ VALUE r_gmpf_add(VALUE self, VALUE arg)
 #else
 /*
  * call-seq:
- *   float + other
+ *   x + y
  *
- * Returns the sum of +float+ and +other+. +other+ can be
+ * Returns the sum of _x_ and _y_. _y_ must be an instance of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -470,9 +461,9 @@ DEFUN_F_ZQXFBD2F(mul)
 
 /*
  * call-seq:
- *   float1 - float2
+ *   x - y
  *
- * Subtracts +float2+ from +float1+. +float2+ can be
+ * Subtracts _y_ from _x_. _y_ must be an instance of:
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -528,9 +519,9 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   float * other
+ *   x * y
  *
- * Returns the product of +float+ and +other+. +other+ can be
+ * Returns the product of _x_ and _y_. _y_ can be
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -544,7 +535,6 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
   MP_RAT *arg_val_q;
   MP_INT *arg_val_z;
   VALUE res;
-  //unsigned long prec;
   mpfr_prec_t prec;
 
   mpf_get_struct_prec (self, self_val, prec);
@@ -587,10 +577,10 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   float ** integer
+ *   x ** y
  *
- * Returns +float+ raised to the +integer+ power. +integer+ must be
- * * Fixnum or Bignum
+ * Returns _x_ raised to the _y_ power. _y_ must be
+ * * an instance of Fixnum or Bignum
  * * non-negative
  */
 VALUE r_gmpf_pow(VALUE self, VALUE arg)
@@ -617,65 +607,11 @@ VALUE r_gmpf_pow(VALUE self, VALUE arg)
   return res;
 }
 
-#ifdef MPFR
 /*
  * call-seq:
- *   float ** other
+ *   x / y
  *
- * Returns +float+ raised to the +other+ power. +other+ must be an instance of
- * * Fixnum
- * * Bignum
- * * Float
- * * GMP::Z
- * * GMP::F
- */
-/*VALUE r_gmpfr_pow(int argc, VALUE *argv, VALUE self)
-{
-  MP_FLOAT *self_val, *res_val, *arg_val_f;
-  VALUE arg, rnd_mode, res_prec;
-  unsigned long arg_val, prec, res_prec_value;
-  mp_rnd_t rnd_mode_value;
-  MP_INT *arg_val_z;
-  VALUE res;
-  
-  rb_scan_args (argc, argv, "12", &arg, &rnd_mode, &res_prec);
-
-  mpf_get_struct_prec (self, self_val, prec);
-  
-  if (NIL_P (rnd_mode)) { rnd_mode_value = __gmp_default_rounding_mode; }
-  else { rnd_mode_value = r_get_rounding_mode(rnd_mode); }
-  if (NIL_P (res_prec)) { res_prec_value = prec; }
-  else { res_prec_value = FIX2INT (res_prec); }
-  mpf_make_struct_init (res, res_val, res_prec_value);
-
-  if (FIXNUM_P(arg)) {
-    mpfr_pow_ui(res_val, self_val, FIX2NUM(arg), rnd_mode_value);
-  } else if (BIGNUM_P(arg)) {
-    mpz_temp_from_bignum(arg_val_z, arg);
-    mpfr_pow_z (res_val, self_val, arg_val_z, rnd_mode_value);
-    mpz_temp_free(arg_val_z);
-  } else if (FLOAT_P(arg)) {
-    r_mpf_set_d (res_val, NUM2DBL(arg));
-    mpfr_pow (res_val, self_val, res_val, rnd_mode_value);
-  } else if (GMPZ_P(arg)) {
-    mpz_get_struct (arg, arg_val_z);
-    mpfr_pow_z (res_val, self_val, arg_val_z, rnd_mode_value);
-  } else if (GMPF_P(arg)) {
-    mpf_get_struct (arg, arg_val_f);
-    mpfr_pow (res_val, self_val, arg_val_f, rnd_mode_value);
-  } else {
-    typeerror(ZFXBD);
-  }
-
-  return res;
-}*/
-#endif
-
-/*
- * call-seq:
- *   float1 / float2
- *
- * Divides +float1+ by +float2+. +float2+ can be
+ * Divides _x_ by _y_. _y_ can be
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -729,45 +665,93 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
   return res;
 }
 
+#ifdef MPFR
+/*
+ * call-seq:
+ *   float ** other
+ *
+ * Returns _x_ raised to the _y_ power. _y_ must be an instance of
+ * * Fixnum
+ * * Bignum
+ * * Float
+ * * GMP::Z
+ * * GMP::F
+ */
+/*VALUE r_gmpfr_pow(int argc, VALUE *argv, VALUE self)
+{
+  MP_FLOAT *self_val, *res_val, *arg_val_f;
+  VALUE arg, rnd_mode, res_prec;
+  unsigned long arg_val, prec, res_prec_value;
+  mp_rnd_t rnd_mode_value;
+  MP_INT *arg_val_z;
+  VALUE res;
+  
+  rb_scan_args (argc, argv, "12", &arg, &rnd_mode, &res_prec);
 
+  mpf_get_struct_prec (self, self_val, prec);
+  
+  if (NIL_P (rnd_mode)) { rnd_mode_value = __gmp_default_rounding_mode; }
+  else { rnd_mode_value = r_get_rounding_mode(rnd_mode); }
+  if (NIL_P (res_prec)) { res_prec_value = prec; }
+  else { res_prec_value = FIX2INT (res_prec); }
+  mpf_make_struct_init (res, res_val, res_prec_value);
+
+  if (FIXNUM_P(arg)) {
+    mpfr_pow_ui(res_val, self_val, FIX2NUM(arg), rnd_mode_value);
+  } else if (BIGNUM_P(arg)) {
+    mpz_temp_from_bignum(arg_val_z, arg);
+    mpfr_pow_z (res_val, self_val, arg_val_z, rnd_mode_value);
+    mpz_temp_free(arg_val_z);
+  } else if (FLOAT_P(arg)) {
+    r_mpf_set_d (res_val, NUM2DBL(arg));
+    mpfr_pow (res_val, self_val, res_val, rnd_mode_value);
+  } else if (GMPZ_P(arg)) {
+    mpz_get_struct (arg, arg_val_z);
+    mpfr_pow_z (res_val, self_val, arg_val_z, rnd_mode_value);
+  } else if (GMPF_P(arg)) {
+    mpf_get_struct (arg, arg_val_f);
+    mpfr_pow (res_val, self_val, arg_val_f, rnd_mode_value);
+  } else {
+    typeerror(ZFXBD);
+  }
+
+  return res;
+}*/
+#endif
 
 /*
  * Document-method: neg
  *
  * call-seq:
- *   float.neg
- *   -float
+ *   x.neg
+ *   -x
  *
- * From the GMP Manual:
- * 
- * Returns -+float+.
+ * Returns -_x_.
  */
 /*
  * Document-method: neg!
  *
  * call-seq:
- *   float.neg!
+ *   x.neg!
  *
- * Sets +float+ to -+float+.
+ * Sets _x_ to -_x_.
  */
 DEFUN_FLOAT2FLOAT(neg,mpf_neg)
 /*
  * Document-method: abs
  *
  * call-seq:
- *   float.abs
+ *   x.abs
  *
- * From the GMP Manual:
- * 
- * Returns the absolute value of +float+.
+ * Returns the absolute value of _x_.
  */
 /*
  * Document-method: abs!
  *
  * call-seq:
- *   float.abs!
+ *   x.abs!
  *
- * Sets +float+ to the absolute value of +float+.
+ * Sets _x_ to the absolute value of _x_.
  */
 DEFUN_FLOAT2FLOAT(abs,mpf_abs)
 
@@ -793,7 +777,10 @@ int mpf_cmp_value(MP_FLOAT *self_val, VALUE arg)
   }
 }
 
-/* what does really "equal" mean ? it's not obvious */
+/*
+ * what does really "equal" mean ? it's not obvious
+ * Is this a note that I, SRR, put in here? It is now obvious to me...
+ */
 VALUE r_gmpf_eq(VALUE self, VALUE arg)
 {
   MP_FLOAT *self_val;
@@ -820,6 +807,28 @@ DEFUN_FLOAT_CMP(le,<=)
 DEFUN_FLOAT_CMP(gt,>)
 DEFUN_FLOAT_CMP(ge,>=)
 
+/*
+ * call-seq:
+ *   x.sgn
+ *
+ * Returns +1 if _x_ > 0, 0 if _x_ == 0, and -1 if _x_ < 0.
+ */
+VALUE r_gmpf_sgn(VALUE self)
+{
+  MP_FLOAT *self_val;
+  mpf_get_struct (self, self_val);
+  return INT2FIX (mpf_sgn (self_val));
+}
+
+
+/**********************************************************************
+ *    Miscellaneous Float Functions                                   *
+ **********************************************************************/
+
+DEFUN_FLOAT2FLOAT(floor,mpf_floor)
+DEFUN_FLOAT2FLOAT(trunc,mpf_trunc)
+DEFUN_FLOAT2FLOAT(ceil,mpf_ceil)
+
 
 #ifdef MPFR
 
@@ -834,7 +843,7 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)        \
   mpf_get_struct_prec (self, self_val, prec);                  \
                                                                \
   rb_scan_args (argc, argv, "02", &rnd_mode, &res_prec);       \
-  if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }    \
+  if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }  \
   else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }       \
   if (NIL_P (res_prec)) { res_prec_value = prec; }             \
   else { res_prec_value = FIX2INT (res_prec); }                \
@@ -884,7 +893,7 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)            \
   if (NIL_P (res_prec)) { res_prec_value = prec; }                 \
   else { res_prec_value = FIX2INT (res_prec); }                    \
   mpf_make_struct_init (res, res_val, res_prec_value);             \
-  mpfr_##name (res_val, arg1_val, self_val, __gmp_default_rounding_mode);    \
+  mpfr_##name (res_val, arg1_val, self_val, __gmp_default_rounding_mode);  \
                                                                    \
   return res;                                                      \
 }
@@ -938,7 +947,7 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
                                                              \
   rb_scan_args (argc, argv, "02", &rnd_mode, &prec);         \
                                                              \
-  if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }    \
+  if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }  \
   else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }     \
   if (NIL_P (prec)) { prec_val = mpfr_get_default_prec(); }  \
   else { prec_val = FIX2INT (prec); }                        \
@@ -1146,25 +1155,6 @@ VALUE r_gmpf_can_round(VALUE self, VALUE err, VALUE rnd1, VALUE rnd2, VALUE prec
 /**********************************************************************
  *    _unsorted_                                                      *
  **********************************************************************/
-
-DEFUN_FLOAT2FLOAT(floor,mpf_floor)
-DEFUN_FLOAT2FLOAT(trunc,mpf_trunc)
-DEFUN_FLOAT2FLOAT(ceil,mpf_ceil)
-
-/*
- * call-seq:
- *   float.sgn
- *
- * From the GMP Manual:
- * 
- * Returns +1 if +float+ > 0, 0 if +float+ == 0, and -1 if +float+ < 0.
- */
-VALUE r_gmpf_sgn(VALUE self)
-{
-  MP_FLOAT *self_val;
-  mpf_get_struct (self, self_val);
-  return INT2FIX (mpf_sgn (self_val));
-}
 
 VALUE r_gmpf_get_prec(VALUE self)
 {

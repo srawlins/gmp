@@ -9,7 +9,12 @@
   * Added MPFR methods GMP::F.atan2, .agm, and .hypot, not tested.
   * Seriously improved RDoc/YARD documentation.
     I didn't know rubygems.org auto-yardocs my stuff!
-  * Added GMP method GMP::Z.submul! (mpz_submul) with tests.
+  * Added GMP method GMP::Z#submul! (mpz_submul) with tests.
+  * Added GMP method GMP::Z#divisible? (mpz_divisible[_ui]_p) with tests.
+  * Preliminary testing with REE on Linux... probably supported next release.
+  * Unit test results: 109 tests, 16144 assertions, 0 failures, 0 errors
+  * Unit test results: 109 tests, 16131 assertions, 0 failures, 0 errors (MPFR 2.4.2)
+  * Unit test results:  90 tests,  4866 assertions, 0 failures, 0 errors (w/o MPFR)
 
 0.5.3:
   * Now supporting GMP 5.0.1 (I now test with GMP 4.3.2 and 5.0.1).

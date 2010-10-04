@@ -34,8 +34,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.5.3}}\\
-\multicolumn{2}{r}{\large{20 September 2010}}
+\multicolumn{2}{r}{\large{Edition 0.5.23}}\\
+\multicolumn{2}{r}{\large{04 October 2010}}
 \end{tabular}
 
 \vfill
@@ -146,11 +146,10 @@ of the following versions of Ruby:
   \item (MRI) Ruby 1.8.7 - tested seriously.
   \item (MRI) Ruby 1.9.1 - tested seriously.
   \item (MRI) Ruby 1.9.2 - tested seriously.
+  \item (REE) Ruby 1.8.7 - tested lightly.
 \end{itemize}
-As you can see only Matz's Ruby Interpreter (MRI) is supported. I haven't even
-put a thought into trying other interpreters/VMs. I intend to look into FFI,
-which supposedly will allow me to load this extension into JRuby and Rubinius,
-not sure about others...\\
+As you can see only Matz's Ruby Interpreter (MRI) is supported. I've just started to poke
+around with REE. Everything seems to work on REE 1.8.7 on Linux, x86 and x86\_64.\\
 
 Next is the platform, the combination of the architecture (processor) and OS.
 As far as I can tell, if you can compile GMP and Ruby (and optionally MPFR) on
@@ -189,6 +188,12 @@ the given version of MPFR:\\\\
                                            & (MRI) Ruby 1.9.2 & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.9.2 & GMP 5.0.1 & (3.0.0) \\ \hline
   Mac OS X 10.6.4 on x86\_64 (64-bit)      & (MRI) Ruby 1.8.7 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.8.7 & GMP 5.0.1 & (3.0.0) \\
+                                           & (MRI) Ruby 1.9.1 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.9.1 & GMP 5.0.1 & (3.0.0) \\
+                                           & (MRI) Ruby 1.9.2 & GMP 4.3.2 & (2.4.2) \\
+                                           & (MRI) Ruby 1.9.2 & GMP 5.0.1 & (3.0.0) \\ \hline
+  Windows 7 on x86\_64 (64-bit)            & (MRI) Ruby 1.8.7 & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.8.7 & GMP 5.0.1 & (3.0.0) \\
                                            & (MRI) Ruby 1.9.1 & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.9.1 & GMP 5.0.1 & (3.0.0) \\
@@ -280,6 +285,8 @@ methods in \texttt{GMP::F}.
 There are additional constants within \texttt{GMP} when MPFR is linked:
 \begin{itemize}
   \item \texttt{GMP::MPFR\_VERSION} - The version of MPFR linked into the gmp gem.
+  \item \texttt{GMP::MPFR\_PREC\_MIN} - The minimum precision available.
+  \item \texttt{GMP::MPFR\_PREC\_MAX} - The maximum precision available
   \item \texttt{GMP::GMP\_RNDN} - Rounding mode representing "round to nearest."
   \item \texttt{GMP::GMP\_RNDZ} - Rounding mode representing "round toward zero."
   \item \texttt{GMP::GMP\_RNDU} - Rounding mode representing "round toward positive
@@ -460,12 +467,24 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
-\textbf{addmul!} & & \textit{integer}.addmul!(\textit{a}, \textit{b}) $\rightarrow$ \textit{numeric} \\
+\textbf{addmul!} & & \textit{integer}.addmul!(\textit{b}, \textit{c}) $\rightarrow$ \textit{numeric} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  Sets \textit{integer} to the sum of \textit{integer} and the product of \textit{a} and
-  \textit{b}. This destructive method calculates the result in place. Both \textit{a} and
-  \textit{b} can be an instance of \gmpz, \textit{Fixnum}, or \textit{Bignum}.
+  Sets \textit{integer} to the sum of \textit{integer} and the product of \textit{b} and
+  \textit{c}. This destructive method calculates the result in place. Both \textit{b} and
+  \textit{c} can be an instance of \gmpz, \textit{Fixnum}, or \textit{Bignum}.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{submul!} & & \textit{integer}.submul!(\textit{b}, \textit{c}) $\rightarrow$ \textit{numeric} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Sets \textit{integer} to the difference of \textit{integer} and the product of \textit{b} and
+  \textit{c}. This destructive method calculates the result in place. Both \textit{b} and
+  \textit{c} can be an instance of \gmpz, \textit{Fixnum}, or \textit{Bignum}.
 }
 \end{tabular}
 \newline\newline
@@ -583,6 +602,17 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
 & \multicolumn{2}{p{\defnwidth}}{
   Returns $integer$ modulo $numeric$. $numeric$ can be an instance of \gmpz, $Fixnum$,
   or $Bignum$. The return object's class is always \gmpz.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{divisible?} & & \textit{integer}.divisible? \textit{numeric} $\rightarrow$ \textit{boolean}\\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns whether $integer$ is divisible by $numeric$. $numeric$ can be an instance of \gmpz, $Fixnum$,
+  or $Bignum$.
 }
 \end{tabular}
 
@@ -724,6 +754,19 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   \texttt{GMP::Z(24).gcd(GMP::Z(8)) \quad \#=> GMP::Z(8) \newline
           GMP::Z(24).gcd(8) \quad \#=> GMP::Z(8) \newline
           GMP::Z(24).gcd(2**32) \quad \#=> GMP::Z(8)}
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{gcdext} & & $a$.gcd($b$) $\rightarrow$ $g$, $s$, $t$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Computes the greatest common divisor of $a$ and $b$, in addition to $s$ and $t$, the
+  coefficients satisfying $a*s + b*t = g$. $g$ will always be positive, even if $a$ or
+  $b$ is negative. $s$ and $t$ are chosen such that $|s| <= |b|$ and $|t| <= |a|$. $b$
+  can be an instance of \gmpz, $Fixnum$, or $Bignum$.
 }
 \end{tabular}
 \newline\newline
