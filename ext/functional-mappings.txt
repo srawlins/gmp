@@ -54,9 +54,11 @@ unsigned long int  mpz_get_ui      (mpz_t op)
              void  mpq_set_f       (mpq_t rop, mpf_t op)
             char * mpq_get_str     (char *str, int base, mpq_t op)
 
->>> ELSE!!! LETS CONVERT
->>>
->>> Z => GMP::Z, X => Fixnum, B => Bignum, Q => GMP::Q, F => GMP::F, D => Float
+>>>>>>>    ELSE!!! LETS CONVERT    <<<<<<<
+>>>>>>>                            <<<<<<<
+>>>>>>> Z => GMP::Z, X => Fixnum,  <<<<<<<
+>>>>>>> B => Bignum, Q => GMP::Q,  <<<<<<<
+>>>>>>> F => GMP::F, D => Float    <<<<<<<
 
 >>> 01 mpz_t__mpz_t_or_ui__to__mpz_t__returns__void  #=> GMP.foo(Z, ZXB, ZXB+) => nil
 void  mpz_add         (mpz_t rop, mpz_t op1, mpz_t op2)
