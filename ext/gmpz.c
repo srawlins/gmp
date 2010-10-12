@@ -188,7 +188,7 @@ static VALUE r_gmpz_##fname(VALUE self)         \
 /*
  * 01 mpz_t__mpz_t_or_ui__to__mpz_t__returns__void
  * FUNC_MAP__Z_ZUI__TO__Z__RETURNS__VOID defines a GMP::Z singleton function that takes a
- * GMP::Z as rop, GMP::Z as op1, and a GMP::Z, Bignum, or Fixnum as op2. It calls
+ * GMP::Z as rop, a GMP::Z as op1, and a GMP::Z, Bignum, or Fixnum as op2. It calls
  * mpz_fname, whose arguments are rop (the return argument), op1, and op2. If op2 is a
  * Fixnum, and >= 0, the ui variant of mpz_fname will be used.
  */
@@ -198,12 +198,12 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1, VALUE op2)  \
   MP_INT *rop_val, *op1_val, *op2_val;                          \
   (void)klass;                                                  \
                                                                 \
-  if (! GMPZ_P(rop)) {                                          \
+  if (! GMPZ_P (rop)) {                                         \
     typeerror_as(Z, "rop");                                     \
   }                                                             \
   mpz_get_struct (rop, rop_val);                                \
                                                                 \
-  if (! GMPZ_P(op1)) {                                          \
+  if (! GMPZ_P (op1)) {                                         \
     typeerror_as (Z, "op1");                                    \
   }                                                             \
   mpz_get_struct (op1, op1_val);                                \
@@ -234,14 +234,95 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1, VALUE op2)  \
  * call-seq:
  *   GMP::Z.add(rop, op1, op2)
  *
- * Returns _a_ times 2 raised to _n_. This operation can also be defined as a left shift
- * by _n_ bits.
+ * ...
  */
 FUNC_MAP__Z_ZUI__TO__Z__RETURNS__VOID(add,mpz_add)
 FUNC_MAP__Z_ZUI__TO__Z__RETURNS__VOID(addmul,mpz_addmul)
 FUNC_MAP__Z_ZUI__TO__Z__RETURNS__VOID(submul,mpz_submul)
 FUNC_MAP__Z_ZUI__TO__Z__RETURNS__VOID(divexact,mpz_divexact)
 FUNC_MAP__Z_ZUI__TO__Z__RETURNS__VOID(lcm,mpz_lcm)
+
+/*
+ * 02 mpz_t_or_ui__mpz_t_or_ui__to__mpz_t__returns__void
+ * FUNC_MAP__ZUI_ZUI__TO__Z__RETURNS__VOID defines a GMP::Z singleton function that takes
+ * a GMP::Z as rop, a GMP::Z, Bignum, or Fixnum as op1, and a GMP::Z, Bignum, or Fixnum
+ * as op2. It calls mpz_fname, whose arguments are rop (the return argument), op1, and
+ * op2. If op1 is a Fixnum and >=0, xor if op2 is a Fixnum and >= 0, one ui variant or
+ * the other of mpz_fname will be used:
+ *
+ *       op2 --> |  FIXNUM >=0  |  FIXNUM < 0  |    BIGNUM    |    GMP::Z    |
+ *     v op1 v   +--------------+--------------+--------------+--------------+
+ *   FIXNUM >= 0 | mpz_ui_fname | mpz_ui_fname | mpz_ui_fname | mpz_ui_fname |
+ *   FIXNUM <  0 | mpz_fname_ui | mpz_fname    | mpz_fname    | mpz_fname    |
+ *   BIGNUM      | mpz_fname_ui | mpz_fname    | mpz_fname    | mpz_fname    |
+ *   GMP::Z      | mpz_fname_ui | mpz_fname    | mpz_fname    | mpz_fname    |
+ *
+ * TODO: Maybe take si's, negate them, and perform mpz_additive_inverse_fname *choke*
+ */
+#define FUNC_MAP__ZUI_ZUI__TO__Z__RETURNS__VOID(fname,mpz_fname)  \
+static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1, VALUE op2)  \
+{                                                                 \
+  MP_INT *rop_val, *op1_val, *op2_val;                            \
+  int free_op1_val = 0;                                           \
+  (void)klass;                                                    \
+                                                                  \
+  if (! GMPZ_P (rop)) {                                           \
+    typeerror_as(Z, "rop");                                       \
+  }                                                               \
+  mpz_get_struct (rop, rop_val);                                  \
+                                                                  \
+  if (FIXNUM_P (op1) && FIX2NUM (op1) >= 0) {                     \
+      if (FIXNUM_P (op2)) {                                       \
+        mpz_set_si (rop_val, FIX2NUM (op2));                      \
+        mpz_ui_##fname (rop_val, FIX2NUM (op1), rop_val);         \
+      } else if (BIGNUM_P (op2)) {                                \
+        mpz_set_bignum (rop_val, op2);                            \
+        mpz_ui_##fname (rop_val, FIX2NUM (op1), rop_val);         \
+      } else if (GMPZ_P (op2)) {                                  \
+        mpz_get_struct (op2, op2_val);                            \
+        mpz_ui_##fname (rop_val, FIX2NUM (op1), op2_val);         \
+      } else {                                                    \
+        typeerror_as (ZXB, "op2");                                \
+      }                                                           \
+  } else {                                                        \
+    if (FIXNUM_P (op1)) {                                         \
+      mpz_temp_alloc (op1_val);                                   \
+      mpz_init_set_si (op1_val, FIX2NUM (op1));                   \
+      free_op1_val = 1;                                           \
+    } else if (BIGNUM_P (op1)) {                                  \
+      mpz_temp_from_bignum (op1_val, op1);                        \
+      free_op1_val = 1;                                           \
+    } else if (GMPZ_P (op1)) {                                    \
+      mpz_get_struct (op1, op1_val);                              \
+    } else {                                                      \
+      typeerror_as (ZXB, "op1");                                  \
+    }                                                             \
+                                                                  \
+    if (FIXNUM_P (op2)) {                                         \
+      if (FIX2NUM (op2) >= 0) {                                   \
+        mpz_fname##_ui (rop_val, op1_val, FIX2NUM (op2));         \
+      } else {                                                    \
+        mpz_set_si (rop_val, FIX2NUM (op2));                      \
+        mpz_fname (rop_val, op1_val, rop_val);                    \
+      }                                                           \
+    } else if (BIGNUM_P (op2)) {                                  \
+      mpz_set_bignum (rop_val, op2);                              \
+      mpz_fname (rop_val, op1_val, rop_val);                      \
+    } else if (GMPZ_P (op2)) {                                    \
+      mpz_get_struct (op2, op2_val);                              \
+      mpz_fname (rop_val, op1_val, op2_val);                      \
+    } else {                                                      \
+      typeerror_as (ZXB, "op2");                                  \
+    }                                                             \
+                                                                  \
+    if (free_op1_val)                                             \
+      mpz_temp_free (op1_val);                                    \
+  }                                                               \
+                                                                  \
+  return Qnil;                                                    \
+}
+
+FUNC_MAP__ZUI_ZUI__TO__Z__RETURNS__VOID(sub,mpz_sub)
 
 
 /**********************************************************************
@@ -2221,6 +2302,7 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "abs!",    r_gmpz_abs_self, 0);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "add", r_gmpzsg_add, 3);
+  rb_define_singleton_method(cGMP_Z, "sub", r_gmpzsg_sub, 3);
   rb_define_singleton_method(cGMP_Z, "addmul", r_gmpzsg_addmul, 3);
   rb_define_singleton_method(cGMP_Z, "submul", r_gmpzsg_submul, 3);
   
