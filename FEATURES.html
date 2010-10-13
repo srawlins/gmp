@@ -18,6 +18,10 @@ body {
   margin-bottom: 32px;
 }
 
+#mpzfm-grid {
+  margin-bottom: 32px;
+}
+
 #mpq-grid {
   margin-bottom: 32px;
 }
@@ -136,6 +140,101 @@ Ext.onReady(function(){
          'GMP::Z#size_in_base',             "mpz_sizeinbase",                          "yes","yes",   "", "no"],
         ['GMP::Z#size_in_bin',              "mpz_sizeinbase",                          "yes","yes",   "", "no"],
         ['GMP::Z#size',                     "mpz_size",                                "yes","yes",   "", "no"]
+    ];
+    
+    var mpzFmData = [
+        /* method,                          function,                                manual, yard, testB, testO */
+        //['GMP::Z#swap',                     "mpz_swap",                                   "","yes","yes", "no"],
+        //['GMP::Z#to_i',                     "mpz_get_si",                              "yes","yes","yes", "no"],
+        //['GMP::Z#to_d',                     "mpz_get_d",                               "yes","yes","yes", "no"],
+        //['',                                "mpz_get_d_2exp",                           "no", "no", "no", "no"],
+        //['GMP::Z#to_s',                     "mpz_get_str",                             "yes","yes","yes", "no"],
+        ['GMP::Z.add',                      "mpz_add<br />mpz_add_ui",                  "no", "no", "no", "no"],
+        ['GMP::Z.sub',                      "mpz_sub<br />mpz_sub_ui<br />mpz_ui_sub",  "no", "no", "no", "no"],
+        ['GMP::Z.mul',                      "mpz_mul<br />mpz_mul_si<br />mpz_mul_ui",  "no", "no", "no", "no"],
+        ['GMP::Z.addmul',                   "mpz_addmul<br />mpz_addmul_ui",            "no", "no", "no", "no"],
+        ['GMP::Z.submul',                   "mpz_submul<br />mpz_submul_ui",            "no", "no", "no", "no"],
+        ['',                                "mpz_mul_2exp",                             "no", "no", "no", "no"],
+        ['',                                "mpz_neg",                                  "no", "no", "no", "no"],
+        ['',                                "mpz_abs",                                  "no", "no", "no", "no"],
+        ['GMP::Z.divexact',                 "mpz_divexact<br />mpz_divexact_ui",        "no", "no", "no", "no"],
+        ['',                                "mpz_tdiv_q",                               "no", "no", "no", "no"],
+        ['',                                "mpz_tdiv_r",                               "no", "no", "no", "no"],
+        ['',                                "mpz_tdiv_qr",                              "no", "no", "no", "no"],
+        /*['GMP::Z#tshr',                     "mpz_tdiv_q_2exp",                            "","yes", "no", "no"],
+        ['GMP::Z#tshrm',                    "mpz_tdiv_r_2exp",                            "", "no", "no", "no"],
+        ['GMP::Z#fdiv',                     "mpz_fdiv_q",                              "yes","yes","yes", "no"],
+        ['GMP::Z#fmod',                     "mpz_fdiv_r",                              "yes","yes","yes", "no"],
+        ['GMP::Z#fdivmod',                  "mpz_fdiv_rq",                              "no", "no", "no", "no"],
+        ['GMP::Z#fshr',                     "mpz_fdiv_q_2exp",                            "", "no", "no", "no"],
+        ['GMP::Z#fshrm',                    "mpz_fdiv_r_2exp",                            "", "no", "no", "no"],
+        ['GMP::Z#cdiv',                     "mpz_cdiv_q",                              "yes","yes","yes", "no"],
+        ['GMP::Z#cmod',                     "mpz_cdiv_r",                              "yes","yes","yes", "no"],
+        ['GMP::Z#cdivmod',                  "mpz_cdiv_qr",                              "no", "no", "no", "no"],
+        ['',                                "mpz_cdiv_q_2exp",                          "no", "no", "no", "no"],
+        ['',                                "mpz_cdiv_r_2exp",                          "no", "no", "no", "no"],
+        ['GMP::Z#%',                        "mpz_mod<br />mpz_mod_ui",                 "yes","yes",   "", "no"],
+        ['GMP::Z#divisible?',               "mpz_divisible_p<br />mpz_divisible_ui_p",  "no","yes","yes", "no"],
+        ['',                                "mpz_divisible_2exp_p",                     "no", "no", "no", "no"],
+        ['',                                "mpz_congruent_p<br />mpz_congruent_ui_p",  "no", "no", "no", "no"],
+        ['',                                "mpz_congruent_2exp_p",                     "no", "no", "no", "no"],
+        ['GMP::Z#**<br />GMP::Z.pow',       "mpz_pow_ui",                              "yes","yes",   "", "no"],
+        ['GMP::Z#powmod',                   "mpz_powm<br />mpz_powm_ui",               "yes","yes",   "", "no"],
+        ['GMP::Z#root',                     "mpz_root",                                "yes","yes",   "", "no"],
+        ['',                                "mpz_rootrem",                              "no", "no", "no", "no"],
+        ['GMP::Z#sqrt<br />GMP::Z#sqrt!',   "mpz_sqrt",                                "yes","yes",   "", "no"],
+        ['GMP::Z#sqrtrem',                  "mpz_sqrtrem",                             "yes","yes",   "", "no"],
+        ['GMP::Z#power?',                   "mpz_perfect_power_p",                     "yes","yes",   "", "no"],
+        ['GMP::Z#square?',                  "mpz_perfect_square_p",                    "yes","yes",   "", "no"],
+        ['GMP::Z#probab_prime?',            "mpz_probab_prime_p",                      "yes","yes",   "", "no"],
+        ['GMP::Z#next_prime<br />' +
+         'GMP::Z#next_prime!',              "mpz_nextprime",                           "yes","yes",   "", "no"],*/
+        ['',                                "mpz_gcd<br />mpz_gcd_ui",                  "no", "no", "no", "no"],
+        ['',                                "mpz_gcdext",                               "no", "no", "no", "no"],
+        ['GMP::Z.lcm',                      "mpz_lcm<br />mpz_lcm_ui",                  "no", "no", "no", "no"],
+        ['',                                "mpz_invert",                               "no", "no", "no", "no"],
+        ['',                                "mpz_jacobi",                               "no", "no", "no", "no"],
+        ['',                                "mpz_legendre",                             "no", "no", "no", "no"],
+        /*['',                                "mpz_kronecker<br />mpz_kronecker_si<br />" +
+                                            "mpz_kronecker_ui<br />mpz_si_kronecker" +
+                                            "<br />mpz_ui_kronecker",                  "yes","yes",   "", "no"],
+        ['GMP::Z#remove',                   "mpz_remove",                              "yes","yes",   "", "no"],
+        ['GMP::Z.fac',                      "mpz_fac_ui",                              "yes","yes",   "", "no"],
+        ['',                                "mpz_bin_ui<br />mpz_bin_uiui",             "no", "no", "no", "no"],
+        ['GMP::Z.fib',                      "mpz_fib_ui",                              "yes","yes",   "", "no"],
+        ['',                                "mpz_fib2_ui",                              "no", "no", "no", "no"],
+        ['',                                "mpz_lucnum_ui",                            "no", "no", "no", "no"],
+        ['',                                "mpz_lucnum2_ui",                           "no", "no", "no", "no"],
+        ['GMP::Z#==<br />GMP::Z#<=><br />' +
+         'GMP::Z#&lt;<br />GMP::Z#&lt;=<br />' +
+         'GMP::Z#&gt;<br />GMP::Z#&gt;=',   "mpz_cmp<br />mpz_cmp_si<br />mpz_cmp_ui", "yes","yes",   "", "no"],
+        ['GMP::Z#cmpabs',                   "mpz_cmpabs",                              "yes","yes",   "", "no"],
+        ['GMP::Z#sgn',                      "mpz_sgn",                                 "yes","yes",   "", "no"],
+        ['GMP::Z#eql?',                     "mpz_get_str",                              "no","yes",   "","n/a"],
+        ['GMP::Z#hash',                     "mpz_get_str",                              "no","yes",   "","n/a"],
+        ['GMP::Z#&',                        "mpz_and",                                 "yes","yes",   "", "no"],
+        ['GMP::Z#|',                        "mpz_ior",                                 "yes","yes",   "", "no"],
+        ['GMP::Z#^',                        "mpz_xor",                                 "yes","yes",   "", "no"],
+        ['GMP::Z#com<br />GMP::Z#com!',     "mpz_com",                                 "yes","yes",   "", "no"],
+        ['GMP::Z#popcount',                 "mpz_popcount",                            "yes","yes",   "", "no"],
+        ['',                                "mpz_hamdist",                              "no", "no", "no", "no"],
+        ['GMP::Z#scan0',                    "mpz_scan0",                               "yes","yes",   "", "no"],
+        ['GMP::Z#scan1',                    "mpz_scan1",                               "yes","yes",   "", "no"],
+        ['GMP::Z#[]=',                      "mpz_setbit<br />mpz_clrbit",              "yes","yes",   "", "no"],
+        ['',                                "mpz_combit",                               "no", "no", "no", "no"],
+        ['GMP::Z#[]',                       "mpz_tstbit",                              "yes","yes",   "", "no"],
+        ['',                                "mpz_fits_ulong_p",                         "no", "no", "no", "no"],
+        ['',                                "mpz_fits_slong_p",                         "no", "no", "no", "no"],
+        ['',                                "mpz_fits_uint_p",                          "no", "no", "no", "no"],
+        ['',                                "mpz_fits_sint_p",                          "no", "no", "no", "no"],
+        ['',                                "mpz_fits_ushort_p",                        "no", "no", "no", "no"],
+        ['',                                "mpz_fits_sshort_p",                        "no", "no", "no", "no"],
+        ['GMP::Z#even?',                    "mpz_even_p",                              "yes","yes",   "", "no"],
+        ['GMP::Z#odd?',                     "mpz_odd_p",                               "yes","yes",   "", "no"],
+        ['GMP::Z#sizeinbase<br />' +
+         'GMP::Z#size_in_base',             "mpz_sizeinbase",                          "yes","yes",   "", "no"],
+        ['GMP::Z#size_in_bin',              "mpz_sizeinbase",                          "yes","yes",   "", "no"],
+        ['GMP::Z#size',                     "mpz_size",                                "yes","yes",   "", "no"]*/
     ];
     
     var mpqData = [
@@ -262,6 +361,18 @@ Ext.onReady(function(){
         ]
     });
     
+    // create the MPZ Functional Mappings data store
+    var mpzfmStore = new Ext.data.ArrayStore({
+        fields: [
+           {name: 'method'},
+           {name: 'function'},
+           {name: 'manual'},
+           {name: 'yard'},
+           {name: 'testBasic'},
+           {name: 'testOriginal'}
+        ]
+    });
+    
     // create the MPQ data store
     var mpqStore = new Ext.data.ArrayStore({
         fields: [
@@ -288,6 +399,7 @@ Ext.onReady(function(){
 
     // manually load local data
     mpzStore.loadData(mpzData);
+    mpzfmStore.loadData(mpzFmData);
     mpqStore.loadData(mpqData);
     mpfStore.loadData(mpfData);
 
@@ -320,7 +432,36 @@ Ext.onReady(function(){
         }
     });
     
-    // create the MPZ Grid
+    // create the MPZ Functional Mappings Grid
+    var mpzfmGrid = new Ext.grid.GridPanel({
+        store: mpzfmStore,
+        columns: [
+            {id:'method',header: 'Ruby method', width: 140, sortable: true, dataIndex: 'method'},
+            {header: 'C function',            width: 130, sortable: true, renderer: shouldExist, dataIndex: 'function'},
+            {header: "Doc'd in manual.pdf?",  width: 140, sortable: true, renderer: shouldYes, dataIndex: 'manual'},
+            {header: "Doc'd in YARD?",        width: 100, sortable: true, renderer: shouldYes, dataIndex: 'yard'},
+            {header: 'Basic Tests?',          width: 100, sortable: true, renderer: shouldYes, dataIndex: 'testBasic'},
+            {header: 'Original Tests?',       width: 100, sortable: true, renderer: shouldYes, dataIndex: 'testOriginal'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'method',
+        height: 260,
+        width: 820,
+        title: 'GMP::Z Functional Mappings',
+        // config options for stateful behavior
+        stateful: true,
+        stateId: 'grid',
+        viewConfig: {
+          getRowClass: function(record, rowIndex, rp, ds){
+            if(record.data.method == ""){
+              return 'x-grid3-row-unimplemented';
+            }
+            return 'x-grid3-row';
+          }
+        }
+    });
+    
+    // create the MPQ Grid
     var mpqGrid = new Ext.grid.GridPanel({
         store: mpqStore,
         columns: [
@@ -349,7 +490,7 @@ Ext.onReady(function(){
         }
     });
     
-    // create the MPZ Grid
+    // create the MPF Grid
     var mpfGrid = new Ext.grid.GridPanel({
         store: mpfStore,
         columns: [
@@ -380,6 +521,7 @@ Ext.onReady(function(){
     
     // render the grid to the specified div in the page
     mpzGrid.render('mpz-grid');
+    mpzfmGrid.render('mpzfm-grid');
     mpqGrid.render('mpq-grid');
     mpfGrid.render('mpf-grid');
 });
@@ -387,6 +529,7 @@ Ext.onReady(function(){
   </head>
   <body>
     <div id="mpz-grid"></div>
+    <div id="mpzfm-grid"></div>
     <div id='mpq-grid'></div>
     <div id='mpf-grid'></div>
   </body>
