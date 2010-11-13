@@ -1,3 +1,5 @@
+require './test_helper'
+
 class TC_Hashes < Test::Unit::TestCase
   def setup
   end

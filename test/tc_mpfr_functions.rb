@@ -1,3 +1,5 @@
+require './test_helper'
+
 class TC_MPFR_Functions < Test::Unit::TestCase
   def setup
     @a = GMP::F(1)

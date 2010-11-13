@@ -1,3 +1,5 @@
+require './test_helper'
+
 class TC_MPFR_Rounding < Test::Unit::TestCase
   def setup
     if GMP::MPFR_VERSION < "3.0.0"

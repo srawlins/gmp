@@ -12,4 +12,5 @@ ext/gmp.bundle
 ext/mkmf.log
 ext/*.o
 ext/*.so
-text/*.rbc
+**/*.rbc
+test/**/*.rbc

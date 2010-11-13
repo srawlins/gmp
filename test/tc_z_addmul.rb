@@ -1,3 +1,5 @@
+require './test_helper'
+
 # Tested: [Z op (Z,Z), Z op (Z,Fixnum), Z op (Z,Bignum),
 #          Z op (Fixnum,Z), Z op (Fixnum,Fixnum), Z op (Fixnum,Bignum)
 #          Z op (Bignum,Z), Z op (Bignum,Bignum), Z op (Bignum,Fixnum)]

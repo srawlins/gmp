@@ -110,13 +110,20 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define r_mpf_cmp(var1, var2) (mpf_cmp(var1, var2))
 #endif
 
-#if SIZEOF_INT < SIZEOF_LONG
-/* 64-bit */
+#ifdef FIXNUM_WIDTH       /* RBX check */
+//#if ((FIXNUM_WIDTH()) == 62)       /* 64-bit */
+#if (((8*SIZEOF_INTPTR_T) - TAG_FIXNUM_SHIFT -1) == 63)
 #define FIX2NUM(x) FIX2LONG(x)
-#else
-/* 32-bit */
-#define FIX2NUM(x) FIX2INT(x)
+//#else                        /* 32-bit */
+//#define FIX2NUM(x) FIX2INT(x)
 #endif
+#else                     /* RBX check */
+#if SIZEOF_INT < SIZEOF_LONG /* 64-bit */
+#define FIX2NUM(x) FIX2LONG(x)
+#else                        /* 32-bit */
+#define FIX2NUM(x) FIX2INT(x)
+#endif         /* MRI's 32-vs-64 check */
+#endif                    /* RBX check */
 
 #define EXPECTED_ZQFXBD "Expected GMP::Z, GMP::Q, GMP::F, Fixnum, Bignum or Float"
 #define EXPECTED_ZQFXB "Expected GMP::Z, GMP::Q, GMP::F, Fixnum or Bignum"

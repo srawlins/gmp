@@ -57,7 +57,7 @@ class TC_Z < Test::Unit::TestCase
     b = GMP::Z(17)
     a_factors = [1,2,3,4,5,6,8,10,12,15,20,24,30,40,60,120]
     a_factors.each do |d|
-      assert_true(a.divisible?(d), "GMP::Z#divisible? ui should be false: #{a}.divisible? #{d}")
+      assert_true(a.divisible?(d), "GMP::Z#divisible? ui should be true: #{a}.divisible? #{d}")
     end
     ((1..120).to_a - a_factors).each do |d|
       assert_false(a.divisible?(d), "GMP::Z#divisible? ui should be false: #{a}.divisible? #{d}")
@@ -74,7 +74,7 @@ class TC_Z < Test::Unit::TestCase
                                 743*109_582_894_312_963_583,
                              29*743*109_582_894_312_963_583]
     a_factors.each do |d|
-      assert_true(a.divisible?(d), "GMP::Z#divisible? bignum should be false: #{a}.divisible? #{d}")
+      assert_true(a.divisible?(d), "GMP::Z#divisible? bignum should be true: #{a}.divisible? #{d}")
     end
     a_factors.map { |n| n*2 }.each do |d|
       assert_false(a.divisible?(d), "GMP::Z#divisible? ui should be false: #{a}.divisible? #{d}")

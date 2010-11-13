@@ -1,3 +1,5 @@
+require './test_helper'
+
 class TC_Z_Exponentiation < Test::Unit::TestCase
   def setup
     @a = GMP::Z.new(100)
@@ -6,7 +8,7 @@ class TC_Z_Exponentiation < Test::Unit::TestCase
   end
   
   def test_exponentiation
-    assert_equal(GMP::Z(10000000000), @a**5,                          "GMP::Z should **(Fixnum) correctly")
+    assert_equal(@a**5, GMP::Z(10000000000),                          "GMP::Z should **(Fixnum) correctly")
     assert_equal(GMP::Z("100000000000000000000000000000000"), @a**@b, "GMP::Z should **(GMP::Z) correctly")
     assert_equal(GMP::Z(65536), 2**@b,                                "Fixnum should **(GMP::Z) correctly")
   end

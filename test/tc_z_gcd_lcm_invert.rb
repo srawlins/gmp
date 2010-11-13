@@ -1,3 +1,5 @@
+require './test_helper'
+
 class TC_Z_GCD_LCM_Invert < Test::Unit::TestCase
   def setup
     @a = GMP::Z( 24)  # 2^3 * 3

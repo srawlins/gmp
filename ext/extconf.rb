@@ -25,6 +25,8 @@ if (have_header('mpfr.h') and
 end
 end
 
+check_sizeof('intptr_t')
+
 $CFLAGS += ' -Wall -W -O6 -g'
 if ok
   create_makefile('gmp')

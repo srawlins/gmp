@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 # do ccmt for every conceivable configuration
 #
 # This one is for the MacBook, running Linux 2.6.32 Ubuntu
@@ -8,6 +10,14 @@ sleep 1
 benchmark = false
 mpfr = ["", "--no-mpfr"]
 ruby_v = %w(1.8.7 1.9.1 1.9.2)
+
+if ARGV[0] == "--help"
+  puts "Usage: EVERYONE-macbook-linux-2.6.32-ubuntu"
+  puts "         [--benchmark]"
+  puts "         [--mpfr={--no-mpfr}]"
+  puts "         [--ruby=a,b,c]"
+  exit
+end
 
 until ARGV.empty?
   case
