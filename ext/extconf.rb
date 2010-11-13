@@ -25,7 +25,9 @@ if (have_header('mpfr.h') and
 end
 end
 
-check_sizeof('intptr_t')
+unless have_macro('SIZEOF_INTPTR_T')
+  check_sizeof('intptr_t')
+end
 
 $CFLAGS += ' -Wall -W -O6 -g'
 if ok

@@ -111,11 +111,10 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #endif
 
 #ifdef FIXNUM_WIDTH       /* RBX check */
-//#if ((FIXNUM_WIDTH()) == 62)       /* 64-bit */
-#if (((8*SIZEOF_INTPTR_T) - TAG_FIXNUM_SHIFT -1) == 63)
+#if (((8*SIZEOF_INTPTR_T) - TAG_FIXNUM_SHIFT -1) == 63) /* 64-bit */
 #define FIX2NUM(x) FIX2LONG(x)
-//#else                        /* 32-bit */
-//#define FIX2NUM(x) FIX2INT(x)
+#else                        /* 32-bit */
+#define FIX2NUM(x) FIX2INT(x)
 #endif
 #else                     /* RBX check */
 #if SIZEOF_INT < SIZEOF_LONG /* 64-bit */

@@ -98,7 +98,7 @@ class TC_precision < Test::Unit::TestCase
       assert_raise(RangeError) { GMP::F.default_prec = -64 }
       assert_raise(TypeError) { GMP::F.default_prec = "Cow" }
     rescue NameError => err
-      raise unless err.to_s == "uninitialized constant GMP::MPFR_VERSION"
+      raise unless err.to_s =~ /uninitialized constant:? GMP::MPFR_VERSION/
       GMP::F.default_prec = 100
       assert_equal(128, GMP::F.default_prec, "GMP::F.default_prec should be assignable.")
       GMP::F.default_prec = 130
