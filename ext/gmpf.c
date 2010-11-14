@@ -1211,6 +1211,7 @@ void init_gmpf()
   // Float Arithmetic
   rb_define_method(cGMP_F, "-", r_gmpf_sub, 1);
   rb_define_method(cGMP_F, "/", r_gmpf_div, 1);
+  rb_define_alias(cGMP_F, "divide", "/");
 #ifndef MPFR
   rb_define_method(cGMP_F, "+", r_gmpf_add, 1);
   rb_define_method(cGMP_F, "*", r_gmpf_mul, 1);
