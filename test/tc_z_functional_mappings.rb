@@ -83,4 +83,18 @@ class TC_Z_Functional_Mappings < Test::Unit::TestCase
       end
     end
   end
+  
+  # 05 mpz_t__to__mpz_t__returns__void
+  def test_FUNC_MAP__Z__TO__Z__RETURNS__VOID
+    functions = [:neg, :abs, :sqrt, :nextprime, :com]
+    rop = GMP::Z(0)
+    op1s = [@z1]
+    functions.each do |f|
+      op1s.each do |op1|
+        assert_nothing_raised("GMP::Z.#{f.to_s} should not raise when passed (#{rop.class}, #{op1.class})") {
+          GMP::Z.send(f, rop, op1)
+        }
+      end
+    end
+  end
 end

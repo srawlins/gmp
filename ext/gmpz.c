@@ -418,6 +418,41 @@ FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(fdiv_r_2exp,mpz_fdiv_r_2exp)
 FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(tdiv_q_2exp,mpz_tdiv_q_2exp)
 FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(tdiv_r_2exp,mpz_tdiv_r_2exp)
 
+/*
+ * 05 mpz_t__mpz_t__to__mpz_t__returns__void
+ * FUNC_MAP__Z__TO__Z__RETURNS__VOID defines a GMP::Z singleton function that takes a
+ * GMP::Z as rop, and a GMP::Z as op1. It calls mpz_fname, whose arguments are rop (the
+ * return argument), and op1.
+ *
+ * TODO: Accept Fixnum, Bignum as op1 and just convert to GMP::Z.
+ */
+#define FUNC_MAP__Z__TO__Z__RETURNS__VOID(fname,mpz_fname)   \
+static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1)  \
+{                                                                   \
+  MP_INT *rop_val, *op1_val;                                        \
+  (void)klass;                                                      \
+                                                                    \
+  if (! GMPZ_P (rop)) {                                             \
+    typeerror_as(Z, "rop");                                         \
+  }                                                                 \
+  mpz_get_struct (rop, rop_val);                                    \
+                                                                    \
+  if (! GMPZ_P (op1)) {                                             \
+    typeerror_as (Z, "op1");                                        \
+  }                                                                 \
+  mpz_get_struct (op1, op1_val);                                    \
+                                                                    \
+  mpz_fname (rop_val, op1_val);                            \
+                                                                    \
+  return Qnil;                                                      \
+}
+
+FUNC_MAP__Z__TO__Z__RETURNS__VOID(neg,mpz_neg)
+FUNC_MAP__Z__TO__Z__RETURNS__VOID(abs,mpz_abs)
+FUNC_MAP__Z__TO__Z__RETURNS__VOID(sqrt,mpz_sqrt)
+FUNC_MAP__Z__TO__Z__RETURNS__VOID(nextprime,mpz_nextprime)
+FUNC_MAP__Z__TO__Z__RETURNS__VOID(com,mpz_com)
+
 
 /**********************************************************************
  *    Initializing, Assigning Integers                                *
@@ -2401,6 +2436,8 @@ void init_gmpz()
   rb_define_singleton_method(cGMP_Z, "addmul", r_gmpzsg_addmul, 3);
   rb_define_singleton_method(cGMP_Z, "submul", r_gmpzsg_submul, 3);
   rb_define_singleton_method(cGMP_Z, "mul_2exp", r_gmpzsg_mul_2exp, 3);
+  rb_define_singleton_method(cGMP_Z, "neg", r_gmpzsg_neg, 2);
+  rb_define_singleton_method(cGMP_Z, "abs", r_gmpzsg_abs, 2);
   
   // Integer Division
   rb_define_method(cGMP_Z, "/",            r_gmpz_div, 1);
@@ -2435,6 +2472,8 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "sqrtrem", r_gmpz_sqrtrem, 0);
   rb_define_method(cGMP_Z, "square?", r_gmpz_is_square, 0);
   rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power, 0);
+  // Functional Mappings
+  rb_define_singleton_method(cGMP_Z, "sqrt", r_gmpzsg_sqrt, 2);
   
   // Number Theoretic Functions
   rb_define_method(          cGMP_Z, "probab_prime?", r_gmpz_is_probab_prime, -1);
@@ -2453,6 +2492,7 @@ void init_gmpz()
   rb_define_singleton_method(cGMP_Z, "fib",           r_gmpzsg_fib, 1);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "lcm", r_gmpzsg_lcm, 3);
+  rb_define_singleton_method(cGMP_Z, "nextprime", r_gmpzsg_nextprime, 2);
   
   // Integer Comparisons
   rb_define_method(cGMP_Z, "<=>",     r_gmpz_cmp, 1);
@@ -2478,6 +2518,8 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "scan1",    r_gmpz_scan1, 1);
   rb_define_method(cGMP_Z, "[]=",      r_gmpz_setbit, 2);
   rb_define_method(cGMP_Z, "[]",       r_gmpz_getbit, 1);
+  // Functional Mappings
+  rb_define_singleton_method(cGMP_Z, "com", r_gmpzsg_com, 2);
   
   // Miscellaneous Integer Functions
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
