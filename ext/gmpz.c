@@ -373,6 +373,51 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1, VALUE op2)  \
 
 FUNC_MAP__Z_ZSIUI__TO__Z__RETURNS__VOID(mul,mpz_mul)
 
+/*
+ * 04 mpz_t__mp_bitcnt_t__to__mpz_t__returns__void
+ * FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID defines a GMP::Z singleton function that takes a
+ * GMP::Z as rop, a GMP::Z as op1, and a Fixnum as op2. It calls mpz_fname, whose
+ * arguments are rop (the return argument), op1, and op2. op2 must be >= 0.
+ *
+ * TODO: Accept Fixnum, Bignum as op1 and just convert to GMP::Z.
+ */
+#define FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(fname,mpz_fname)   \
+static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1, VALUE op2)  \
+{                                                                   \
+  MP_INT *rop_val, *op1_val;                                        \
+  (void)klass;                                                      \
+                                                                    \
+  if (! GMPZ_P (rop)) {                                             \
+    typeerror_as(Z, "rop");                                         \
+  }                                                                 \
+  mpz_get_struct (rop, rop_val);                                    \
+                                                                    \
+  if (! GMPZ_P (op1)) {                                             \
+    typeerror_as (Z, "op1");                                        \
+  }                                                                 \
+  mpz_get_struct (op1, op1_val);                                    \
+                                                                    \
+  if (! FIXNUM_P (op2)) {                                           \
+    typeerror_as (X, "op2");                                        \
+  }                                                                 \
+                                                                    \
+  if (FIX2NUM (op2) >= 0) {                                         \
+    mpz_fname (rop_val, op1_val, FIX2NUM (op2));                    \
+  } else {                                                          \
+      rb_raise(rb_eRangeError, "op2 (Fixnum) must be nonnegative"); \
+  }                                                                 \
+                                                                    \
+  return Qnil;                                                      \
+}
+
+FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(mul_2exp,mpz_mul_2exp)
+FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(cdiv_q_2exp,mpz_cdiv_q_2exp)
+FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(cdiv_r_2exp,mpz_cdiv_r_2exp)
+FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(fdiv_q_2exp,mpz_fdiv_q_2exp)
+FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(fdiv_r_2exp,mpz_fdiv_r_2exp)
+FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(tdiv_q_2exp,mpz_tdiv_q_2exp)
+FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(tdiv_r_2exp,mpz_tdiv_r_2exp)
+
 
 /**********************************************************************
  *    Initializing, Assigning Integers                                *
@@ -2355,6 +2400,7 @@ void init_gmpz()
   rb_define_singleton_method(cGMP_Z, "mul", r_gmpzsg_mul, 3);
   rb_define_singleton_method(cGMP_Z, "addmul", r_gmpzsg_addmul, 3);
   rb_define_singleton_method(cGMP_Z, "submul", r_gmpzsg_submul, 3);
+  rb_define_singleton_method(cGMP_Z, "mul_2exp", r_gmpzsg_mul_2exp, 3);
   
   // Integer Division
   rb_define_method(cGMP_Z, "/",            r_gmpz_div, 1);
@@ -2370,6 +2416,12 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "divisible?",   r_gmpz_divisible, 1);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "divexact", r_gmpzsg_divexact, 3);
+  rb_define_singleton_method(cGMP_Z, "cdiv_q_2exp", r_gmpzsg_cdiv_q_2exp, 3);
+  rb_define_singleton_method(cGMP_Z, "cdiv_r_2exp", r_gmpzsg_cdiv_r_2exp, 3);
+  rb_define_singleton_method(cGMP_Z, "fdiv_q_2exp", r_gmpzsg_fdiv_q_2exp, 3);
+  rb_define_singleton_method(cGMP_Z, "fdiv_r_2exp", r_gmpzsg_fdiv_r_2exp, 3);
+  rb_define_singleton_method(cGMP_Z, "tdiv_q_2exp", r_gmpzsg_tdiv_q_2exp, 3);
+  rb_define_singleton_method(cGMP_Z, "tdiv_r_2exp", r_gmpzsg_tdiv_r_2exp, 3);
   
   // Integer Exponentiation
   rb_define_singleton_method(cGMP_Z, "pow",    r_gmpzsg_pow, 2);
