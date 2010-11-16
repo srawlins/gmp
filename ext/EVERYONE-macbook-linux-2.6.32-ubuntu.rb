@@ -9,7 +9,7 @@ sleep 1
 
 benchmark = false
 mpfr = ["", "--no-mpfr"]
-ruby_v = %w(1.8.7 1.9.1 1.9.2 ree rbx-1.1)
+ruby_v = %w(1.8.7 1.9.1 1.9.2 ree rbx-1.1.0)
 
 if ARGV[0] == "--help"
   puts "Usage: EVERYONE-macbook-linux-2.6.32-ubuntu"

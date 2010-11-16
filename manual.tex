@@ -1541,21 +1541,33 @@ Ruby and GMP compiled with gcc 4.2.1 (Apple Inc. build 5664)\\
   \hline
 \end{tabular}\\\\
 
-Ubuntu 10.04, Kernel 2.6.32-24, x86\_64 (64-bit)\\
+Ubuntu 10.04, Kernel 2.6.32-25, x86\_64 (64-bit)\\
 Ruby and GMP compiled with gcc 4.4.3 (Ubuntu 4.4.3-4ubuntu5)\\
+In these tests, the classic multiply benchmark crashes with OutOfMemory. There are
+two ways this has been remedied. The first (tests marked multiply.gc) is to manually
+kick off garbage collection every so often. This solves the memory problem in all
+interpreters except Rubinius 1.1 (investigation pending). The second, and far better
+solution is to employ the new functional mapping methods. These have not been
+documented yet, but documentation is pending, and high on my priority list. Simply
+put, these methods overcome the overhead (memory and time) of instantiating new
+objects all the time.\\
 \begin{tabular}{|l|l|r|r|r|r|}
   \hline
-  GMP   & bench    & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & C \\
+  GMP   & bench        & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & RBX 1.1 & C \\
   \hline
-  4.3.2 & multiply &     7793.7 &     6825.7 &     7460.6 & 14716   \\
-        & divide   &     7687.6 &     7725.9 &     7473.3 &  8614.3 \\
-        & gcd      &     2450.1 &     2507.6 &     2476.6 &  2779.8 \\
-        & rsa      &     1979.1 &     2065.6 &     2059.2 &  1984.3 \\
+  4.3.2 & multiply     &          x &          x &          x &       x & 14716   \\
+        & multiply.gc  &     7849.2 &     6911.4 &     7703.5 &       x & 14716   \\
+        & multiply.fnl &     9532.6 &    11182   &    10886   &  5131.3 & 14716   \\
+        & divide       &     7704.6 &     7591.8 &     7527.2 &  4265.1 &  8614.3 \\
+        & gcd          &     2420.1 &     2453.6 &     2487.4 &  1676.4 &  2779.8 \\
+        & rsa          &     2040.5 &     2069.2 &     2044.2 &  1758.9 &  1984.3 \\
   \hline
-  5.0.1 & multiply &     9727.1 &     7020.3 &     7902.1 & 17695   \\
-        & divide   &     9306.4 &    10785   &    10799   & 15629   \\
-        & gcd      &     2345.3 &     2525.5 &     2541.2 &  2925.1 \\
-        & rsa      &     2116.5 &     2117.8 &     2143.9 &  2233.4 \\
+  5.0.1 & multiply     &          x &          x &          x &       x & 17695   \\
+        & multiply.gc  &     8265.3 &     7289.4 &     8105.1 &       x & 17695   \\
+        & multiply.fnl &    10029   &    11807   &    11493   &  6036.7 & 17695   \\
+        & divide       &    10988   &    10935   &    10799   &  6164.9 & 15629   \\
+        & gcd          &     2554.2 &     2510.2 &     2538.6 &  1802.8 &  2925.1 \\
+        & rsa          &     2128.7 &     2189   &     2179.9 &  1941.2 &  2233.4 \\
   \hline
 \end{tabular}\\\\
 
