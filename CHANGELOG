@@ -3,10 +3,13 @@
     of 0.6.
   * First Functional Mappings: GMP::Z.add, .addmul, .submul, .divexact, .lcm, .sub, .mul,
     .mul_2exp, .cdiv_q_2exp, .cdiv_r_2exp, .fdiv_q_2exp, .fdiv_r_2exp, .tdiv_q_2exp,
-    .tdiv_r_2exp, :neg, :abs, :sqrt, :nextprime, :com
+    .tdiv_r_2exp, .neg, .abs, .sqrt, .nextprime, .com
   * Added hopeful support for the Rubinius Ruby interpreter and VM! All tests pass in
     Rubinius 1.1.0, but full support won't be added until the release and inspection of
     Rubinius 1.1.1. Tested on 64-bit OS X 10.6 and 64-bit Linux 2.6.35.
+  * Unit test results: x tests, x assertions, 0 failures, 0 errors
+  * Unit test results: x tests, x assertions, 0 failures, 0 errors (MPFR 2.4.2)
+  * Unit test results:  x tests,  x assertions, 0 failures, 0 errors (w/o MPFR)
 
 0.5.23:
   * Added MPFR method GMP::F.can_round? (mpfr_can_round), not tested.

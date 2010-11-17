@@ -34,8 +34,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.5.23}}\\
-\multicolumn{2}{r}{\large{04 October 2010}}
+\multicolumn{2}{r}{\large{Edition 0.5.41}}\\
+\multicolumn{2}{r}{\large{17 November 2010}}
 \end{tabular}
 
 \vfill
@@ -149,7 +149,7 @@ of the following versions of Ruby:
   \item (REE) Ruby 1.8.7 - tested lightly.
 \end{itemize}
 As you can see only Matz's Ruby Interpreter (MRI) is supported. I've just started to poke
-around with REE. Everything seems to work on REE 1.8.7 on Linux, x86 and x86\_64.\\
+around with Ruby Enterprise Edition 1.8.7 (REE) and Rubinius 1.1.0 (RBX). Everything seems to work on REE 1.8.7 (Linux x86 and Linux x86\_64) and RBX 1.1.0 (Linux x86,  Linux x86\_64, and OS X 10.6 x86\_64).\\
 
 Next is the platform, the combination of the architecture (processor) and OS.
 As far as I can tell, if you can compile GMP and Ruby (and optionally MPFR) on
@@ -214,6 +214,7 @@ In addition, I \textit{used to test} on the following environments, in versions
   Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.9.1 & GMP 4.3.1 \\ \hline
 \end{tabular}
 
+\newpage
 \subsection{Installing}
 You may clone the gmp gem's git repository with:\\
 \\
