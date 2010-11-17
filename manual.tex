@@ -183,21 +183,25 @@ the given version of MPFR:\\\\
                                            & (MRI) Ruby 1.9.1   & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.9.1   & GMP 5.0.1 & (3.0.0) \\
                                            & (MRI) Ruby 1.9.2   & GMP 4.3.2 & (2.4.2) \\
-                                           & (MRI) Ruby 1.9.2   & GMP 5.0.1 & (3.0.0) \\ \hline
+                                           & (MRI) Ruby 1.9.2   & GMP 5.0.1 & (3.0.0) \\
+                                           & (RBX) Rubinius 1.1 & GMP 4.3.2 & (2.4.2) \\
+                                           & (RBX) Rubinius 1.1 & GMP 5.0.1 & (3.0.0) \\ \hline
   Linux (Ubuntu 10.04) on x86\_64 (64-bit) & (MRI) Ruby 1.8.7   & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.8.7   & GMP 5.0.1 & (3.0.0) \\
                                            & (MRI) Ruby 1.9.1   & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.9.1   & GMP 5.0.1 & (3.0.0) \\
                                            & (MRI) Ruby 1.9.2   & GMP 4.3.2 & (2.4.2) \\
-                                           & (MRI) Ruby 1.9.2   & GMP 5.0.1 & (3.0.0) \\ \hline
+                                           & (MRI) Ruby 1.9.2   & GMP 5.0.1 & (3.0.0) \\
+                                           & (RBX) Rubinius 1.1 & GMP 4.3.2 & (2.4.2) \\
+                                           & (RBX) Rubinius 1.1 & GMP 5.0.1 & (3.0.0) \\ \hline
   Mac OS X 10.6.4 on x86\_64 (64-bit)      & (MRI) Ruby 1.8.7   & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.8.7   & GMP 5.0.1 & (3.0.0) \\
                                            & (MRI) Ruby 1.9.1   & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.9.1   & GMP 5.0.1 & (3.0.0) \\
                                            & (MRI) Ruby 1.9.2   & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.9.2   & GMP 5.0.1 & (3.0.0) \\
-                                           & (MRI) Rubinius 1.1 & GMP 4.3.2 & (2.4.2) \\
-                                           & (MRI) Rubinius 1.1 & GMP 5.0.1 & (3.0.0) \\ \hline
+                                           & (RBX) Rubinius 1.1 & GMP 4.3.2 & (2.4.2) \\
+                                           & (RBX) Rubinius 1.1 & GMP 5.0.1 & (3.0.0) \\ \hline
   Windows 7 on x86\_64 (64-bit)            & (MRI) Ruby 1.8.7   & GMP 4.3.2 & (2.4.2) \\
                                            & (MRI) Ruby 1.8.7   & GMP 5.0.1 & (3.0.0) \\
                                            & (MRI) Ruby 1.9.1   & GMP 4.3.2 & (2.4.2) \\
@@ -208,6 +212,7 @@ the given version of MPFR:\\\\
                                            & (MRI) Ruby 1.9.1   & GMP 5.0.1 & (3.0.0) \\ \hline
 \end{tabular}\\\\
 
+\newpage
 In addition, I \textit{used to test} on the following environments, in versions
 0.4.7 and earlier of the gmp gem:\\\\
 
@@ -219,7 +224,6 @@ In addition, I \textit{used to test} on the following environments, in versions
   Mac OS X 10.5.7 on x86 (32-bit) & (MRI) Ruby 1.9.1 & GMP 4.3.1 \\ \hline
 \end{tabular}
 
-\newpage
 \subsection{Installing}
 You may clone the gmp gem's git repository with:\\
 \\
@@ -1526,7 +1530,7 @@ for 'base' and 'app' are not listed; they cannot be compared with GMPbench resul
 
 Mac OS X 10.6.4, x86 (32-bit)\\
 Ruby and GMP compiled with gcc 4.2.1 (Apple Inc. build 5664)\\
-\begin{tabular}{|l|l|r|r|r|r|}
+\begin{tabular}{|l|l|r|r|r|r|r|}
   \hline
   GMP   & bench    & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & RBX 1.1 & C \\
   \hline
@@ -1544,15 +1548,15 @@ Ruby and GMP compiled with gcc 4.2.1 (Apple Inc. build 5664)\\
 
 Ubuntu 10.04, Kernel 2.6.32-25, x86\_64 (64-bit)\\
 Ruby and GMP compiled with gcc 4.4.3 (Ubuntu 4.4.3-4ubuntu5)\\
-In these tests, the classic multiply benchmark crashes with OutOfMemory. There are
+\begin{small}In these tests, the classic multiply benchmark crashes with OutOfMemory. There are
 two ways this has been remedied. The first (tests marked multiply.gc) is to manually
 kick off garbage collection every so often. This solves the memory problem in all
 interpreters except Rubinius 1.1 (investigation pending). The second, and far better
 solution is to employ the new functional mapping methods. These have not been
 documented yet, but documentation is pending, and high on my priority list. Simply
 put, these methods overcome the overhead (memory and time) of instantiating new
-objects all the time.\\
-\begin{tabular}{|l|l|r|r|r|r|}
+objects all the time.\end{small}\\
+\begin{tabular}{|l|l|r|r|r|r|r|}
   \hline
   GMP   & bench        & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & RBX 1.1 & C \\
   \hline
@@ -1572,6 +1576,7 @@ objects all the time.\\
   \hline
 \end{tabular}\\\\
 
+\newpage
 Windows 7 (64-bit)\\
 Ruby and GMP compiled with gcc 4.5.0 (tdm-1)\\
 \begin{tabular}{|l|l|r|r|r|r|}
