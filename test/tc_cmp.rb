@@ -2,11 +2,16 @@ require './test_helper'
 
 class TC_Cmp < Test::Unit::TestCase
   def setup
+    @_64bit = 1_000_000_000_000.is_a? Fixnum
     @a=GMP::Z.new(180)
     @c=GMP::Q.new(2000,11) # ~181.82
     @d=GMP::Q.new(3000,17) # ~176.47
     @e=700
-    @f=2**32
+    if @_64bit
+      @f=2**64
+    else
+      @f=2**32
+    end
     @g=GMP::Q(360,2)
   end
 

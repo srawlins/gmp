@@ -27,4 +27,29 @@ class TC_Hashes < Test::Unit::TestCase
     assert(h[GMP::Z(127)] == "GMP::Z")
     assert(h["127"] == "String")
   end
+  
+  def test_q_hashes
+    h = {}
+    h[GMP::Q(1,4)] = [GMP::Q(16,64), GMP::Q(166,664)]
+    assert(h[GMP::Q(1,4)] != nil, "Newly created GMP::Zs should hash equally if they are equal.")
+    assert(h[GMP::Q(233,144)].nil?,    "Newly created GMP::Zs should hash differently if they are different.")
+    10.times do
+      assert(GMP::Q(11,13).hash == GMP::Q(11,13).hash)
+    end
+    
+    100.times do |i|
+      assert(GMP::Q(1,1).hash != GMP::Q(i,101).hash)
+    end
+    
+    # GMP::Q(5,1) and "5" might (I think, 'do') hash the same, but should not be equal
+    assert(! GMP::Q(101,1).eql?("101"))
+    
+    h["22/7"] = "String"
+    h[GMP::Q(22,7)] = "GMP::Z"
+    assert(h["22/7"] != "GMP::Z")
+    #assert(h[GMP::Q(22/7)] != "String")  # caused segfaults, i swear!
+    assert(h[GMP::Q(22,7)] != "String")
+    assert(h[GMP::Q(22,7)] == "GMP::Z")
+    assert(h["22/7"] == "String")
+  end
 end

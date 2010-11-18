@@ -20,48 +20,6 @@ void r_gmpf_free(void *ptr)         { mpf_clear (ptr);     free (ptr); }
 #endif
 void r_gmprandstate_free(void *ptr) { gmp_randclear (ptr); free (ptr); }
 
-static void mpq_str_set(MP_RAT *ROP, char *str)
-{
-  int i=0;
-
-  while (str[i] && str[i] != '/')
-    i++;
-
-  if (str[i])
-  {
-    str[i] = 0; /* You didn't see that :) */
-    mpz_set_str (mpq_numref(ROP), str, 0);
-    str[i] = '/';
-    mpz_set_str (mpq_denref(ROP), str+i+1, 0);
-  } else {
-    mpz_set_str (mpq_numref(ROP), str, 0);
-    mpz_set_ui (mpq_denref(ROP), 1);
-  }
-  mpq_canonicalize (ROP);
-}
-
-static VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
-{
-  MP_RAT *self_val, *arg_val;
-
-  if (argc != 0) {
-    mpq_get_struct(self, self_val);
-    if (argc == 1 && GMPQ_P(argv[0])) {
-      mpq_get_struct(argv[0], arg_val);
-      mpq_set (self_val, arg_val);
-    } else if (argc == 1 && STRING_P(argv[0])) {
-      mpq_str_set (self_val, StringValuePtr(argv[0]));
-    } else {
-      mpz_set_value (mpq_numref(self_val), argv[0]);
-      if (argc == 2) {
-        mpz_set_value (mpq_denref(self_val), argv[1]);
-        mpq_canonicalize(self_val);
-      }
-    }
-  }
-  return Qnil;
-}
-
 static VALUE r_gmpz_coerce(VALUE self, VALUE arg)
 {
   return rb_assoc_new(r_gmpzsg_new(1, &arg, cGMP_Z), self);

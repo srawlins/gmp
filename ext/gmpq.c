@@ -69,6 +69,7 @@ static VALUE r_gmpq_##fname##_self(VALUE self) \
 /*
  * call-seq:
  *   GMP::Q.new(arg)
+ *   GMP::Q.new(num,den)
  *
  * Creates a new GMP::Q rational, with _arg_ as its value, converting where
  * necessary.
@@ -88,6 +89,48 @@ VALUE r_gmpqsg_new(int argc, VALUE *argv, VALUE klass)
   rb_obj_call_init(res, argc, argv);
  
   return res;
+}
+
+static void mpq_str_set(MP_RAT *ROP, char *str)
+{
+  int i=0;
+
+  while (str[i] && str[i] != '/')
+    i++;
+
+  if (str[i])
+  {
+    str[i] = 0; /* You didn't see that :) */
+    mpz_set_str (mpq_numref(ROP), str, 0);
+    str[i] = '/';
+    mpz_set_str (mpq_denref(ROP), str+i+1, 0);
+  } else {
+    mpz_set_str (mpq_numref(ROP), str, 0);
+    mpz_set_ui (mpq_denref(ROP), 1);
+  }
+  mpq_canonicalize (ROP);
+}
+
+VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
+{
+  MP_RAT *self_val, *arg_val;
+
+  if (argc != 0) {
+    mpq_get_struct(self, self_val);
+    if (argc == 1 && GMPQ_P(argv[0])) {
+      mpq_get_struct(argv[0], arg_val);
+      mpq_set (self_val, arg_val);
+    } else if (argc == 1 && STRING_P(argv[0])) {
+      mpq_str_set (self_val, StringValuePtr(argv[0]));
+    } else {
+      mpz_set_value (mpq_numref(self_val), argv[0]); // are these segfaulting?
+      if (argc == 2) {
+        mpz_set_value (mpq_denref(self_val), argv[1]); // are these segfaulting?
+        mpq_canonicalize(self_val);
+      } // AND IF ARGC != 2 ?!? WHAT JUST HAPPENED?
+    }
+  }
+  return Qnil;
 }
 
 /*
@@ -686,6 +729,47 @@ VALUE r_gmpq_sgn(VALUE self)
   return INT2FIX(mpq_sgn(self_val));
 }
 
+/*
+ * call-seq:
+ *   a.eql?(b)
+ *
+ * @since 0.5.47
+ *
+ * Returns true if _a_ is equal to _b_. _a_ and _b_ must then be equal in cardinality,
+ * and both be instances of GMP::Q. Otherwise, returns false. a.eql?(b) if and only if
+ * b.class == GMP::Q, and a.hash == b.hash.
+ */
+VALUE r_gmpq_eql(VALUE self, VALUE arg)
+{
+  MP_RAT *self_val, *arg_val;
+  mpq_get_struct(self,self_val);
+  
+  if (GMPQ_P(arg)) {
+    mpq_get_struct(arg, arg_val);
+    return (mpq_cmp (self_val, arg_val) == 0) ? Qtrue : Qfalse;
+  }
+  else {
+    return Qfalse;
+  }
+}
+
+/*
+ * call-seq:
+ *   a.hash
+ *
+ * @since 0.5.47
+ *
+ * Returns the computed hash value of _a_. This method first converts _a_ into a String
+ * (base 10), then calls String#hash on the result, returning the hash value. a.eql?(b)
+ * if and only if b.class == GMP::Q, and a.hash == b.hash.
+ */
+VALUE r_gmpq_hash(VALUE self)
+{
+  ID to_s_sym = rb_intern("to_s");
+  ID hash_sym = rb_intern("hash");
+  return rb_funcall(rb_funcall(self, to_s_sym, 0), hash_sym, 0);
+}
+
 /**********************************************************************
  *    Applying Integer Functions                                      *
  **********************************************************************/
@@ -751,6 +835,9 @@ void init_gmpq()
   rb_define_method(cGMP_Q, "==",  r_gmpq_eq, 1);
   rb_define_method(cGMP_Q, "sgn", r_gmpq_sgn, 0);
   rb_define_method(cGMP_Q, "cmpabs",  r_gmpq_cmpabs, 1);
+  
+  rb_define_method(cGMP_Q, "eql?",    r_gmpq_eql, 1);
+  rb_define_method(cGMP_Q, "hash",    r_gmpq_hash, 0);
   
   // _unsorted_
   rb_define_method(cGMP_Q, "floor",  r_gmpq_floor, 0);

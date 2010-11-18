@@ -218,6 +218,7 @@ extern VALUE r_gmpz_size_in_bin(VALUE self);
 
 // Initializing Rationals
 extern VALUE r_gmpqsg_new(int argc, VALUE *argv, VALUE klass);
+extern VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self);
 extern VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module);
 extern VALUE r_gmpq_swap(VALUE self, VALUE arg);
 

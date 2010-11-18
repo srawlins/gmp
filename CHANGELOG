@@ -1,3 +1,7 @@
+0.5.47:
+  * Probably last release before 0.6.1
+  * Added GMP::Q#hash and GMP::Q#eql?; tested.
+
 0.5.41:
   * Added first five sets of Functional Mappings. These will be the primary new features
     of 0.6.

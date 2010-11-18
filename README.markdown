@@ -457,7 +457,11 @@ Todo
 * `GMP::Z#to_d_2exp`, `#congruent?`, `#rootrem`, `#lcm`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#hamdist`, `#combit`, `#fits_x?`
 * `GMP::Q#to_s(base)`, `GMP::F#to_s(base)` (test it!)
 * benchmark gcdext, pi
+* a butt-load of functional mappings. 47-ish sets.
 * use Rake use Rake use Rake
+* investigate possible memory leaks when using `GMP::Q(22/7)` for example
+* beef up `r_gmpq_initialize`; I don't want to rely on `mpz_set_value`.
+* finish compile-results.rb
 
 The below are inherited from Tomasz. I will go through these and see which are
 still relevant, and which I understand.

@@ -2093,7 +2093,7 @@ VALUE r_gmpz_sgn(VALUE self)
  *
  * Returns true if _a_ is equal to _b_. _a_ and _b_ must then be equal in cardinality,
  * and both be instances of GMP::Z. Otherwise, returns false. a.eql?(b) if and only if
- * a.hash == b.hash.
+ * b.class == GMP::Z, and a.hash == b.hash.
  */
 VALUE r_gmpz_eql(VALUE self, VALUE arg)
 {
@@ -2117,7 +2117,7 @@ VALUE r_gmpz_eql(VALUE self, VALUE arg)
  *
  * Returns the computed hash value of _a_. This method first converts _a_ into a String
  * (base 10), then calls String#hash on the result, returning the hash value. a.eql?(b)
- * if and only if a.hash == b.hash.
+ * if and only if b.class == GMP::Z, and a.hash == b.hash.
  */
 VALUE r_gmpz_hash(VALUE self)
 {
