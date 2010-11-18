@@ -7,6 +7,8 @@ benchmark/gexpr
 benchmark/gexpr.exe
 benchmark/res*
 benchmark/RES-*
+doc/**/*
+doc
 ext/Makefile
 ext/gmp.bundle
 ext/mkmf.log
