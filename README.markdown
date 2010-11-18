@@ -50,7 +50,7 @@ paragraph at [their homepage](http://gmplib.org/#WHAT):
 Only GMP 4 or newer is supported. The following environments have been tested
 by me: gmp gem 0.5.41 on:
 
-<table>
+<table border="1">
   <tr>
     <th>Platform</th>
     <th>Ruby</th>
