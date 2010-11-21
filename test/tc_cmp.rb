@@ -8,7 +8,7 @@ class TC_Cmp < Test::Unit::TestCase
     @d=GMP::Q.new(3000,17) # ~176.47
     @e=700
     if @_64bit
-      @=2**64
+      @f=2**64
     else
       @f=2**32
     end
