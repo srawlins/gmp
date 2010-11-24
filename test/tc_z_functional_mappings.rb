@@ -4,6 +4,7 @@ class TC_Z_Functional_Mappings < Test::Unit::TestCase
   def setup
     @_64bit = 1_000_000_000_000.is_a? Fixnum
     @xp1 = 7
+    @xp2 = 2**30 -1
     @xn1 = -5
     @b1 = 2**70
     # TODO: Add edge cases along Fixnum/Bignum border!!
@@ -15,7 +16,7 @@ class TC_Z_Functional_Mappings < Test::Unit::TestCase
     functions = [:add, :addmul, :submul, :divexact, :lcm]
     rop = GMP::Z(0)
     op1s = [@z1]
-    op2s = [@xp1, @xn1, @b1, @z1]
+    op2s = [@xp1, @xp2, @xn1, @b1, @z1]
     functions.each do |f|
       op1s.each do |op1|
         op2s.each do |op2|
@@ -31,8 +32,8 @@ class TC_Z_Functional_Mappings < Test::Unit::TestCase
   def test_FUNC_MAP__ZUI_ZUI__TO__Z__RETURNS__VOID
     functions = [:sub]
     rop = GMP::Z(0)
-    op1s = [@xp1, @xn1, @b1, @z1]
-    op2s = [@xp1, @xn1, @b1, @z1]
+    op1s = [@xp1, @xp2, @xn1, @b1, @z1]
+    op2s = [@xp1, @xp2, @xn1, @b1, @z1]
     functions.each do |f|
       op1s.each do |op1|
         op2s.each do |op2|
@@ -49,7 +50,7 @@ class TC_Z_Functional_Mappings < Test::Unit::TestCase
     functions = [:mul]
     rop = GMP::Z(0)
     op1s = [@z1]
-    op2s = [@xp1, @xn1, @b1, @z1]
+    op2s = [@xp1, @xp2, @xn1, @b1, @z1]
     functions.each do |f|
       op1s.each do |op1|
         op2s.each do |op2|
@@ -68,7 +69,7 @@ class TC_Z_Functional_Mappings < Test::Unit::TestCase
     op1s = [@z1]
     functions.each do |f|
       op1s.each do |op1|
-        op2s = [@xp1]
+        op2s = [@xp1, @xp2]
         op2s.each do |op2|
           assert_nothing_raised("GMP::Z.#{f.to_s} should not raise when passed (#{rop.class}, #{op1.class}, #{op2.class})") {
             GMP::Z.send(f, rop, op1, op2)
@@ -94,6 +95,22 @@ class TC_Z_Functional_Mappings < Test::Unit::TestCase
         assert_nothing_raised("GMP::Z.#{f.to_s} should not raise when passed (#{rop.class}, #{op1.class})") {
           GMP::Z.send(f, rop, op1)
         }
+      end
+    end
+  end
+  
+  # 09 mpz_t__mpz_t_or_ui__to__none__returns__int
+  def test_FUNC_MAP__Z_Z__TO__VOID__RETURNS__BOOL
+    functions = [:divisible?]
+    op1s = [@z1]
+    functions.each do |f|
+      op1s.each do |op1|
+        op2s = [@xp1, @xp2, @xn1, @b1, @z1]
+        op2s.each do |op2|
+          assert_nothing_raised("GMP::Z.#{f.to_s} should not raise when passed (#{op1.class}, #{op2.class})") {
+            GMP::Z.send(f, op1, op2)
+          }
+        end
       end
     end
   end

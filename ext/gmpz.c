@@ -453,6 +453,51 @@ FUNC_MAP__Z__TO__Z__RETURNS__VOID(sqrt,mpz_sqrt)
 FUNC_MAP__Z__TO__Z__RETURNS__VOID(nextprime,mpz_nextprime)
 FUNC_MAP__Z__TO__Z__RETURNS__VOID(com,mpz_com)
 
+/*
+ * 09 mpz_t__mpz_t_or_ui__to__none__returns__int
+ * FUNC_MAP__Z_Z__TO__VOID__RETURNS__BOOL defines a GMP::Z singleton function that
+ * doesn't take a rop, a GMP::Z as op1, and a GMP::Z or Fixnum as op2. It calls
+ * mpz_fname[_ui]_p, whose arguments are op1 and op2.
+ *
+ * TODO: Accept Fixnum, Bignum as op1 and just convert to GMP::Z.
+ */
+#define FUNC_MAP__Z_Z__TO__VOID__RETURNS__BOOL(fname,mpz_fname)     \
+static VALUE r_gmpzsg_##fname(VALUE klass, VALUE op1, VALUE op2)    \
+{                                                                   \
+  MP_INT *op1_val, *op2_val;                                        \
+  int res;                                                          \
+  (void)klass;                                                      \
+                                                                    \
+  if (! GMPZ_P (op1)) {                                             \
+    typeerror_as (Z, "op1");                                        \
+  }                                                                 \
+  mpz_get_struct (op1, op1_val);                                    \
+                                                                    \
+  if (FIXNUM_P (op2)) {                                             \
+    if (FIX2NUM (op2) >= 0) {                                       \
+      res = mpz_fname##_ui_p (op1_val, FIX2NUM (op2));                \
+    } else {                                                        \
+      mpz_temp_alloc (op2_val);                                     \
+      mpz_init_set_si (op2_val, FIX2NUM (op2));                     \
+      res = mpz_fname##_p (op1_val, op2_val);                           \
+      mpz_temp_free (op2_val);                                      \
+    }                                                               \
+  } else if (BIGNUM_P (op2)) {                                      \
+    mpz_temp_from_bignum (op2_val, op2);                            \
+    res = mpz_fname##_p (op1_val, op2_val);                             \
+    mpz_temp_free (op2_val);                                        \
+  } else if (GMPZ_P (op2)) {                                        \
+    mpz_get_struct (op2, op2_val);                                  \
+    res = mpz_fname##_p (op1_val, op2_val);                             \
+  } else {                                                          \
+    typeerror_as (ZXB, "op2");                                      \
+  }                                                                 \
+                                                                    \
+  return (res ? Qtrue : Qfalse);                                    \
+}
+
+FUNC_MAP__Z_Z__TO__VOID__RETURNS__BOOL(divisible,mpz_divisible)
+
 
 /**********************************************************************
  *    Initializing, Assigning Integers                                *
@@ -2452,13 +2497,14 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "%",            r_gmpz_mod, 1);
   rb_define_method(cGMP_Z, "divisible?",   r_gmpz_divisible, 1);
   // Functional Mappings
-  rb_define_singleton_method(cGMP_Z, "divexact", r_gmpzsg_divexact, 3);
+  rb_define_singleton_method(cGMP_Z, "divexact",    r_gmpzsg_divexact, 3);
   rb_define_singleton_method(cGMP_Z, "cdiv_q_2exp", r_gmpzsg_cdiv_q_2exp, 3);
   rb_define_singleton_method(cGMP_Z, "cdiv_r_2exp", r_gmpzsg_cdiv_r_2exp, 3);
   rb_define_singleton_method(cGMP_Z, "fdiv_q_2exp", r_gmpzsg_fdiv_q_2exp, 3);
   rb_define_singleton_method(cGMP_Z, "fdiv_r_2exp", r_gmpzsg_fdiv_r_2exp, 3);
   rb_define_singleton_method(cGMP_Z, "tdiv_q_2exp", r_gmpzsg_tdiv_q_2exp, 3);
   rb_define_singleton_method(cGMP_Z, "tdiv_r_2exp", r_gmpzsg_tdiv_r_2exp, 3);
+  rb_define_singleton_method(cGMP_Z, "divisible?",  r_gmpzsg_divisible, 2);
   
   // Integer Exponentiation
   rb_define_singleton_method(cGMP_Z, "pow",    r_gmpzsg_pow, 2);

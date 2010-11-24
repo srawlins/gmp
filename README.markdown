@@ -392,7 +392,8 @@ Here's a fun list of all of the functional mappings written so far:
 
     GMP::Z
       .abs          .add          .addmul       .cdiv_q_2exp  .cdiv_r_2exp  .com
-      .divexact     .fdiv_q_2exp  .fdiv_r_2exp  .lcm          .mul          .mul_2exp
+      .divexact     .divisible?   .fdiv_q_2exp  .fdiv_r_2exp  .lcm          .mul
+      .mul_2exp
       .neg          .nextprime    .sqrt         .sub          .submul       .tdiv_q_2exp
       .tdiv_r_2exp
 

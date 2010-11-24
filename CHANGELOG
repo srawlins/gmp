@@ -1,5 +1,8 @@
+0.6.7:
+  * Added 9th set of Functional Mappings: GMP::Z.divisible?
+
 0.5.47:
-  * Probably last release before 0.6.1
+  * Probably last release before 0.6.7
   * Added GMP::Q#hash and GMP::Q#eql?; tested.
 
 0.5.41:
