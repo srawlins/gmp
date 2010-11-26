@@ -1,5 +1,6 @@
 0.6.7:
   * Added 9th set of Functional Mappings: GMP::Z.divisible?
+  * Added 11th set of Functional Mappings: GMP::Z.congruent?
 
 0.5.47:
   * Probably last release before 0.6.7
