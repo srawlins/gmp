@@ -34,8 +34,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.5.41}}\\
-\multicolumn{2}{r}{\large{17 November 2010}}
+\multicolumn{2}{r}{\large{Edition 0.5.47}}\\
+\multicolumn{2}{r}{\large{10 November 2011}}
 \end{tabular}
 
 \vfill
@@ -47,7 +47,7 @@
 This manual describes how to use the gmp Ruby gem, which provides bindings to
 the GNU multiple precision arithmetic library, version 4.3.x or 5.0.x.\\
 \\
-Copyright 2009, 2010 Sam Rawlins.\\
+Copyright 2009, 2010, 2011 Sam Rawlins.\\
 No license yet.
 \newpage
 
@@ -93,7 +93,7 @@ near you, see \url{http://www.gnu.org/order/ftp.html} for a full list.\\
 \\
 There are three public mailing lists of interest. One for release
 announcements, one for general questions and discussions about usage of the GMP
-library, and one for bug reports. For more information, see 
+library, and one for bug reports. For more information, see
 \url{http://gmplib.org/mailman/listinfo/}.\\
 
 The proper place for bug reports is gmp-bugs@gmplib.org. See Chapter 4
@@ -326,16 +326,19 @@ There are additional constants within \texttt{GMP} when MPFR is linked:
 \toprule
 \textbf{new} & & GMP::Z.new $\rightarrow$ \textit{integer} \\
 & & GMP::Z.new(\textit{numeric = 0}) $\rightarrow$ \textit{integer} \\
-& & GMP::Z.new(\textit{str}) $\rightarrow$ \textit{integer} \\
+& & GMP::Z.new(\textit{str}, \textit{base = 0}) $\rightarrow$ \textit{integer} \\
 \cmidrule(r){2-3}
 & \multicolumn{2}{p{\defnwidth}}{
-  This method creates a new \gmpzs integer. It takes one optional argument for the value
-  of the integer. This argument can be one of several classes. Here are some
-  examples:\newline
-  
+  This method creates a new \gmpzs integer. It typically takes one optional argument for
+  the value of the integer. This argument can be one of several classes. If the first
+  argument is a String, then a second argument, the base, may be optionally supplied.
+  Here are some examples:\newline
+
   \texttt{GMP::Z.new \qqqquad\qqqquad \#=> 0 (default) \newline
           GMP::Z.new(1) \qqqquad\qquad\  \#=> 1 (Ruby Fixnum) \newline
           GMP::Z.new("127") \qqqquad\  \#=> 127 (Ruby String)\newline
+          GMP::Z.new("FF", 16) \qquad\ \  \#=> 255 (Ruby String with base)\newline
+          GMP::Z.new("1Z", 36) \qquad\ \  \#=> 71 (Ruby String with base)\newline
           GMP::Z.new(4294967296) \qquad \#=> 4294967296 (Ruby Bignum)\newline
           GMP::Z.new(GMP::Z.new(31))  \#=> 31 (GMP Integer)}
 }
@@ -1139,7 +1142,7 @@ There is also a convenience method available, \texttt{GMP::Z()}.\\
   arguments for the value of the numerator and denominator. These arguments can each be
   an instance of several classes. Here are some
   examples:\newline
-  
+
   \texttt{GMP::Q.new \qqqquad\qqqquad \#=> 0 (default) \newline
           GMP::Q.new(1) \qqqquad\qquad\  \#=> 1 (Ruby Fixnum) \newline
           GMP::Q.new(1,3) \qqqquad\quad\  \#=> 1/3 (Ruby Fixnums) \newline
@@ -1163,7 +1166,7 @@ There is also a convenience method available, \texttt{GMP::Q()}.\\
 
   Otherwise returns the least significant part of \texttt{rational}, with the same sign as
   \textit{rational}.
-  
+
   If \textit{rational} is too big to fit in a Float, the returned result is probably not
   very useful.
 }
@@ -1195,7 +1198,7 @@ There is also a convenience method available, \texttt{GMP::Q()}.\\
 
 \subsection{Floating-point Special Functions (MPFR Only)}
 
-Every method below accepts two additional parameters in addition to any required parameters. These are $rnd_mode$, the rounding mode to use in calculation, which defaults to \textit{GMP::GMP\_RNDN}, and $res_prec$, the precision of the result, which defaults to the \textit{f.prec}, the precision of $f$.\\
+Every method below accepts two additional parameters in addition to any required parameters. These are $rnd\_mode$, the rounding mode to use in calculation, which defaults to \textit{GMP::GMP\_RNDN}, and $res\_prec$, the precision of the result, which defaults to the \textit{f.prec}, the precision of $f$.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
@@ -1451,7 +1454,7 @@ Every method below accepts two additional parameters in addition to any required
   \textit{:lc\_2exp\_size}. This initializer instead takes just one argument, $size$. $a$, $c$,
   and $m2exp$ are then chosen from a table, with $m2exp/2 > size$. The maximum size
   currently supported is 128.\newline
-  
+
   \texttt{GMP::RandState.new \newline
           GMP::RandState.new(:mt) \newline
           GMP::RandState.new(:lc\_2exp, 1103515245, 12345, 15) \quad \#=> Perl's old rand() \newline
@@ -1494,6 +1497,30 @@ Every method below accepts two additional parameters in addition to any required
 }
 \end{tabular}
 
+\subsection{Floating-point Miscellaneous Functions (MPFR Only)}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{mpfr\_buildopt\_tls\_p} & & GMP::F.mpfr\_buildopt\_tls\_p() $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Available only in MPFR 3.0.0 and greater.
+  \newline\newline
+  From the MPFR Manual: Return a non-zero value if MPFR was compiled as thread safe using compiler-level Thread Local Storage (that is, MPFR was built with the \texttt{--enable-thread-safe} configure option, see INSTALL file), return zero otherwise.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{mpfr\_buildopt\_decimal\_p} & & GMP::F.mpfr\_buildopt\_decimal\_p() $\rightarrow$ $integer$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Available only in MPFR 3.0.0 and greater.
+  \newline\newline
+  From the MPFR Manual: Return a non-zero value if MPFR was compiled with decimal float support (that is, MPFR was built with the \texttt{--enable-decimal-float} configure option), return zero otherwise.
+}
+\end{tabular}
 
 \newpage
 \section{Benchmarking}

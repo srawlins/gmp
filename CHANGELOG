@@ -5,6 +5,9 @@
 0.5.47:
   * Probably last release before 0.6.7
   * Added GMP::Q#hash and GMP::Q#eql?; tested.
+  * Added optional parameter to GMP::Z.new(String), the base; tested.
+  * Added GMP::F.mpfr_buildopt_tls_p() when MPFR > 2.x.x.
+  * Added GMP::F.mpfr_buildopt_decimal_p() when MPFR > 2.x.x.
 
 0.5.41:
   * Added first five sets of Functional Mappings. These will be the primary new features
