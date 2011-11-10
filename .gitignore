@@ -15,6 +15,7 @@ ext/mkmf.log
 ext/*.o
 ext/*.so
 ext/*.dSYM
+ext/*.log
 **/*.rbc
 test/**/*.rbc
 test/*.log

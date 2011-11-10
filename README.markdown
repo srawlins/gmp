@@ -316,6 +316,9 @@ Methods
       const_pi                 returns pi
       const_euler              returns euler
       const_catalan            returns catalan
+      mpfr_buildopt_tls_p      returns whether MPFR was built as thread safe
+      mpfr_buildopt_decimal_p  returns whether MPFR was compiled with decimal
+                               float support
     GMP::F
       sqrt                     square root of the object
       rec_sqrt                 square root of the recprical of the object
@@ -420,6 +423,8 @@ Known Issues
 
 * Don't call `GMP::RandState(:lc_2exp_size)`. Give a 2nd arg.
 * Don't use multiple assignment (`a = b = GMP::Z(0)`) with functional mappings.
+* JRuby has some interesting bugs and flickering tests. GMP::Z(GMP::GMP_NUMB_MAX) for example, blows up.
+* MPFR 3.1.0 breaks some of the random tests. This is because of a known change in MPFR. I just need my tests to become aware of the change.
 
 Precision
 ---------
@@ -464,7 +469,6 @@ Todo
 * beef up `r_gmpq_initialize`; I don't like to rely on `mpz_set_value`.
 * finish compile-results.rb
 * New in MPFR 3.1.0: mpfr_frexp, mpfr_grandom, mpfr_z_sub, divide-by-zero exception (?)
-* mpz_set_str takes a base. GMP::Z should too.
 
 The below are inherited from Tomasz. I will go through these and see which are
 still relevant, and which I understand.

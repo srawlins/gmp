@@ -1,55 +1,62 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC
-    "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
-    "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
-<html xml:lang='en' xmlns:svg='http://www.w3.org/2000/svg' xmlns='http://www.w3.org/1999/xhtml'>
-<head><meta content='application/xhtml+xml;charset=utf-8' http-equiv='Content-type' /><title>gmp</title></head>
-<body>
-<h1 id='gmp'>gmp</h1>
+<h1>gmp</h1>
 
-<p>gmp is library providing Ruby bindings to GMP library. Here is the introduction paragraph at <a href='http://gmplib.org/#WHAT'>their homepage</a>:</p>
+<p>gmp is library providing Ruby bindings to GMP library. Here is the introduction
+paragraph at <a href="http://gmplib.org/#WHAT">their homepage</a>:</p>
 
-<blockquote>
-<p>GMP is a free library for arbitrary precision arithmetic, operating on signed integers, rational numbers, and floating point numbers. There is no practical limit to the precision except the ones implied by the available memory in the machine GMP runs on. GMP has a rich set of functions, and the functions have a regular interface.</p>
+<blockquote><p>GMP is a free library for arbitrary precision arithmetic, operating on
+signed integers, rational numbers, and floating point numbers. There is no
+practical limit to the precision except the ones implied by the available
+memory in the machine GMP runs on. GMP has a rich set of functions, and the
+functions have a regular interface.</p>
 
-<p>The main target applications for GMP are cryptography applications and research, Internet security applications, algebra systems, computational algebra research, etc.</p>
+<p>The main target applications for GMP are cryptography applications and
+research, Internet security applications, algebra systems, computational
+algebra research, etc.</p>
 
-<p>GMP is carefully designed to be as fast as possible, both for small operands and for huge operands. The speed is achieved by using fullwords as the basic arithmetic type, by using fast algorithms, with highly optimised assembly code for the most common inner loops for a lot of CPUs, and by a general emphasis on speed.</p>
-</blockquote>
+<p>GMP is carefully designed to be as fast as possible, both for small operands
+and for huge operands. The speed is achieved by using fullwords as the basic
+arithmetic type, by using fast algorithms, with highly optimised assembly
+code for the most common inner loops for a lot of CPUs, and by a general
+emphasis on speed.</p>
 
-<blockquote>
-<p>GMP is faster than any other bignum library. The advantage for GMP increases with the operand sizes for many operations, since GMP uses asymptotically faster algorithms.</p>
-</blockquote>
+<p>GMP is faster than any other bignum library. The advantage for GMP increases
+with the operand sizes for many operations, since GMP uses asymptotically
+faster algorithms.</p>
 
-<blockquote>
-<p>The first GMP release was made in 1991. It is continually developed and maintained, with a new release about once a year.</p>
-</blockquote>
+<p>The first GMP release was made in 1991. It is continually developed and
+maintained, with a new release about once a year.</p>
 
-<blockquote>
-<p>GMP is distributed under the GNU LGPL. This license makes the library free to use, share, and improve, and allows you to pass on the result. The license gives freedoms, but also sets firm restrictions on the use with non-free programs.</p>
-</blockquote>
+<p>GMP is distributed under the GNU LGPL. This license makes the library free to
+use, share, and improve, and allows you to pass on the result. The license
+gives freedoms, but also sets firm restrictions on the use with non-free
+programs.</p>
 
-<blockquote>
-<p>GMP is part of the GNU project. For more information about the GNU project, please see the official GNU web site.</p>
-</blockquote>
+<p>GMP is part of the GNU project. For more information about the GNU project,
+please see the official GNU web site.</p>
 
-<blockquote>
-<p>GMP&#8217;s main target platforms are Unix-type systems, such as GNU/Linux, Solaris, HP-UX, Mac OS X/Darwin, BSD, AIX, etc. It also is known to work on Windoze in 32-bit mode.</p>
+<p>GMP's main target platforms are Unix-type systems, such as GNU/Linux,
+Solaris, HP-UX, Mac OS X/Darwin, BSD, AIX, etc. It also is known to work on
+Windoze in 32-bit mode.</p>
 
 <p>GMP is brought to you by a team listed in the manual.</p>
 
-<p>GMP is carefully developed and maintained, both technically and legally. We of course inspect and test contributed code carefully, but equally importantly we make sure we have the legal right to distribute the contributions, meaning users can safely use GMP. To achieve this, we will ask contributors to sign paperwork where they allow us to distribute their work.&#8221;</p>
-</blockquote>
+<p>GMP is carefully developed and maintained, both technically and legally. We
+of course inspect and test contributed code carefully, but equally
+importantly we make sure we have the legal right to distribute the
+contributions, meaning users can safely use GMP. To achieve this, we will ask
+contributors to sign paperwork where they allow us to distribute their work."</p></blockquote>
 
-<p>Only GMP 4 or newer is supported. The following environments have been tested by me: gmp gem 0.5.41 on:</p>
-<table border='1'>
+<p>Only GMP 4 or newer is supported. The following environments have been tested
+by me: gmp gem 0.5.41 on:</p>
+
+<table border="1">
   <tr>
     <th>Platform</th>
     <th>Ruby</th>
     <th>GMP (MPFR)</th>
   </tr>
   <tr>
-    <td rowspan='3'>Linux (Ubuntu NR 10.04) on x86 (32-bit)</td>
+    <td rowspan="3">Linux (Ubuntu NR 10.04) on x86 (32-bit)</td>
     <td>(MRI) Ruby 1.8.7</td>
     <td>GMP 4.3.1 (2.4.2)<br />
         GMP 4.3.2 (2.4.2)<br />
@@ -68,28 +75,7 @@
         GMP 5.0.1 (3.0.0)</td>
   </tr>
   <tr>
-    <td rowspan='4'>Linux (Ubuntu 10.04) on x86_64 (64-bit)</td>
-    <td>(MRI) Ruby 1.8.7</td>
-    <td>GMP 4.3.2 (2.4.2)<br />
-        GMP 5.0.1 (3.0.0)</td>
-  </tr>
-  <tr>
-    <td>(MRI) Ruby 1.9.1</td>
-    <td>GMP 4.3.2 (2.4.2)<br />
-        GMP 5.0.1 (3.0.0)</td>
-  </tr>
-  <tr>
-    <td>(MRI) Ruby 1.9.2</td>
-    <td>GMP 4.3.2 (2.4.2)<br />
-        GMP 5.0.1 (3.0.0)</td>
-  </tr>
-  <tr>
-    <td>(RBX) Rubinius 1.1.0</td>
-    <td>GMP 4.3.2 (2.4.2)<br />
-        GMP 5.0.1 (3.0.0)</td>
-  </tr>
-  <tr>
-    <td rowspan='4'>Mac OS X 10.6.4 on x86_64 (64-bit)</td>
+    <td rowspan="4">Linux (Ubuntu 10.04) on x86_64 (64-bit)</td>
     <td>(MRI) Ruby 1.8.7</td>
     <td>GMP 4.3.2 (2.4.2)<br />
         GMP 5.0.1 (3.0.0)</td>
@@ -110,7 +96,28 @@
         GMP 5.0.1 (3.0.0)</td>
   </tr>
   <tr>
-    <td rowspan='3'>Windows 7 on x86_64 (64-bit)</td>
+    <td rowspan="4">Mac OS X 10.6.4 on x86_64 (64-bit)</td>
+    <td>(MRI) Ruby 1.8.7</td>
+    <td>GMP 4.3.2 (2.4.2)<br />
+        GMP 5.0.1 (3.0.0)</td>
+  </tr>
+  <tr>
+    <td>(MRI) Ruby 1.9.1</td>
+    <td>GMP 4.3.2 (2.4.2)<br />
+        GMP 5.0.1 (3.0.0)</td>
+  </tr>
+  <tr>
+    <td>(MRI) Ruby 1.9.2</td>
+    <td>GMP 4.3.2 (2.4.2)<br />
+        GMP 5.0.1 (3.0.0)</td>
+  </tr>
+  <tr>
+    <td>(RBX) Rubinius 1.1.0</td>
+    <td>GMP 4.3.2 (2.4.2)<br />
+        GMP 5.0.1 (3.0.0)</td>
+  </tr>
+  <tr>
+    <td rowspan="3">Windows 7 on x86_64 (64-bit)</td>
     <td>(MRI) Ruby 1.8.7</td>
     <td>GMP 4.3.2 (2.4.2)<br />
         GMP 5.0.1 (3.0.0)</td>
@@ -132,75 +139,53 @@
         GMP 5.0.1 (3.0.0)</td>
   </tr>
 </table>
-<h2 id='authors'>Authors</h2>
+
+
+<h2>Authors</h2>
 
 <ul>
 <li>Tomasz Wegrzanowski</li>
-
 <li>srawlins</li>
 </ul>
 
-<h2 id='constants'>Constants</h2>
 
-<p>The GMP module includes the following constants. Mathematical constants, such as pi, are defined under class methods of GMP::F, listed below.</p>
+<h2>Constants</h2>
+
+<p>The GMP module includes the following constants. Mathematical constants, such
+as pi, are defined under class methods of GMP::F, listed below.</p>
 
 <ul>
-<li><code>GMP::GMP_VERSION</code> - A string like &#8220;5.0.1&#8221;</li>
-
+<li><code>GMP::GMP_VERSION</code> - A string like "5.0.1"</li>
 <li><code>GMP::GMP_CC</code> - The compiler used to compile GMP</li>
-
 <li><code>GMP::GMP_CFLAGS</code> - The CFLAGS used to compile GMP</li>
-
 <li><code>GMP::GMP\_BITS_PER_LIMB</code> The number of bits per limb</li>
-
 <li><code>GMP::GMP_NUMB_MAX</code> - The maximum value that can be stored in the number part of a limb</li>
 </ul>
 
-<p>if MPFR is available:</p>
 
-<ul>
-<li><code>GMP::MPFR_VERSION</code> - A string like &#8220;2.4.2&#8221;</li>
+<p>if MPFR is available:
+* <code>GMP::MPFR_VERSION</code> - A string like "2.4.2"
+* <code>GMP::MPFR\_PREC_MIN</code> - The minimum precision available
+* <code>GMP::MPFR_PREC_MAX</code> - The maximum precision available
+* <code>GMP::GMP_RNDN</code> - The constant representing "round to nearest"
+* <code>GMP::GMP_RNDZ</code> - The constant representing "round toward zero"
+* <code>GMP::GMP_RNDU</code> - The constant representing "round toward plus infinity"
+* <code>GMP::GMP_RNDD</code> - The constant representing "round toward minus infinity"</p>
 
-<li><code>GMP::MPFR\_PREC_MIN</code> - The minimum precision available</li>
+<p>New in MPFR 3.0.0:
+* <code>GMP::MPFR_RNDN</code>
+* <code>GMP::MPFR_RNDZ</code>
+* <code>GMP::MPFR_RNDU</code>
+* <code>GMP::MPFR_RNDD</code>
+* <code>GMP::MPFR_RNDA</code> - The constant representing "round away from zero"</p>
 
-<li><code>GMP::MPFR_PREC_MAX</code> - The maximum precision available</li>
+<h2>Classes</h2>
 
-<li><code>GMP::GMP_RNDN</code> - The constant representing &#8220;round to nearest&#8221;</li>
-
-<li><code>GMP::GMP_RNDZ</code> - The constant representing &#8220;round toward zero&#8221;</li>
-
-<li><code>GMP::GMP_RNDU</code> - The constant representing &#8220;round toward plus infinity&#8221;</li>
-
-<li><code>GMP::GMP_RNDD</code> - The constant representing &#8220;round toward minus infinity&#8221;</li>
-</ul>
-
-<p>New in MPFR 3.0.0:</p>
-
-<ul>
-<li><code>GMP::MPFR_RNDN</code></li>
-
-<li><code>GMP::MPFR_RNDZ</code></li>
-
-<li><code>GMP::MPFR_RNDU</code></li>
-
-<li><code>GMP::MPFR_RNDD</code></li>
-
-<li><code>GMP::MPFR_RNDA</code> - The constant representing &#8220;round away from zero&#8221;</li>
-</ul>
-
-<h2 id='classes'>Classes</h2>
-
-<p>The GMP module is provided with following classes:</p>
-
-<ul>
-<li><code>GMP::Z</code> - infinite precision integer numbers</li>
-
-<li><code>GMP::Q</code> - infinite precision rational numbers</li>
-
-<li><code>GMP::F</code> - arbitrary precision floating point numbers</li>
-
-<li><code>GMP::RandState</code> - states of individual random number generators</li>
-</ul>
+<p>The GMP module is provided with following classes:
+* <code>GMP::Z</code> - infinite precision integer numbers
+* <code>GMP::Q</code> - infinite precision rational numbers
+* <code>GMP::F</code> - arbitrary precision floating point numbers
+* <code>GMP::RandState</code> - states of individual random number generators</p>
 
 <p>Numbers are created by using <code>new()</code>. Constructors can take following arguments:</p>
 
@@ -223,16 +208,18 @@ GMP::F.new(String, precision=0)
 GMP::F.new(Fixnum, precision=0)
 GMP::F.new(Bignum, precision=0)
 GMP::F.new(Float,  precision=0)
-GMP::RandState.new(\[algorithm\] \[, algorithm_args\])</code></pre>
+GMP::RandState.new(\[algorithm\] \[, algorithm_args\])
+</code></pre>
 
 <p>You can also call them as:</p>
 
 <pre><code>GMP.Z(args)
 GMP.Q(args)
 GMP.F(args)
-GMP.RandState()</code></pre>
+GMP.RandState()
+</code></pre>
 
-<h2 id='methods'>Methods</h2>
+<h2>Methods</h2>
 
 <pre><code>GMP::Z, GMP::Q and GMP::F
   +                        addition
@@ -276,8 +263,8 @@ GMP::Z
                            (respectively), then return the index of the
                            first instance.
   cmpabs                   comparison of absolute value
-  com                      2&#39;s complement
-  com!                     in-place 2&#39;s complement
+  com                      2's complement
+  com!                     in-place 2's complement
   &amp;,|,^                    logical operations: and, or, xor
   even?                    is even
   odd?                     is odd
@@ -333,6 +320,9 @@ class methods of GMP::F
   const_pi                 returns pi
   const_euler              returns euler
   const_catalan            returns catalan
+  mpfr_buildopt_tls_p      returns whether MPFR was built as thread safe
+  mpfr_buildopt_decimal_p  returns whether MPFR was compiled with decimal
+                           float support
 GMP::F
   sqrt                     square root of the object
   rec_sqrt                 square root of the recprical of the object
@@ -352,7 +342,7 @@ GMP::F
   li2                      real part of the dilogarithm of object
   gamma                    Gamma fucntion of object
   lngamma                  logarithm of the Gamma function of object
-  digamma                  Digamma function of object (MPFR_VERSION &gt;= &quot;3.0.0&quot;)
+  digamma                  Digamma function of object (MPFR_VERSION &gt;= "3.0.0")
   zeta                     Reimann Zeta function of object
   erf                      error function of object
   erfc                     complementary error function of object
@@ -389,71 +379,77 @@ GMP::F
   infinite?                | type of floating point number
   finite?                  |
   number?                  |
-  regular?                 / (MPFR_VERSION &gt;= &quot;3.0.0&quot;)
+  regular?                 / (MPFR_VERSION &gt;= "3.0.0")
 GMP::RandState
   mpfr_urandomb(fixnum)    get uniformly distributed random floating-point
-                           number within 0 &lt;= rop &lt; 1</code></pre>
+                           number within 0 &lt;= rop &lt; 1
+</code></pre>
 
-<h2 id='functional_mappings'>Functional Mappings</h2>
+<h2>Functional Mappings</h2>
 
-<p>In order to align better with the GMP paradigms of using return arguments, I have started creating &#8220;functional mappings&#8221;, singleton methods that map directly to functions in GMP. These methods take return arguments, so that passing an object to a functional mapping may change the object itself. For example:</p>
+<p>In order to align better with the GMP paradigms of using return arguments, I have started creating "functional mappings", singleton methods that map directly to functions in GMP. These methods take return arguments, so that passing an object to a functional mapping may change the object itself. For example:</p>
 
 <pre><code>a = GMP::Z(0)
 b = GMP::Z(13)
 c = GMP::Z(17)
 GMP::Z.add(a, b, c)
-a  #=&gt; 30</code></pre>
+a  #=&gt; 30
+</code></pre>
 
-<p>Here&#8217;s a fun list of all of the functional mappings written so far:</p>
+<p>Here's a fun list of all of the functional mappings written so far:</p>
 
 <pre><code>GMP::Z
   .abs          .add          .addmul       .cdiv_q_2exp  .cdiv_r_2exp  .com
-  .divexact     .fdiv_q_2exp  .fdiv_r_2exp  .lcm          .mul          .mul_2exp
+  .congruent?   .divexact     .divisible?   .fdiv_q_2exp  .fdiv_r_2exp  .lcm
+  .mul          .mul_2exp
   .neg          .nextprime    .sqrt         .sub          .submul       .tdiv_q_2exp
-  .tdiv_r_2exp</code></pre>
+  .tdiv_r_2exp
+</code></pre>
 
-<h2 id='documentation'>Documentation</h2>
+<h2>Documentation</h2>
 
 <ul>
-<li><a href='https://github.com/srawlins/gmp'>This README</a></li>
-
-<li>Loren Segal and the guys at RubyGems.org are badasses: <a href='http://rubydoc.info/gems/gmp/frames'>YARDoc</a>.</li>
-
-<li>There should be a manual.pdf <a href='https://github.com/srawlins/gmp/blob/master/manual.pdf'>here</a>. I spend waaay too much time working on this, but it looks very pretty.</li>
-
-<li><a href='https://github.com/srawlins/gmp/blob/master/CHANGELOG'>CHANGELOG</a></li>
+<li><a href="https://github.com/srawlins/gmp">This README</a></li>
+<li>Loren Segal and the guys at RubyGems.org are badasses: <a href="http://rubydoc.info/gems/gmp/frames">YARDoc</a>.</li>
+<li>There should be a manual.pdf <a href="https://github.com/srawlins/gmp/blob/master/manual.pdf">here</a>. I spend waaay too much time working on this, but it looks very pretty.</li>
+<li><a href="https://github.com/srawlins/gmp/blob/master/CHANGELOG">CHANGELOG</a></li>
 </ul>
 
-<h2 id='testing'>Testing</h2>
+
+<h2>Testing</h2>
 
 <p>Tests can be run with:</p>
 
 <pre><code>cd test
-ruby unit_tests.rb</code></pre>
+ruby unit_tests.rb
+</code></pre>
 
-<p>If you have the unit_test gem installed, all tests should pass. Otherwise, one test may error. I imagine there is a bug in Ruby&#8217;s built-in <code>Test::Unit</code> package that is fixed with the unit_test gem.</p>
+<p>If you have the unit_test gem installed, all tests should pass. Otherwise, one test may error. I imagine there is a bug in Ruby's built-in <code>Test::Unit</code> package that is fixed with the unit_test gem.</p>
 
-<h2 id='known_issues'>Known Issues</h2>
+<h2>Known Issues</h2>
 
 <ul>
-<li>Don&#8217;t call <code>GMP::RandState(:lc_2exp_size)</code>. Give a 2nd arg.</li>
-
-<li>Don&#8217;t use multiple assignment (<code>a = b = GMP::Z(0)</code>) with functional mappings.</li>
+<li>Don't call <code>GMP::RandState(:lc_2exp_size)</code>. Give a 2nd arg.</li>
+<li>Don't use multiple assignment (<code>a = b = GMP::Z(0)</code>) with functional mappings.</li>
+<li>JRuby has some interesting bugs and flickering tests. GMP::Z(GMP::GMP_NUMB_MAX) for example, blows up.</li>
+<li>MPFR 3.1.0 breaks some of the random tests. This is because of a known change in MPFR. I just need my tests to become aware of the change.</li>
 </ul>
 
-<h2 id='precision'>Precision</h2>
 
-<p>Precision can be explicitely set as second argument for <code>GMP::F.new()</code>. If there is no explicit precision, highest precision of all <code>GMP::F</code> arguments is used. That doesn&#8217;t ensure that result will be exact. For details, consult any paper about floating point arithmetics.</p>
+<h2>Precision</h2>
+
+<p>Precision can be explicitely set as second argument for <code>GMP::F.new()</code>. If there is no explicit precision, highest precision of all <code>GMP::F</code> arguments is used. That doesn't ensure that result will be exact. For details, consult any paper about floating point arithmetics.</p>
 
 <p>Default precision can be explicitely set by passing <code>0</code> as the second argument for to <code>GMP::F.new()</code>. In particular, you can set precision of copy of <code>GMP::F</code> object by:</p>
 
-<pre><code>new_obj = GMP::F.new(old_obj, 0)</code></pre>
+<pre><code>new_obj = GMP::F.new(old_obj, 0)
+</code></pre>
 
 <p>Precision argument, and default_precision will be rounded up to whatever GMP thinks is appropriate.</p>
 
-<h2 id='benchmarking'>Benchmarking</h2>
+<h2>Benchmarking</h2>
 
-<p>&#8220;GMP is carefully designed to be as fast as possible.&#8221; Therefore, I believe it is very important for GMP, and its various language bindings to be benchmarked. In recent years, the GMP team developed GMPbench, an elegant, weighted benchmark. Currently, they maintain a list of recent benchmark <a href='http://www.gmplib.org/gmpbench.html'>results</a>, broken down by CPU, CPU freq, ABI, and compiler flags; GMPbench compares different processor&#8217;s performance against eachother, rather than GMP against other bignum libraries, or comparing different versions of GMP.</p>
+<p>"GMP is carefully designed to be as fast as possible." Therefore, I believe it is very important for GMP, and its various language bindings to be benchmarked. In recent years, the GMP team developed GMPbench, an elegant, weighted benchmark. Currently, they maintain a list of recent benchmark <a href="http://www.gmplib.org/gmpbench.html">results</a>, broken down by CPU, CPU freq, ABI, and compiler flags; GMPbench compares different processor's performance against eachother, rather than GMP against other bignum libraries, or comparing different versions of GMP.</p>
 
 <p>I intend to build a plug-in to GMPbench that will test the ruby gmp gem. The results of this benchmark should be directly comparable with the results of GMP (on same CPU, etc.). Rather than write a benchmark from the ground up, or try to emulate what GMPbench does, a plug-in will allow for this type of comparison. And in fact, GMPbench is (perhaps intentionally) written perfectly to allow for plugging in.</p>
 
@@ -463,69 +459,53 @@ ruby unit_tests.rb</code></pre>
 
 <ul>
 <li>multiply - measures performance of multiplying (or squaring) <code>GMP::Z</code> objects whose size (in bits) is given by one or two operands.</li>
-
 <li>divide - measures performance of dividing two <code>GMP::Z</code> objects (using <code>tdiv</code>) whose size (in bits) is given by two operands.</li>
-
-<li>gcd - measure&#8230;</li>
-
+<li>gcd - measure...</li>
 <li>rsa - measures performance of using RSA to sign messages. The size of <code>pq</code>, the product of the two co-prime <code>GMP::Z</code> objects, <code>p</code> and <code>q</code>, is given by one operand.</li>
 </ul>
+
 
 <p><strong>insert table here</strong></p>
 
 <p>My guess is that the increase in ruby gmp gem overhead is caused by increased efficiency in GMP; the inefficiencies of the gmp gem are relatively greater.</p>
 
-<h2 id='todo'>Todo</h2>
+<h2>Todo</h2>
 
 <ul>
 <li><code>GMP::Z#to_d_2exp</code>, <code>#congruent?</code>, <code>#rootrem</code>, <code>#lcm</code>, <code>#kronecker</code>, <code>#bin</code>, <code>#fib2</code>, <code>#lucnum</code>, <code>#lucnum2</code>, <code>#hamdist</code>, <code>#combit</code>, <code>#fits_x?</code></li>
-
 <li><code>GMP::Q#to_s(base)</code>, <code>GMP::F#to_s(base)</code> (test it!)</li>
-
 <li>benchmark gcdext, pi</li>
-
+<li>a butt-load of functional mappings. 47-ish sets.</li>
 <li>use Rake use Rake use Rake</li>
+<li>investigate possible memory leaks when using <code>GMP::Q(22/7)</code> for example</li>
+<li>beef up <code>r_gmpq_initialize</code>; I don't like to rely on <code>mpz_set_value</code>.</li>
+<li>finish compile-results.rb</li>
+<li>New in MPFR 3.1.0: mpfr_frexp, mpfr_grandom, mpfr_z_sub, divide-by-zero exception (?)</li>
 </ul>
 
-<p>The below are inherited from Tomasz. I will go through these and see which are still relevant, and which I understand.</p>
+
+<p>The below are inherited from Tomasz. I will go through these and see which are
+still relevant, and which I understand.</p>
 
 <ul>
 <li><code>mpz_fits_*</code> and 31 vs. 32 integer variables</li>
-
-<li>fix all sign issues (don&#8217;t know what these are)</li>
-
+<li>fix all sign issues (don't know what these are)</li>
 <li><code>to_s</code> vs. <code>inspect</code></li>
-
 <li>check if <code>mpz_addmul_ui</code> would optimize some statements</li>
-
-<li>some system that allows using denref and numref as normal ruby objects (?)</li>
-
+<li>some system that allows using denref and numref as normal ruby objects</li>
 <li>takeover code that replaces all <code>Bignums</code> with <code>GMP::Z</code></li>
-
 <li>better bignum parser (how? <code>to_s</code> seems good to me.)</li>
-
 <li>zero-copy method for strings generation</li>
-
 <li>benchmarks against Python GMP and Perl GMP</li>
-
 <li><code>dup</code> methods</li>
-
 <li>integrate <code>F</code> into system</li>
-
 <li>should <code>Z.\[\]</code> bits be 0/1 or true/false, 0 is true, which might surprise users</li>
-
 <li><code>any2small_integer()</code></li>
-
-<li>check asm output, especially local memory efficiency</li>
-
-<li>it might be better to use &#8216;register&#8217; for some local variables</li>
-
+<li>check asm output, especially local memory efficiency  (uh... no)</li>
+<li>it might be better to use 'register' for some local variables  (uh... no)</li>
 <li>powm with negative exponents</li>
-
 <li>check if different sorting of operatations gives better cache usage</li>
-
 <li><code>GMP::\*</code> op <code>RubyFloat</code> and <code>RubyFloat</code> op <code>GMP::\*</code></li>
-
 <li>sort checks</li>
 </ul>
-</body></html>
+
