@@ -8,6 +8,16 @@
   * Added optional parameter to GMP::Z.new(String), the base; tested.
   * Added GMP::F.mpfr_buildopt_tls_p() when MPFR > 2.x.x.
   * Added GMP::F.mpfr_buildopt_decimal_p() when MPFR > 2.x.x.
+  * I'm seeing weird failures on tests with JRuby 1.6.5... they are flickering though.
+    GMP::Z(GMP::GMP_NUMB_MAX) is not happy... need to research.
+  * If using MPFR 3.1.0, the random number generator tests will fail, I imagine because
+    of this new functionality, documented on the MPFR site:
+      "The mpfr_urandom and mpfr_urandomb functions now return identical values on
+       processors with different word size (assuming the same random seed, and since the
+       GMP random generator does not depend itself on the word size, cf
+       http://gmplib.org/list-archives/gmp-devel/2010-September/001642.html)."
+  * Unit test results: 118 tests, 16396 assertions, 0 failures, 0 errors
+  * Unit test results:  99 tests,  5118 assertions, 0 failures, 0 errors (w/o MPFR)
 
 0.5.41:
   * Added first five sets of Functional Mappings. These will be the primary new features
