@@ -593,8 +593,8 @@ VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
   VALUE res;
   (void)klass;
 
-  if (argc > 1)
-    rb_raise(rb_eArgError, "wrong # of arguments (%d for 0 or 1)", argc);
+  if (argc > 2)
+    rb_raise(rb_eArgError, "wrong # of arguments (%d for 0, 1, or 2)", argc);
 
   mpz_make_struct(res, res_val);
   mpz_init(res_val);
@@ -606,10 +606,30 @@ VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
 VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
 {
   MP_INT *self_val;
+  int base = 0;
+
+  // Set up the base if 2 arguments are passed
+  if (argc == 2) { // only ok if String, Fixnum
+    if (STRING_P(argv[0])) {  // first arg must be a String
+      if (FIXNUM_P(argv[1])) {  //  second arg must be a Fixnum
+        base = FIX2INT(argv[1]);
+        if ( base != 0 && ( base < 2 || base > 62) )
+          rb_raise (rb_eRangeError, "base must be either 0 or between 2 and 62");
+      } else {
+        rb_raise (rb_eTypeError, "base must be a Fixnum between 2 and 62, not a %s.", rb_class2name (rb_class_of (argv[1])));
+      }
+    } else {
+      rb_raise(
+        rb_eTypeError,
+        "GMP::Z.new() must be passed a String as the 1st argument (not a %s), if a base is passed as the 2nd argument.",
+        rb_class2name (rb_class_of (argv[0]))
+      );
+    }
+  }
 
   if (argc != 0) {
-    mpz_get_struct(self,self_val);
-    mpz_set_value (self_val, argv[0]);
+    mpz_get_struct (self,self_val);
+    mpz_set_value (self_val, argv[0], base);
   }
   return Qnil;
 }
@@ -626,7 +646,7 @@ VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
  * * String
  * * Bignum
  */
-void mpz_set_value(MP_INT *target, VALUE source)
+void mpz_set_value(MP_INT *target, VALUE source, int base)
 {
   MP_INT *source_val;
 
@@ -636,7 +656,7 @@ void mpz_set_value(MP_INT *target, VALUE source)
   } else if (FIXNUM_P(source)) {
     mpz_set_si(target, FIX2NUM(source));
   } else if (STRING_P(source)) {
-    mpz_set_str(target, StringValuePtr(source), 0);
+    mpz_set_str(target, StringValuePtr(source), base);
   } else if (BIGNUM_P(source)) {
     mpz_set_bignum(target, source);
   } else {

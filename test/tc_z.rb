@@ -16,6 +16,38 @@ class TC_Z < Test::Unit::TestCase
 
   def test_init_string
     assert_equal(GMP::Z.new("1"), 1, "GMP::Z.new(x : String) should initialize to x")
+    assert_equal(GMP::Z.new("5000000000"), 5_000_000_000, "GMP::Z.new(x : String) bigger than 32-bit should initialize to x")
+  end
+
+  def test_init_string_base
+    assert_equal(42, GMP::Z.new("42",  0), "GMP::Z.new(x : String, 0) should initialize to x")
+    assert_equal(42, GMP::Z.new("42", 10), "GMP::Z.new(x : String, 10) should initialize to x")
+    assert_equal(32, GMP::Z.new("20", 16), "GMP::Z.new(x : String, 16) should initialize to x")
+    assert_equal(255, GMP::Z.new("FF", 16), "GMP::Z.new(x : String, 16), with uppercase A-F should initialize to x")
+    assert_equal(255, GMP::Z.new("ff", 16), "GMP::Z.new(x : String, 16), with lowercase a-f should initialize to x")
+    assert_equal(255, GMP::Z.new("7v", 32), "GMP::Z.new(x : String, 32), with lowercase a-v should initialize to x")
+    assert_equal(511, GMP::Z.new("fv", 32), "GMP::Z.new(x : String, 32), with lowercase a-v should initialize to x")
+    assert_equal(512, GMP::Z.new("e8", 36), "GMP::Z.new(x : String, 36), with lowercase a-z should initialize to x")
+    assert_equal(523, GMP::Z.new("ej", 36), "GMP::Z.new(x : String, 36), with lowercase a-z should initialize to x")
+    assert_equal(77, GMP::Z.new("1Z", 42), "GMP::Z.new(x : String, 42), with A-Z,a-f should initialize to x")
+    assert_equal(78, GMP::Z.new("1a", 42), "GMP::Z.new(x : String, 42), with A-Z,a-f should initialize to x")
+    assert_equal(83, GMP::Z.new("1f", 42), "GMP::Z.new(x : String, 42), with A-Z,a-f should initialize to x")
+    assert_equal(84, GMP::Z.new("20", 42), "GMP::Z.new(x : String, 42), with A-Z,a-f should initialize to x")
+    assert_equal(115, GMP::Z.new("1v", 58), "GMP::Z.new(x : String, 58), with A-Z,a-v should initialize to x")
+    assert_equal(116, GMP::Z.new("20", 58), "GMP::Z.new(x : String, 58), with A-Z,a-v should initialize to x")
+    assert_equal(126, GMP::Z.new("2A", 58), "GMP::Z.new(x : String, 58), with A-Z,a-v should initialize to x")
+    assert_equal(151, GMP::Z.new("2Z", 58), "GMP::Z.new(x : String, 58), with A-Z,a-v should initialize to x")
+    assert_equal(152, GMP::Z.new("2a", 58), "GMP::Z.new(x : String, 58), with A-Z,a-v should initialize to x")
+    assert_equal(161, GMP::Z.new("2j", 58), "GMP::Z.new(x : String, 58), with A-Z,a-v should initialize to x")
+    assert_equal(171, GMP::Z.new("2t", 58), "GMP::Z.new(x : String, 58), with A-Z,a-v should initialize to x")
+    assert_equal(123, GMP::Z.new("1z", 62), "GMP::Z.new(x : String, 62), with A-Z,a-z should initialize to x")
+    assert_equal(124, GMP::Z.new("20", 62), "GMP::Z.new(x : String, 62), with A-Z,a-z should initialize to x")
+    assert_equal(134, GMP::Z.new("2A", 62), "GMP::Z.new(x : String, 62), with A-Z,a-z should initialize to x")
+    assert_equal(160, GMP::Z.new("2a", 62), "GMP::Z.new(x : String, 62), with A-Z,a-z should initialize to x")
+    assert_equal(169, GMP::Z.new("2j", 62), "GMP::Z.new(x : String, 62), with A-Z,a-z should initialize to x")
+    assert_equal(179, GMP::Z.new("2t", 62), "GMP::Z.new(x : String, 62), with A-Z,a-z should initialize to x")
+    assert_equal(185, GMP::Z.new("2z", 62), "GMP::Z.new(x : String, 62), with A-Z,a-z should initialize to x")
+    assert_equal(186, GMP::Z.new("30", 62), "GMP::Z.new(x : String, 62), with A-Z,a-z should initialize to x")
   end
 
   def test_init_bignum

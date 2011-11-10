@@ -123,9 +123,9 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
     } else if (argc == 1 && STRING_P(argv[0])) {
       mpq_str_set (self_val, StringValuePtr(argv[0]));
     } else {
-      mpz_set_value (mpq_numref(self_val), argv[0]); // are these segfaulting?
+      mpz_set_value (mpq_numref(self_val), argv[0], 0); // are these segfaulting?
       if (argc == 2) {
-        mpz_set_value (mpq_denref(self_val), argv[1]); // are these segfaulting?
+        mpz_set_value (mpq_denref(self_val), argv[1], 0); // are these segfaulting?
         mpq_canonicalize(self_val);
       } // AND IF ARGC != 2 ?!? WHAT JUST HAPPENED?
     }

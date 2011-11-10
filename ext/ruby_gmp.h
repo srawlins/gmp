@@ -66,9 +66,14 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define GMPQ_P(value)   (rb_obj_is_instance_of(value, cGMP_Q) == Qtrue)
 #define GMPF_P(value)   (rb_obj_is_instance_of(value, cGMP_F) == Qtrue)
 #define mpz_set_bignum(var_mpz,var_bignum) {                   \
-  VALUE tmp = rb_funcall (var_bignum, rb_intern ("to_s"), 1, INT2FIX(32));  \
+  VALUE tmp = rb_funcall (rb_funcall (var_bignum, rb_intern ("to_s"), 1, INT2FIX(32)), rb_intern("upcase"), 0);  \
   mpz_set_str (var_mpz, StringValuePtr (tmp), 32);              \
 }
+  /*VALUE tmp = rb_funcall (var_bignum, rb_intern ("to_s"), 1, INT2FIX(32));  \*/
+/*#define mpz_set_bignum(var_mpz,var_bignum) {                   \
+  VALUE tmp = rb_funcall (var_bignum, rb_intern ("to_s"), 0);  \
+  mpz_set_str (var_mpz, StringValuePtr (tmp), 10);              \
+}*/
 #define mpz_temp_alloc(var) { var=malloc(sizeof(MP_INT)); }
 #define mpz_temp_init(var) { mpz_temp_alloc(var); mpz_init(var); }
 #define mpz_temp_from_bignum(var,var_bignum) {                 \
@@ -160,7 +165,7 @@ extern void r_gmprandstate_free(void *ptr);
 // Initializing, Assigning Integers
 extern VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass);
 extern VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self);
-extern void mpz_set_value(MP_INT *target, VALUE source);
+extern void mpz_set_value(MP_INT *target, VALUE source, int base);
 extern VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module);
 extern VALUE r_gmpz_swap(VALUE self, VALUE arg);
 
