@@ -15,14 +15,14 @@ class TC_MPFR_Rounding < Test::Unit::TestCase
     assert_equal(2, GMP::GMP_RNDU.mode, "GMP::Rnd.mode should be correct.")
     assert_equal(3, GMP::GMP_RNDD.mode, "GMP::Rnd.mode should be correct.")
   end
-  
+
   def test_rounding_name
     assert_equal(@prefix+"_RNDN", GMP::GMP_RNDN.name, "GMP::Rnd.name should be correct.")
     assert_equal(@prefix+"_RNDZ", GMP::GMP_RNDZ.name, "GMP::Rnd.name should be correct.")
     assert_equal(@prefix+"_RNDU", GMP::GMP_RNDU.name, "GMP::Rnd.name should be correct.")
     assert_equal(@prefix+"_RNDD", GMP::GMP_RNDD.name, "GMP::Rnd.name should be correct.")
   end
-  
+
   def test_rounding_ieee754
     assert_equal("roundTiesToEven", GMP::GMP_RNDN.ieee754, "GMP::Rnd.ieee754 should be correct.")
     assert_equal("roundTowardZero", GMP::GMP_RNDZ.ieee754, "GMP::Rnd.ieee754 should be correct.")

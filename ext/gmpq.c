@@ -87,7 +87,7 @@ VALUE r_gmpqsg_new(int argc, VALUE *argv, VALUE klass)
   mpq_make_struct (res, res_val);
   mpq_init (res_val);
   rb_obj_call_init(res, argc, argv);
- 
+
   return res;
 }
 
