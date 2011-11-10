@@ -1,6 +1,11 @@
 #! /bin/bash
 source ~/.rvm/scripts/rvm
 
+if [[ $1 == --help ]]; then
+  echo "ccmt.sh [--no-mpfr] [rvm-ruby] [gmp-number] [mpfr-number]"
+  exit 1
+fi
+
 extconf_opts=""
 if [[ $1 == --* ]]; then
   if [ "$1" == "--no-mpfr" ]; then
