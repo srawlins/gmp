@@ -17,4 +17,5 @@ ext/*.so
 ext/*.dSYM
 **/*.rbc
 test/**/*.rbc
+test/**/*.log
 *.gem
