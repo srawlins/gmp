@@ -1,4 +1,4 @@
-require './test_helper'
+require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 class TC_Q < Test::Unit::TestCase
   def test_init_null

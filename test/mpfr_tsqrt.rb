@@ -1,4 +1,4 @@
-require './test_helper'
+require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 class MPFR_TSQRT < Test::Unit::TestCase
   def setup

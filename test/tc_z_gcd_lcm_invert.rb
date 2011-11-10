@@ -1,4 +1,4 @@
-require './test_helper'
+require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 class TC_Z_GCD_LCM_Invert < Test::Unit::TestCase
   def setup

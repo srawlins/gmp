@@ -1,4 +1,4 @@
-require './test_helper'
+require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 # Tested: [Z op (Z,Z), Z op (Z,Fixnum), Z op (Z,Bignum),
 #          Z op (Fixnum,Z), Z op (Fixnum,Fixnum), Z op (Fixnum,Bignum)

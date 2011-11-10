@@ -1,4 +1,4 @@
-require './test_helper'
+require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 # Tested: [Z op Z, Z op FixNum, Z op BigNum, FixNum op Z, BigNum op Z]
 # Things are tested both ways because the implementation is asymetrical

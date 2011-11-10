@@ -1,4 +1,4 @@
-require './test_helper'
+require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 class TC_MPFR_Constants < Test::Unit::TestCase
   def test_mpfr_constants

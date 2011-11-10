@@ -1,4 +1,4 @@
-require './test_helper'
+require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 # [Q op Q, Q op Z, Z op Q, Q op FixNum, Q op BigNum, FixNum op Q, BigNum op Q]
 class TC_Q_Basic < Test::Unit::TestCase

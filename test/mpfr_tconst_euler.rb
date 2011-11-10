@@ -1,12 +1,14 @@
-require './test_helper'
+require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 class MPFR_TCONST_EULER < Test::Unit::TestCase
   def setup
     @rand_state = GMP::RandState.new
     
     if GMP::MPFR_VERSION >= "3.0.0"
+      @rnd_modes = [GMP::MPFR_RNDN, GMP::MPFR_RNDZ, GMP::MPFR_RNDU, GMP::MPFR_RNDD, GMP::MPFR_RNDA]
       @mpfr_rnd_max = 5
     else
+      @rnd_modes = [GMP::GMP_RNDN, GMP::GMP_RNDZ, GMP::GMP_RNDU, GMP::GMP_RNDD]
       @mpfr_rnd_max = 4
     end
   end
@@ -23,13 +25,14 @@ class MPFR_TCONST_EULER < Test::Unit::TestCase
       t = GMP::F(0, p)
       yprec = p+10
 
-      (0...@mpfr_rnd_max).each do |rnd|
+      #(0...@mpfr_rnd_max).each do |rnd|  # Can i emulate this?
+      (@rnd_modes).each do |rnd|
         y.prec = yprec
-        GMP::F.const_euler(y, rnd)
-        err = rnd == GMP::GMP_RNDN ? yprec+1 : yprec
-        if y.can_round?(err, rnd, rnd, p)
-        
-        end
+        #GMP::F.const_euler(y, rnd)
+        #err = rnd == GMP::GMP_RNDN ? yprec+1 : yprec
+        #if y.can_round?(err, rnd, rnd, p)
+        #
+        #end
       end
     end
   end
