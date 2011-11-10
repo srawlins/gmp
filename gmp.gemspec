@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
   s.name = "gmp"
-  s.version = "0.5.41"
+  s.version = "0.5.47"
   s.authors = ["Tomasz Wegrzanowski", "srawlins"]
-  s.date = "2010-11-17"
+  s.date = "2011-11-10"
   s.description = "gmp - providing Ruby bindings to the GMP library."
   s.email = ["Tomasz.Wegrzanowski@gmail.com", "sam.rawlins@gmail.com"]
-  
+
   s.extensions = ["ext/extconf.rb"]
-  
+
   s.has_rdoc = "yard"
   s.homepage = "http://github.com/srawlins/gmp"
   s.summary = "Provides Ruby bindings to the GMP library."
@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.files  = Dir["ext/*.c"] + Dir["ext/*.h"] + ["ext/extconf.rb"]
   s.files += Dir["lib/gmp.rb"]
-  
+
   s.files += Dir["test/*.rb"] + ["test/README"] + Dir["test/test_unit/*.rb"]
   s.files += Dir["benchmark/*"] - Dir["benchmark/runbench.rb"] - Dir["benchmark/gexpr.exe"]
   s.files += ["CHANGELOG", "INSTALL", "README.rdoc", "manual.pdf", "manual.tex", "FEATURES.html"]
