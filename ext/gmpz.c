@@ -579,13 +579,15 @@ FUNC_MAP__Z_ZXB_ZXB__TO__VOID__RETURNS__BOOL(congruent,mpz_congruent)
  * * Bignum
  *
  * @example
- *   GMP::Z.new(5)        #=> 5
- *   GMP::Z.new(2**32)    #=> 4_294_967_296
- *   GMP::Z.new(2**101)   #=> 2_535_301_200_456_458_802_993_406_410_752
- *   GMP::Z.new("20")     #=> 20
- *   GMP::Z.new("0x20")   #=> 32
- *   GMP::Z.new("020")    #=> 16
- *   GMP::Z.new("0b101")  #=> 5
+ *   GMP::Z.new(5)         #=> 5
+ *   GMP::Z.new(2**32)     #=> 4_294_967_296
+ *   GMP::Z.new(2**101)    #=> 2_535_301_200_456_458_802_993_406_410_752
+ *   GMP::Z.new("20")      #=> 20
+ *   GMP::Z.new("0x20")    #=> 32
+ *   GMP::Z.new("020")     #=> 16
+ *   GMP::Z.new("0b101")   #=> 5
+ *   GMP::Z.new("20", 16)  #=> 32
+ *   GMP::Z.new("1Z", 36)  #=> 71
  */
 VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
 {

@@ -114,7 +114,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
     mpfr_init (self_val);
   else
     mpfr_init2 (self_val, prec);
-  
+
   if (STRING_P(argv[0])) {
     if (argc >= 3) {
       if (FIXNUM_P(argv[2])) {
@@ -130,7 +130,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
     if (argc == 4) {
       // FIGURE IT OUT. ACCEPT A ROUNDING MODE!
     }
-    
+
     mpf_set_value2 (self_val, arg, base);
     return Qnil;
   }
@@ -215,7 +215,7 @@ void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
   int result;
 
   result = mpfr_set_str(self_val, StringValuePtr(arg), base, __gmp_default_rounding_mode);
-  
+
   if (result == -1) {
     rb_raise(rb_eRuntimeError, "Badly formatted string");
   }
@@ -268,10 +268,10 @@ VALUE r_gmpf_to_s(VALUE self)
   mp_exp_t exponent;
 
   mpf_get_struct(self, self_val);
-  
+
   //mpfr_sprintf(str, "%Rf", self_val);
   //res = rb_str_new2(str);
-  
+
   str = mpfr_get_str(NULL, &exponent, 10, 0, self_val, __gmp_default_rounding_mode);
   if ((strcmp(str,  "NaN") == 0) ||
       (strcmp(str,  "Inf") == 0) ||
@@ -587,7 +587,7 @@ VALUE r_gmpf_pow(VALUE self, VALUE arg)
 {
   MP_FLOAT *self_val, *res_val;
   VALUE res;
-  
+
   //unsigned long prec;
   mpfr_prec_t prec;
 
@@ -685,11 +685,11 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
   mp_rnd_t rnd_mode_value;
   MP_INT *arg_val_z;
   VALUE res;
-  
+
   rb_scan_args (argc, argv, "12", &arg, &rnd_mode, &res_prec);
 
   mpf_get_struct_prec (self, self_val, prec);
-  
+
   if (NIL_P (rnd_mode)) { rnd_mode_value = __gmp_default_rounding_mode; }
   else { rnd_mode_value = r_get_rounding_mode(rnd_mode); }
   if (NIL_P (res_prec)) { res_prec_value = prec; }
@@ -1107,7 +1107,7 @@ VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
   } else {
     rb_raise(rb_eTypeError, "rounding mode must be one of the rounding mode constants.");
   }
-  
+
   switch (FIX2INT(mode)) {
     case 0:
       mpfr_set_default_rounding_mode (GMP_RNDN); break;
@@ -1122,17 +1122,17 @@ VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
       mpfr_set_default_rounding_mode (MPFR_RNDA); break;
 #endif
   }
-  
+
   return Qnil;
 }
- 
+
 VALUE r_gmpf_can_round(VALUE self, VALUE err, VALUE rnd1, VALUE rnd2, VALUE prec)
 {
   MP_FLOAT *self_val;
   mp_exp_t err_val;
   mpfr_rnd_t rnd1_val, rnd2_val;
   mpfr_prec_t prec_val;
-  
+
   mpf_get_struct(self, self_val);
   if (FIXNUM_P(err)) {
     err_val = FIX2INT(err);
@@ -1142,7 +1142,7 @@ VALUE r_gmpf_can_round(VALUE self, VALUE err, VALUE rnd1, VALUE rnd2, VALUE prec
   rnd1_val = r_get_rounding_mode(rnd1);
   rnd2_val = r_get_rounding_mode(rnd2);
   prec_val = FIX2INT (prec);
-  
+
   if (mpfr_can_round (self_val, err_val, rnd1_val, rnd2_val, prec_val))
     return Qtrue;
   else
@@ -1150,6 +1150,23 @@ VALUE r_gmpf_can_round(VALUE self, VALUE err, VALUE rnd1, VALUE rnd2, VALUE prec
 }
 
 #endif
+
+
+/**********************************************************************
+ *    Rounding Related Functions                                      *
+ **********************************************************************/
+
+VALUE r_gmpfsg_mpfr_buildopt_tls_p(VALUE klass)
+{
+  (void)klass;
+  return INT2FIX (mpfr_buildopt_tls_p());
+}
+
+VALUE r_gmpfsg_mpfr_buildopt_decimal_p(VALUE klass)
+{
+  (void)klass;
+  return INT2FIX (mpfr_buildopt_decimal_p());
+}
 
 
 /**********************************************************************
@@ -1192,22 +1209,22 @@ void init_gmpf()
 {
   mGMP = rb_define_module("GMP");
   rb_define_module_function(mGMP, "F", r_gmpmod_f, -1);
-  
+
   cGMP_F = rb_define_class_under (mGMP, "F", rb_cNumeric);
-  
-  
+
+
   // Initializing, Assigning Floats
   rb_define_singleton_method(cGMP_F, "new", r_gmpfsg_new, -1);
   rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
   rb_define_method(cGMP_F, "prec", r_gmpf_get_prec, 0);
   rb_define_method(cGMP_F, "prec=", r_gmpf_set_prec, 1);
   rb_define_method(cGMP_F, "prec_raw=", r_gmpf_set_prec_raw, 1);
-  
+
   // Converting Floats
   rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, 0);
   rb_define_method(cGMP_F, "to_d",  r_gmpf_to_d, 0);
   rb_define_alias(cGMP_F, "to_f", "to_d");
-  
+
   // Float Arithmetic
   rb_define_method(cGMP_F, "-", r_gmpf_sub, 1);
   rb_define_method(cGMP_F, "/", r_gmpf_div, 1);
@@ -1226,7 +1243,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "neg!", r_gmpf_neg_self, 0);
   rb_define_method(cGMP_F, "abs", r_gmpf_abs, 0);
   rb_define_method(cGMP_F, "abs!", r_gmpf_abs_self, 0);
-  
+
   // Float Comparison
   rb_define_method(cGMP_F, "<=>", r_gmpf_cmp, 1);
   rb_define_method(cGMP_F, ">",   r_gmpf_cmp_gt, 1);
@@ -1235,20 +1252,18 @@ void init_gmpf()
   rb_define_method(cGMP_F, "<=",  r_gmpf_cmp_le, 1);
   rb_define_method(cGMP_F, "==",  r_gmpf_eq, 1);
   rb_define_method(cGMP_F, "sgn", r_gmpf_sgn, 0);
-  
+
   // Miscellaneous Functions
   rb_define_method(cGMP_F, "ceil",  r_gmpf_ceil, 0);
   rb_define_method(cGMP_F, "ceil!",  r_gmpf_ceil_self, 0);
   rb_define_method(cGMP_F, "floor",  r_gmpf_floor, 0);
   rb_define_method(cGMP_F, "floor!",  r_gmpf_floor_self, 0);rb_define_method(cGMP_F, "trunc",  r_gmpf_trunc, 0);
   rb_define_method(cGMP_F, "trunc!",  r_gmpf_trunc_self, 0);
-  
-  
+
+
 #ifdef MPFR
   /* To implement; new in MPFR 3.0.0:
    *
-   * mpfr_buildopt_tls_p
-   * mpfr_buildopt_decimal_p
    * mpfr_set_zero
    * mpfr_ai
    * mpfr_set_flt
@@ -1256,6 +1271,16 @@ void init_gmpf()
    * mpfr_urandom
    * mpfr_set_z_2exp
    */
+
+  /* To implement; new in MPFR 3.1.0:
+   *
+   * mpfr_buildopt_gmpinternals_p
+   * mpfr_buildopt_tune_case
+   * mpfr_frexp
+   * mpfr_grandom
+   * mpfr_z_sub
+   */
+
   // Basic Arithmetic Functions
   rb_define_method(cGMP_F, "sqrt",     r_gmpfr_sqrt,     -1);
   rb_define_method(cGMP_F, "rec_sqrt", r_gmpfr_rec_sqrt, -1);
@@ -1266,9 +1291,9 @@ void init_gmpf()
   // "dim", r_gmpfr_dim
   // "mul_2", r_gmpfr_mul_2
   // "div_2", r_gmpfr_div_2
-  
+
   //rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
-  
+
   // Comparison Functions
   rb_define_method(cGMP_F, "nan?", r_gmpfr_nan_p, 0);
   rb_define_method(cGMP_F, "infinite?", r_gmpfr_inf_p, 0);
@@ -1281,7 +1306,7 @@ void init_gmpf()
   //"sgn", r_gmpfr_sgn
   //"lessgreater", r_gmpfr_lessgreater_p
   //"unordered", r_gmpfr_unordered_p
-  
+
   // Special Functions
   rb_define_method(cGMP_F, "log",       r_gmpfr_log,     -1);
   rb_define_method(cGMP_F, "log2",      r_gmpfr_log2,    -1);
@@ -1310,7 +1335,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "acosh",     r_gmpfr_acosh,     -1);
   rb_define_method(cGMP_F, "asinh",     r_gmpfr_asinh,     -1);
   rb_define_method(cGMP_F, "atanh",     r_gmpfr_atanh,     -1);
-  
+
   // "fac", r_gmpfr_fac
 
   rb_define_method(cGMP_F, "log1p",   r_gmpfr_log1p,   -1);
@@ -1338,7 +1363,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "agm",   r_gmpfr_agm,       -1);
   rb_define_method(cGMP_F, "hypot", r_gmpfr_hypot,     -1);
   // "ai", r_gmpfr_ai  !! 3.0.0
-  
+
   rb_define_singleton_method(cGMP_F, "const_log2",    r_gmpfrsg_const_log2,    -1);
   rb_define_singleton_method(cGMP_F, "const_pi",      r_gmpfrsg_const_pi,      -1);
   rb_define_singleton_method(cGMP_F, "const_euler",   r_gmpfrsg_const_euler,   -1);
@@ -1346,12 +1371,18 @@ void init_gmpf()
 
   // Integer and Remainder Related Functions
   // "integer?", r_gmpfr_integer_p
-  
+
   // Rounding Related Functions
   rb_define_singleton_method (cGMP_F, "default_rounding_mode", r_gmpfsg_get_default_rounding_mode, 0);
   rb_define_singleton_method (cGMP_F, "default_rounding_mode=", r_gmpfsg_set_default_rounding_mode, 1);
   rb_define_method(cGMP_F, "can_round?",  r_gmpf_can_round, 4);
+
+  // Miscellaneous Functions
+#if MPFR_VERSION_MAJOR > 2
+  rb_define_singleton_method (cGMP_F, "mpfr_buildopt_decimal_p", r_gmpfsg_mpfr_buildopt_decimal_p, 0);
+  rb_define_singleton_method (cGMP_F, "mpfr_buildopt_tls_p", r_gmpfsg_mpfr_buildopt_tls_p, 0);
+#endif /* MPFR > 2 */
 #endif /* MPFR */
-  
+
   // _unsorted_
 }

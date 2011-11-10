@@ -286,11 +286,11 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 // MPFR
 #ifdef MPFR
   extern void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base);
-  
+
   extern VALUE r_gmpfr_sqrt(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_rec_sqrt(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_cbrt(int argc, VALUE *argv, VALUE self);
-  
+
   extern VALUE r_gmpfr_log(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_log2(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_log10(int argc, VALUE *argv, VALUE self);
@@ -303,22 +303,22 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
   extern VALUE r_gmpfr_sec(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_csc(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_cot(int argc, VALUE *argv, VALUE self);
-  
+
   extern VALUE r_gmpfr_acos(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_asin(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_atan(int argc, VALUE *argv, VALUE self);
-  
+
   extern VALUE r_gmpfr_cosh(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_sinh(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_tanh(int argc, VALUE *argv, VALUE self);
-  
+
   extern VALUE r_gmpfr_sech(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_csch(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_coth(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_acosh(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_asinh(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_atanh(int argc, VALUE *argv, VALUE self);
-  
+
   extern VALUE r_gmpfr_log1p(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_expm1(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_eint(int argc, VALUE *argv, VALUE self);
@@ -337,12 +337,12 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
   extern VALUE r_gmpfr_jn(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_y0(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_y1(int argc, VALUE *argv, VALUE self);
-  
+
   extern VALUE r_gmpfrsg_const_log2();
   extern VALUE r_gmpfrsg_const_pi();
   extern VALUE r_gmpfrsg_const_euler();
   extern VALUE r_gmpfrsg_const_catalan();
-  
+
   extern mp_rnd_t r_get_rounding_mode(VALUE rnd);
 #endif /* MPFR */
 
