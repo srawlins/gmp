@@ -9,7 +9,7 @@ paragraph at [their homepage](http://gmplib.org/#WHAT):
 > practical limit to the precision except the ones implied by the available
 > memory in the machine GMP runs on. GMP has a rich set of functions, and the
 > functions have a regular interface.
-> 
+>
 > The main target applications for GMP are cryptography applications and
 > research, Internet security applications, algebra systems, computational
 > algebra research, etc.
@@ -19,28 +19,28 @@ paragraph at [their homepage](http://gmplib.org/#WHAT):
 > arithmetic type, by using fast algorithms, with highly optimised assembly
 > code for the most common inner loops for a lot of CPUs, and by a general
 > emphasis on speed.
-
+>
 > GMP is faster than any other bignum library. The advantage for GMP increases
 > with the operand sizes for many operations, since GMP uses asymptotically
 > faster algorithms.
-
+>
 > The first GMP release was made in 1991. It is continually developed and
 > maintained, with a new release about once a year.
-
+>
 > GMP is distributed under the GNU LGPL. This license makes the library free to
 > use, share, and improve, and allows you to pass on the result. The license
 > gives freedoms, but also sets firm restrictions on the use with non-free
 > programs.
-
+>
 > GMP is part of the GNU project. For more information about the GNU project,
 > please see the official GNU web site.
-
+>
 > GMP's main target platforms are Unix-type systems, such as GNU/Linux,
 > Solaris, HP-UX, Mac OS X/Darwin, BSD, AIX, etc. It also is known to work on
 > Windoze in 32-bit mode.
-> 
+>
 > GMP is brought to you by a team listed in the manual.
-> 
+>
 > GMP is carefully developed and maintained, both technically and legally. We
 > of course inspect and test contributed code carefully, but equally
 > importantly we make sure we have the legal right to distribute the
@@ -309,7 +309,7 @@ Methods
     GMP (timing functions for GMPbench (0.2))
       cputime                  milliseconds of cpu time since Ruby start
       time                     times the execution of a block
-  
+
     *only if MPFR is available*
     class methods of GMP::F
       const_log2               returns the natural log of 2
@@ -461,8 +461,10 @@ Todo
 * a butt-load of functional mappings. 47-ish sets.
 * use Rake use Rake use Rake
 * investigate possible memory leaks when using `GMP::Q(22/7)` for example
-* beef up `r_gmpq_initialize`; I don't want to rely on `mpz_set_value`.
+* beef up `r_gmpq_initialize`; I don't like to rely on `mpz_set_value`.
 * finish compile-results.rb
+* New in MPFR 3.1.0: mpfr_frexp, mpfr_grandom, mpfr_z_sub, divide-by-zero exception (?)
+* mpz_set_str takes a base. GMP::Z should too.
 
 The below are inherited from Tomasz. I will go through these and see which are
 still relevant, and which I understand.
@@ -471,7 +473,7 @@ still relevant, and which I understand.
 * fix all sign issues (don't know what these are)
 * `to_s` vs. `inspect`
 * check if `mpz_addmul_ui` would optimize some statements
-* some system that allows using denref and numref as normal ruby objects (?)
+* some system that allows using denref and numref as normal ruby objects
 * takeover code that replaces all `Bignums` with `GMP::Z`
 * better bignum parser (how? `to_s` seems good to me.)
 * zero-copy method for strings generation
@@ -480,8 +482,8 @@ still relevant, and which I understand.
 * integrate `F` into system
 * should `Z.\[\]` bits be 0/1 or true/false, 0 is true, which might surprise users
 * `any2small_integer()`
-* check asm output, especially local memory efficiency
-* it might be better to use 'register' for some local variables
+* check asm output, especially local memory efficiency  (uh... no)
+* it might be better to use 'register' for some local variables  (uh... no)
 * powm with negative exponents
 * check if different sorting of operatations gives better cache usage
 * `GMP::\*` op `RubyFloat` and `RubyFloat` op `GMP::\*`

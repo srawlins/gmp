@@ -769,8 +769,8 @@ VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self)
   ID bin_base_id = rb_intern(bin_base);
   ID oct_base_id = rb_intern(oct_base);
   ID dec_base_id = rb_intern(dec_base);
-  ID hex_base_id = rb_intern(hex_base);  
-  
+  ID hex_base_id = rb_intern(hex_base);
+
   rb_scan_args(argc, argv, "01", &base);
   if (NIL_P(base)) { base = INT2FIX(10); }           /* default value */
   if (FIXNUM_P(base)) {
