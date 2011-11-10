@@ -50,9 +50,9 @@ static VALUE r_gmpf_cmp_##name(VALUE self, VALUE arg)          \
 
 /*
  * call-seq:
- *   GMP::R.new(arg)
+ *   GMP::F.new(arg)
  *
- * Creates a new GMP::R float, with arg as its value, converting where
+ * Creates a new GMP::F float, with arg as its value, converting where
  * necessary.
  */
 VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
