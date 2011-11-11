@@ -1,6 +1,7 @@
 manual.aux
 manual.log
 manual.toc
+Rakefile.compiled.rbc
 results*
 .yardoc
 benchmark/gexpr
