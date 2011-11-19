@@ -77,8 +77,8 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define mpz_temp_alloc(var) { var=malloc(sizeof(MP_INT)); }
 #define mpz_temp_init(var) { mpz_temp_alloc(var); mpz_init(var); }
 #define mpz_temp_from_bignum(var,var_bignum) {                 \
-  mpz_temp_alloc(var);                                         \
   VALUE tmp = rb_funcall (var_bignum, rb_intern ("to_s"), 1, INT2FIX(32));  \
+  mpz_temp_alloc(var);                                         \
   mpz_init_set_str (var, StringValuePtr (tmp), 32);             \
 }
 #define mpz_temp_free(var) { mpz_clear(var); free(var); }

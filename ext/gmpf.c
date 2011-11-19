@@ -75,6 +75,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   MP_FLOAT *self_val, *arg_val_f;
   unsigned long prec = 0;
   VALUE arg;
+  int base = 10;
 
   mpf_get_struct (self, self_val);
 
@@ -109,7 +110,6 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
     prec = mpf_get_prec (arg_val_f);
   }
 #ifdef MPFR
-  int base = 10;
   if (prec == 0)
     mpfr_init (self_val);
   else
@@ -938,12 +938,12 @@ static VALUE r_gmpfr_##name(VALUE self)     \
 #define MPFR_CONST_FUNCTION(name)                            \
 VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
 {                                                            \
-  (void)self;                                                \
   MP_FLOAT *res_val;                                         \
   VALUE res;                                                 \
   VALUE rnd_mode, prec;                                      \
   mp_rnd_t rnd_mode_val;                                     \
   mpfr_prec_t prec_val;                                      \
+  (void)self;                                                \
                                                              \
   rb_scan_args (argc, argv, "02", &rnd_mode, &prec);         \
                                                              \
@@ -1084,8 +1084,8 @@ static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
 
 VALUE r_gmpfsg_get_default_rounding_mode(VALUE klass)
 {
-  (void)klass;
   const char *rounding_string_val;
+  (void)klass;
   rounding_string_val = mpfr_print_rnd_mode (mpfr_get_default_rounding_mode ());
   if ( rounding_string_val == NULL ) {
     return Qnil;
@@ -1097,8 +1097,8 @@ VALUE r_gmpfsg_get_default_rounding_mode(VALUE klass)
 
 VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
 {
-  (void)klass;
   VALUE mode;
+  (void)klass;
   if (GMPRND_P(arg)) {
     mode = rb_funcall (arg, rb_intern("mode"), 0);
     if (FIX2INT(mode) < 0 || FIX2INT(mode) > 3) {

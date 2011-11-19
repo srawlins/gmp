@@ -10,11 +10,11 @@
     __times = 1;                                           \
     {func;}                                                \
     do {                                                   \
-	  __times <<= 1;                                       \
-	  __t0 = FIX2INT(r_gmpmod_cputime ());                 \
-	  for (__t = 0; __t < __times; __t++)                  \
-	    {func;}                                            \
-	  __tmp = FIX2INT(r_gmpmod_cputime ()) - __t0;         \
+      __times <<= 1;                                       \
+      __t0 = FIX2INT(r_gmpmod_cputime ());                 \
+      for (__t = 0; __t < __times; __t++)                  \
+        {func;}                                            \
+      __tmp = FIX2INT(r_gmpmod_cputime ()) - __t0;         \
     } while (__tmp < 250);                                 \
     (t) = (double) __tmp / __times;                        \
   } while (0)
@@ -22,7 +22,7 @@
 /* Return user CPU time measured in milliseconds.  */
 #if !defined (__sun) \
     && (defined (USG) || defined (__SVR4) || defined (_UNICOS) \
-	|| defined (__hpux) || defined (_WIN32))
+    || defined (__hpux) || defined (_WIN32))
 #include <time.h>
 
 int
@@ -55,12 +55,12 @@ r_gmpmod_cputime (VALUE self)
 VALUE
 r_gmpmod_time (VALUE self)
 {
-  (void)self;
   long int __t0, __times, __t, __tmp;
+  (void)self;
   __times = 1;
-  
+
   rb_need_block();
-  
+
   rb_yield (Qnil);
   do {
     __times <<= 1;

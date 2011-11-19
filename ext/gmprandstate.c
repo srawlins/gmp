@@ -47,14 +47,14 @@ VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
   unsigned long c_val, m2exp_val;
   unsigned long size_val;
   int free_a_val = 0;
-  
+
   ID default_algorithm      = rb_intern("default");
   ID mt_algorithm           = rb_intern("mt");
   ID lc_2exp_algorithm      = rb_intern("lc_2exp");
   ID lc_2exp_size_algorithm = rb_intern("lc_2exp_size");
-  
+
   (void)klass;
-  
+
   mprandstate_make_struct(rs, rs_val);
   rb_scan_args(argc, argv, "04", &algorithm, &arg2, &arg3, &arg4);
   if (NIL_P(algorithm))    { algorithm_id = rb_intern("default"); }  /* default value */
@@ -88,14 +88,13 @@ VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
     size_val = NUM2LONG(arg2);
     if (size_val > 128)
       rb_raise(rb_eArgError, "size must be within [0..128]");
-    int rv = gmp_randinit_lc_2exp_size(rs_val, size_val);
-    if (rv == 0)
+    if (gmp_randinit_lc_2exp_size (rs_val, size_val) == 0)
       rb_raise(rb_eArgError, "could not gmp_randinit_lc_2exp_size with %lu", size_val);
   }
-  
+
   if (free_a_val) { mpz_temp_free(a_val); }
   rb_obj_call_init(rs, argc, argv);
-  
+
   return rs;
 }
 
@@ -156,7 +155,7 @@ VALUE r_gmprandstate_seed(VALUE self, VALUE arg)
   MP_INT *arg_val;
 
   mprandstate_get_struct(self,self_val);
-  
+
   if (GMPZ_P(arg)) {
     mpz_get_struct(arg,arg_val);
     gmp_randseed(self_val, arg_val);
@@ -192,14 +191,14 @@ VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg)
   VALUE res;
 
   mprandstate_get_struct(self,self_val);
-  
+
   if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
     mpz_urandomb(res_val, self_val, FIX2INT(arg));
   } else {
     typeerror(X);
   }
-  
+
   return res;
 }
 
@@ -221,7 +220,7 @@ VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg)
   VALUE res;
 
   mprandstate_get_struct(self,self_val);
-  
+
   if (GMPZ_P(arg)) {
     mpz_get_struct(arg, arg_val);
   } else if (FIXNUM_P(arg)) {
@@ -234,11 +233,11 @@ VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg)
   } else {
     typeerror_as(ZXB, "arg");
   }
-  
+
   mpz_make_struct_init(res, res_val);
   mpz_urandomm(res_val, self_val, arg_val);
   if (free_arg_val) { mpz_temp_free(arg_val); }
-  
+
   return res;
 }
 
@@ -260,14 +259,14 @@ VALUE r_gmprandstate_rrandomb(VALUE self, VALUE arg)
   VALUE res;
 
   mprandstate_get_struct(self,self_val);
-  
+
   if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
     mpz_rrandomb(res_val, self_val, FIX2INT(arg));
   } else {
     typeerror(X);
   }
-  
+
   return res;
 }
 
