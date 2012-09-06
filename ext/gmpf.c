@@ -1149,8 +1149,6 @@ VALUE r_gmpf_can_round(VALUE self, VALUE err, VALUE rnd1, VALUE rnd2, VALUE prec
     return Qfalse;
 }
 
-#endif
-
 
 /**********************************************************************
  *    Rounding Related Functions                                      *
@@ -1167,6 +1165,8 @@ VALUE r_gmpfsg_mpfr_buildopt_decimal_p(VALUE klass)
   (void)klass;
   return INT2FIX (mpfr_buildopt_decimal_p());
 }
+
+#endif
 
 
 /**********************************************************************
