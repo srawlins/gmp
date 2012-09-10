@@ -48,7 +48,7 @@ paragraph at [their homepage](http://gmplib.org/#WHAT):
 > contributors to sign paperwork where they allow us to distribute their work."
 
 Only GMP 4 or newer is supported. The following environments have been tested
-by me: gmp gem 0.5.41 on:
+by me: gmp gem 0.5.47 on:
 
 <table border="1">
   <tr>
@@ -97,20 +97,15 @@ by me: gmp gem 0.5.41 on:
         GMP 5.0.1 (3.0.0)</td>
   </tr>
   <tr>
-    <td rowspan="4">Mac OS X 10.6.4 on x86_64 (64-bit)</td>
+    <td rowspan="4">Mac OS X 10.6.8 on x86_64 (64-bit)</td>
     <td>(MRI) Ruby 1.8.7</td>
     <td>GMP 4.3.2 (2.4.2)<br />
-        GMP 5.0.1 (3.0.0)</td>
+        GMP 5.0.5 (3.1.1)</td>
   </tr>
   <tr>
-    <td>(MRI) Ruby 1.9.1</td>
+    <td>(MRI) Ruby 1.9.3</td>
     <td>GMP 4.3.2 (2.4.2)<br />
-        GMP 5.0.1 (3.0.0)</td>
-  </tr>
-  <tr>
-    <td>(MRI) Ruby 1.9.2</td>
-    <td>GMP 4.3.2 (2.4.2)<br />
-        GMP 5.0.1 (3.0.0)</td>
+        GMP 5.0.5 (3.1.1)</td>
   </tr>
   <tr>
     <td>(RBX) Rubinius 1.1.0</td>
