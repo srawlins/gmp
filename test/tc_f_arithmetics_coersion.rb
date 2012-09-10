@@ -8,7 +8,7 @@ class TC_F_arithmetics_coersion < Test::Unit::TestCase
     @d = GMP::Q(7,2)
     @e = 2**32
   end
-  
+
   def test_add
     assert_in_delta(         5.85,   @a +   @b, 1e-6)
     assert_in_delta(         5.85,   @b +   @a, 1e-6)
@@ -23,7 +23,7 @@ class TC_F_arithmetics_coersion < Test::Unit::TestCase
     assert_in_delta(         7.65,   @a + 4.51, 1e-6)
     assert_in_delta(         7.65, 4.51 +   @a, 1e-6)
   end
-  
+
   def test_sub
     assert_in_delta(          0.43,   @a -   @b, 1e-6)
     assert_in_delta(         -0.43,   @b -   @a, 1e-6)
