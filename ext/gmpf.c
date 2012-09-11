@@ -128,7 +128,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
       }
     }
     if (argc == 4) {
-      // FIGURE IT OUT. ACCEPT A ROUNDING MODE!
+      // TODO: FIGURE IT OUT. ACCEPT A ROUNDING MODE!
     }
 
     mpf_set_value2 (self_val, arg, base);
@@ -260,19 +260,60 @@ VALUE r_gmpf_to_d(VALUE self)
  *
  * Returns the decimal representation of _x_, as a String.
  */
-VALUE r_gmpf_to_s(VALUE self)
+VALUE r_gmpf_to_s(int argc, VALUE *argv, VALUE self)
 {
   MP_FLOAT *self_val;
   char *str, *str2;
   VALUE res;
   mp_exp_t exponent;
 
+  VALUE base;
+  int base_val = 10;
+  ID base_id;
+  const char * bin_base = "bin";                            /* binary */
+  const char * oct_base = "oct";                             /* octal */
+  const char * dec_base = "dec";                           /* decimal */
+  const char * hex_base = "hex";                       /* hexadecimal */
+  ID bin_base_id = rb_intern(bin_base);
+  ID oct_base_id = rb_intern(oct_base);
+  ID dec_base_id = rb_intern(dec_base);
+  ID hex_base_id = rb_intern(hex_base);
+
   mpf_get_struct(self, self_val);
+
+  /* TODO: accept a second optional argument, n_digits */
+  rb_scan_args (argc, argv, "01", &base);
+
+  /* The entire following stanza is determining the base. */
+  if (NIL_P (base)) { base = INT2FIX (10); }           /* default value */
+  if (FIXNUM_P (base)) {
+    base_val = FIX2INT (base);
+    if ((base_val >=   2 && base_val <= 62) ||
+        (base_val >= -36 && base_val <= -2)) {
+      /* good base */
+    } else {
+      base_val = 10;
+      rb_raise (rb_eRangeError, "base must be within [2, 62] or [-36, -2].");
+    }
+  } else if (SYMBOL_P (base)) {
+    base_id = rb_to_id (base);
+    if (base_id == bin_base_id) {
+      base_val =  2;
+    } else if (base_id == oct_base_id) {
+      base_val =  8;
+    } else if (base_id == dec_base_id) {
+      base_val = 10;
+    } else if (base_id == hex_base_id) {
+      base_val = 16;
+    } else {
+      base_val = 10;  /* TODO: should raise an exception here. */
+    }
+  }
 
   //mpfr_sprintf(str, "%Rf", self_val);
   //res = rb_str_new2(str);
 
-  str = mpfr_get_str(NULL, &exponent, 10, 0, self_val, __gmp_default_rounding_mode);
+  str = mpfr_get_str(NULL, &exponent, base_val, 0, self_val, __gmp_default_rounding_mode);
   if ((strcmp(str,  "NaN") == 0) ||
       (strcmp(str,  "Inf") == 0) ||
       (strcmp(str, "-Inf") == 0))
@@ -288,7 +329,7 @@ VALUE r_gmpf_to_s(VALUE self)
     res = rb_str_new2(str2);
     mpfr_free_str(str2);
   }
-  
+
   mpfr_free_str(str);
   return res;
 }
@@ -1221,7 +1262,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "prec_raw=", r_gmpf_set_prec_raw, 1);
 
   // Converting Floats
-  rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, 0);
+  rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, -1);
   rb_define_method(cGMP_F, "to_d",  r_gmpf_to_d, 0);
   rb_define_alias(cGMP_F, "to_f", "to_d");
 
@@ -1257,7 +1298,8 @@ void init_gmpf()
   rb_define_method(cGMP_F, "ceil",  r_gmpf_ceil, 0);
   rb_define_method(cGMP_F, "ceil!",  r_gmpf_ceil_self, 0);
   rb_define_method(cGMP_F, "floor",  r_gmpf_floor, 0);
-  rb_define_method(cGMP_F, "floor!",  r_gmpf_floor_self, 0);rb_define_method(cGMP_F, "trunc",  r_gmpf_trunc, 0);
+  rb_define_method(cGMP_F, "floor!",  r_gmpf_floor_self, 0);
+  rb_define_method(cGMP_F, "trunc",  r_gmpf_trunc, 0);
   rb_define_method(cGMP_F, "trunc!",  r_gmpf_trunc_self, 0);
 
 
