@@ -21,3 +21,4 @@ ext/*.log
 test/**/*.rbc
 test/*.log
 *.gem
+**/*.swp
