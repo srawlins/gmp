@@ -1058,6 +1058,8 @@ MPFR_CONST_FUNCTION(const_pi)
 MPFR_CONST_FUNCTION(const_euler)
 MPFR_CONST_FUNCTION(const_catalan)
 
+MPFR_SINGLE_BOOLEAN_FUNCTION(integer_p)
+
 MPFR_SINGLE_BOOLEAN_FUNCTION(nan_p)
 MPFR_SINGLE_BOOLEAN_FUNCTION(inf_p)
 static VALUE r_gmpfr_fin_p(VALUE self)
@@ -1413,6 +1415,7 @@ void init_gmpf()
 
   // Integer and Remainder Related Functions
   // "integer?", r_gmpfr_integer_p
+  rb_define_method(cGMP_F, "integer?", r_gmpfr_integer_p, 0);
 
   // Rounding Related Functions
   rb_define_singleton_method (cGMP_F, "default_rounding_mode", r_gmpfsg_get_default_rounding_mode, 0);

@@ -35,6 +35,7 @@ require './gmp_tgcd'
 begin
   GMP::MPFR_VERSION
   require './tc_mpfr_constants'
+  require './tc_mpfr_integer'
   require './tc_mpfr_random'
   require './tc_mpfr_functions'
   require './tc_mpfr_rounding'
