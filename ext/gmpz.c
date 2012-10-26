@@ -2544,7 +2544,7 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "to_i", r_gmpz_to_i, 0);
   rb_define_method(cGMP_Z, "to_d", r_gmpz_to_d, 0);
   rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, -1);
-  
+
   // Integer Arithmetic
   rb_define_method(cGMP_Z, "+",       r_gmpz_add, 1);
   rb_define_method(cGMP_Z, "add!",    r_gmpz_add_self, 1);
@@ -2568,7 +2568,7 @@ void init_gmpz()
   rb_define_singleton_method(cGMP_Z, "mul_2exp", r_gmpzsg_mul_2exp, 3);
   rb_define_singleton_method(cGMP_Z, "neg", r_gmpzsg_neg, 2);
   rb_define_singleton_method(cGMP_Z, "abs", r_gmpzsg_abs, 2);
-  
+
   // Integer Division
   rb_define_method(cGMP_Z, "/",            r_gmpz_div, 1);
   rb_define_method(cGMP_Z, "tdiv",         r_gmpz_tdiv, 1);
@@ -2591,7 +2591,7 @@ void init_gmpz()
   rb_define_singleton_method(cGMP_Z, "tdiv_r_2exp", r_gmpzsg_tdiv_r_2exp, 3);
   rb_define_singleton_method(cGMP_Z, "divisible?",  r_gmpzsg_divisible, 2);
   rb_define_singleton_method(cGMP_Z, "congruent?",  r_gmpzsg_congruent, 3);
-  
+
   // Integer Exponentiation
   rb_define_singleton_method(cGMP_Z, "pow",    r_gmpzsg_pow, 2);
   rb_define_method(cGMP_Z,           "**",     r_gmpz_pow, 1);
@@ -2606,7 +2606,7 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power, 0);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "sqrt", r_gmpzsg_sqrt, 2);
-  
+
   // Number Theoretic Functions
   rb_define_method(          cGMP_Z, "probab_prime?", r_gmpz_is_probab_prime, -1);
   rb_define_method(          cGMP_Z, "nextprime",     r_gmpz_nextprime, 0);
@@ -2625,7 +2625,7 @@ void init_gmpz()
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "lcm", r_gmpzsg_lcm, 3);
   rb_define_singleton_method(cGMP_Z, "nextprime", r_gmpzsg_nextprime, 2);
-  
+
   // Integer Comparisons
   rb_define_method(cGMP_Z, "<=>",     r_gmpz_cmp, 1);
   rb_define_method(cGMP_Z, ">",       r_gmpz_cmp_gt, 1);
@@ -2635,10 +2635,10 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "<=",      r_gmpz_cmp_le, 1);
   rb_define_method(cGMP_Z, "cmpabs",  r_gmpz_cmpabs, 1);
   rb_define_method(cGMP_Z, "sgn",     r_gmpz_sgn, 0);
-  
+
   rb_define_method(cGMP_Z, "eql?",    r_gmpz_eql, 1);
   rb_define_method(cGMP_Z, "hash",    r_gmpz_hash, 0);
-  
+
   // Integer Logic and Bit Fiddling
   rb_define_method(cGMP_Z, "&",        r_gmpz_and, 1);
   rb_define_method(cGMP_Z, "|",        r_gmpz_or, 1);
@@ -2652,17 +2652,17 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "[]",       r_gmpz_getbit, 1);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "com", r_gmpzsg_com, 2);
-  
+
   // Miscellaneous Integer Functions
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
   rb_define_method(cGMP_Z, "odd?", r_gmpz_is_odd, 0);
   rb_define_method(cGMP_Z, "sizeinbase", r_gmpz_sizeinbase, 1);
   rb_define_alias( cGMP_Z, "size_in_base", "sizeinbase");
   rb_define_method(cGMP_Z, "size_in_bin", r_gmpz_size_in_bin, 0);
-  
+
   // Integer Special Functions
   rb_define_method(cGMP_Z, "size", r_gmpz_size, 0);
-  
+
   // _unsorted_
   rb_define_method(cGMP_Z, ">>",  r_gmpz_fshr, 1);
   rb_define_method(cGMP_Z, "lastbits_pos",  r_gmpz_fshrm, 1);
