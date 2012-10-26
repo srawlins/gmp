@@ -55,6 +55,33 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
   return Qnil;
 }
 
+VALUE r_gmpsg_sprintf2(VALUE klass, VALUE format, VALUE arg) {
+  VALUE res;
+  char *buffer;
+  char *format_str;
+  MP_INT *arg_val_z;
+  MP_RAT *arg_val_q;
+  MP_FLOAT *arg_val_f;
+  (void)klass;
+  format_str = StringValuePtr(format);
+  if (GMPZ_P(arg)) {
+    mpz_get_struct (arg, arg_val_z);
+    gmp_asprintf(&buffer, format_str, arg_val_z);
+  } else if (GMPQ_P(arg)) {
+    mpq_get_struct (arg, arg_val_q);
+    gmp_asprintf(&buffer, format_str, arg_val_q);
+  } else if (GMPF_P(arg)) {
+    mpf_get_struct (arg, arg_val_f);
+    gmp_asprintf(&buffer, format_str, arg_val_f);
+  } else {
+    return format;
+  }
+
+  res = rb_str_new2(buffer);
+  free(buffer);
+  return res;
+}
+
 #ifdef MPFR
 mp_rnd_t r_get_rounding_mode(VALUE rnd)
 {
@@ -116,6 +143,9 @@ void Init_gmp() {
   rb_define_const(mGMP, "MPFR_PREC_MAX", INT2FIX(MPFR_PREC_MAX));
 #endif /* MPFR */
 
+  // Formatted Output Functions
+  rb_define_singleton_method(mGMP, "sprintf2", r_gmpsg_sprintf2, 2);
+
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
   init_gmpz ();
   rb_define_method(cGMP_Z, "coerce", r_gmpz_coerce, 1);
@@ -138,10 +168,10 @@ void Init_gmp() {
   rb_define_method (cGMP_F, "coerce", r_gmpf_coerce, 1); // new method - testing
 
 /*  rb_define_method(cGMP_F, "cmpabs",  r_gmpf_cmpabs, 1);*/
-  
+
   cGMP_RandState = rb_define_class_under (mGMP, "RandState", rb_cObject);
   init_gmprandstate ();
-  
+
   init_gmpbench_timing ();
 
   // more

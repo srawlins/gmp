@@ -31,6 +31,7 @@ require './tc_hashes'
 require './tc_z_functional_mappings'
 
 require './gmp_tgcd'
+require './gmp_tprintf'
 
 begin
   GMP::MPFR_VERSION

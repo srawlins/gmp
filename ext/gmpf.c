@@ -1053,6 +1053,29 @@ MPFR_SINGLE_LONG_FUNCTION(yn)
 MPFR_SINGLE_MPF_FUNCTION(agm)
 MPFR_SINGLE_MPF_FUNCTION(hypot)
 
+//VALUE r_gmpfrsg_sprintf(int argc, VALUE *argv, VALUE self)
+  //rb_scan_args (argc, argv, "1*", &format, &list);
+VALUE r_gmpfrsg_sprintf2(VALUE klass, VALUE format, VALUE arg) {
+  VALUE res;
+  char *buffer;
+  char *format_str;
+  MP_INT *arg_val_z;
+  MP_FLOAT *arg_val_f;
+  (void)klass;
+  format_str = StringValuePtr(format);
+  if (GMPZ_P(arg)) {
+    mpz_get_struct (arg, arg_val_z);
+    mpfr_asprintf(&buffer, format_str, arg_val_z);
+  } else if (GMPF_P(arg)) {
+    mpf_get_struct (arg, arg_val_f);
+    mpfr_asprintf(&buffer, format_str, arg_val_f);
+  }
+
+  res = rb_str_new2(buffer);
+  free(buffer);
+  return res;
+}
+
 MPFR_CONST_FUNCTION(const_log2)
 MPFR_CONST_FUNCTION(const_pi)
 MPFR_CONST_FUNCTION(const_euler)
@@ -1407,6 +1430,9 @@ void init_gmpf()
   rb_define_method(cGMP_F, "agm",   r_gmpfr_agm,       -1);
   rb_define_method(cGMP_F, "hypot", r_gmpfr_hypot,     -1);
   // "ai", r_gmpfr_ai  !! 3.0.0
+
+  // Formatted Output Functions
+  rb_define_singleton_method(cGMP_F, "sprintf2", r_gmpfrsg_sprintf2, 2);
 
   rb_define_singleton_method(cGMP_F, "const_log2",    r_gmpfrsg_const_log2,    -1);
   rb_define_singleton_method(cGMP_F, "const_pi",      r_gmpfrsg_const_pi,      -1);
