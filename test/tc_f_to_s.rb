@@ -55,4 +55,18 @@ class TC_F_to_s < Test::Unit::TestCase
       assert_equal(strings[i], (n/d).to_s, "GMP::F#to_s should be correct for different precision numbers.")
     end
   end
+
+  def test_different_bases
+    f = GMP::F(0.5)
+    assert_equal("0.50000000000000000e+0",                                     f.to_s)
+    assert_equal("0.10000000000000000000000000000000000000000000000000000e+0", f.to_s(2))
+    assert_equal("0.11111111111111111111111111111111112e+0",                   f.to_s(3))
+    assert_equal("0.200000000000000000000000000e+0",                           f.to_s(4))
+
+    g = GMP::F(0.8)
+    assert_equal("0.80000000000000004e+0",                   g.to_s)
+    assert_equal("0.21012101210121012101210121012101220e+0", g.to_s(3))
+    assert_equal("0.400000000000000000000003e+0",            g.to_s(5))
+    assert_equal("0.k00000000002ge+0",                       g.to_s(25))
+  end
 end
