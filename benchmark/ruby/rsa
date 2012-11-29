@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+
+require '../../ext/gmp'
+
+RSA_EXP = 0x10001
+
+def rsa_sign(msg, p, q, pq, p_i_q, dp, dq)
+  pr = msg.powmod(dp, p)
+  qr = msg.powmod(dq, q)
+  
+  qr_m_pr = qr - pr
+  
+  t = qr_m_pr * p_i_q
+  o = t % q
+  
+  t = o * p
+  smsg = pr + t
+  smsg % pq
+end
+
+n = ARGV[0].to_i
+random_state = GMP::RandState.new
+
+print "Generating p, q, d..."
+STDOUT.flush
+
+pq = GMP::Z()
+while pq != 1
+  p = random_state.urandomb(n/2)
+  p[n/2 - 1] = true
+  p[n/2 - 2] = true
+  p[0]       = true
+  
+  q = random_state.urandomb(n/2)
+  q[n/2 - 1] = true
+  q[n/2 - 2] = true
+  q[0]       = true
+  
+  pq = p.gcd(q)
+end
+
+pq = p * q
+
+e = GMP::Z(RSA_EXP)
+
+pm1 = p - 1
+qm1 = q - 1
+phi = pm1 * qm1
+d = e.invert(phi)
+
+puts "done; pq is %i bits" % pq.sizeinbase(2)
+puts "Precomputing CRT constants"
+
+p_i_q = p.invert(q)
+
+dp = d % pm1
+dq = d % qm1
+
+puts "Generating random messages"
+
+msg = []
+(0...1024).each do |i|
+  msg << random_state.urandomb(n)
+end
+
+print "Calibrating CPU speed..."
+STDOUT.flush
+t = GMP::time { smsg = rsa_sign(msg[0], p, q, pq, p_i_q, dp, dq) }
+puts "done"
+
+iterations = (1e4 / t).to_i
+iterations = 1 if iterations == 0
+
+print "Signing random messages %i times..." % iterations
+STDOUT.flush
+
+t0 = GMP::cputime
+(1..iterations).to_a.reverse.each do |i|
+  smsg = rsa_sign(msg[i % 1024], p, q, pq, p_i_q, dp, dq)
+end
+ti = GMP::cputime - t0
+  
+puts "done!"
+ops_per_sec = 1000.0 * iterations / ti
+f = 100.0
+decimals = 0
+while true
+  decimals += 1
+  break if ops_per_sec > f
+  f = f * 0.1
+end
+
+puts "RESULT: %#{decimals}f operations per second\n" % ops_per_sec

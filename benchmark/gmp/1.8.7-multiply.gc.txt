@@ -1,0 +1,47 @@
+***** GMPbench version 0.2 *****
+Suppressing compilation
+Running benchmarks (propagated score accuracy exceeds printed intermediates)
+  Category base
+    Program multiply (weight=1)
+      GMPbench.base.multiply(128)                        7.863e+05
+      GMPbench.base.multiply(512)                        7.835e+05
+      GMPbench.base.multiply(8192)                       7.968e+04
+      GMPbench.base.multiply(131072)                          1682
+      GMPbench.base.multiply(2097152)                        62.43
+      GMPbench.base.multiply(128,128)                    7.871e+05
+      GMPbench.base.multiply(512,512)                    7.602e+05
+      GMPbench.base.multiply(8192,8192)                   5.55e+04
+      GMPbench.base.multiply(131072,131072)                   1215
+      GMPbench.base.multiply(2097152,2097152)                41.18
+      GMPbench.base.multiply(15000,10000)                3.025e+04
+      GMPbench.base.multiply(20000,10000)                 2.37e+04
+      GMPbench.base.multiply(30000,10000)                1.539e+04
+      GMPbench.base.multiply(16777216,512)                   183.3
+      GMPbench.base.multiply(16777216,262144)                9.933
+    GMPbench.base.multiply                        8893.2
+    Program divide (weight=1)
+      GMPbench.base.divide(8192,32)                      4.233e+05
+      GMPbench.base.divide(8192,64)                       4.22e+05
+      GMPbench.base.divide(8192,128)                     3.178e+05
+      GMPbench.base.divide(8192,4096)                    1.456e+05
+      GMPbench.base.divide(131072,65536)                      1622
+      GMPbench.base.divide(8388608,4194304)                  8.411
+      GMPbench.base.divide(8192,8064)                    9.643e+05
+      GMPbench.base.divide(16777216,262144)                  4.986
+    GMPbench.base.divide                           12353
+    Program gcd (weight=0.5)
+      GMPbench.base.gcd(128,128)                         7.809e+05
+      GMPbench.base.gcd(512,512)                         1.653e+05
+      GMPbench.base.gcd(8192,8192)                            5111
+      GMPbench.base.gcd(131072,131072)                       83.08
+      GMPbench.base.gcd(1048576,1048576)                     4.356
+    GMPbench.base.gcd                             2989.3
+  GMPbench.base                         8155.5
+  Category app
+    Program rsa (weight=1)
+      GMPbench.app.rsa(512)                              1.305e+04
+      GMPbench.app.rsa(1024)                                  2808
+      GMPbench.app.rsa(2048)                                 445.5
+    GMPbench.app.rsa                              2536.3
+  GMPbench.app                          2536.3
+GMPbench:         4548.1
