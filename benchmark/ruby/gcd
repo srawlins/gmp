@@ -5,8 +5,8 @@ require '../../ext/gmp'
 m = ARGV[0].to_i
 n = ARGV[1].to_i
 
-x = random(2**m)
-y = random(2**n)
+x = rand(2**m)
+y = rand(2**n)
 
 print "Calibrating CPU speed..."
 STDOUT.flush

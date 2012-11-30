@@ -8,6 +8,7 @@ benchmark/gexpr
 benchmark/gexpr.exe
 benchmark/res*
 benchmark/RES-*
+benchmark/*.txt
 doc/**/*
 doc
 ext/Makefile
@@ -22,3 +23,4 @@ test/**/*.rbc
 test/*.log
 *.gem
 **/*.swp
+performance.html

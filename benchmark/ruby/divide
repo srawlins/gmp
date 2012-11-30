@@ -5,8 +5,8 @@ require '../../ext/gmp'
 dividend = ARGV[0].to_i
 divisor = ARGV[1].to_i
 
-x = random(2**dividend)
-y = random(2**divisor)
+x = rand(2**dividend)
+y = rand(2**divisor)
 
 t = GMP::time { z = x / y }
 iterations = (1 + (1e4 / t)).to_i

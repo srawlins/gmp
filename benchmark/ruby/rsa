@@ -19,19 +19,18 @@ def rsa_sign(msg, p, q, pq, p_i_q, dp, dq)
 end
 
 n = ARGV[0].to_i
-random_state = GMP::RandState.new
 
 print "Generating p, q, d..."
 STDOUT.flush
 
 pq = GMP::Z()
 while pq != 1
-  p = random_state.urandomb(n/2)
+  p = rand(2**(n/2))
   p[n/2 - 1] = true
   p[n/2 - 2] = true
   p[0]       = true
   
-  q = random_state.urandomb(n/2)
+  q = rand(2**(n/2))
   q[n/2 - 1] = true
   q[n/2 - 2] = true
   q[0]       = true
@@ -60,7 +59,7 @@ puts "Generating random messages"
 
 msg = []
 (0...1024).each do |i|
-  msg << random_state.urandomb(n)
+  msg << rand(2**n)
 end
 
 print "Calibrating CPU speed..."
