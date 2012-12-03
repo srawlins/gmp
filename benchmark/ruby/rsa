@@ -4,15 +4,33 @@ require '../../ext/gmp'
 
 RSA_EXP = 0x10001
 
+class Bignum
+  def []=(n, v)
+    if self[n] == 1
+      return ( v ? self : self - (2**n) )
+    else
+      return ( v ? self | (2**n) : self )
+    end
+  end
+
+  def gcd(b)
+    a = self
+    while b != 0
+      a, b = b, a % b
+    end
+    return a
+  end
+end
+
 def rsa_sign(msg, p, q, pq, p_i_q, dp, dq)
   pr = msg.powmod(dp, p)
   qr = msg.powmod(dq, q)
-  
+
   qr_m_pr = qr - pr
-  
+
   t = qr_m_pr * p_i_q
   o = t % q
-  
+
   t = o * p
   smsg = pr + t
   smsg % pq
@@ -29,12 +47,12 @@ while pq != 1
   p[n/2 - 1] = true
   p[n/2 - 2] = true
   p[0]       = true
-  
+
   q = rand(2**(n/2))
   q[n/2 - 1] = true
   q[n/2 - 2] = true
   q[0]       = true
-  
+
   pq = p.gcd(q)
 end
 

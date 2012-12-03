@@ -2,6 +2,16 @@
 
 require '../../ext/gmp'
 
+class Bignum
+  def gcd(b)
+    a = self
+    while b != 0
+      a, b = b, a % b
+    end
+    return a
+  end
+end
+
 m = ARGV[0].to_i
 n = ARGV[1].to_i
 

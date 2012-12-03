@@ -1799,6 +1799,39 @@ VALUE r_gmpz_gcdext(VALUE self, VALUE arg)
 
 /*
  * call-seq:
+ *   a.lcm(b)
+ *
+ * @since 0.2.11
+ *
+ * Returns the least common multiple of a and b. The result is always positive even if
+ * one or both of _a_ or _b_ are negative.
+ */
+VALUE r_gmpz_lcm(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val, *res_val;
+  VALUE res;
+
+  mpz_get_struct (self,self_val);
+
+  if (GMPZ_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_get_struct (arg, arg_val);
+    mpz_lcm (res_val, self_val, arg_val);
+  } else if (FIXNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_lcm_ui (res_val, self_val, FIX2NUM(arg));
+  } else if (BIGNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_set_bignum (res_val, arg);
+    mpz_lcm (res_val, res_val, self_val);
+  } else {
+    typeerror (ZXB);
+  }
+  return res;
+}
+
+/*
+ * call-seq:
  *   a.invert(b)
  *
  * @since 0.2.11
@@ -2615,6 +2648,7 @@ void init_gmpz()
   rb_define_alias(           cGMP_Z, "next_prime!",   "nextprime!");
   rb_define_method(          cGMP_Z, "gcd",           r_gmpz_gcd, 1);
   rb_define_method(          cGMP_Z, "gcdext",        r_gmpz_gcdext, 1);
+  rb_define_method(          cGMP_Z, "lcm",           r_gmpz_lcm, 1);
   rb_define_method(          cGMP_Z, "invert",        r_gmpz_invert, 1);
   rb_define_method(          cGMP_Z, "jacobi",        r_gmpz_jacobi, 1);
   rb_define_singleton_method(cGMP_Z, "jacobi",        r_gmpzsg_jacobi, 2);
