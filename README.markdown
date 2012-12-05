@@ -273,7 +273,8 @@ Methods
                                certainly prime
       nextprime                next *probable* prime
       nextprime!               change the object into its next *probable* prime
-      gcd, gcdext              greatest common divisor
+      gcd, gcdext, gcdext2     greatest common divisor
+      lcm                      least common multiple
       invert(m)                invert mod m
       jacobi                   jacobi symbol
       legendre                 legendre symbol
@@ -419,7 +420,6 @@ Known Issues
 * Don't call `GMP::RandState(:lc_2exp_size)`. Give a 2nd arg.
 * Don't use multiple assignment (`a = b = GMP::Z(0)`) with functional mappings.
 * JRuby has some interesting bugs and flickering tests. GMP::Z(GMP::GMP_NUMB_MAX) for example, blows up.
-* MPFR 3.1.0 breaks some of the random tests. This is because of a known change in MPFR. I just need my tests to become aware of the change.
 
 Precision
 ---------
@@ -435,29 +435,14 @@ Precision argument, and default_precision will be rounded up to whatever GMP thi
 Benchmarking
 ------------
 
-"GMP is carefully designed to be as fast as possible." Therefore, I believe it is very important for GMP, and its various language bindings to be benchmarked. In recent years, the GMP team developed GMPbench, an elegant, weighted benchmark. Currently, they maintain a list of recent benchmark [results](http://www.gmplib.org/gmpbench.html), broken down by CPU, CPU freq, ABI, and compiler flags; GMPbench compares different processor's performance against eachother, rather than GMP against other bignum libraries, or comparing different versions of GMP.
-
-I intend to build a plug-in to GMPbench that will test the ruby gmp gem. The results of this benchmark should be directly comparable with the results of GMP (on same CPU, etc.). Rather than write a benchmark from the ground up, or try to emulate what GMPbench does, a plug-in will allow for this type of comparison. And in fact, GMPbench is (perhaps intentionally) written perfectly to allow for plugging in.
-
-Various scores are derived from GMPbench by running the `runbench` script. This script compiles and runs various individual programs that measure the performance of base functions, such as multiply, and app functions such as rsa.
-
-The gmp gem benchmark uses the GMPbench framework (that is, runbench, gexpr, and the timing methods), and plugs in ruby scripts as the individual programs. Right now, there are only four (of six) such plugged in ruby scripts:
-
-* multiply - measures performance of multiplying (or squaring) `GMP::Z` objects whose size (in bits) is given by one or two operands.
-* divide - measures performance of dividing two `GMP::Z` objects (using `tdiv`) whose size (in bits) is given by two operands.
-* gcd - measure...
-* rsa - measures performance of using RSA to sign messages. The size of `pq`, the product of the two co-prime `GMP::Z` objects, `p` and `q`, is given by one operand.
-
-**insert table here**
-
-My guess is that the increase in ruby gmp gem overhead is caused by increased efficiency in GMP; the inefficiencies of the gmp gem are relatively greater.
+Please see [performance](performance.md)
 
 Todo
 ----
 
-* `GMP::Z#to_d_2exp`, `#congruent?`, `#rootrem`, `#lcm`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#hamdist`, `#combit`, `#fits_x?`
+* `GMP::Z#to_d_2exp`, `#congruent?`, `#rootrem`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#hamdist`, `#combit`, `#fits_x?`
 * `GMP::Q#to_s(base)`, `GMP::F#to_s(base)` (test it!)
-* benchmark gcdext, pi
+* benchmark pi
 * a butt-load of functional mappings. 47-ish sets.
 * investigate possible memory leaks when using `GMP::Q(22/7)` for example
 * beef up `r_gmpq_initialize`; I don't like to rely on `mpz_set_value`.
