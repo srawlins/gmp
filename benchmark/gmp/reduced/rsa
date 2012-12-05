@@ -1,62 +1,57 @@
 #!/usr/bin/env ruby
 
-require '../../ext/gmp'
-require './ruby-enhancements'
+require './gmp_require'
 
 RSA_EXP = 0x10001
 
 def rsa_sign(msg, p, q, pq, p_i_q, dp, dq)
-  #pr = msg.powmod(dp, p)
-  #qr = msg.powmod(dq, q)
-  pr = Bignum.powmod(msg, dp, p)
-  qr = Bignum.powmod(msg, dq, q)
-
+  pr = msg.powmod(dp, p)
+  qr = msg.powmod(dq, q)
+  
   qr_m_pr = qr - pr
-
+  
   t = qr_m_pr * p_i_q
   o = t % q
-
+  
   t = o * p
   smsg = pr + t
   smsg % pq
 end
 
 n = ARGV[0].to_i
+random_state = GMP::RandState.new
 
 print "Generating p, q, d..."
 STDOUT.flush
 
-pq = 0
+pq = GMP::Z()
 while pq != 1
-  p = rand(2**(n/2))
+  p = random_state.urandomb(n/2)
   p[n/2 - 1] = true
   p[n/2 - 2] = true
   p[0]       = true
-
-  q = rand(2**(n/2))
+  
+  q = random_state.urandomb(n/2)
   q[n/2 - 1] = true
   q[n/2 - 2] = true
   q[0]       = true
-
+  
   pq = p.gcd(q)
 end
 
 pq = p * q
 
-e = RSA_EXP
+e = GMP::Z(RSA_EXP)
 
 pm1 = p - 1
 qm1 = q - 1
 phi = pm1 * qm1
-#d = e.invert(phi)
-d = Bignum.invert(e,phi)
+d = e.invert(phi)
 
-#puts "done; pq is %i bits" % pq.sizeinbase(2)
-puts "done; pq is %i bits" % pq.to_s(2).size
+puts "done; pq is %i bits" % pq.sizeinbase(2)
 puts "Precomputing CRT constants"
 
-#p_i_q = p.invert(q)
-p_i_q = Bignum.invert(p,q)
+p_i_q = p.invert(q)
 
 dp = d % pm1
 dq = d % qm1
@@ -65,13 +60,12 @@ puts "Generating random messages"
 
 msg = []
 (0...1024).each do |i|
-  msg << rand(2**n)
+  msg << random_state.urandomb(n)
 end
 
 print "Calibrating CPU speed..."
 STDOUT.flush
 t = GMP::time { smsg = rsa_sign(msg[0], p, q, pq, p_i_q, dp, dq) }
-#smsg = rsa_sign(msg[0], p, q, pq, p_i_q, dp, dq)
 puts "done"
 
 iterations = (1e4 / t).to_i

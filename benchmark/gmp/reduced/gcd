@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 
-require '../../ext/gmp'
-require './ruby-enhancements'
+require './gmp_require'
 
 m = ARGV[0].to_i
 n = ARGV[1].to_i
+random_state = GMP::RandState.new
 
-x = rand(2**m)
-y = rand(2**n)
+x = random_state.urandomb(m)
+y = random_state.urandomb(n)
 
 print "Calibrating CPU speed..."
 STDOUT.flush
@@ -24,7 +24,7 @@ iterations.times do
   z = x.gcd(y)
 end
 ti = GMP::cputime - t0
-
+  
 puts "done!"
 ops_per_sec = 1000.0 * iterations / ti
 f = 100.0

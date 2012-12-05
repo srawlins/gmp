@@ -79,9 +79,30 @@ In order to run a set of benchmarks (a directory containing `multiply`, `runbenc
 
     ./runbench -n
 
-### `Bignum#gcd`
+## Ruby benchmarks
 
-`Bignum#gcd` is not provided by Ruby's standard library. A simple and fast enough version is provided in `benchmark/ruby/gcd`.
+### New `Bignum` methods
+
+Several methods provided in `GMP::Z` are not provided in `Bignum`, in Ruby's standard library. In order to attempt a vague comparison between `Bignum` and `GMP::Z`, a simple and "fast enough" version of the following methods is provided in `benchmark/ruby/ruby-enhancements`:
+
+* `Bignum.gcdext`
+* `Bignum.invert`
+* `Bignum.powmod`
+* `Bignum#[]=`
+* `Bignum#gcd`
+
+### Modifications to `benchmark/ruby` benchmarks
+
+Ruby's `Bignum` class is not advanced enough to handle several of the benchmark test cases, namely:
+
+* `multiply 16777216 512` (Ruby's `Bignum` cannot raise 2 to a 16777216-bit number.)
+* `multiply 16777216 262144` (Ruby's `Bignum` cannot raise 2 to a 16777216-bit number.)
+* `divide 8388608 4194304` (Ruby's `Bignum` cannot raise 2 to a 8388608-bit number.)
+* `divide 16777216 262144` (Ruby's `Bignum` cannot raise 2 to a 16777216-bit number.)
+
+Ruby can raise 2 to approximately $4,194,000$.
+
+In the `benchmark/ruby` suite, these have been removed, so that summary scores can still be produced. In order to compare these summary scores against `GMP::Z` benchmarks, there is also a `benchmark/gmp/reduced` suite that uses the same test cases. `benchmark/gmp/reduced` is the only test suite that should be compared against `benchmark/ruby`.
 
 ## Complex Functions
 
