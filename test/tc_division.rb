@@ -24,9 +24,9 @@ class TC_division < Test::Unit::TestCase
     assert_in_delta(5.0         , @c / @a, 1e-7, "GMP::Z./ should work.")
     rescue TypeError => e
       if e.message == "GMP::Q can't be coerced into Float"
-        puts ""
-        puts "Suppressing error that should be fixed with a recent version of Test::Unit"
-        puts "installed."
+        #puts ""
+        print "[Suppressing error that should be fixed with a recent version of Test::Unit installed]"
+        #puts "installed."
       else
         puts "Accidentally rescued TypeError with message \"#{e.message}\", raising..."
         raise e

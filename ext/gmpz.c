@@ -605,6 +605,21 @@ VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
   return res;
 }
 
+static VALUE r_gmpz_alloc(VALUE klass) {
+  MP_INT *z;
+  VALUE obj;
+
+  //mpz_init(z);
+  //obj = Data_Make_Struct(klass, MP_INT, 0, r_gmpz_free, z);
+  //obj = Data_Wrap_Struct(klass, 0, r_gmpz_free, z);
+//  mpz_make_struct_init (z, obj);
+ // mpz_make_struct_init (obj, z);
+  obj = Data_Make_Struct(klass, MP_INT, 0, r_gmpz_free, z);
+  mpz_init (z);
+
+  return obj;
+}
+
 VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
 {
   MP_INT *self_val;
@@ -634,6 +649,22 @@ VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
     mpz_set_value (self_val, argv[0], base);
   }
   return Qnil;
+}
+
+static VALUE r_gmpz_initialize_copy(VALUE copy, VALUE orig) {
+  MP_INT *orig_z, *copy_z;
+
+  if (copy == orig) return copy;
+
+  if (TYPE(orig) != T_DATA) {
+    rb_raise(rb_eTypeError, "wrong argument type");
+  }
+
+  mpz_get_struct (orig, orig_z);
+  mpz_get_struct (copy, copy_z);
+  mpz_set (copy_z, orig_z);
+
+  return copy;
 }
 
 /*
@@ -2569,9 +2600,11 @@ void init_gmpz()
   cGMP_Z = rb_define_class_under(mGMP, "Z", rb_cInteger);
 
   // Initializing, Assigning Integers
-  rb_define_singleton_method(cGMP_Z, "new", r_gmpzsg_new, -1);
-  rb_define_method(cGMP_Z, "initialize",    r_gmpz_initialize, -1);
-  rb_define_method(cGMP_Z, "swap",          r_gmpz_swap, 1);
+  rb_define_singleton_method(cGMP_Z, "new",   r_gmpzsg_new, -1);
+  rb_define_method(    cGMP_Z, "initialize",      r_gmpz_initialize, -1);
+  rb_define_method(    cGMP_Z, "initialize_copy", r_gmpz_initialize_copy, 1);
+  rb_define_alloc_func(cGMP_Z,                    r_gmpz_alloc);
+  rb_define_method(    cGMP_Z, "swap",            r_gmpz_swap, 1);
 
   // Converting Integers
   rb_define_method(cGMP_Z, "to_i", r_gmpz_to_i, 0);
