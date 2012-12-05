@@ -1,6 +1,0 @@
-Generating p, q, d...done; pq is 512 bits
-Precomputing CRT constants
-Generating random messages
-Calibrating CPU speed...done
-Signing random messages 132556 times...done!
-RESULT: 12677.505738 operations per second

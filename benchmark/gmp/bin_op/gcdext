@@ -11,7 +11,7 @@ y = random_state.urandomb(n)
 
 print "Calibrating CPU speed..."
 STDOUT.flush
-t = GMP::time { z = x.gcd(y) }
+t = GMP::time { z, s = x.gcdext2(y) }
 puts "done"
 
 iterations = (1 + (1e4 / t)).to_i
@@ -21,7 +21,7 @@ STDOUT.flush
 
 t0 = GMP::cputime
 iterations.times do
-  z = x.gcd(y)
+  z, s = x.gcdext2(y)
 end
 ti = GMP::cputime - t0
 

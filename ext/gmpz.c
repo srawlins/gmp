@@ -1807,8 +1807,8 @@ VALUE r_gmpz_gcdext(VALUE self, VALUE arg)
     mpz_make_struct_init (res, res_val);
     mpz_make_struct_init (s, s_val);
     mpz_make_struct_init (t, t_val);
-    mpz_temp_alloc(arg_val);
-    mpz_init_set_ui(arg_val, FIX2NUM(arg));
+    mpz_temp_alloc (arg_val);
+    mpz_init_set_ui (arg_val, FIX2NUM(arg));
     free_arg_val = 1;
     mpz_gcdext (res_val, s_val, t_val, self_val, arg_val);
   } else if (BIGNUM_P (arg)) {
@@ -1820,11 +1820,58 @@ VALUE r_gmpz_gcdext(VALUE self, VALUE arg)
   } else {
     typeerror (ZXB);
   }
-  
+
   if (free_arg_val)
-    mpz_temp_free(arg_val);
-  
-  ary = rb_ary_new3(3, res, s, t);
+    mpz_temp_free (arg_val);
+
+  ary = rb_ary_new3 (3, res, s, t);
+  return ary;
+}
+
+/*
+ * call-seq:
+ *   a.gcdext2(b) #=> g, s
+ *
+ * @since 0.5.x
+ *
+ * Returns the greatest common divisor of _a_ and _b_, in addition to _s_, the
+ * coefficient satisfying <i>a*s + b*t = g</i>. _g_ is always positive, even if one or
+ * both of _a_ and _b_ are negative. _s_ and _t_ are chosen such that
+ * <i>abs(s) <= abs(b)</i> and <i>abs(t) <= abs(a)</i>.
+ */
+VALUE r_gmpz_gcdext2(VALUE self, VALUE arg)
+{
+  MP_INT *self_val, *arg_val, *res_val, *s_val;
+  VALUE res, s, ary;
+  int free_arg_val = 0;
+
+  mpz_get_struct (self,self_val);
+
+  if (GMPZ_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_make_struct_init (s, s_val);
+    mpz_get_struct (arg, arg_val);
+    mpz_gcdext (res_val, s_val, NULL, self_val, arg_val);
+  } else if (FIXNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_make_struct_init (s, s_val);
+    mpz_temp_alloc (arg_val);
+    mpz_init_set_ui (arg_val, FIX2NUM(arg));
+    free_arg_val = 1;
+    mpz_gcdext (res_val, s_val, NULL, self_val, arg_val);
+  } else if (BIGNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_make_struct_init (s, s_val);
+    mpz_set_bignum (res_val, arg);
+    mpz_gcdext (res_val, s_val, NULL, res_val, self_val);
+  } else {
+    typeerror (ZXB);
+  }
+
+  if (free_arg_val)
+    mpz_temp_free (arg_val);
+
+  ary = rb_ary_new3 (2, res, s);
   return ary;
 }
 
@@ -2679,19 +2726,20 @@ void init_gmpz()
   rb_define_method(          cGMP_Z, "nextprime!",    r_gmpz_nextprime_self, 0);
   rb_define_alias(           cGMP_Z, "next_prime",    "nextprime");
   rb_define_alias(           cGMP_Z, "next_prime!",   "nextprime!");
-  rb_define_method(          cGMP_Z, "gcd",           r_gmpz_gcd, 1);
-  rb_define_method(          cGMP_Z, "gcdext",        r_gmpz_gcdext, 1);
-  rb_define_method(          cGMP_Z, "lcm",           r_gmpz_lcm, 1);
-  rb_define_method(          cGMP_Z, "invert",        r_gmpz_invert, 1);
-  rb_define_method(          cGMP_Z, "jacobi",        r_gmpz_jacobi, 1);
-  rb_define_singleton_method(cGMP_Z, "jacobi",        r_gmpzsg_jacobi, 2);
-  rb_define_method(          cGMP_Z, "legendre",      r_gmpz_legendre, 1);
-  rb_define_method(          cGMP_Z, "remove",        r_gmpz_remove, 1);
-  rb_define_singleton_method(cGMP_Z, "fac",           r_gmpzsg_fac, 1);
-  rb_define_singleton_method(cGMP_Z, "fib",           r_gmpzsg_fib, 1);
+  rb_define_method(          cGMP_Z, "gcd",           r_gmpz_gcd,         1);
+  rb_define_method(          cGMP_Z, "gcdext",        r_gmpz_gcdext,      1);
+  rb_define_method(          cGMP_Z, "gcdext2",       r_gmpz_gcdext2,     1);
+  rb_define_method(          cGMP_Z, "lcm",           r_gmpz_lcm,         1);
+  rb_define_method(          cGMP_Z, "invert",        r_gmpz_invert,      1);
+  rb_define_method(          cGMP_Z, "jacobi",        r_gmpz_jacobi,      1);
+  rb_define_singleton_method(cGMP_Z, "jacobi",        r_gmpzsg_jacobi,    2);
+  rb_define_method(          cGMP_Z, "legendre",      r_gmpz_legendre,    1);
+  rb_define_method(          cGMP_Z, "remove",        r_gmpz_remove,      1);
+  rb_define_singleton_method(cGMP_Z, "fac",           r_gmpzsg_fac,       1);
+  rb_define_singleton_method(cGMP_Z, "fib",           r_gmpzsg_fib,       1);
   // Functional Mappings
-  rb_define_singleton_method(cGMP_Z, "lcm", r_gmpzsg_lcm, 3);
-  rb_define_singleton_method(cGMP_Z, "nextprime", r_gmpzsg_nextprime, 2);
+  rb_define_singleton_method(cGMP_Z, "lcm",           r_gmpzsg_lcm,       3);
+  rb_define_singleton_method(cGMP_Z, "nextprime",     r_gmpzsg_nextprime, 2);
 
   // Integer Comparisons
   rb_define_method(cGMP_Z, "<=>",     r_gmpz_cmp, 1);

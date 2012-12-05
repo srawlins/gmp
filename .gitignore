@@ -7,7 +7,8 @@ results*
 benchmark/gexpr
 benchmark/gexpr.exe
 benchmark/res*
-benchmark/**/RES-*
+benchmark/gmp/**/RES-*
+benchmark/ruby/RES-*
 benchmark/**/*.txt
 doc/**/*
 doc
