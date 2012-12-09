@@ -88,7 +88,7 @@ pre {
 <p>In the <code>benchmark/ruby</code> suite, these have been removed, so that summary scores can still be produced. In order to compare these summary scores against <code>GMP::Z</code> benchmarks, there is also a <code>benchmark/gmp/reduced</code> suite that uses the same test cases. <code>benchmark/gmp/reduced</code> is the only test suite that should be compared against <code>benchmark/ruby</code> (or, with some work, one can manually calculate the weighted geometric means, using the same method found in <code>runbench</code>.</p>
 <p></p>
 <h2 id="results">Results</h2>
-<p>Raw benchmark results can be found in <code>benchmark/benchmark-results.ods</code>, and OpenOffice spreadsheet. Here I show some interpreted results.</p>
+<p>Raw benchmark results can be found in <code>benchmark/benchmark-results-5.0.5_1.9.3_0.6.7.ods</code>, a LibreOffice spreadsheet. Below I show some interpreted results.</p>
 <h3 id="ruby-v-ruby">Ruby v Ruby</h3>
 <p>I benchmarked three different versions of Ruby's Bignum implementation: Ruby 1.8.7, Ruby 1.9.3, and Ruby 2.0.0-preview2 (the latest version of Ruby 2.0 at the time of the tests). These tests only measured Ruby's Bignum, and do not use GMP at all. Ruby 1.9.3 and Ruby 2.0.0-preview2 performed very similarly, within 5% of each other in most cases. The interesting result in this test is Ruby 1.8.7 v Ruby 1.9.3. With the exception of <code>divide</code>, 1.9.3 outperformed 1.8.7, and often dramatically:</p>
 <table>
@@ -403,7 +403,7 @@ pre {
 <p>Here are the specifics of these tests:</p>
 <ul>
 <li>The pure GMP tests used GMP 5.0.5, compiled with Apple's GCC 4.2.1.</li>
-<li>The gmp gem tests used the master branch of the gmp gem, compiled against GMP 5.0.5, on Ruby 1.9.3, compiled with Apple's GCC 4.2.1.</li>
+<li>The gmp gem tests used the master branch of the gmp gem (roughly equivalent to gmp gem version 0.6.7), compiled against GMP 5.0.5, on Ruby 1.9.3, compiled with Apple's GCC 4.2.1.</li>
 <li>The Ruby Bignum tests used Ruby 1.9.3, compiled with Apple's GCC 4.2.1</li>
 </ul>
 <p></p>

@@ -1,6 +1,19 @@
 0.6.7:
   * Added 9th set of Functional Mappings: GMP::Z.divisible?
   * Added 11th set of Functional Mappings: GMP::Z.congruent?
+  * Added GMP::sprintf for Ruby 1.9.x (requires Oniguruma regular expressions)
+  * Added optional parameter to GMP::F#to_s to allow a base to be passed in
+  * Finally added a rake file. My workflow now consists largely of:
+        rvm use _some_ruby_
+        rake make
+  * Added tests for GMP::F#to_s
+  * Added GMP::F#integer?
+  * Fixed tests for MPFR 3.1's PRNG
+  * Completely reorganized the benchmarks
+  * Added new performance.md, performance.html, and performance.pdf, a reworked benchmarking report
+  * Added GMP::Z#lcm, with tests
+  * Added an alloc_func, so that now GMP::Z#dup and GMP::Z#clone work
+  * Added GMP::Z#gcdext2, which only calculates g and s, for as + bt = g
 
 0.5.47:
   * Probably last release before 0.6.7

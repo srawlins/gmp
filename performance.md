@@ -112,7 +112,7 @@ In the `benchmark/ruby` suite, these have been removed, so that summary scores c
 
 ## Results
 
-Raw benchmark results can be found in `benchmark/benchmark-results.ods`, and OpenOffice spreadsheet. Here I show some interpreted results.
+Raw benchmark results can be found in `benchmark/benchmark-results-5.0.5_1.9.3_0.6.7.ods`, a LibreOffice spreadsheet. Below I show some interpreted results.
 
 ### Ruby v Ruby
 
@@ -216,7 +216,7 @@ At a glance, it looks like GMP is consistently faster than the gmp gem, but they
 Here are the specifics of these tests:
 
 * The pure GMP tests used GMP 5.0.5, compiled with Apple's GCC 4.2.1.
-* The gmp gem tests used the master branch of the gmp gem (roughly equivalent to gmp gem version 0.5.71), compiled against GMP 5.0.5, on Ruby 1.9.3, compiled with Apple's GCC 4.2.1.
+* The gmp gem tests used the master branch of the gmp gem (roughly equivalent to gmp gem version 0.6.7), compiled against GMP 5.0.5, on Ruby 1.9.3, compiled with Apple's GCC 4.2.1.
 * The Ruby Bignum tests used Ruby 1.9.3, compiled with Apple's GCC 4.2.1
 
 \newpage

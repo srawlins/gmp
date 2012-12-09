@@ -34,8 +34,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.5.47}}\\
-\multicolumn{2}{r}{\large{10 November 2011}}
+\multicolumn{2}{r}{\large{Edition 0.6.7}}\\
+\multicolumn{2}{r}{\large{9 December 2012}}
 \end{tabular}
 
 \vfill
@@ -47,7 +47,7 @@
 This manual describes how to use the gmp Ruby gem, which provides bindings to
 the GNU multiple precision arithmetic library, version 4.3.x or 5.0.x.\\
 \\
-Copyright 2009, 2010, 2011 Sam Rawlins.\\
+Copyright 2009, 2010, 2011, 2012 Sam Rawlins.\\
 No license yet.
 \newpage
 
@@ -1525,110 +1525,6 @@ Every method below accepts two additional parameters in addition to any required
 \newpage
 \section{Benchmarking}
 
-Starting with, I believe, GMP 5.0.0, their benchmarking suite was updated to version 0.2,
-a significant improvement over version 0.1. The suite consists of 3 parts.\\\\
-
-First is six individual programs that will benchmark a single concept. These are
-\texttt{multiply}, \texttt{divide}, \texttt{gcd}, \texttt{gcdext}, \texttt{rsa}, and
-\texttt{pi}.
-
-Second is gexpr.c, a nifty little program (compiled with \texttt{gcc -o gexpr gexpr.c},
-or\\ \texttt{gcc -o gexpr gexpr.c -lm} on some systems). They use this basically for
-weighing the results of individual tests and stringifying them to a certain precision.
-
-Third is runbench, a shell script that runs each of the six benchmark programs, each
-several times with a different set of arguments. It compiles the results, using gexpr
-to carefully calculate a final "score" for each benchmark, each benchmark family
-(\texttt{rsa} and \texttt{pi} are separated as "app" benchmarks.), and for the suite as a
-whole.
-
-\subsection{gmp gem benchmarking}
-
-The structure described above lends itself perfectly to some simple modifications that
-allow me to benchmark the gmp gem. Instead of using the C programs that are the
-individual benchmarks, I have converted them into Ruby programs, and called them the same
-names. When runbench executes "multiply" for example, it is running a Ruby program that
-does the same general thing as "multiply" the C program. This allows me to benchmark the
-gmp gem, and I can even compare the results with those of benchmarking GMP itself. I have
-done so below.
-
-\newpage
-\subsection{Benchmark Results}
-
-I've benchmarked an array of Ruby-version/GMP-version combinations, which can be compared
-with results of the actual GMPbench benchmark, in order to understand the overhead that
-Ruby and the Ruby C Extension API impose on the GMP library. The benchmarks listed were
-all executed on an Apple MacBook "5.1." booting three operating systems with rEFIt 0.14.
-Because not all of the marks from GMPbench have been ported to the Ruby gmp gem, results
-for 'base' and 'app' are not listed; they cannot be compared with GMPbench results.\\
-
-\begin{LARGE}MacBook, Intel Core 2 Duo, 2 GHz, 2 GB DDR3\end{LARGE}\\
-
-Mac OS X 10.6.4, x86 (32-bit)\\
-Ruby and GMP compiled with gcc 4.2.1 (Apple Inc. build 5664)\\
-\begin{tabular}{|l|l|r|r|r|r|r|}
-  \hline
-  GMP   & bench    & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & RBX 1.1 & C \\
-  \hline
-  4.3.2 & multiply &  7734.2    &     7505.9 &     7637.9 &  7469.3 & 16789   \\
-        & divide   &  7336.1    &     7180   &     7223.7 &  7121.2 &  9872.5 \\
-        & gcd      &  2356      &     2436.8 &     2448.8 &  2385.6 &  2938.9 \\
-        & rsa      &  2035.2    &     1995.3 &     2068.4 &  2051.1 &  2136.7 \\
-  \hline
-  5.0.1 & multiply &  8030.5    &     7926.7 &     8019.3 &  7944.1 & 17925   \\
-        & divide   & 10341      &    10070   &    10218   & 10018   & 16069   \\
-        & gcd      &  2501      &     2535.4 &     2578.7 &  2537.3 &  3063.7 \\
-        & rsa      &  2128      &     2159.1 &     2170.5 &  2162   &  2229.2 \\
-  \hline
-\end{tabular}\\\\
-
-Ubuntu 10.04, Kernel 2.6.32-25, x86\_64 (64-bit)\\
-Ruby and GMP compiled with gcc 4.4.3 (Ubuntu 4.4.3-4ubuntu5)\\
-\begin{small}In these tests, the classic multiply benchmark crashes with OutOfMemory. There are
-two ways this has been remedied. The first (tests marked multiply.gc) is to manually
-kick off garbage collection every so often. This solves the memory problem in all
-interpreters except Rubinius 1.1 (investigation pending). The second, and far better
-solution is to employ the new functional mapping methods. These have not been
-documented yet, but documentation is pending, and high on my priority list. Simply
-put, these methods overcome the overhead (memory and time) of instantiating new
-objects all the time.\end{small}\\
-\begin{tabular}{|l|l|r|r|r|r|r|}
-  \hline
-  GMP   & bench        & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & RBX 1.1 & C \\
-  \hline
-  4.3.2 & multiply     &          x &          x &          x &       x & 14716   \\
-        & multiply.gc  &     7849.2 &     6911.4 &     7703.5 &       x & 14716   \\
-        & multiply.fnl &     9532.6 &    11182   &    10886   &  5131.3 & 14716   \\
-        & divide       &     7704.6 &     7591.8 &     7527.2 &  4265.1 &  8614.3 \\
-        & gcd          &     2420.1 &     2453.6 &     2487.4 &  1676.4 &  2779.8 \\
-        & rsa          &     2040.5 &     2069.2 &     2044.2 &  1758.9 &  1984.3 \\
-  \hline
-  5.0.1 & multiply     &          x &          x &          x &       x & 17695   \\
-        & multiply.gc  &     8265.3 &     7289.4 &     8105.1 &       x & 17695   \\
-        & multiply.fnl &    10029   &    11807   &    11493   &  6036.7 & 17695   \\
-        & divide       &    10988   &    10935   &    10799   &  6164.9 & 15629   \\
-        & gcd          &     2554.2 &     2510.2 &     2538.6 &  1802.8 &  2925.1 \\
-        & rsa          &     2128.7 &     2189   &     2179.9 &  1941.2 &  2233.4 \\
-  \hline
-\end{tabular}\\\\
-
-\newpage
-Windows 7 (64-bit)\\
-Ruby and GMP compiled with gcc 4.5.0 (tdm-1)\\
-\begin{tabular}{|l|l|r|r|r|r|}
-  \hline
-  GMP & bench & Ruby 1.8.7 & Ruby 1.9.1 & Ruby 1.9.2 & C \\
-  \hline
-  4.3.2 & multiply & 3607.9   & 3679.3  & 3655.5 & 6448.7 \\
-        & divide   & 3062.6   & 3103.7  & 3074.5 & 3717.5 \\
-        & gcd      & 1165     & 1190.6  & 1211.8 & 1359.4 \\
-        & rsa      & 733.87   &  729.9  & 742.22 & 757.97 \\
-  \hline
-  5.0.1 & multiply & 3792.1   & 3869    & 3785.9 & 6835.2 \\
-        & divide   & 4662.2   & 4704.4  & 4692.3 & 6497.4 \\
-        & gcd      & 1222.8   & 1249.7  & 1245   & 1394.2 \\
-        & rsa      &  742.78  &  745.66 & 739.9  & 754.72 \\
-  \hline
-\end{tabular}\\
+Benchmark results can be found in performance.pdf.
 
 \end{document}
