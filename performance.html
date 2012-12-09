@@ -1,0 +1,355 @@
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<style>
+body {
+  margin: 0 auto;
+  width: 800px;
+}
+
+table {
+  border-collapse: collapse;
+  border-top:    solid 1px #000000;
+  border-bottom: solid 1px #000000;
+  border-right:  solid 1px #000000;
+  border-left:   solid 1px #000000;
+  margin: 0 auto;
+}
+
+th {
+  font-weight: normal;
+  border-top:    solid 1px #000000;
+  border-bottom: solid 2px #000000;
+  border-right:  solid 1px #000000;
+  border-left:   solid 1px #000000;
+}
+
+td {
+  border-top:    solid 1px #CCCCCC;
+  border-bottom: solid 1px #CCCCCC;
+  border-right:  solid 1px #666666;
+  border-left:   solid 1px #666666;
+}
+
+td, th {
+  padding: 2px 4px;
+}
+
+pre {
+  background-color: #EEEEEE;
+  padding: 3px 2px;
+</style>
+
+<h1 id="gmp-gem-performance">GMP gem Performance</h1>
+<p>Performance analysis of the GMP gem</p>
+<p>28 November 2012</p>
+<p></p>
+<p>written by Sam Rawlins</p>
+<p></p>
+<p></p>
+<p></p>
+<h2 id="introduction-to-the-performance-benchmarks">Introduction to the performance benchmarks</h2>
+<p>The benchmarking system used to test the performance of the gmp gem is inspired by, and uses parts of, gmpbench 0.2. http://gmplib.org/gmpbench.html. gmpbench consists of two parts:</p>
+<ul>
+<li><code>multiply</code>, <code>divide</code>, <code>gcd</code>, <code>gcdext</code>, <code>rsa</code>, and <code>pi</code> are 6 small programs that use GMP to measure a specific piece of functionality. <code>multiply</code>, <code>divide</code>, <code>gcd</code>, and <code>gcdext</code> are the &quot;base&quot; benchmarks that test small pieces of functionality. <code>rsa</code> and <code>pi</code> are the &quot;application&quot; benchmarks that measure the performance of a larger concept implemented with GMP.</li>
+<li><code>runbench</code> is a shell script that coordinates an execution of each of the benchmarking programs, applying a weight to the results of each, and yielding a total score for GMP on the current system.</li>
+</ul>
+<p>The benchmarking system in the gmp gem uses Ruby versions of each of the 6 programs (actually, <code>pi</code> is still being ported), attempting to be as identical to their C code siblings. This system also just uses <code>runbench</code> unmodified from the original gmpbench suite.</p>
+<p>Due to a few issues with Ruby 1.8.7, and the gmp gem itself, there are actually 3x different versions of the benchmark suite that use the gmp gem:</p>
+<ul>
+<li><code>benchmark/gmp/bin_op</code> uses binary operators, such as <code>*</code>, on <code>GMP::Z</code> integers. Since <code>a * b</code> creates a new <code>mpz_t</code> that it returns, the benchmark programs are constantly creating new objects, which is not what the GMP benchmark programs do. The real problem that this creates is Ruby 1.8.7 running out of memory.</li>
+<li><code>benchmark/gmp/gc</code> also uses binary operators, but invokes Ruby's garbage collector every 512 iterations of each test. This allows all of the benchmarks to complete in Ruby 1.8.7, but is still not the best comparison with GMP's benchmark programs.</li>
+<li><code>benchmark/gmp/functional</code> uses the &quot;functional&quot;, <code>GMP::Z</code> singleton methods to perform what would otherwise be binary operations. For example, <code>x * y</code> is replaced with <code>GMP::Z.mul(z,x,y)</code> in order to use <code>z</code> as the &quot;return argument&quot; through each iteration of a benchmark. In this version, <code>z</code> is only created once, before the benchmark begins measuring time.</li>
+</ul>
+<h2 id="run-the-benchmarks">Run the Benchmarks</h2>
+<p>In order to run a set of benchmarks (a directory containing <code>multiply</code>, <code>runbench</code>, etc.), just use the command:</p>
+<pre><code>./runbench -n</code></pre>
+<p>Next to each test case, program, and category, a score will be printed, which is iterations per second. For program, category, and overall scores, this represents a weighted geometric mean, and so should just be thought of more like a &quot;score&quot; than an actual real-world metric.</p>
+<h2 id="ruby-benchmarks">Ruby benchmarks</h2>
+<p>In addition to the above variations of the benchmark suite located in <code>benchmark/gmp</code>, there is one more variation of the benchmark suite that measure's Ruby's Bignum algorithms. This suite is located at <code>benchmark/ruby</code>.</p>
+<h3 id="new-bignum-methods">New <code>Bignum</code> methods</h3>
+<p>Several methods provided in <code>GMP::Z</code> are not provided in <code>Bignum</code>, in Ruby's standard library. In order to attempt a vague comparison between <code>Bignum</code> and <code>GMP::Z</code>, a simple and &quot;fast enough&quot; version of the following methods is provided in <code>benchmark/ruby/ruby-enhancements</code>:</p>
+<ul>
+<li><code>Bignum.gcdext</code></li>
+<li><code>Bignum.invert</code></li>
+<li><code>Bignum.powmod</code></li>
+<li><code>Bignum#[]=</code></li>
+<li><code>Bignum#gcd</code></li>
+</ul>
+<p><code>Bignum.gcdext</code>, <code>Bignum.invert</code>, and <code>Bignum.powmod</code> are all borrwed from John Nishinaga, available at <a href="https://gist.github.com/2388745"><code class="url">https://gist.github.com/2388745</code></a>.</p>
+<h3 id="modifications-to-benchmarkruby-benchmarks">Modifications to <code>benchmark/ruby</code> benchmarks</h3>
+<p>Ruby's <code>Bignum</code> class is not advanced enough to handle several of the benchmark test cases, namely:</p>
+<ul>
+<li><code>multiply 16777216 512</code> (Ruby's <code>Bignum</code> cannot raise 2 to a 16777216-bit number.)</li>
+<li><code>multiply 16777216 262144</code> (Ruby's <code>Bignum</code> cannot raise 2 to a 16777216-bit number.)</li>
+<li><code>divide 8388608 4194304</code> (Ruby's <code>Bignum</code> cannot raise 2 to a 8388608-bit number.)</li>
+<li><code>divide 16777216 262144</code> (Ruby's <code>Bignum</code> cannot raise 2 to a 16777216-bit number.)</li>
+</ul>
+<p>Ruby can raise 2 to approximately 4,194,000.</p>
+<p>In the <code>benchmark/ruby</code> suite, these have been removed, so that summary scores can still be produced. In order to compare these summary scores against <code>GMP::Z</code> benchmarks, there is also a <code>benchmark/gmp/reduced</code> suite that uses the same test cases. <code>benchmark/gmp/reduced</code> is the only test suite that should be compared against <code>benchmark/ruby</code> (or, with some work, one can manually calculate the weighted geometric means, using the same method found in <code>runbench</code>.</p>
+<p></p>
+<h2 id="results">Results</h2>
+<p>Raw benchmark results can be found in <code>benchmark/benchmark-results.ods</code>, and OpenOffice spreadsheet. Here I show some interpreted results.</p>
+<h3 id="ruby-v-ruby">Ruby v Ruby</h3>
+<p>I benchmarked three different versions of Ruby's Bignum implementation: Ruby 1.8.7, Ruby 1.9.3, and Ruby 2.0.0-preview2 (the latest version of Ruby 2.0 at the time of the tests). These tests only measured Ruby's Bignum, and do not use GMP at all. Ruby 1.9.3 and Ruby 2.0.0-preview2 performed very similarly, within 5% of each other in most cases. The interesting result in this test is Ruby 1.8.7 v Ruby 1.9.3. With the exception of <code>divide</code>, 1.9.3 outperformed 1.8.7, and often dramatically:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Program</th>
+<th align="right">Ruby 1.8.7</th>
+<th align="right">Ruby 1.9.3</th>
+<th align="right">1.9.3 over 1.8.7*</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">multiply</td>
+<td align="right">1.98e+03</td>
+<td align="right">4.89e+03</td>
+<td align="right">2.47</td>
+</tr>
+<tr class="even">
+<td align="left">divide</td>
+<td align="right">2.45e+04</td>
+<td align="right">2.32e+04</td>
+<td align="right">0.95</td>
+</tr>
+<tr class="odd">
+<td align="left">gcd</td>
+<td align="right">2.23e+01</td>
+<td align="right">3.08e+01</td>
+<td align="right">1.38</td>
+</tr>
+<tr class="even">
+<td align="left">gcdext</td>
+<td align="right">6.41e+00</td>
+<td align="right">1.05e+01</td>
+<td align="right">1.64</td>
+</tr>
+<tr class="odd">
+<td align="left">[base]</td>
+<td align="right">8.34e+04</td>
+<td align="right">1.27e+03</td>
+<td align="right">1.52</td>
+</tr>
+<tr class="even">
+<td align="left">rsa</td>
+<td align="right">1.17e+02</td>
+<td align="right">1.45e+02</td>
+<td align="right">1.24</td>
+</tr>
+<tr class="odd">
+<td align="left">[app]</td>
+<td align="right">1.17e+02</td>
+<td align="right">1.45e+02</td>
+<td align="right">1.24</td>
+</tr>
+<tr class="even">
+<td align="left">[bench]</td>
+<td align="right">3.12e+02</td>
+<td align="right">4.29e+02</td>
+<td align="right">1.37</td>
+</tr>
+</tbody>
+</table>
+<p>* Calculated as \(\frac{1.9.3 \text{ score}}{1.8.7\text{ score}}\) so that 2.47 means &quot;2.47 times as fast&quot; or equivalently &quot;1.47 times faster.&quot;</p>
+<p>We can look at individual tests to see where 1.9.3 specifically improves over 1.8.7:</p>
+<ul>
+<li>Firstly, in the <code>multiply</code> test, 1.9.3 and 1.8.7 are actually neck-and-neck for most of the tests, until we get to multiplying &quot;very large&quot; numbers together. Multiplying a 131072-bit number by a 131072-bit number is ~5 times as fast in 1.9.3 vs 1.8.7. Multiplying two 2,097,152-bit numbers together is 22x as fast!</li>
+<li>Second, the reverse phenomenon happens with <code>gcd</code> and <code>gcdext</code>, where 1.9.3 outperforms 1.8.7 at 3.4x and 5.1x, respectively, when using 128-bit inputs. With 512-bit inputs and above, however, the speedup fades to nothing. This suggests that the algorithms used in <code>Bignum</code> do not change, but the overhead costs are lower in Ruby 1.9.3. One can understand that when GCDing smaller numbers, the overhead of looping, making method calls, etc. is a larger percentage of the work being done, but when GCDing larger numbers, the overhead dissolves into almost nothing.</li>
+</ul>
+<h2 id="gmp-gem-binary-operators-v-functional-operators">gmp gem: Binary Operators v Functional Operators</h2>
+<p>It is beneficial to look at the two different forms of methods sometimes offered: binary operators (such as <code>GMP::Z#+</code> which is used like <code>c = a + b</code>) and &quot;functional&quot; operators (such as <code>GMP::Z.add</code> which is used like <code>GMP::Z.add(c, a, b)</code>). At this time, only the <code>GMP::Z#*</code> binary operator is available as a functional operator (<code>GMP::Z.multiply</code>), which can change gears to a squaring algorithm if it detects that the operands are equal. (Squaring is thus faster than multiplication.) We can look at those results below:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Test Case</th>
+<th align="right">Bin Op</th>
+<th align="right">Functional</th>
+<th align="right">Functional over Bin Op</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">multiply(128)</td>
+<td align="right">9.30e+05</td>
+<td align="right">4.39e+06</td>
+<td align="right">4.72</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(512)</td>
+<td align="right">9.19e+05</td>
+<td align="right">3.10e+06</td>
+<td align="right">3.37</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(8192)</td>
+<td align="right">7.93e+04</td>
+<td align="right">9.24e+04</td>
+<td align="right">1.17</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(131072)</td>
+<td align="right">1.66e+03</td>
+<td align="right">1.75e+03</td>
+<td align="right">1.06</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(2097152)</td>
+<td align="right">6.24e+01</td>
+<td align="right">6.20e+01</td>
+<td align="right">0.99</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(128, 128)</td>
+<td align="right">9.57e+05</td>
+<td align="right">4.41e+06</td>
+<td align="right">4.61</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(512, 512)</td>
+<td align="right">8.40e+05</td>
+<td align="right">2.78e+06</td>
+<td align="right">3.31</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(8192, 8192)</td>
+<td align="right">5.44e+03</td>
+<td align="right">5.92e+04</td>
+<td align="right">1.09</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(131072, 131072)</td>
+<td align="right">1.20e+03</td>
+<td align="right">1.23e+03</td>
+<td align="right">1.02</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(2097152, 2097152)</td>
+<td align="right">4.08e+01</td>
+<td align="right">4.00e+01</td>
+<td align="right">0.98</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(15000, 10000)</td>
+<td align="right">2.95e+04</td>
+<td align="right">3.19e+04</td>
+<td align="right">1.08</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(20000, 10000)</td>
+<td align="right">2.32e+04</td>
+<td align="right">2.51e+04</td>
+<td align="right">1.08</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(30000, 10000)</td>
+<td align="right">1.54e+04</td>
+<td align="right">1.60e+04</td>
+<td align="right">1.04</td>
+</tr>
+</tbody>
+</table>
+<p>We can see the effects of allocating new <code>GMP::Z</code> objects every iteration of the benchmark loop. When we are squaring or multiplying &quot;small,&quot; 128-bit or 512-bit numbers, allocating objects and garbage collection can slow down the computation by three- or four-fold, if the computation is multiplying numbers (using <code>GMP::Z#*</code>) in a tight loop.</p>
+<p>Once we get to squaring (or multiplying) 8192-bit numbers, however, the time spent inside GMP becomes great enough, that garbage collection and object allocation fades into the background. Above this size, binary operators can be only 17% slower. When squaring 131072-bit numbers, or multiplying 10000-bit numbers, binary operators are 8%, or less, slower.</p>
+<h3 id="gnu-multiple-precision-arithmetic-library-without-ruby">GNU Multiple Precision Arithmetic Library, without Ruby</h3>
+<p>Here I present some raw benchmark results of GMP 5.0.5, using the original gmpbench 0.2 software. These tests do not involve the Ruby interpreter in any way.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Program</th>
+<th align="right">GMP 5.0.5</th>
+<th align="right">GMP 5.0.5, reduced</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">multiply(128, 128)</td>
+<td align="right">4.55e+07</td>
+<td align="right">4.55e+07</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(2097152, 2097152)</td>
+<td align="right">4.09e+01</td>
+<td align="right">4.09e+01</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(16777216, 262144)</td>
+<td align="right">9.97e+00</td>
+<td align="right">n/a</td>
+</tr>
+<tr class="even">
+<td align="left">multiply</td>
+<td align="right">2.15e+04</td>
+<td align="right">5.58e+04</td>
+</tr>
+<tr class="odd">
+<td align="left">divide(8192, 32)</td>
+<td align="right">7.23e+05</td>
+<td align="right">7.23e+05</td>
+</tr>
+<tr class="even">
+<td align="left">divide(16777216, 262144)</td>
+<td align="right">4.98e+00</td>
+<td align="right">n/a</td>
+</tr>
+<tr class="odd">
+<td align="left">divide</td>
+<td align="right">1.93e+04</td>
+<td align="right">2.77e+05</td>
+</tr>
+<tr class="even">
+<td align="left">gcd</td>
+<td align="right">3.68e+03</td>
+<td align="right">3.68e+03</td>
+</tr>
+<tr class="odd">
+<td align="left">gcdext</td>
+<td align="right">2.22e+03</td>
+<td align="right">2.22e+03</td>
+</tr>
+<tr class="even">
+<td align="left">[base]</td>
+<td align="right">1.06e+04</td>
+<td align="right">3.53e+04</td>
+</tr>
+<tr class="odd">
+<td align="left">rsa</td>
+<td align="right">2.68e+03</td>
+<td align="right">2.68e+03</td>
+</tr>
+<tr class="even">
+<td align="left">[app]</td>
+<td align="right">2.68e+03</td>
+<td align="right">2.68e+03</td>
+</tr>
+<tr class="odd">
+<td align="left">[bench]</td>
+<td align="right">5.33e+03</td>
+<td align="right">9.73e+03</td>
+</tr>
+</tbody>
+</table>
+<p>In both columns of results, the <code>pi</code> results have not been presented, as they cannot be compared to anything in Ruby, yet. In the second column, we also reduce the test by not including the <code>multiply</code> and <code>divide</code> tests that Ruby's Bignum algorithms cannot handle.</p>
+<p>These results have been included to primarily show the results of two tests that Ruby's Bignum is unable to compute: <code>multiply(16777216, 262144)</code> and <code>divide(16777216, 262144)</code>. Whereas GMP can multiply two 128-bit numbers together more than 45 million times per second, and even two 2097152-bit numbers more than 40 times per second, it can only multiply a 16777216-bit and a 262144-bit number about 10 times per second.</p>
+<p>At the same time, pure GMP works hard to divide one huge number by another: it can divide an 8192-bit by a 32-bit number more than 700,000 times per second, but only divide a 16777216-bit by a 262144-bit number about 5 times per second.</p>
+<p>One can also get a grasp of how why the <em>geometric</em> mean is important when computing the scores for, say, the <code>multiply</code> or the <code>divide</code> program. Removing the two slowest test cases from the <code>multiply</code> set raises the geometric mean from about 21,500 to about 55,800 multiplications per second. An arithmetic mean would produce scores that might be difficult to compare side-by-side.</p>
+<p>Ultimately, the reduced test cases change the overall benchmark score from about 5000 to about 10000. This shows why, ultimately, none of the test scores here should be compared with scores from the original, full gmpbench 0.2 suite. All of the scores analyzed in this document can only be used to compare <em>some</em> other scores also analyzed in this document.</p>
+<h3 id="gmp-v-gmp-gem-v-ruby-bignum">GMP v gmp gem v Ruby Bignum</h3>
+<p>Now that we have all of the required reduced test results, and the known limitations of Ruby's Bignum and the gmp gem's binary operators, we can do a proper comparison between raw GMP, the gmp gem, and Ruby's Bignum. First, a table with some summarized results, and no direct comparisons:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Program</th>
+<th align="right">GMP</th>
+<th align="right">gmp gem</th>
+<th align="right">Ruby Bignum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">multiply</td>
+<td align="right">5.58e+04</td>
+<td align="right">2.17e+04</td>
+<td align="right">4.89e+03</td>
+</tr>
+</tbody>
+</table>

@@ -4,6 +4,12 @@
 \usepackage{amssymb,amsmath}
 \usepackage{booktabs}
 \usepackage{ifxetex,ifluatex}
+
+% srawlins
+\usepackage{ctable}
+\usepackage{float}
+% /srawlins
+
 \usepackage{fixltx2e} % provides \textsubscript
 % use microtype if available
 \IfFileExists{microtype.sty}{\usepackage{microtype}}{}
