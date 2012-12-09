@@ -24,6 +24,7 @@ test/**/*.rbc
 test/*.log
 *.gem
 **/*.swp
+performance.aux
 performance.latex
 performance.log
 performance.out
