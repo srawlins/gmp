@@ -63,6 +63,7 @@ pre {
 <p>In order to run a set of benchmarks (a directory containing <code>multiply</code>, <code>runbench</code>, etc.), just use the command:</p>
 <pre><code>./runbench -n</code></pre>
 <p>Next to each test case, program, and category, a score will be printed, which is iterations per second. For program, category, and overall scores, this represents a weighted geometric mean, and so should just be thought of more like a &quot;score&quot; than an actual real-world metric.</p>
+<p></p>
 <h2 id="ruby-benchmarks">Ruby benchmarks</h2>
 <p>In addition to the above variations of the benchmark suite located in <code>benchmark/gmp</code>, there is one more variation of the benchmark suite that measure's Ruby's Bignum algorithms. This suite is located at <code>benchmark/ruby</code>.</p>
 <h3 id="new-bignum-methods">New <code>Bignum</code> methods</h3>
@@ -156,6 +157,7 @@ pre {
 <li>Firstly, in the <code>multiply</code> test, 1.9.3 and 1.8.7 are actually neck-and-neck for most of the tests, until we get to multiplying &quot;very large&quot; numbers together. Multiplying a 131072-bit number by a 131072-bit number is ~5 times as fast in 1.9.3 vs 1.8.7. Multiplying two 2,097,152-bit numbers together is 22x as fast!</li>
 <li>Second, the reverse phenomenon happens with <code>gcd</code> and <code>gcdext</code>, where 1.9.3 outperforms 1.8.7 at 3.4x and 5.1x, respectively, when using 128-bit inputs. With 512-bit inputs and above, however, the speedup fades to nothing. This suggests that the algorithms used in <code>Bignum</code> do not change, but the overhead costs are lower in Ruby 1.9.3. One can understand that when GCDing smaller numbers, the overhead of looping, making method calls, etc. is a larger percentage of the work being done, but when GCDing larger numbers, the overhead dissolves into almost nothing.</li>
 </ul>
+<p></p>
 <h2 id="gmp-gem-binary-operators-v-functional-operators">gmp gem: Binary Operators v Functional Operators</h2>
 <p>It is beneficial to look at the two different forms of methods sometimes offered: binary operators (such as <code>GMP::Z#+</code> which is used like <code>c = a + b</code>) and &quot;functional&quot; operators (such as <code>GMP::Z.add</code> which is used like <code>GMP::Z.add(c, a, b)</code>). At this time, only the <code>GMP::Z#*</code> binary operator is available as a functional operator (<code>GMP::Z.multiply</code>), which can change gears to a squaring algorithm if it detects that the operands are equal. (Squaring is thus faster than multiplication.) We can look at those results below:</p>
 <table>
@@ -250,6 +252,7 @@ pre {
 </table>
 <p>We can see the effects of allocating new <code>GMP::Z</code> objects every iteration of the benchmark loop. When we are squaring or multiplying &quot;small,&quot; 128-bit or 512-bit numbers, allocating objects and garbage collection can slow down the computation by three- or four-fold, if the computation is multiplying numbers (using <code>GMP::Z#*</code>) in a tight loop.</p>
 <p>Once we get to squaring (or multiplying) 8192-bit numbers, however, the time spent inside GMP becomes great enough, that garbage collection and object allocation fades into the background. Above this size, binary operators can be only 17% slower. When squaring 131072-bit numbers, or multiplying 10000-bit numbers, binary operators are 8%, or less, slower.</p>
+<p></p>
 <h3 id="gnu-multiple-precision-arithmetic-library-without-ruby">GNU Multiple Precision Arithmetic Library, without Ruby</h3>
 <p>Here I present some raw benchmark results of GMP 5.0.5, using the original gmpbench 0.2 software. These tests do not involve the Ruby interpreter in any way.</p>
 <table>
@@ -333,6 +336,7 @@ pre {
 <p>At the same time, pure GMP works hard to divide one huge number by another: it can divide an 8192-bit by a 32-bit number more than 700,000 times per second, but only divide a 16777216-bit by a 262144-bit number about 5 times per second.</p>
 <p>One can also get a grasp of how why the <em>geometric</em> mean is important when computing the scores for, say, the <code>multiply</code> or the <code>divide</code> program. Removing the two slowest test cases from the <code>multiply</code> set raises the geometric mean from about 21,500 to about 55,800 multiplications per second. An arithmetic mean would produce scores that might be difficult to compare side-by-side.</p>
 <p>Ultimately, the reduced test cases change the overall benchmark score from about 5000 to about 10000. This shows why, ultimately, none of the test scores here should be compared with scores from the original, full gmpbench 0.2 suite. All of the scores analyzed in this document can only be used to compare <em>some</em> other scores also analyzed in this document.</p>
+<p></p>
 <h3 id="gmp-v-gmp-gem-v-ruby-bignum">GMP v gmp gem v Ruby Bignum</h3>
 <p>Now that we have all of the required reduced test results, and the known limitations of Ruby's Bignum and the gmp gem's binary operators, we can do a proper comparison between raw GMP, the gmp gem, and Ruby's Bignum. First, a table with some summarized results, and no direct comparisons:</p>
 <table>
@@ -351,5 +355,409 @@ pre {
 <td align="right">2.17e+04</td>
 <td align="right">4.89e+03</td>
 </tr>
+<tr class="even">
+<td align="left">divide</td>
+<td align="right">2.77e+05</td>
+<td align="right">1.46e+05</td>
+<td align="right">2.32e+04</td>
+</tr>
+<tr class="odd">
+<td align="left">gcd</td>
+<td align="right">3.68e+03</td>
+<td align="right">2.94e+03</td>
+<td align="right">3.08e+01</td>
+</tr>
+<tr class="even">
+<td align="left">gcdext</td>
+<td align="right">2.22e+03</td>
+<td align="right">1.74e+03</td>
+<td align="right">1.05e+01</td>
+</tr>
+<tr class="odd">
+<td align="left">[base]</td>
+<td align="right">3.53e+04</td>
+<td align="right">1.93e+04</td>
+<td align="right">1.27e+03</td>
+</tr>
+<tr class="even">
+<td align="left">rsa</td>
+<td align="right">2.68e+03</td>
+<td align="right">2.59e+03</td>
+<td align="right">1.45e+02</td>
+</tr>
+<tr class="odd">
+<td align="left">[app]</td>
+<td align="right">2.68e+03</td>
+<td align="right">2.59e+03</td>
+<td align="right">1.45e+02</td>
+</tr>
+<tr class="even">
+<td align="left">[bench]</td>
+<td align="right">9.73e+03</td>
+<td align="right">7.06e+03</td>
+<td align="right">4.29e+02</td>
+</tr>
 </tbody>
 </table>
+<p>At a glance, it looks like GMP is consistently faster than the gmp gem, but they are on the same order of magnitude. We can also see that the gmp gem is consistently faster than Ruby's Bignum, by one or two orders of magnitude.</p>
+<p>Here are the specifics of these tests:</p>
+<ul>
+<li>The pure GMP tests used GMP 5.0.5, compiled with Apple's GCC 4.2.1.</li>
+<li>The gmp gem tests used the master branch of the gmp gem, compiled against GMP 5.0.5, on Ruby 1.9.3, compiled with Apple's GCC 4.2.1.</li>
+<li>The Ruby Bignum tests used Ruby 1.9.3, compiled with Apple's GCC 4.2.1</li>
+</ul>
+<p></p>
+<h3 id="gmp-gem-v-ruby-bignum">gmp gem v Ruby Bignum</h3>
+<p>Perhaps the most useful results to come out of the benchmark testing are the comparisons between Ruby's Bignum and the gmp gem. These results show the possible performance gains when refactoring Ruby code to use the gmp gem:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Test Case</th>
+<th align="right">Ruby Bignum</th>
+<th align="right">gmp gem</th>
+<th align="right">Bignum over gmp gem</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">multiply(128)</td>
+<td align="right">1.81e+06</td>
+<td align="right">1.06e+06</td>
+<td align="right">0.59</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(512)</td>
+<td align="right">8.48e+05</td>
+<td align="right">9.13e+05</td>
+<td align="right">1.08</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(2097152)</td>
+<td align="right">2.85e+00</td>
+<td align="right">6.24e+01</td>
+<td align="right">21.95</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(128,128)</td>
+<td align="right">1.73e+06</td>
+<td align="right">1.07e+06</td>
+<td align="right">0.62</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(512,512)</td>
+<td align="right">8.25e+05</td>
+<td align="right">8.77e+05</td>
+<td align="right">1.06</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(2097152,2097152)</td>
+<td align="right">2.29e+00</td>
+<td align="right">3.99e+01</td>
+<td align="right">17.48</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply</td>
+<td align="right">4.89e+03</td>
+<td align="right">2.17e+04</td>
+<td align="right">4.43</td>
+</tr>
+<tr class="even">
+<td align="left">divide(8192,32)</td>
+<td align="right">1.98e+05</td>
+<td align="right">3.90e+05</td>
+<td align="right">1.97</td>
+</tr>
+<tr class="odd">
+<td align="left">divide(8192,4096)</td>
+<td align="right">1.61e+04</td>
+<td align="right">1.41e+05</td>
+<td align="right">8.81</td>
+</tr>
+<tr class="even">
+<td align="left">divide(131072,65536)</td>
+<td align="right">6.60e+01</td>
+<td align="right">1.62e+03</td>
+<td align="right">24.47</td>
+</tr>
+<tr class="odd">
+<td align="left">divide</td>
+<td align="right">2.32e+04</td>
+<td align="right">1.46e+05</td>
+<td align="right">6.29</td>
+</tr>
+<tr class="even">
+<td align="left">gcd(128,128)</td>
+<td align="right">3.58e+04</td>
+<td align="right">7.53e+05</td>
+<td align="right">21.05</td>
+</tr>
+<tr class="odd">
+<td align="left">gcd(8192,8192)</td>
+<td align="right">6.65e+01</td>
+<td align="right">5.11e+03</td>
+<td align="right">76.83</td>
+</tr>
+<tr class="even">
+<td align="left">gcd(1048576,1048576)</td>
+<td align="right">8.17e-03</td>
+<td align="right">4.36e+00</td>
+<td align="right">532.98</td>
+</tr>
+<tr class="odd">
+<td align="left">gcd</td>
+<td align="right">3.08e+01</td>
+<td align="right">2.94e+03</td>
+<td align="right">95.38</td>
+</tr>
+<tr class="even">
+<td align="left">gcdext(128,128)</td>
+<td align="right">1.32e+04</td>
+<td align="right">3.44e+05</td>
+<td align="right">26.03</td>
+</tr>
+<tr class="odd">
+<td align="left">gcdext(8192,8192)</td>
+<td align="right">2.07e+01</td>
+<td align="right">3.16e+03</td>
+<td align="right">152.61</td>
+</tr>
+<tr class="even">
+<td align="left">gcdext(1048576,1048576)</td>
+<td align="right">3.23e-03</td>
+<td align="right">2.83e+00</td>
+<td align="right">876.51</td>
+</tr>
+<tr class="odd">
+<td align="left">gcdext</td>
+<td align="right">1.05e+01</td>
+<td align="right">1.74e+03</td>
+<td align="right">165.59</td>
+</tr>
+<tr class="even">
+<td align="left">[base]</td>
+<td align="right">1.27e+03</td>
+<td align="right">1.93e+04</td>
+<td align="right">15.20</td>
+</tr>
+<tr class="odd">
+<td align="left">rsa(512)</td>
+<td align="right">5.52e+02</td>
+<td align="right">1.37e+04</td>
+<td align="right">24.88</td>
+</tr>
+<tr class="even">
+<td align="left">rsa(2048)</td>
+<td align="right">3.48e+01</td>
+<td align="right">4.46e+02</td>
+<td align="right">12.80</td>
+</tr>
+<tr class="odd">
+<td align="left">rsa</td>
+<td align="right">1.45e+02</td>
+<td align="right">2.59e+03</td>
+<td align="right">17.84</td>
+</tr>
+<tr class="even">
+<td align="left">[app]</td>
+<td align="right">1.45e+02</td>
+<td align="right">2.59e+03</td>
+<td align="right">17.84</td>
+</tr>
+<tr class="odd">
+<td align="left">[bench]</td>
+<td align="right">4.29e+02</td>
+<td align="right">7.06e+03</td>
+<td align="right">16.47</td>
+</tr>
+</tbody>
+</table>
+<p>Let's analyze the multiplication results first. We can see that below a threshold of squaring (or multiplying together) 512-bit numbers, Ruby's Bignum implementation is actually faster than using the gmp gem. Beyond this threshold however, the gmp gem gets continually faster. The greatest improvement measured in multiplication is the case of squaring a 2097152-bit number, where the gmp gem is approximately 22 times as fast as Ruby's Bignum. The (geometric) average improvement is 4.43x. The reason for an improved speedup with larger numbers is of course attributable to asymptotically faster algorithms used in GMP.</p>
+<p>The division results show much the same thing. When dividing an 8192-bit by a 32-bit number, the gmp outperforms Ruby's Bignum at abouttwice as fast. Beyond that, the gmp grows to be up to 25 times as fast as Ruby's Bignum. This growing gap is again attributable to asymptotically faster algorithms in GMP.</p>
+<p>The GCD and GCD Extended cases show that the gmp gem is dramatically faster than Ruby's Bignum. However, this test is not actually benchmarking any GCD algorithms written into the Bignum C extension; it is using the GCD algorithms that were written in Ruby, for the benchmark tests. It is likely that a faster algorithm could be implemented in Ruby in a few hours, or that a faster implementation could be written in C, as a Bignum C extension function, in a few dozen hours. This is something that should be examined in the future.</p>
+<p>The RSA test results show the reverse phenomenon as all of the previous results: The gmp gem is an order of magnitude faster than pure Ruby in every test, but the Ruby Bignum implementation appears to be <em>catching up</em> to the gmp gem. This is currently not understood.</p>
+<p></p>
+<h3 id="pure-gmp-vs-gmp-gem">Pure GMP vs gmp gem</h3>
+<p>The other question that scientific computation experts will want answered is this: what is the cost of refactoring a GMP application into Ruby and the gmp gem? Let's compare those two:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Test Case</th>
+<th align="right">gmp gem</th>
+<th align="right">Pure GMP</th>
+<th align="right">GMP over gmp gem</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">multiply(128)</td>
+<td align="right">1.06e+06</td>
+<td align="right">4.56e+07</td>
+<td align="right">43.05</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(512)</td>
+<td align="right">9.13e+05</td>
+<td align="right">8.79e+06</td>
+<td align="right">9.63</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(2097152)</td>
+<td align="right">6.24e+01</td>
+<td align="right">6.38e+01</td>
+<td align="right">1.02</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(128,128)</td>
+<td align="right">1.07e+06</td>
+<td align="right">4.55e+07</td>
+<td align="right">42.50</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply(512,512)</td>
+<td align="right">8.77e+05</td>
+<td align="right">6.39e+06</td>
+<td align="right">7.29</td>
+</tr>
+<tr class="even">
+<td align="left">multiply(2097152,2097152)</td>
+<td align="right">3.99e+01</td>
+<td align="right">4.09e+01</td>
+<td align="right">1.02</td>
+</tr>
+<tr class="odd">
+<td align="left">multiply</td>
+<td align="right">2.17e+04</td>
+<td align="right">5.58e+04</td>
+<td align="right">2.57</td>
+</tr>
+<tr class="even">
+<td align="left">divide(8192,32)</td>
+<td align="right">3.90e+05</td>
+<td align="right">7.23e+05</td>
+<td align="right">1.86</td>
+</tr>
+<tr class="odd">
+<td align="left">divide(8192,4096)</td>
+<td align="right">1.41e+05</td>
+<td align="right">1.72e+05</td>
+<td align="right">1.22</td>
+</tr>
+<tr class="even">
+<td align="left">divide(131072,65536)</td>
+<td align="right">1.62e+03</td>
+<td align="right">1.64e+03</td>
+<td align="right">1.01</td>
+</tr>
+<tr class="odd">
+<td align="left">divide</td>
+<td align="right">1.46e+05</td>
+<td align="right">2.77e+05</td>
+<td align="right">1.90</td>
+</tr>
+<tr class="even">
+<td align="left">gcd(128,128)</td>
+<td align="right">7.53e+05</td>
+<td align="right">1.82e+06</td>
+<td align="right">2.42</td>
+</tr>
+<tr class="odd">
+<td align="left">gcd(8192,8192)</td>
+<td align="right">5.11e+03</td>
+<td align="right">5.16e+03</td>
+<td align="right">1.01</td>
+</tr>
+<tr class="even">
+<td align="left">gcd(1048576,1048576)</td>
+<td align="right">4.36e+00</td>
+<td align="right">4.37e+00</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="odd">
+<td align="left">gcd</td>
+<td align="right">2.94e+03</td>
+<td align="right">3.68e+03</td>
+<td align="right">1.25</td>
+</tr>
+<tr class="even">
+<td align="left">gcdext(128,128)</td>
+<td align="right">3.44e+05</td>
+<td align="right">8.40e+05</td>
+<td align="right">2.44</td>
+</tr>
+<tr class="odd">
+<td align="left">gcdext(8192,8192)</td>
+<td align="right">3.16e+03</td>
+<td align="right">3.20e+03</td>
+<td align="right">1.01</td>
+</tr>
+<tr class="even">
+<td align="left">gcdext(1048576,1048576)</td>
+<td align="right">2.83e+00</td>
+<td align="right">2.85e+00</td>
+<td align="right">1.01</td>
+</tr>
+<tr class="odd">
+<td align="left">gcdext</td>
+<td align="right">1.74e+03</td>
+<td align="right">2.22e+03</td>
+<td align="right">1.28</td>
+</tr>
+<tr class="even">
+<td align="left">[base]</td>
+<td align="right">1.93e+04</td>
+<td align="right">3.53e+04</td>
+<td align="right">1.83</td>
+</tr>
+<tr class="odd">
+<td align="left">rsa(512)</td>
+<td align="right">1.37e+04</td>
+<td align="right">1.49e+04</td>
+<td align="right">1.08</td>
+</tr>
+<tr class="even">
+<td align="left">rsa(2048)</td>
+<td align="right">4.46e+02</td>
+<td align="right">4.48e+02</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="odd">
+<td align="left">rsa</td>
+<td align="right">2.59e+03</td>
+<td align="right">2.68e+03</td>
+<td align="right">1.04</td>
+</tr>
+<tr class="even">
+<td align="left">[app]</td>
+<td align="right">2.59e+03</td>
+<td align="right">2.68e+03</td>
+<td align="right">1.04</td>
+</tr>
+<tr class="odd">
+<td align="left">[bench]</td>
+<td align="right">7.06e+03</td>
+<td align="right">9.73e+03</td>
+<td align="right">1.38</td>
+</tr>
+</tbody>
+</table>
+<p>These results are all very exciting for potential users of the gmp gem. All of the tests show the same trend: as the operand size grows, the performance of the gmp gem gets asymptotically closer to the GMP library itself. For example, when multiplying two 128-bit numbers together, the GMP library by itself is more than 40 times as fast as the gmp gem, but this gap shrinks to just 7x when multiplying two 512-bit numbers, and shrinks all the way to 1.02x when multiplying two 2097152-bit numbers.</p>
+<p>None of the other programs start off with such a gap between GMP performance and gmp gem performance as the multiplication tests. For example in calculating the GCD between two 128-bit numbers, GMP itself is only 2.4 times as fast as the gmp gem.</p>
+<p>These can all be easily explained as Ruby overhead. The Ruby VM and the Ruby garbage collector and all of the dynamic calls are responsible for the gap between GMP and the gmp gem. As the operands get larger, and more CPU time is spent inside the GMP algorithms, the overhead shrinks to almost nothing.</p>
+<p>The goal, of course, in future releases of the gmp gem, is to shrink that gap even more. Even though the gap when multiplying two 2097152-bit numbers is negligible, that does not help the developer who is multiplying two 128-bit numbers. Theoretically, improvements in a number of different arenas can help shrink the gap:</p>
+<ul>
+<li>Improvements in &quot;Matz's Ruby Interpreter&quot; may reduce the overhead.</li>
+<li>A different Ruby VM, such as Rubinius and JRuby, may reduce the overhead.</li>
+<li>Compiling Ruby and the gmp gem with an improved C compiler (such as a &quot;modern&quot; GCC, as opposed to GCC 4.2.1, or LLVM) may reduce the overhead.</li>
+<li>Coding improvements in the gmp gem may reduce the overhead. This could include reordered type-checking, and complete bindings for functional forms of theGMP methods.</li>
+</ul>
+<h2 id="future-plans">Future Plans</h2>
+<p>There is a lot of work to be done in comparing pure GMP, the gmp gem, and Ruby's Bignum. These plans are not listed in any particular order:</p>
+<ul>
+<li>The <code>pi</code> program (benchmark test) needs to be written, in order to compare more closely the gmp gem with GMP.</li>
+<li>Various Bignum methods need to be written more seriously, namely <code>gcd</code> and <code>gcdext</code>. These can use faster alrogithms, but still exist as Ruby code (see <a href="http://gmplib.org/manual/Greatest-Common-Divisor-Algorithms.html"><code class="url">http://gmplib.org/manual/Greatest-Common-Divisor-Algorithms.html</code></a>), or be reimplemented as Ruby C extensions. Also, <code>Bignum#[]=</code> should probably be reimplemented as a C extension. All of these would be candidates to contribute back to Ruby Core.</li>
+<li>The <code>rsa</code> results between Ruby's Bignum and gmp gem need to be understood.</li>
+<li>All of the tests represented in this report used software compiled with Apple's GCC 4.2.1, which is notoriously a bad choice to compile GMP with. Smoke tests should be conducted against a more modern GCC, such as GCC 4.6.x or GCC 4.7.x. Alternatively, LLVM should compile GMP and Ruby without much difficulty these days.</li>
+<li>There are new releases of both Ruby (2.0.0) and GMP (5.1.0) on the horizon. As previews, betas, and release candidates are made available, some benchmarking should be performed.</li>
+<li>Most (all?) alternative Ruby VMs in the wild today support Ruby C Extensions. These include: JRuby 1.6+, Rubinius 1.1+, MacRuby 0.7+, and MagLev. JRuby and Rubinius, at a minimum, have the real possibility of outperforming MRI, with their different garbage collectors and JIT compilers.</li>
+<li>The results listed in this report were all conducted on Mac OS X 10.6.8. While they should certainly translate <em>roughly</em> to other platforms, an effort should be made to test the gmp gem on other platforms. I don't expect any surprises on BSD or Linux, but coupling GMP, Ruby, and Windows together yield something different. Additionally, I think that testing GMP and Ruby on ARM (on Android, for example) sounds incredibly fun.</li>
+</ul>
