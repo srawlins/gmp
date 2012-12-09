@@ -448,6 +448,7 @@ Todo
 * beef up `r_gmpq_initialize`; I don't like to rely on `mpz_set_value`.
 * finish compile-results.rb
 * New in MPFR 3.1.0: mpfr_frexp, mpfr_grandom, mpfr_z_sub, divide-by-zero exception (?)
+* New in GMP 5.1.0: mpz_2fac_ui, mpz_mfac_uiui, mpz_primorial_ui
 
 The below are inherited from Tomasz. I will go through these and see which are
 still relevant, and which I understand.
@@ -458,16 +459,14 @@ still relevant, and which I understand.
 * check if `mpz_addmul_ui` would optimize some statements
 * some system that allows using denref and numref as normal ruby objects
 * takeover code that replaces all `Bignums` with `GMP::Z`
-* better bignum parser (how? `to_s` seems good to me.)
+* better bignum parser (crawling into the Bignum extension)
 * zero-copy method for strings generation
 * benchmarks against Python GMP and Perl GMP
-* `dup` methods
+* `dup` methods for GMP::Q and GMP::F
 * integrate `F` into system
 * should `Z.\[\]` bits be 0/1 or true/false, 0 is true, which might surprise users
 * `any2small_integer()`
-* check asm output, especially local memory efficiency  (uh... no)
-* it might be better to use 'register' for some local variables  (uh... no)
 * powm with negative exponents
-* check if different sorting of operatations gives better cache usage
+* check if different sorting of operations gives better cache usage
 * `GMP::\*` op `RubyFloat` and `RubyFloat` op `GMP::\*`
-* sort checks
+* benchmark different orderings of type checks

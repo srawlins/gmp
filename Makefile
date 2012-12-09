@@ -1,4 +1,8 @@
-.PHONY : performance
+.PHONY : performance manual
+
+manual: manual.tex
+	pdflatex manual.tex && pdflatex manual.tex
+
 performance: performance.pdf performance.html
 
 performance.latex: performance.md
