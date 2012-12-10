@@ -172,6 +172,39 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)        \
   return res;                                                \
 }
 
+#define DEFUN_INT_SINGLETON_UIUI(fname,mpz_fname)                     \
+static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg1, VALUE arg2)    \
+{                                                                     \
+  MP_INT *arg1_val_z, *res_val;                                       \
+  unsigned long arg1_val_ul, arg2_val_ul;                             \
+  VALUE res;                                                          \
+                                                                      \
+  (void)klass;                                                        \
+                                                                      \
+  if (FIXNUM_P (arg1)) {                                              \
+    arg1_val_ul = FIX2NUM (arg1);                                     \
+  } else if (GMPZ_P (arg1)) {                                         \
+    mpz_get_struct (arg1, arg1_val_z);                                \
+    if (!mpz_fits_ulong_p (arg1_val_z))                               \
+      rb_raise (rb_eRangeError, "first argument out of range");       \
+    arg1_val_ul = mpz_get_ui (arg1_val_z);                            \
+    if (arg1_val_ul == 0)                                             \
+      rb_raise (rb_eRangeError, "first argument out of range");       \
+  } else {                                                            \
+    typeerror_as (ZX, "first argument");                              \
+  }                                                                   \
+                                                                      \
+  if (FIXNUM_P (arg2)) {                                              \
+    arg2_val_ul = FIX2NUM (arg2);                                     \
+  } else {                                                            \
+    typeerror_as (X, "second argument");                              \
+  }                                                                   \
+                                                                      \
+  mpz_make_struct_init (res, res_val);                                \
+  mpz_fname (res_val, arg1_val_ul, arg2_val_ul);                      \
+  return res;                                                         \
+}
+
 #define DEFUN_INT_COND_P(fname,mpz_fname)       \
 static VALUE r_gmpz_##fname(VALUE self)         \
 {                                               \
@@ -2115,6 +2148,80 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
  * * GMP::Z.fac(4)  #=> 24
  */
 DEFUN_INT_SINGLETON_UI(fac, mpz_fac_ui)
+#if __GNU_MP_VERSION >= 5 && __GNU_MP_VERSION_MINOR >= 1  // 5.1.0 and newer
+
+/*
+ * Document-method: GMP::Z.2fac
+ *
+ * call-seq:
+ *   GMP::Z.send(:"2fac", n)
+ *   GMP::Z.double_fac(n)
+ *
+ * Returns <i>n!!</i>, the double factorial of _n_.
+ *
+ * Examples:
+ * * GMP::Z.double_fac(  0)  #=>    1
+ * * GMP::Z.double_fac(  1)  #=>    1
+ * * GMP::Z.double_fac(  2)  #=>    2
+ * * GMP::Z.double_fac(  3)  #=>    3
+ * * GMP::Z.double_fac(  4)  #=>    8
+ * * GMP::Z.double_fac(  5)  #=>   15
+ * * GMP::Z.double_fac(  6)  #=>   48
+ * * GMP::Z.double_fac(  7)  #=>  105
+ * * GMP::Z.double_fac(  8)  #=>  384
+ * * GMP::Z.double_fac(  9)  #=>  945
+ * * GMP::Z.double_fac( 10)  #=> 3840
+ * * GMP::Z.double_fac(100)
+ *     #=> 34243224702511976248246432895208185975118675053719198827915654463488000000000000
+ */
+DEFUN_INT_SINGLETON_UI(2fac,       mpz_2fac_ui)
+
+/*
+ * Document-method: GMP::Z.mfac
+ *
+ * call-seq:
+ *   GMP::Z.mfac(n)
+ *
+ * Returns <i>n!^(m)</i>, the m-multi-factorial of _n_.
+ *
+ * Examples:
+ * * GMP::Z.mfac(0,   3)  #=>    1
+ * * GMP::Z.mfac(1,   3)  #=>    1
+ * * GMP::Z.mfac(2,   3)  #=>    2
+ * * GMP::Z.mfac(3,   3)  #=>    3
+ * * GMP::Z.mfac(4,   3)  #=>    4
+ * * GMP::Z.mfac(5,   3)  #=>   10
+ * * GMP::Z.mfac(6,   3)  #=>   18
+ * * GMP::Z.mfac(7,   3)  #=>   28
+ * * GMP::Z.mfac(8,   3)  #=>   80
+ * * GMP::Z.mfac(9,   3)  #=>  162
+ * * GMP::Z.mfac(10,  3)  #=>  280
+ * * GMP::Z.mfac(11,  3)  #=>  880
+ * * GMP::Z.mfac(12,  3)  #=> 1944
+ */
+DEFUN_INT_SINGLETON_UIUI(mfac,     mpz_mfac_uiui)
+
+/*
+ * Document-method: GMP::Z.primorial
+ *
+ * call-seq:
+ *   GMP::Z.primorial(n)
+ *
+ * Returns the primorial _n_.
+ *
+ * Examples:
+ * * GMP::Z.primorial(0)  #=>   1
+ * * GMP::Z.primorial(1)  #=>   1
+ * * GMP::Z.primorial(2)  #=>   2
+ * * GMP::Z.primorial(3)  #=>   6
+ * * GMP::Z.primorial(4)  #=>   6
+ * * GMP::Z.primorial(5)  #=>  30
+ * * GMP::Z.primorial(6)  #=>  30
+ * * GMP::Z.primorial(7)  #=> 210
+ */
+DEFUN_INT_SINGLETON_UI(primorial,  mpz_primorial_ui)
+#endif
+
 /*
  * Document-method: GMP::Z.fib
  *
@@ -2132,7 +2239,8 @@ DEFUN_INT_SINGLETON_UI(fac, mpz_fac_ui)
  * * GMP::Z.fib(6)  #=>  8
  * * GMP::Z.fib(7)  #=> 13
  */
-DEFUN_INT_SINGLETON_UI(fib, mpz_fib_ui)
+DEFUN_INT_SINGLETON_UI(fib,    mpz_fib_ui)
+DEFUN_INT_SINGLETON_UI(lucnum, mpz_lucnum_ui)
 
 
 /**********************************************************************
@@ -2736,7 +2844,14 @@ void init_gmpz()
   rb_define_method(          cGMP_Z, "legendre",      r_gmpz_legendre,    1);
   rb_define_method(          cGMP_Z, "remove",        r_gmpz_remove,      1);
   rb_define_singleton_method(cGMP_Z, "fac",           r_gmpzsg_fac,       1);
+#if __GNU_MP_VERSION >= 5 && __GNU_MP_VERSION_MINOR >= 1  // 5.1.0 and newer
+  rb_define_singleton_method(cGMP_Z, "2fac",          r_gmpzsg_2fac,      1);
+  rb_define_singleton_method(cGMP_Z, "double_fac",    r_gmpzsg_2fac,      1);
+  rb_define_singleton_method(cGMP_Z, "mfac",          r_gmpzsg_mfac,      2);
+  rb_define_singleton_method(cGMP_Z, "primorial",     r_gmpzsg_primorial, 1);
+#endif
   rb_define_singleton_method(cGMP_Z, "fib",           r_gmpzsg_fib,       1);
+  rb_define_singleton_method(cGMP_Z, "lucnum",        r_gmpzsg_lucnum,    1);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "lcm",           r_gmpzsg_lcm,       3);
   rb_define_singleton_method(cGMP_Z, "nextprime",     r_gmpzsg_nextprime, 2);

@@ -230,6 +230,9 @@ Methods
       <=>,>=,>,<=,<            comparisions
     class methods of GMP::Z
       fac(n)                   factorial of n
+      2fac(n), double_fac(n)   double factorial of n
+      mfac(n)                  m-multi-factorial of n
+      primorial(n)             primorial of n
       fib(n)                   nth fibonacci number
       pow(n,m)                 n to mth power
     GMP::Z and GMP::Q
@@ -448,7 +451,7 @@ Todo
 * beef up `r_gmpq_initialize`; I don't like to rely on `mpz_set_value`.
 * finish compile-results.rb
 * New in MPFR 3.1.0: mpfr_frexp, mpfr_grandom, mpfr_z_sub, divide-by-zero exception (?)
-* New in GMP 5.1.0: mpz_2fac_ui, mpz_mfac_uiui, mpz_primorial_ui
+* benchmark different orderings of type checks
 
 The below are inherited from Tomasz. I will go through these and see which are
 still relevant, and which I understand.
@@ -469,4 +472,3 @@ still relevant, and which I understand.
 * powm with negative exponents
 * check if different sorting of operations gives better cache usage
 * `GMP::\*` op `RubyFloat` and `RubyFloat` op `GMP::\*`
-* benchmark different orderings of type checks
