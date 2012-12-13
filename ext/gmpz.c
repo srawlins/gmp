@@ -2054,7 +2054,7 @@ VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
   } else {
     typeerror_as(ZXB, "b");
   }
-  
+
   res_val = mpz_jacobi(a_val, b_val);
   if (free_a_val) { mpz_temp_free(a_val); }
   if (free_b_val) { mpz_temp_free(b_val); }
@@ -2554,6 +2554,25 @@ VALUE r_gmpz_popcount(VALUE self)
 
 /*
  * call-seq:
+ *   a.hamdist(b)
+ *
+ * If _a_ and _b_ are both >= 0 or both < 0, calculate the hamming distance between _a_ and _b_. If one operand is >= 0 and the other is less than 0, then return "infinity" (the largest possible `mp_bitcnt_t`.
+ * positive.
+ */
+VALUE r_gmpz_hamdist(VALUE self_val, VALUE b_val)
+{
+  MP_INT *self, *b;
+  mpz_get_struct (self_val, self);
+  mpz_get_struct (   b_val,    b);
+  if (! GMPZ_P (b_val)) {
+    typeerror_as (Z, "b");
+  }
+
+  return INT2FIX (mpz_hamdist(self, b));
+}
+
+/*
+ * call-seq:
  *   a.scan0(starting_bit)
  *
  * Scan _a_, starting from bit _starting_bit_, towards more significant bits, until the
@@ -2870,16 +2889,17 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "hash",    r_gmpz_hash, 0);
 
   // Integer Logic and Bit Fiddling
-  rb_define_method(cGMP_Z, "&",        r_gmpz_and, 1);
-  rb_define_method(cGMP_Z, "|",        r_gmpz_or, 1);
-  rb_define_method(cGMP_Z, "^",        r_gmpz_xor, 1);
-  rb_define_method(cGMP_Z, "com",      r_gmpz_com, 0);
+  rb_define_method(cGMP_Z, "&",        r_gmpz_and,      1);
+  rb_define_method(cGMP_Z, "|",        r_gmpz_or,       1);
+  rb_define_method(cGMP_Z, "^",        r_gmpz_xor,      1);
+  rb_define_method(cGMP_Z, "com",      r_gmpz_com,      0);
   rb_define_method(cGMP_Z, "com!",     r_gmpz_com_self, 0);
   rb_define_method(cGMP_Z, "popcount", r_gmpz_popcount, 0);
-  rb_define_method(cGMP_Z, "scan0",    r_gmpz_scan0, 1);
-  rb_define_method(cGMP_Z, "scan1",    r_gmpz_scan1, 1);
-  rb_define_method(cGMP_Z, "[]=",      r_gmpz_setbit, 2);
-  rb_define_method(cGMP_Z, "[]",       r_gmpz_getbit, 1);
+  rb_define_method(cGMP_Z, "hamdist",  r_gmpz_hamdist,  1);
+  rb_define_method(cGMP_Z, "scan0",    r_gmpz_scan0,    1);
+  rb_define_method(cGMP_Z, "scan1",    r_gmpz_scan1,    1);
+  rb_define_method(cGMP_Z, "[]=",      r_gmpz_setbit,   2);
+  rb_define_method(cGMP_Z, "[]",       r_gmpz_getbit,   1);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "com", r_gmpzsg_com, 2);
 

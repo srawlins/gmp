@@ -283,6 +283,7 @@ Methods
       legendre                 legendre symbol
       remove(n)                remove all occurences of factor n
       popcount                 the number of bits equal to 1
+      hamdist                  the hamming distance between two integers
       sizeinbase(b)            digits in base b
       size_in_bin              digits in binary
       size                     number of limbs
@@ -417,6 +418,12 @@ Tests can be run with:
 
 If you have the unit\_test gem installed, all tests should pass. Otherwise, one test may error. I imagine there is a bug in Ruby's built-in `Test::Unit` package that is fixed with the unit_test gem.
 
+You can also use the following shiny new rake tasks:
+
+    rake test
+    rake report
+    MPFR=no-mpfr rake report
+
 Known Issues
 ------------
 
@@ -443,7 +450,7 @@ Please see [performance](performance.md)
 Todo
 ----
 
-* `GMP::Z#to_d_2exp`, `#congruent?`, `#rootrem`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#hamdist`, `#combit`, `#fits_x?`
+* `GMP::Z#to_d_2exp`, `#congruent?`, `#rootrem`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#combit`, `#fits_x?`
 * `GMP::Q#to_s(base)`, `GMP::F#to_s(base)` (test it!)
 * benchmark pi
 * a butt-load of functional mappings. 47-ish sets.

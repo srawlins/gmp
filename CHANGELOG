@@ -1,3 +1,11 @@
+0.6.13:
+  * Added three new GMP::Z methods for GMP 5.1.x: GMP::Z#2fac
+    (GMP::Z#double_fac), GMP::Z#mfac, and GMP::Z#primorial
+  * Fixed a compilation bug when MPFR is not available.
+  * Fixed test bugs when MPFR is not available.
+  * Tweaked README documentation
+  * Added GMP::Z method: GMP::Z#hamdist, with minimal tests
+
 0.6.7:
   * Added 9th set of Functional Mappings: GMP::Z.divisible?
   * Added 11th set of Functional Mappings: GMP::Z.congruent?
