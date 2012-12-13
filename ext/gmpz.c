@@ -2001,7 +2001,7 @@ VALUE r_gmpz_jacobi(VALUE self, VALUE b)
 /*
  * call-seq:
  *   GMP::Z.jacobi(a, b)
- * 
+ *
  * Calculate the Jacobi symbol <i>(a/b)</i>. This is defined only for _b_ odd and
  * positive.
  */
@@ -2012,7 +2012,7 @@ VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
   int free_a_val = 0;
   int free_b_val = 0;
   (void)klass;
-  
+
   if (GMPZ_P(a)) {
     mpz_get_struct(a, a_val);
   } else if (FIXNUM_P(a)) {
@@ -2025,7 +2025,7 @@ VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
   } else {
     typeerror_as(ZXB, "a");
   }
-  
+
   if (GMPZ_P(b)) {
     mpz_get_struct(b, b_val);
     if (mpz_sgn(b_val) != 1)
