@@ -97,7 +97,7 @@ by me: gmp gem 0.5.47 on:
         GMP 5.0.1 (3.0.0)</td>
   </tr>
   <tr>
-    <td rowspan="4">Mac OS X 10.6.8 on x86_64 (64-bit)</td>
+    <td rowspan="3">Mac OS X 10.6.8 on x86_64 (64-bit)</td>
     <td>(MRI) Ruby 1.8.7</td>
     <td>GMP 4.3.2 (2.4.2)<br />
         GMP 5.0.5 (3.1.1)</td>
