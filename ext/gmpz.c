@@ -1,6 +1,7 @@
 #include <gmpz.h>
 #include <gmpq.h>
 #include <gmpf.h>
+#include <ruby/io.h>
 
 /*
  * Document-class: GMP::Z
@@ -2676,6 +2677,61 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
 
 
 /**********************************************************************
+ *    I/O of Integers                                                 *
+ **********************************************************************/
+
+/*
+ * call-seq:
+ *   a.out_raw(stream) #=> Fixnum
+ *
+ * Output _a_ on IO object _stream_, in raw binary format. The integer is
+ * written in a portable format, with 4 bytes of size information, and that
+ * many bytes of limbs. Both the size and the limbs are written in decreasing
+ * significance order (i.e., in big-endian).
+ *
+ * The output can be read with `GMP::Z.inp_raw`.
+ *
+ * Return the number of bytes written, or if an error occurred, return 0.
+ */
+VALUE r_gmpz_out_raw(VALUE self, VALUE stream)
+{
+  MP_INT *self_val;
+  FILE *fd;
+  mpz_get_struct(self, self_val);
+  if (TYPE (stream) != T_FILE) {
+    rb_raise (rb_eTypeError, "stream must be an IO.");
+  }
+  fd = rb_io_stdio_file (RFILE (stream)->fptr);
+  return INT2FIX (mpz_out_raw (fd, self_val));
+}
+
+/*
+ * call-seq:
+ *   GMP::Z.inp_raw(a, stream) #=> Fixnum
+ *
+ * Input from IO object _stream_ in the format written by `GMP::Z#out_raw`, and
+ * put the result in _a_. Return the number of bytes read, or if an error
+ * occurred, return 0.
+ */
+VALUE r_gmpzsg_inp_raw(VALUE klass, VALUE a_val, VALUE stream_val)
+{
+  MP_INT *a;
+  FILE *stream;
+  (void)klass;
+
+  if (! GMPZ_P(a_val))
+    typeerror_as(Z, "a");
+
+  if (TYPE (stream_val) != T_FILE)
+    rb_raise (rb_eTypeError, "stream must be an IO.");
+
+  mpz_get_struct(a_val, a);
+  stream = rb_io_stdio_file (RFILE (stream_val)->fptr);
+  return INT2FIX (mpz_inp_raw (a, stream));
+}
+
+
+/**********************************************************************
  *    Miscellaneous Integer Functions                                 *
  **********************************************************************/
 
@@ -2902,6 +2958,11 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "[]",       r_gmpz_getbit,   1);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "com", r_gmpzsg_com, 2);
+
+  // I/O of Integers
+  rb_define_method(cGMP_Z, "out_raw", r_gmpz_out_raw, 1);
+  // Functional Mapping
+  rb_define_singleton_method(cGMP_Z, "inp_raw", r_gmpzsg_inp_raw, 2);
 
   // Miscellaneous Integer Functions
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);

@@ -284,6 +284,8 @@ Methods
       remove(n)                remove all occurences of factor n
       popcount                 the number of bits equal to 1
       hamdist                  the hamming distance between two integers
+      out_raw                  output to IO object
+      inp_raw                  input from IO object
       sizeinbase(b)            digits in base b
       size_in_bin              digits in binary
       size                     number of limbs
