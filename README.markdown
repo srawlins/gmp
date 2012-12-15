@@ -286,6 +286,8 @@ Methods
       hamdist                  the hamming distance between two integers
       out_raw                  output to IO object
       inp_raw                  input from IO object
+      export                   export to a byte array (String)
+      import                   import from a byte array (String)
       sizeinbase(b)            digits in base b
       size_in_bin              digits in binary
       size                     number of limbs

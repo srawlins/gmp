@@ -2732,6 +2732,111 @@ VALUE r_gmpzsg_inp_raw(VALUE klass, VALUE a_val, VALUE stream_val)
 
 
 /**********************************************************************
+ *    Integer Import and Export                                       *
+ **********************************************************************/
+
+VALUE r_gmpzsg_import(int argc, VALUE *argv, VALUE klass)
+{
+  MP_INT *res;
+  VALUE string_val, order_val, endian_val, res_val;
+  char *string;
+  int order, endian;
+  size_t nails;
+  (void)klass;
+
+  nails = 0;
+
+  rb_scan_args (argc, argv, "12", &string_val, &order_val, &endian_val);
+
+  if (NIL_P (order_val))
+    order = -1;
+  else if (! FIXNUM_P (order_val))
+    typeerror_as (X, "order");
+  else
+    order = FIX2INT (order_val);
+
+  if (NIL_P (endian_val))
+    endian = 0;
+  else if (! FIXNUM_P (endian_val))
+    typeerror_as (X, "order");
+  else
+    endian = FIX2INT (endian_val);
+
+  mpz_make_struct(res_val, res);
+  mpz_init(res);
+
+  string = StringValuePtr (string_val);
+
+  mpz_import (res, RSTRING_LEN(string_val), order, sizeof(char), endian, nails, string);
+  return res_val;
+}
+
+/*
+ * call-seq:
+ *   a.export() #=> String
+ *
+ * Return a String with word data from _a_.
+ *
+ * The parameters specify the format of the data produced. Each word will be
+ * size bytes and order can be 1 for most significant word first or -1 for
+ * least significant first. Within each word endian can be 1 for most
+ * significant byte first, -1 for least significant first, or 0 for the native
+ * endianness of the host CPU. The most significant nails bits of each word are
+ * unused and set to zero, this can be 0 to produce full words.
+ *
+ * The number of words produced is written to *countp, or countp can be NULL to
+ * discard the count. rop must have enough space for the data, or if rop is
+ * NULL then a result array of the necessary size is allocated using the
+ * current GMP allocation function (see Custom Allocation). In either case the
+ * return value is the destination used, either rop or the allocated block.
+ *
+ * If op is non-zero then the most significant word produced will be non-zero.
+ * If op is zero then the count returned will be zero and nothing written to
+ * rop. If rop is NULL in this case, no block is allocated, just NULL is
+ * returned.
+ *
+ * The sign of op is ignored, just the absolute value is exported. An
+ * application can use mpz_sgn to get the sign and handle it as desired. (see
+ * Integer Comparisons)
+ *
+ * There are no data alignment restrictions on rop, any address is allowed.
+ */
+VALUE r_gmpz_export(int argc, VALUE *argv, VALUE self_val)
+{
+  MP_INT *self;
+  VALUE order_val, endian_val, res;
+  int order, endian;
+  size_t countp, nails;
+  char *string;
+
+  nails = 0;
+  mpz_get_struct(self_val, self);
+
+  rb_scan_args (argc, argv, "02", &order_val, &endian_val);
+
+  if (NIL_P (order_val))
+    order = -1;
+  else if (! FIXNUM_P (order_val))
+    typeerror_as (X, "order");
+  else
+    order = FIX2INT (order_val);
+
+  if (NIL_P (endian_val))
+    endian = 0;
+  else if (! FIXNUM_P (endian_val))
+    typeerror_as (X, "order");
+  else
+    endian = FIX2INT (endian_val);
+
+  string = mpz_export (NULL, &countp, order, sizeof(char), endian, nails, self);
+  res = rb_str_new (string, countp);
+  free (string);
+
+  return res;
+}
+
+
+/**********************************************************************
  *    Miscellaneous Integer Functions                                 *
  **********************************************************************/
 
@@ -2963,6 +3068,10 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "out_raw", r_gmpz_out_raw, 1);
   // Functional Mapping
   rb_define_singleton_method(cGMP_Z, "inp_raw", r_gmpzsg_inp_raw, 2);
+
+  // Integer Import and Export
+  rb_define_singleton_method(cGMP_Z, "import", r_gmpzsg_import, -1);
+  rb_define_method(cGMP_Z, "export", r_gmpz_export, -1);
 
   // Miscellaneous Integer Functions
   rb_define_method(cGMP_Z, "even?", r_gmpz_is_even, 0);
