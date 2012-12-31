@@ -250,6 +250,7 @@ Methods
       tmod,fmod,cmod           truncate, floor and ceil modulus
       >>                       shift right, floor
       divisible?(b)            true if divisible by b
+      congruent?(c,d)          true if congruent to c modulus d
       **                       power
       powmod                   power modulo
       \[\],\[\]=                   testing and setting bits (as booleans)
@@ -408,7 +409,7 @@ Documentation
 -------------
 
 * [This README](https://github.com/srawlins/gmp)
-* Loren Segal and the guys at RubyGems.org are badasses: [YARDoc](http://rubydoc.info/gems/gmp/frames).
+* Loren Segal and the guys at RubyGems.org are awesome: [YARDoc](http://rubydoc.info/gems/gmp/frames).
 * There should be a manual.pdf [here](https://github.com/srawlins/gmp/blob/master/manual.pdf). I spend waaay too much time working on this, but it looks very pretty.
 * [CHANGELOG](https://github.com/srawlins/gmp/blob/master/CHANGELOG)
 
@@ -454,7 +455,7 @@ Please see [performance](performance.md)
 Todo
 ----
 
-* `GMP::Z#to_d_2exp`, `#congruent?`, `#rootrem`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#combit`, `#fits_x?`
+* `GMP::Z#to_d_2exp`, `#rootrem`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#combit`, `#fits_x?`
 * `GMP::Q#to_s(base)`, `GMP::F#to_s(base)` (test it!)
 * benchmark pi
 * a butt-load of functional mappings. 47-ish sets.

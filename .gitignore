@@ -20,6 +20,7 @@ ext/*.o
 ext/*.so
 ext/*.dSYM
 ext/*.log
+ext/.rbx/
 **/*.rbc
 test/**/*.rbc
 test/*.log
@@ -30,3 +31,4 @@ performance.latex
 performance.log
 performance.out
 performance.toc
+.rbx/

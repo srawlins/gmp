@@ -32,7 +32,9 @@ require './tc_random'
 require './tc_hashes'
 require './tc_z_functional_mappings'
 
+require './gmp_tcong'
 require './gmp_tgcd'
+require './gmp_tlcm'
 require './gmp_tprintf'
 
 begin
