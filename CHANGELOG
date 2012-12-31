@@ -1,3 +1,9 @@
+0.6.19:
+  * Added GMP::Z#congruent? and tests
+
+0.6.17:
+  * Added GMP::Z#out_raw, GMP::Z.inp_raw
+
 0.6.13:
   * Added three new GMP::Z methods for GMP 5.1.x: GMP::Z#2fac
     (GMP::Z#double_fac), GMP::Z#mfac, and GMP::Z#primorial
