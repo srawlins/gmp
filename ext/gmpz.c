@@ -1502,7 +1502,7 @@ static VALUE r_gmpz_divisible(VALUE self, VALUE arg)
   MP_INT *self_val, *arg_val;
   int res;
   mpz_get_struct (self, self_val);
-  
+
   if (FIXNUM_P (arg) && FIX2NUM (arg) > 0) {
     mpz_temp_alloc(arg_val);
     mpz_init_set_ui(arg_val, FIX2NUM(arg));
@@ -1523,6 +1523,60 @@ static VALUE r_gmpz_divisible(VALUE self, VALUE arg)
     res = mpz_divisible_p (self_val, arg_val);
   } else {
     typeerror_as (ZXB, "argument");
+  }
+  return (res != 0) ? Qtrue : Qfalse;
+}
+
+/*
+ * call-seq:
+ *   n.congruent?(c, d)
+ *
+ * @since 0.6.19
+ *
+ * Returns true if _n_ is congruent to _c_ modulo _d_. _c_ and _d_ can be an instance any of the following:
+ * * GMP::Z
+ * * Fixnum
+ * * Bignum
+ */
+static VALUE r_gmpz_congruent(VALUE self_val, VALUE c_val, VALUE d_val)
+{
+  MP_INT *self, *c, *d;
+  int res, free_c, free_d;
+  mpz_get_struct (self_val, self);
+  free_c = free_d = 0;
+
+  if (FIXNUM_P (c_val) && FIX2NUM (c_val) > 0 &&
+      FIXNUM_P (d_val) && FIX2NUM (d_val) > 0) {
+    res = mpz_congruent_ui_p (self, FIX2NUM (c_val), FIX2NUM (d_val));
+  } else {
+    if (FIXNUM_P (c_val)) {
+      mpz_make_struct_init (c_val, c);
+      mpz_init_set_si (c, FIX2NUM (c_val));
+    } else if (BIGNUM_P (c_val)) {
+      mpz_temp_from_bignum (c, c_val);
+      free_c = 1;
+    } else if (GMPZ_P (c_val)) {
+      mpz_get_struct (c_val, c);
+    } else {
+      typeerror_as (ZXB, "c");
+    }
+
+    if (FIXNUM_P (d_val)) {
+      mpz_make_struct_init (d_val, d);
+      mpz_init_set_si (d, FIX2NUM (d_val));
+    } else if (BIGNUM_P (d_val)) {
+      mpz_temp_from_bignum (d, d_val);
+      free_d = 1;
+    } else if (GMPZ_P (d_val)) {
+      mpz_get_struct (d_val, d);
+    } else {
+      if (free_c) { mpz_temp_free (c); }
+      typeerror_as (ZXB, "d");
+    }
+
+    res = mpz_congruent_p (self, c, d);
+    if (free_c) { mpz_temp_free (c); }
+    if (free_d) { mpz_temp_free (d); }
   }
   return (res != 0) ? Qtrue : Qfalse;
 }
@@ -2982,6 +3036,7 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "cmod",         r_gmpz_cmod, 1);
   rb_define_method(cGMP_Z, "%",            r_gmpz_mod, 1);
   rb_define_method(cGMP_Z, "divisible?",   r_gmpz_divisible, 1);
+  rb_define_method(cGMP_Z, "congruent?",   r_gmpz_congruent, 2);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "divexact",    r_gmpzsg_divexact, 3);
   rb_define_singleton_method(cGMP_Z, "cdiv_q_2exp", r_gmpzsg_cdiv_q_2exp, 3);
