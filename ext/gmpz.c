@@ -2789,18 +2789,29 @@ VALUE r_gmpzsg_inp_raw(VALUE klass, VALUE a_val, VALUE stream_val)
  *    Integer Import and Export                                       *
  **********************************************************************/
 
+/*
+ * call-seq:
+ *   GMP::Z.import(str, order = -1) #=> GMP::Z
+ *
+ * Return a GMP::Z from a String, `str`.
+ *
+ * `order` can be 1 for most significant word first or -1 for least significant first.
+ *
+ * There is no sign taken from the data, the result will simply be a positive integer. An application can handle any sign itself, and apply it for instance with `GMP::Z#neg`.
+ */
 VALUE r_gmpzsg_import(int argc, VALUE *argv, VALUE klass)
 {
   MP_INT *res;
-  VALUE string_val, order_val, endian_val, res_val;
+  VALUE string_val, order_val, res_val;
   char *string;
   int order, endian;
   size_t nails;
   (void)klass;
 
+  endian = 0;
   nails = 0;
 
-  rb_scan_args (argc, argv, "12", &string_val, &order_val, &endian_val);
+  rb_scan_args (argc, argv, "11", &string_val, &order_val);
 
   if (NIL_P (order_val))
     order = -1;
@@ -2808,13 +2819,6 @@ VALUE r_gmpzsg_import(int argc, VALUE *argv, VALUE klass)
     typeerror_as (X, "order");
   else
     order = FIX2INT (order_val);
-
-  if (NIL_P (endian_val))
-    endian = 0;
-  else if (! FIXNUM_P (endian_val))
-    typeerror_as (X, "order");
-  else
-    endian = FIX2INT (endian_val);
 
   mpz_make_struct(res_val, res);
   mpz_init(res);
@@ -2827,14 +2831,12 @@ VALUE r_gmpzsg_import(int argc, VALUE *argv, VALUE klass)
 
 /*
  * call-seq:
- *   a.export(order = -1, endian = 0) #=> String
+ *   a.export(order = -1) #=> String
  *
  * Return a String with word data from _a_.
  *
- * The parameters specify the format of the data produced.  `order` can be 1
- * for most significant word first or -1 for least significant first. Within
- * each word endian can be 1 for most significant byte first, -1 for least
- * significant first, or 0 for the native endianness of the host CPU.
+ * `order` can be 1 for most significant word first or -1 for least significant
+ * first.
  *
  * If `a` is non-zero then the most significant word produced will be non-zero.
  * `GMP::Z(0).export` returns `""`.
@@ -2845,15 +2847,16 @@ VALUE r_gmpzsg_import(int argc, VALUE *argv, VALUE klass)
 VALUE r_gmpz_export(int argc, VALUE *argv, VALUE self_val)
 {
   MP_INT *self;
-  VALUE order_val, endian_val, res;
+  VALUE order_val, res;
   int order, endian;
   size_t countp, nails;
   char *string;
 
+  endian = 0;
   nails = 0;
   mpz_get_struct(self_val, self);
 
-  rb_scan_args (argc, argv, "02", &order_val, &endian_val);
+  rb_scan_args (argc, argv, "01", &order_val);
 
   if (NIL_P (order_val))
     order = -1;
@@ -2861,13 +2864,6 @@ VALUE r_gmpz_export(int argc, VALUE *argv, VALUE self_val)
     typeerror_as (X, "order");
   else
     order = FIX2INT (order_val);
-
-  if (NIL_P (endian_val))
-    endian = 0;
-  else if (! FIXNUM_P (endian_val))
-    typeerror_as (X, "order");
-  else
-    endian = FIX2INT (endian_val);
 
   string = mpz_export (NULL, &countp, order, sizeof(char), endian, nails, self);
   res = rb_str_new (string, countp);
