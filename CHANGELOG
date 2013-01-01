@@ -1,5 +1,6 @@
 0.6.19:
   * Added GMP::Z#congruent? and tests
+  * Added GMP::Z#export and GMP::Z.import and _minimal_ tests
 
 0.6.17:
   * Added GMP::Z#out_raw, GMP::Z.inp_raw
