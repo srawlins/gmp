@@ -2827,33 +2827,20 @@ VALUE r_gmpzsg_import(int argc, VALUE *argv, VALUE klass)
 
 /*
  * call-seq:
- *   a.export() #=> String
+ *   a.export(order = -1, endian = 0) #=> String
  *
  * Return a String with word data from _a_.
  *
- * The parameters specify the format of the data produced. Each word will be
- * size bytes and order can be 1 for most significant word first or -1 for
- * least significant first. Within each word endian can be 1 for most
- * significant byte first, -1 for least significant first, or 0 for the native
- * endianness of the host CPU. The most significant nails bits of each word are
- * unused and set to zero, this can be 0 to produce full words.
+ * The parameters specify the format of the data produced.  `order` can be 1
+ * for most significant word first or -1 for least significant first. Within
+ * each word endian can be 1 for most significant byte first, -1 for least
+ * significant first, or 0 for the native endianness of the host CPU.
  *
- * The number of words produced is written to *countp, or countp can be NULL to
- * discard the count. rop must have enough space for the data, or if rop is
- * NULL then a result array of the necessary size is allocated using the
- * current GMP allocation function (see Custom Allocation). In either case the
- * return value is the destination used, either rop or the allocated block.
+ * If `a` is non-zero then the most significant word produced will be non-zero.
+ * `GMP::Z(0).export` returns `""`.
  *
- * If op is non-zero then the most significant word produced will be non-zero.
- * If op is zero then the count returned will be zero and nothing written to
- * rop. If rop is NULL in this case, no block is allocated, just NULL is
- * returned.
- *
- * The sign of op is ignored, just the absolute value is exported. An
- * application can use mpz_sgn to get the sign and handle it as desired. (see
- * Integer Comparisons)
- *
- * There are no data alignment restrictions on rop, any address is allowed.
+ * The sign of _a_ is ignored, just the absolute value is exported. An
+ * application can use `GMP::Z#sgn` to get the sign and handle it as desired.
  */
 VALUE r_gmpz_export(int argc, VALUE *argv, VALUE self_val)
 {
