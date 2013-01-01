@@ -433,6 +433,7 @@ Known Issues
 ------------
 
 Don't call `GMP::RandState(:lc_2exp_size)`. Give a 2nd arg.
+
 Don't use multiple assignment (`a = b = GMP::Z(0)`) with functional mappings:
 
 ```ruby
@@ -462,7 +463,7 @@ Precision argument, and default_precision will be rounded up to whatever GMP thi
 Benchmarking
 ------------
 
-Please see [performance](performance.md)
+Please see [performance](https://github.com/srawlins/gmp/blob/master/performance.md) on GitHub.
 
 Todo
 ----
