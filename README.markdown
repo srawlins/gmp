@@ -434,16 +434,14 @@ Known Issues
 
 * Don't call `GMP::RandState(:lc_2exp_size)`. Give a 2nd arg.
 * Don't use multiple assignment (`a = b = GMP::Z(0)`) with functional mappings:
-  ```ruby
-  >> a = b = GMP::Z(0)
-  => 0
-  >> GMP::Z.mul(a, GMP::Z(2), GMP::Z(3))
-  => nil
-  >> a
-  => 6
-  >> b
-  => 6
-  ```
+        >> a = b = GMP::Z(0)
+        => 0
+        >> GMP::Z.mul(a, GMP::Z(2), GMP::Z(3))
+        => nil
+        >> a
+        => 6
+        >> b
+        => 6
 * JRuby has some interesting bugs and flickering tests. GMP::Z(GMP::GMP_NUMB_MAX) for example, blows up.
 
 Precision

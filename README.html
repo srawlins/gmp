@@ -441,16 +441,14 @@ MPFR=no-mpfr rake report
 <ul>
 <li>Don&#39;t call <code>GMP::RandState(:lc_2exp_size)</code>. Give a 2nd arg.</li>
 <li>Don&#39;t use multiple assignment (<code>a = b = GMP::Z(0)</code>) with functional mappings:
-<code>ruby
-&gt;&gt; a = b = GMP::Z(0)
-=&gt; 0
-&gt;&gt; GMP::Z.mul(a, GMP::Z(2), GMP::Z(3))
-=&gt; nil
-&gt;&gt; a
-=&gt; 6
-&gt;&gt; b
-=&gt; 6
-</code></li>
+    &gt;&gt; a = b = GMP::Z(0)
+    =&gt; 0
+    &gt;&gt; GMP::Z.mul(a, GMP::Z(2), GMP::Z(3))
+    =&gt; nil
+    &gt;&gt; a
+    =&gt; 6
+    &gt;&gt; b
+    =&gt; 6</li>
 <li>JRuby has some interesting bugs and flickering tests. GMP::Z(GMP::GMP<em>NUMB</em>MAX) for example, blows up.</li>
 </ul>
 
