@@ -2,7 +2,7 @@
 DEPENDENCIES_DIR = '/usr/local'
 
 task :clean do
-  sh "cd ext && make clean"
+  sh "cd ext && make clean; echo"
 end
 
 task :extconf => [:clean] do

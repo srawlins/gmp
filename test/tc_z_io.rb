@@ -1,6 +1,9 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 require 'fileutils'
 
+if RUBY_DESCRIPTION =~ /rubinius/ and RUBY_VERSION =~ /^1.8/
+  # Sorry charlie
+else
 class TC_Z_IO < Test::Unit::TestCase
   def setup
     @two_pow_100   = GMP::Z.pow(GMP::Z(2), 100)
@@ -47,4 +50,5 @@ class TC_Z_IO < Test::Unit::TestCase
     end
     FileUtils.rm('test_io_raw')
   end
+end
 end

@@ -29,9 +29,20 @@ unless have_macro('SIZEOF_INTPTR_T')
   check_sizeof('intptr_t')
 end
 
+# Need check for which ruby vm to see how to require various things
+if (begin; Rubinius; rescue NameError; end) != nil
+  $CFLAGS += ' -DRUBY_ENGINE=rbx'
+end
+
+if (begin; JRuby; rescue NameError; end) != nil
+  $CFLAGS += ' -DRUBY_ENGINE=jruby'
+end
+
+
 $CFLAGS += ' -Wall -W -O6 -g'
 if ok
   create_makefile('gmp')
 else
   raise "Unable to build, correct above errors and rerun"
 end
+

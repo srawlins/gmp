@@ -1,7 +1,10 @@
 #include <gmpz.h>
 #include <gmpq.h>
 #include <gmpf.h>
+
+#ifdef HAVE_RUBY_IO_H
 #include <ruby/io.h>
+#endif
 
 /*
  * Document-class: GMP::Z
@@ -2747,6 +2750,7 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
  *
  * Return the number of bytes written, or if an error occurred, return 0.
  */
+#ifdef HAVE_RUBY_IO_H
 VALUE r_gmpz_out_raw(VALUE self, VALUE stream)
 {
   MP_INT *self_val;
@@ -2783,6 +2787,7 @@ VALUE r_gmpzsg_inp_raw(VALUE klass, VALUE a_val, VALUE stream_val)
   stream = rb_io_stdio_file (RFILE (stream_val)->fptr);
   return INT2FIX (mpz_inp_raw (a, stream));
 }
+#endif
 
 
 /**********************************************************************
@@ -3103,9 +3108,11 @@ void init_gmpz()
   rb_define_singleton_method(cGMP_Z, "com", r_gmpzsg_com, 2);
 
   // I/O of Integers
+#ifdef HAVE_RUBY_IO_H
   rb_define_method(cGMP_Z, "out_raw", r_gmpz_out_raw, 1);
   // Functional Mapping
   rb_define_singleton_method(cGMP_Z, "inp_raw", r_gmpzsg_inp_raw, 2);
+#endif
 
   // Integer Import and Export
   rb_define_singleton_method(cGMP_Z, "import", r_gmpzsg_import, -1);
