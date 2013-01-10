@@ -26,7 +26,7 @@ end
 end
 
 unless have_macro('SIZEOF_INTPTR_T')
-  check_sizeof('intptr_t')
+  check_sizeof('intptr_t', 'ruby.h')
 end
 
 # Need check for which ruby vm to see how to require various things

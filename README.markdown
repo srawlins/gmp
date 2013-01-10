@@ -477,8 +477,6 @@ Todo
 * finish compile-results.rb
 * New in MPFR 3.1.0: mpfr_frexp, mpfr_grandom, mpfr_z_sub, divide-by-zero exception (?)
 * benchmark different orderings of type checks
-* `test/mpfr_tsqrt.rb` fails in Rubinius 1.8mode for some reason.
-* `GMP::Z(2**32)` (or greater than 32) resolves to 0 in Rubinius 1.8mode for some reason (seen in `test/tc_division.rb`, `test/tc_f_arithmetics_coersion.rb`, `test/tc_f_precision.rb`, `test/tc_q.rb`, and `test/tc_z_addmul.rb`).
 
 The below are inherited from Tomasz. I will go through these and see which are
 still relevant, and which I understand.
