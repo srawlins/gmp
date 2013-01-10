@@ -45,7 +45,7 @@ namespace :dependencies do
 end
 
 def gmp_opt
-  version = ENV['GMP'] || '5.0.5'
+  version = ENV['GMP'] || '5.1.0'
   '--with-gmp-dir='+File.join(DEPENDENCIES_DIR, "gmp-#{version}")
 end
 
