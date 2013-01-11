@@ -33,7 +33,7 @@ unless RUBY_VERSION =~ /^1.8/
       assert(fmt.size < MAX_OUTPUT)
       got = GMP.sprintf(fmt, *args)
 
-      assert_equal(want, got, "GMP.sprintf() generates correct output.")
+      assert_equal(want, got, "GMP.sprintf(#{fmt}, #{args.join(', ')}) generates correct output.")
     end
 
     def check_one(want, fmt, *args)

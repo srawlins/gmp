@@ -168,7 +168,7 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
     r_mpf_set_z(self_val, arg_val_z);
   } else if (FLOAT_P(arg)) {
     mpfr_set_d(self_val, NUM2DBL(arg), __gmp_default_rounding_mode);
-  } else if (FIXNUM_P(arg)) {
+  } else if (TYPE (arg) == T_FIXNUM) {
     mpf_set_si(self_val, FIX2NUM(arg));
   } else if (STRING_P(arg)) {
     result = mpfr_set_str(self_val, StringValuePtr(arg), 10, __gmp_default_rounding_mode);

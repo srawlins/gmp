@@ -1,7 +1,8 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 require 'fileutils'
 
-if RUBY_DESCRIPTION =~ /rubinius/ and RUBY_VERSION =~ /^1.8/
+if (RUBY_DESCRIPTION =~ /rubinius/i and RUBY_VERSION =~ /^1.8/) ||
+   (RUBY_DESCRIPTION =~ /jruby/i)
   # Sorry charlie
 else
 class TC_Z_IO < Test::Unit::TestCase

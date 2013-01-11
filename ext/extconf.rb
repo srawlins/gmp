@@ -31,11 +31,11 @@ end
 
 # Need check for which ruby vm to see how to require various things
 if (begin; Rubinius; rescue NameError; end) != nil
-  $CFLAGS += ' -DRUBY_ENGINE=rbx'
+  $CFLAGS += ' -DRUBY_ENGINE_RBX'
 end
 
 if (begin; JRuby; rescue NameError; end) != nil
-  $CFLAGS += ' -DRUBY_ENGINE=jruby'
+  $CFLAGS += ' -DRUBY_ENGINE_JRUBY'
 end
 
 

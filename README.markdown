@@ -477,6 +477,8 @@ Todo
 * finish compile-results.rb
 * New in MPFR 3.1.0: mpfr_frexp, mpfr_grandom, mpfr_z_sub, divide-by-zero exception (?)
 * benchmark different orderings of type checks
+* JRuby doesn't like some MPFR stuff, specifically sqrt tests fail.
+* Rubinius in 1.9 mode fails a sprintf test in a minor way.
 
 The below are inherited from Tomasz. I will go through these and see which are
 still relevant, and which I understand.
