@@ -10,6 +10,7 @@ benchmark/res*
 benchmark/gmp/**/RES-*
 benchmark/gmp/**/*.txt
 benchmark/ruby/RES-*
+benchmark/rubyext/RES-*
 benchmark/**/*.txt
 doc/**/*
 doc

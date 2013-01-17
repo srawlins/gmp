@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require '../../ext/gmp'
+#require './ruby-enhancements'
+require './bignumext'
+
+m = ARGV[0].to_i
+n = ARGV[1].to_i
+
+x = rand(2**m)
+y = rand(2**n)
+
+print "Calibrating CPU speed..."
+STDOUT.flush
+t = GMP::time { z = x.gcdes(y) }
+puts "done"
+
+iterations = (1 + (1e4 / t)).to_i
+
+print "Calculating the gcd of a %i-bit number and a %i-bit number %i times..." % [m, n, iterations]
+STDOUT.flush
+
+t0 = GMP::cputime
+iterations.times do
+  z = x.gcdes(y)
+end
+ti = GMP::cputime - t0
+
+puts "done!"
+ops_per_sec = 1000.0 * iterations / ti
+f = 100.0
+decimals = 0
+while true
+  decimals += 1
+  break if ops_per_sec > f
+  f = f * 0.1
+end
+
+puts "RESULT: %#{decimals}f operations per second\n" % ops_per_sec
