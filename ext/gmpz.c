@@ -1716,6 +1716,45 @@ VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
  */
 DEFUN_INT_F_UL(root,mpz_root,"root number")
 
+
+/*
+ * Document-method: rootrem
+ *
+ * call-seq:
+ *   a.rootrem(b)
+ *
+ * Returns the truncated integer part of the <i>b</i>th root of _a_, and the remainder, _a - root**b_.
+ */
+static VALUE r_gmpz_rootrem(VALUE self_val, VALUE exp_val)
+{
+  MP_INT *self, *root, *rem;
+  VALUE root_val, rem_val, ary;
+  unsigned long exp;
+
+  if (FIXNUM_P(exp_val)) {
+    if (FIX2NUM(exp_val) < 0)
+      rb_raise(rb_eRangeError, "root number out of range");
+    exp = FIX2NUM(exp_val);
+  } else if (GMPZ_P(exp_val)) {
+    mpz_get_struct(exp_val, root);
+    if (!mpz_fits_ulong_p(root))
+      rb_raise(rb_eRangeError, "root number out of range");
+    exp = mpz_get_ui(root);
+    if (exp_val == 0)
+      rb_raise(rb_eRangeError, "root number out of range");
+  } else {
+    typeerror_as(ZX, "root number");
+  }
+
+  mpz_make_struct_init(root_val, root);
+  mpz_make_struct_init(rem_val, rem);
+  mpz_get_struct(self_val, self);
+  mpz_rootrem(root, rem, self, exp);
+
+  ary = rb_ary_new3 (2, root_val, rem_val);
+  return ary;
+}
+
 /*
  * Document-method: sqrt
  *
@@ -3050,12 +3089,13 @@ void init_gmpz()
   rb_define_method(cGMP_Z,           "powmod", r_gmpz_powm, 2);
 
   // Integer Roots
-  rb_define_method(cGMP_Z, "root",    r_gmpz_root, 1);
-  rb_define_method(cGMP_Z, "sqrt",    r_gmpz_sqrt, 0);
+  rb_define_method(cGMP_Z, "root",    r_gmpz_root,      1);
+  rb_define_method(cGMP_Z, "rootrem", r_gmpz_rootrem,   1);
+  rb_define_method(cGMP_Z, "sqrt",    r_gmpz_sqrt,      0);
   rb_define_method(cGMP_Z, "sqrt!",   r_gmpz_sqrt_self, 0);
-  rb_define_method(cGMP_Z, "sqrtrem", r_gmpz_sqrtrem, 0);
+  rb_define_method(cGMP_Z, "sqrtrem", r_gmpz_sqrtrem,   0);
   rb_define_method(cGMP_Z, "square?", r_gmpz_is_square, 0);
-  rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power, 0);
+  rb_define_method(cGMP_Z, "power?",  r_gmpz_is_power,  0);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "sqrt", r_gmpzsg_sqrt, 2);
 

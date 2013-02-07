@@ -37,6 +37,7 @@ require './gmp_tcong'
 require './gmp_tgcd'
 require './gmp_tlcm'
 require './gmp_tprintf'
+require './gmp_troot'
 
 begin
   GMP::MPFR_VERSION

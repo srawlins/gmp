@@ -46,6 +46,12 @@ end
 
 def gmp_opt
   version = ENV['GMP'] || '5.1.0'
+  directory = File.join(DEPENDENCIES_DIR, "gmp-#{version}")
+  if ! File.exist? directory
+    puts "========================================"
+    puts "==  Warning: target GMP installation directory does not exist: #{directory}"
+    puts "========================================"
+  end
   '--with-gmp-dir='+File.join(DEPENDENCIES_DIR, "gmp-#{version}")
 end
 
