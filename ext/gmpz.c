@@ -2285,7 +2285,7 @@ DEFUN_INT_SINGLETON_UI(2fac,       mpz_2fac_ui)
  * Document-method: GMP::Z.mfac
  *
  * call-seq:
- *   GMP::Z.mfac(n)
+ *   GMP::Z.mfac(n, m)
  *
  * Returns <i>n!^(m)</i>, the m-multi-factorial of _n_.
  *
@@ -2312,7 +2312,7 @@ DEFUN_INT_SINGLETON_UIUI(mfac,     mpz_mfac_uiui)
  * call-seq:
  *   GMP::Z.primorial(n)
  *
- * Returns the primorial _n_.
+ * Returns the primorial of _n_.
  *
  * Examples:
  * * GMP::Z.primorial(0)  #=>   1
