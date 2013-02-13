@@ -271,8 +271,9 @@ Methods
       square?                  is perfect square
       sqrt                     square root
       sqrt!                    change the object into its square root
-      sqrtrem                  square root, remainder
+      sqrtrem                  square root, with remainder
       root(n)                  nth root
+      rootrem(n)               nth root, with remainder
       probab_prime?            0 if composite, 1 if probably prime, 2 if
                                certainly prime
       nextprime                next *probable* prime
@@ -405,6 +406,37 @@ Here's a fun list of all of the functional mappings written so far:
       .neg          .nextprime    .sqrt         .sub          .submul       .tdiv_q_2exp
       .tdiv_r_2exp
 
+Method Tables
+-------------
+
+The following is organized in the same categories as in the GMP and MPFR manuals.
+
+### Integer Functions
+
+#### Assigning Integers
+
+<table>
+  <tr>
+    <th>GMP Function</th><th>GMP::Z method</th>
+  </tr>
+  <tr>
+    <td>`mpz_swap`</td><td>`GMP::Z#swap`</td>
+  </tr>
+</table>
+
+#### Assigning Integers
+
+<table>
+  <tr>
+    <th>GMP Function</th><th>GMP::Z method</th>
+  </tr>
+  <tr>
+    <td>`mpz_get_ui`<br />
+        `mpz_get_si</td><td>`GMP::Z#to_i`</td>
+    <td>`mpz_get_d`</td><td>`GMP::Z#to_d`</td>
+  </tr>
+</table>
+
 Documentation
 -------------
 
@@ -468,7 +500,7 @@ Please see [performance](https://github.com/srawlins/gmp/blob/master/performance
 Todo
 ----
 
-* `GMP::Z#to_d_2exp`, `#rootrem`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#combit`, `#fits_x?`
+* `GMP::Z#to_d_2exp`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#combit`, `#fits_x?`
 * `GMP::Q#to_s(base)`, `GMP::F#to_s(base)` (test it!)
 * benchmark pi
 * a butt-load of functional mappings. 47-ish sets.
@@ -476,7 +508,6 @@ Todo
 * beef up `r_gmpq_initialize`; I don't like to rely on `mpz_set_value`.
 * finish compile-results.rb
 * New in MPFR 3.1.0: mpfr_frexp, mpfr_grandom, mpfr_z_sub, divide-by-zero exception (?)
-* benchmark different orderings of type checks
 * JRuby doesn't like some MPFR stuff, specifically sqrt tests fail.
 * Rubinius in 1.9 mode fails a sprintf test in a minor way.
 
@@ -485,7 +516,6 @@ still relevant, and which I understand.
 
 * `mpz_fits_*` and 31 vs. 32 integer variables
 * fix all sign issues (don't know what these are)
-* `to_s` vs. `inspect`
 * check if `mpz_addmul_ui` would optimize some statements
 * some system that allows using denref and numref as normal ruby objects
 * takeover code that replaces all `Bignums` with `GMP::Z`
