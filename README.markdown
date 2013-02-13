@@ -425,9 +425,10 @@ The following is organized in the same categories as in the GMP and MPFR manuals
 <table>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_get_ui<br />
-          mpz_get_si</td>  <td>GMP::Z#to_i</td></tr>
-  <tr><td>mpz_get_d</td>   <td>GMP::Z#to_d</td></tr>
-  <tr><td>mpz_get_str</td> <td>GMP::Z#to_s</td></tr>
+          mpz_get_si</td>      <td>GMP::Z#to_i</td></tr>
+  <tr><td>mpz_get_d</td>       <td>GMP::Z#to_d</td></tr>
+  <tr><td>mpz_get_d_2exp</td>  <td><em>not implemented yet</em></td></tr>
+  <tr><td>mpz_get_str</td>     <td>GMP::Z#to_s</td></tr>
 </table>
 
 #### Integer Arithmetic
@@ -435,12 +436,24 @@ The following is organized in the same categories as in the GMP and MPFR manuals
 <table>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_add<br />
-          mpz_add_ui</td>  <td>GMP::Z#+<br />
-                               GMP::Z#add! (destructive method)</td></tr>
+          mpz_add_ui</td>               <td>GMP::Z#+<br />
+                                            GMP::Z#add! (destructive method)<br />
+                                            GMP::Z.add (in-place singleton method)</td></tr>
   <tr><td>mpz_sub<br />
           mpz_sub_ui<br />
-          mpz_ui_sub</td>  <td>GMP::Z#-<br />
-                               GMP::Z#sub! (destructive method)</td></tr>
+          mpz_ui_sub (never used)</td>  <td>GMP::Z#-<br />
+                                            GMP::Z#sub! (destructive method)<br />
+                                            GMP::Z.sub (in-place singleton method)</td></tr>
+  <tr><td>mpz_mul<br />
+          mpz_mul_si<br />
+          mpz_mul_ui</td>               <td>GMP::Z#*<br />
+                                            GMP::Z.mul (in-place singleton method)</td></tr>
+  <tr><td>mpz_addmul<br />
+          mpz_addmul_ui</td>            <td>GMP::Z#addmul! (destructive method)<br />
+                                            GMP::Z.addmul (in-place singleton method)</td></tr>
+  <tr><td>mpz_submul<br />
+          mpz_submul_ui</td>            <td>GMP::Z#submul! (destructive method)<br />
+                                            GMP::Z.submul (in-place singleton method)</td></tr>
 </table>
 
 Documentation
@@ -522,6 +535,7 @@ still relevant, and which I understand.
 
 * `mpz_fits_*` and 31 vs. 32 integer variables
 * fix all sign issues (don't know what these are)
+* check if `mpz_mul_ui` would optimize `GMP::Z#*`
 * check if `mpz_addmul_ui` would optimize some statements
 * some system that allows using denref and numref as normal ruby objects
 * takeover code that replaces all `Bignums` with `GMP::Z`

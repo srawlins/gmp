@@ -1101,6 +1101,7 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
     mpz_mul(res_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
+    /* TODO: use mpz_mul_ui */
     mpz_mul_si(res_val, self_val, FIX2NUM(arg));
   } else if (GMPQ_P(arg)) {
     return r_gmpq_mul(arg, self);
