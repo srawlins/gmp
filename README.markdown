@@ -416,25 +416,31 @@ The following is organized in the same categories as in the GMP and MPFR manuals
 #### Assigning Integers
 
 <table>
-  <tr>
-    <th>GMP Function</th><th>GMP::Z method</th>
-  </tr>
-  <tr>
-    <td>`mpz_swap`</td><td>`GMP::Z#swap`</td>
-  </tr>
+  <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
+  <tr><td>mpz_swap</td><td>GMP::Z#swap</td></tr>
 </table>
 
-#### Assigning Integers
+#### Converting Integers
 
 <table>
-  <tr>
-    <th>GMP Function</th><th>GMP::Z method</th>
-  </tr>
-  <tr>
-    <td>`mpz_get_ui`<br />
-        `mpz_get_si</td><td>`GMP::Z#to_i`</td>
-    <td>`mpz_get_d`</td><td>`GMP::Z#to_d`</td>
-  </tr>
+  <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
+  <tr><td>mpz_get_ui<br />
+          mpz_get_si</td>  <td>GMP::Z#to_i</td></tr>
+  <tr><td>mpz_get_d</td>   <td>GMP::Z#to_d</td></tr>
+  <tr><td>mpz_get_str</td> <td>GMP::Z#to_s</td></tr>
+</table>
+
+#### Integer Arithmetic
+
+<table>
+  <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
+  <tr><td>mpz_add<br />
+          mpz_add_ui</td>  <td>GMP::Z#+<br />
+                               GMP::Z#add! (destructive method)</td></tr>
+  <tr><td>mpz_sub<br />
+          mpz_sub_ui<br />
+          mpz_ui_sub</td>  <td>GMP::Z#-<br />
+                               GMP::Z#sub! (destructive method)</td></tr>
 </table>
 
 Documentation
