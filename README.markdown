@@ -413,15 +413,12 @@ The following is organized in the same categories as in the GMP and MPFR manuals
 
 ### Integer Functions
 
-#### Assigning Integers
-
 <table>
+  <tr><th colspan="2"><h4>Assigning Integers</h4></th></tr>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_swap</td><td>GMP::Z#swap</td></tr>
-</table>
 
-<table>
-  <tr><th colspan="2">Converting Integers</th></tr>
+  <tr><th colspan="2"><h4>Converting Integers</h4></th></tr>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_get_ui<br />
           mpz_get_si</td>      <td>GMP::Z#to_i</td></tr>
@@ -429,7 +426,7 @@ The following is organized in the same categories as in the GMP and MPFR manuals
   <tr><td>mpz_get_d_2exp</td>  <td><em>not implemented yet</em></td></tr>
   <tr><td>mpz_get_str</td>     <td>GMP::Z#to_s</td></tr>
 
-  <tr><th colspan="2">Integer Arithmetic</th></tr>
+  <tr><th colspan="2"><h4>Integer Arithmetic</h4></th></tr>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_add<br />
           mpz_add_ui</td>               <td>GMP::Z#+<br />
@@ -458,7 +455,14 @@ The following is organized in the same categories as in the GMP and MPFR manuals
                                             GMP::Z#abs! (destructive method)<br />
                                             GMP::Z.abs (in-place singleton method)</td></tr>
 
-  <tr><th colspan="2">Integer Division</th></tr>
+  <tr><th colspan="2"><h4>Integer Division</h4></th></tr>
+  <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
+  <tr><td>mpz_cdiv_q<br />
+          mpz_cdiv_q_ui</td>            <td>GMP::Z#cdiv</td></tr>
+  <tr><td>mpz_fdiv_q<br />
+          mpz_fdiv_q_ui</td>            <td>GMP::Z#fdiv</td></tr>
+  <tr><td>mpz_tdiv_q<br />
+          mpz_tdiv_q_ui</td>            <td>GMP::Z#tdiv</td></tr>
 </table>
 
 Documentation
