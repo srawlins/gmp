@@ -224,7 +224,7 @@ Methods
       -@                       negation
       neg!                     in-place negation
       abs                      absolute value
-      asb!                     in-place absolute value
+      abs!                     in-place absolute value
       coerce                   promotion of arguments
       ==                       equality test
       <=>,>=,>,<=,<            comparisions
@@ -420,20 +420,16 @@ The following is organized in the same categories as in the GMP and MPFR manuals
   <tr><td>mpz_swap</td><td>GMP::Z#swap</td></tr>
 </table>
 
-#### Converting Integers
-
 <table>
+  <tr><th colspan="2">Converting Integers</th></tr>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_get_ui<br />
           mpz_get_si</td>      <td>GMP::Z#to_i</td></tr>
   <tr><td>mpz_get_d</td>       <td>GMP::Z#to_d</td></tr>
   <tr><td>mpz_get_d_2exp</td>  <td><em>not implemented yet</em></td></tr>
   <tr><td>mpz_get_str</td>     <td>GMP::Z#to_s</td></tr>
-</table>
 
-#### Integer Arithmetic
-
-<table>
+  <tr><th colspan="2">Integer Arithmetic</th></tr>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_add<br />
           mpz_add_ui</td>               <td>GMP::Z#+<br />
@@ -446,7 +442,7 @@ The following is organized in the same categories as in the GMP and MPFR manuals
                                             GMP::Z.sub (in-place singleton method)</td></tr>
   <tr><td>mpz_mul<br />
           mpz_mul_si<br />
-          mpz_mul_ui</td>               <td>GMP::Z#*<br />
+          mpz_mul_ui (not used yet)</td><td>GMP::Z#*<br />
                                             GMP::Z.mul (in-place singleton method)</td></tr>
   <tr><td>mpz_addmul<br />
           mpz_addmul_ui</td>            <td>GMP::Z#addmul! (destructive method)<br />
@@ -454,6 +450,15 @@ The following is organized in the same categories as in the GMP and MPFR manuals
   <tr><td>mpz_submul<br />
           mpz_submul_ui</td>            <td>GMP::Z#submul! (destructive method)<br />
                                             GMP::Z.submul (in-place singleton method)</td></tr>
+  <tr><td>mpz_mul_2exp</td>             <td>GMP::Z.mul_2exp (in-place singleton method)</td></tr>
+  <tr><td>mpz_neg</td>                  <td>GMP::Z@-<br />
+                                            GMP::Z#neg! (destructive method)<br />
+                                            GMP::Z.neg (in-place singleton method)</td></tr>
+  <tr><td>mpz_abs</td>                  <td>GMP::Z#abs<br />
+                                            GMP::Z#abs! (destructive method)<br />
+                                            GMP::Z.abs (in-place singleton method)</td></tr>
+
+  <tr><th colspan="2">Integer Division</th></tr>
 </table>
 
 Documentation
