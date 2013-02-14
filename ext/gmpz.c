@@ -1294,6 +1294,12 @@ DEFUN_INT2INT(abs, mpz_abs)
  * * GMP::Q
  * * GMP::F
  * * Bignum
+ *
+ * If _b_ is a GMP::Z, Fixnum, GMP::Q, or Bignum, then no division is actually
+ * performed. Instead, we simply construct a new GMP::Q number, using _a_ and
+ * _b_ as the numerator and denominator (not exactly true for the GMP::Q case).
+ *
+ * If _b_ is a GMP::F, then the result is calculated via `mpf_div`.
  */
 VALUE r_gmpz_div(VALUE self, VALUE arg)
 {

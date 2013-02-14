@@ -418,7 +418,8 @@ The following is organized in the same categories as in the GMP and MPFR manuals
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_swap</td><td>GMP::Z#swap</td></tr>
 
-  <tr><th colspan="2"><h4>Converting Integers</h4></th></tr>
+  <tr><th colspan="2"><h4>Converting Integers</h4>
+                      4 C functions mapped to 3 Rb methods; 1 unmapped C function</th></tr>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_get_ui<br />
           mpz_get_si</td>      <td>GMP::Z#to_i</td></tr>
@@ -459,10 +460,46 @@ The following is organized in the same categories as in the GMP and MPFR manuals
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_cdiv_q<br />
           mpz_cdiv_q_ui</td>            <td>GMP::Z#cdiv</td></tr>
+  <tr><td>mpz_cdiv_r<br />
+          mpz_cdiv_r_ui</td>            <td>GMP::Z#cmod</td></tr>
+  <tr><td>mpz_cdiv_qr<br />
+          mpz_cdiv_qr_ui</td>           <td><em>not implemented yet</em></td></tr>
+  <tr><td>mpz_cdiv_ui</td>              <td><em>not implemented yet</em></td></tr>
+  <tr><td>mpz_cdiv_q_2exp<br />
+          mpz_cdiv_r_2exp</td>          <td>GMP::Z.cdiv_q_2exp (in-place singleton method)<br />
+                                            GMP::Z.cdiv_r_2exp (in-place singleton method)</td></tr>
   <tr><td>mpz_fdiv_q<br />
           mpz_fdiv_q_ui</td>            <td>GMP::Z#fdiv</td></tr>
+  <tr><td>mpz_fdiv_r<br />
+          mpz_fdiv_r_ui</td>            <td>GMP::Z#fmod</td></tr>
+  <tr><td>mpz_fdiv_qr<br />
+          mpz_fdiv_qr_ui</td>           <td><em>not implemented yet</em></td></tr>
+  <tr><td>mpz_fdiv_ui</td>              <td><em>not implemented yet</em></td></tr>
+  <tr><td>mpz_fdiv_q_2exp<br />
+          mpz_fdiv_r_2exp</td>          <td>GMP::Z.fdiv_q_2exp (in-place singleton method)<br />
+                                            GMP::Z.fdiv_r_2exp (in-place singleton method)</td></tr>
   <tr><td>mpz_tdiv_q<br />
           mpz_tdiv_q_ui</td>            <td>GMP::Z#tdiv</td></tr>
+  <tr><td>mpz_tdiv_r<br />
+          mpz_tdiv_r_ui</td>            <td>GMP::Z#tmod</td></tr>
+  <tr><td>mpz_tdiv_qr<br />
+          mpz_tdiv_qr_ui</td>           <td><em>not implemented yet</em></td></tr>
+  <tr><td>mpz_tdiv_ui</td>              <td><em>not implemented yet</em></td></tr>
+  <tr><td>mpz_tdiv_q_2exp<br />
+          mpz_tdiv_r_2exp</td>          <td>GMP::Z.tdiv_q_2exp (in-place singleton method)<br />
+                                            GMP::Z.tdiv_r_2exp (in-place singleton method)</td></tr>
+  <tr><td>mpz_mod<br />
+          mpz_mod_ui</td>               <td>GMP::Z#mod</td></tr>
+  <tr><td>mpz_divexact<br />
+          mpz_divexact_ui</td>          <td>GMP::Z.divexact (in-place singleton method)</td></tr>
+  <tr><td>mpz_divisible_p<br />
+          mpz_divisible_ui_p</td>       <td>GMP::Z#divisible?<br />
+                                            GMP::Z.divisible? (in-place singleton method)</td></tr>
+  <tr><td>mpz_divisible_2exp_p</td>     <td><em>not implemented yet</em></td></tr>
+  <tr><td>mpz_congruent_p<br />
+          mpz_congruent_ui_p</td>       <td>GMP::Z#congruent?<br />
+                                            GMP::Z.congruent? (in-place singleton method)</td></tr>
+  <tr><td>mpz_congruent_2exp_p</td>     <td><em>not implemented yet</em></td></tr>
 </table>
 
 Documentation
@@ -481,13 +518,20 @@ Tests can be run with:
     cd test
     ruby unit_tests.rb
 
-If you have the unit\_test gem installed, all tests should pass. Otherwise, one test may error. I imagine there is a bug in Ruby's built-in `Test::Unit` package that is fixed with the unit_test gem.
+If you have the unit\_test gem installed, all tests should pass. Otherwise, one
+test may error. I imagine there is a bug in Ruby's built-in `Test::Unit`
+package that is fixed with the unit_test gem.
 
 You can also use the following shiny new rake tasks:
 
     rake test
     rake report
     MPFR=no-mpfr rake report
+
+You can also run tests from an individual file with:
+
+    cd test
+    ruby some_test_file.rb
 
 Known Issues
 ------------
@@ -535,6 +579,7 @@ Todo
 * investigate possible memory leaks when using `GMP::Q(22/7)` for example
 * beef up `r_gmpq_initialize`; I don't like to rely on `mpz_set_value`.
 * finish compile-results.rb
+* check if `mpz_mul_ui` would optimize `GMP::Z#*`
 * New in MPFR 3.1.0: mpfr_frexp, mpfr_grandom, mpfr_z_sub, divide-by-zero exception (?)
 * JRuby doesn't like some MPFR stuff, specifically sqrt tests fail.
 * Rubinius in 1.9 mode fails a sprintf test in a minor way.
@@ -543,8 +588,6 @@ The below are inherited from Tomasz. I will go through these and see which are
 still relevant, and which I understand.
 
 * `mpz_fits_*` and 31 vs. 32 integer variables
-* fix all sign issues (don't know what these are)
-* check if `mpz_mul_ui` would optimize `GMP::Z#*`
 * check if `mpz_addmul_ui` would optimize some statements
 * some system that allows using denref and numref as normal ruby objects
 * takeover code that replaces all `Bignums` with `GMP::Z`
