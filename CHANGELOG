@@ -1,3 +1,6 @@
+0.6.31:
+  * Added GMP::Z#rootrem and tests
+
 0.6.19:
   * Added GMP::Z#congruent? and tests
   * Added GMP::Z#export and GMP::Z.import and _minimal_ tests

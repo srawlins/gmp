@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name = "gmp"
-  s.version = "0.6.19"
+  s.version = "0.6.31"
   s.authors = ["Tomasz Wegrzanowski", "srawlins"]
-  s.date = "2012-12-31"
+  s.date = "2013-02-06"
   s.description = "gmp - providing Ruby bindings to the GMP library."
   s.email = ["Tomasz.Wegrzanowski@gmail.com", "sam.rawlins@gmail.com"]
 
@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.files += Dir["test/*.rb"] + ["test/README"] + Dir["test/test_unit/*.rb"]
   s.files += Dir["benchmark/*"]
   s.files += ["CHANGELOG", "INSTALL", "README.html", "README.markdown", "manual.pdf", "manual.tex", "FEATURES.html"] +
-    ["performance.md", "performance.html", "performance.pdf"]
+    ["performance.2012.md", "performance.2012.html", "performance.2012.pdf"]
 end
