@@ -1,0 +1,1 @@
+sed 's/[ ]*GMPbench:[ ]*//' |sed 's/[ ]*GMPbench.[a-z]*.[a-z]*([0-9,]*)[ ]*/,,,/' |sed 's/[ ]*GMPbench.[a-z]*\.[a-z]*[ ]*/,,/' |sed 's/[ ]*GMPbench.[a-z]*[ ]*/,/' |sed 's/Program.*//' |sed 's/Category.*//'
