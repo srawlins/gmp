@@ -9,8 +9,11 @@ benchmark/gexpr.exe
 benchmark/res*
 benchmark/gmp/**/RES-*
 benchmark/gmp/**/*.txt
+benchmark/gmp/**/gexpr
 benchmark/ruby/RES-*
+benchmark/ruby/gexpr
 benchmark/rubyext/RES-*
+benchmark/rubyext/gexpr
 benchmark/**/*.txt
 doc/**/*
 doc
