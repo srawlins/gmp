@@ -27,6 +27,7 @@ test/**/*.rbc
 test/*.log
 *.gem
 **/*.swp
+**/.~lock*
 performance.aux
 performance.latex
 performance.log

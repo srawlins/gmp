@@ -1,6 +1,12 @@
 #! /bin/bash
 source ~/.rvm/scripts/rvm
 
+function out {
+  echo "========================================"
+  echo "$*"
+  echo "========================================"
+}
+
 if [[ $1 == --help ]]; then
   echo "ccmt.sh [--no-mpfr] [rvm-ruby] [gmp-number] [mpfr-number]"
   exit 1
@@ -15,6 +21,7 @@ if [[ $1 == --* ]]; then
 fi
 
 if [ $# -gt 0 ]; then
+  out "rvm use $1"
   rvm use $1
   if [ $? -ne 0 ]; then
     echo "ERROR: rvm doesn't like \"$1\". Quitting."
@@ -30,13 +37,17 @@ if [ $# -gt 2 ]; then
   mpfr_dir="--with-mpfr-dir=/usr/local/mpfr-$3"
 fi
 
+out "make clean"
 make clean
+
+out "ruby extconf.rb $extconf_opts $gmp_dir $mpfr_dir"
 ruby extconf.rb $extconf_opts $gmp_dir $mpfr_dir
 if [ $? -ne 0 ]; then
   echo "ERROR: ruby extconf.rb didn't work so hot. Quitting."
   exit 2
 fi
 
+out make
 make
 if [ $? -ne 0 ]; then
   echo "ERROR: make didn't work so hot. Quitting."
@@ -55,5 +66,3 @@ if [ -z `echo "$extconf_opts" | grep "no-mpfr"` ]; then
 else
   echo "MPFR:   --no-mpfr"
 fi
-
-

@@ -2,6 +2,10 @@
 
 require 'mkmf'
 
+# Workaround for Ruby bug #8074, introduced in Ruby 2.0.0, fixed in Ruby 2.1.0
+# https://bugs.ruby-lang.org/issues/8074
+@libdir_basename = "lib"
+
 dir_config('gmp')
 dir_config('mpfr')
 
