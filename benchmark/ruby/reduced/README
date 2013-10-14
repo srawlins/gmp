@@ -1,0 +1,75 @@
+GMPbench
+
+Copyright 2003, 2008 Free Software Foundation, Inc.
+
+This file is part of GMPbench.
+
+GMPbench is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3 of the License, or (at your option)
+any later version.
+
+GMPbench is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License along
+with the GMPbench.  If not, see http://www.gnu.org/licenses/.
+
+
+For this version of GMPbench, there are just 6 parts:
+
+	[Multiply large numbers]
+	base.multiply (weight 1)
+
+	[Divide numbers of different sizes]
+	base.divide (weight 1)
+
+	[Compute the greatest common divisor]
+	base.gcd (weight 0.5)
+
+	[Compute the extended greatest common divisor]
+	base.gcdext (weight 0.5)
+
+	[Compute the square root]
+	base.sqrt (weight 0.5)
+
+	[Compute the nth root]
+	base.root (weight 0.5)
+
+	[Run the RSA encryption algorithm]
+	app.rsa (weight 1)
+
+	[Compute digits of Pi]
+	app.pi (weight 1)
+
+
+Result scores are computed as a weighted geometric mean.  Please use the included
+script runbench for running the benchmarks and computing benchmark scores.
+
+Guidelines:
+
+  1. If benchmark code is changed, results are invalid and should not be
+     reported as GMPbench results.  Compilation parameters may be changed,
+     as long as the same parameters are used for all GMP source files and
+     for all benchmark files.
+  2. If GMP source is changed, results should not be reported as GMPbench
+     results unless the following three conditions are met:
+     A. It is clearly stated that GMP was changed when reporting results.
+     B. The changes are generic and reasonable and not specifically targeted
+	towards improving some aspect specifically exercised by the benchmark
+	suite.
+     C. All rights to the changes are assigned to the Free Software
+	Foundation prior to publication of the benchmark results.
+  3. As long as these rules are followed, results may be freely used.
+     Please also report results to the GMP developer's mailing list
+     gmp-devel@swox.com.
+  4. When reporting results, this data should be included:
+     A. Machine type and model
+     B. CPU type and clock frequency
+     C. GMP version used
+     D. List of modifications as permitted above
+     E. Compiler and compiler version used
+     F. Compiler options used
+  5. The benchmark suite is believed to be compatible with GMP 4.1 or later.
