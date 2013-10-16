@@ -1,55 +1,55 @@
 #!/usr/bin/env ruby
 
-#require './test_helper'
+DIR = File.expand_path(File.dirname(__FILE__))
 
-require './tc_constants'
-require './tc_division'
-require './tc_f_precision'
-require './tc_f_arithmetics_coersion'
-require './tc_f_to_s'
-require './tc_z'
-require './tc_z_basic'
-require './tc_z_addmul'
-require './tc_z_submul'
-require './tc_z_logic'
-require './tc_z_exponentiation'
-require './tc_z_export_import'
-require './tc_z_hamdist'
-require './tc_z_io'
-require './tc_z_to_dis'
-require './tc_z_shifts_last_bits'
-require './tc_z_jac_leg_rem'
-require './tc_z_gcd_lcm_invert'
-require './tc_q'
-require './tc_q_basic'
-require './tc_cmp'
-require './tc_zerodivisionexceptions'
-require './tc_sgn_neg_abs'
-require './tc_fib_fac_nextprime'
-require './tc_swap'
-require './tc_floor_ceil_truncate'
-require './tc_logical_roots'
-require './tc_random'
-require './tc_hashes'
-require './tc_z_functional_mappings'
+require File.join(DIR, 'tc_constants')
+require File.join(DIR, 'tc_division')
+require File.join(DIR, 'tc_f_precision')
+require File.join(DIR, 'tc_f_arithmetics_coersion')
+require File.join(DIR, 'tc_f_to_s')
+require File.join(DIR, 'tc_z')
+require File.join(DIR, 'tc_z_basic')
+require File.join(DIR, 'tc_z_addmul')
+require File.join(DIR, 'tc_z_submul')
+require File.join(DIR, 'tc_z_logic')
+require File.join(DIR, 'tc_z_exponentiation')
+require File.join(DIR, 'tc_z_export_import')
+require File.join(DIR, 'tc_z_hamdist')
+require File.join(DIR, 'tc_z_io')
+require File.join(DIR, 'tc_z_to_dis')
+require File.join(DIR, 'tc_z_shifts_last_bits')
+require File.join(DIR, 'tc_z_jac_leg_rem')
+require File.join(DIR, 'tc_z_gcd_lcm_invert')
+require File.join(DIR, 'tc_q')
+require File.join(DIR, 'tc_q_basic')
+require File.join(DIR, 'tc_cmp')
+require File.join(DIR, 'tc_zerodivisionexceptions')
+require File.join(DIR, 'tc_sgn_neg_abs')
+require File.join(DIR, 'tc_fib_fac_nextprime')
+require File.join(DIR, 'tc_swap')
+require File.join(DIR, 'tc_floor_ceil_truncate')
+require File.join(DIR, 'tc_logical_roots')
+require File.join(DIR, 'tc_random')
+require File.join(DIR, 'tc_hashes')
+require File.join(DIR, 'tc_z_functional_mappings')
 
-require './gmp_tcong'
-require './gmp_tgcd'
-require './gmp_tlcm'
-require './gmp_tprintf'
-require './gmp_troot'
+require File.join(DIR, 'gmp_tcong')
+require File.join(DIR, 'gmp_tgcd')
+require File.join(DIR, 'gmp_tlcm')
+require File.join(DIR, 'gmp_tprintf')
+require File.join(DIR, 'gmp_troot')
 
 begin
   GMP::MPFR_VERSION
-  require './tc_mpfr_constants'
-  require './tc_mpfr_integer'
-  require './tc_mpfr_random'
-  require './tc_mpfr_functions'
-  require './tc_mpfr_rounding'
-  require './mpfr_tcbrt'
-  require './mpfr_tisnan'
-  require './mpfr_trec_sqrt'
-  require './mpfr_tsqrt'
+  require File.join(DIR, 'tc_mpfr_constants')
+  require File.join(DIR, 'tc_mpfr_integer')
+  require File.join(DIR, 'tc_mpfr_random')
+  require File.join(DIR, 'tc_mpfr_functions')
+  require File.join(DIR, 'tc_mpfr_rounding')
+  require File.join(DIR, 'mpfr_tcbrt')
+  require File.join(DIR, 'mpfr_tisnan')
+  require File.join(DIR, 'mpfr_trec_sqrt')
+  require File.join(DIR, 'mpfr_tsqrt')
 rescue
 
 end

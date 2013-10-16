@@ -54,9 +54,7 @@ if [ $? -ne 0 ]; then
   exit 3
 fi
 
-cd ../test
-ruby unit_tests.rb
-cd ../ext
+ruby ../test/unit_tests.rb
 
 echo "RUBY:   `ruby -v`"
 echo "GMP:    `ruby -r './gmp' -e \"puts GMP::GMP_VERSION\"`"
