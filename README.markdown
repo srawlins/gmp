@@ -419,7 +419,7 @@ The following is organized in the same categories as in the GMP and MPFR manuals
   <tr><td>mpz_swap</td><td>GMP::Z#swap</td></tr>
 
   <tr><th colspan="2"><h4>Converting Integers</h4>
-                      4 C functions mapped to 3 Rb methods; 1 unmapped C function</th></tr>
+                      4x C functions mapped to 3x Ruby methods; 1x unmapped C function</th></tr>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_get_ui<br />
           mpz_get_si</td>      <td>GMP::Z#to_i</td></tr>
@@ -427,7 +427,8 @@ The following is organized in the same categories as in the GMP and MPFR manuals
   <tr><td>mpz_get_d_2exp</td>  <td><em>not implemented yet</em></td></tr>
   <tr><td>mpz_get_str</td>     <td>GMP::Z#to_s</td></tr>
 
-  <tr><th colspan="2"><h4>Integer Arithmetic</h4></th></tr>
+  <tr><th colspan="2"><h4>Integer Arithmetic</h4>
+                      12x C functions mapped to 19x Ruby methods; 2x unmapped C functions</th></tr>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_add<br />
           mpz_add_ui</td>               <td>GMP::Z#+<br />
@@ -456,7 +457,8 @@ The following is organized in the same categories as in the GMP and MPFR manuals
                                             GMP::Z#abs! (destructive method)<br />
                                             GMP::Z.abs (in-place singleton method)</td></tr>
 
-  <tr><th colspan="2"><h4>Integer Division</h4></th></tr>
+  <tr><th colspan="2"><h4>Integer Division</h4>
+                      26x C functions mapped to 18x Ruby methods; 11x unmapped C functions</th></tr>
   <tr><th>GMP Function</th><th>GMP::Z method</th></tr>
   <tr><td>mpz_cdiv_q<br />
           mpz_cdiv_q_ui</td>            <td>GMP::Z#cdiv</td></tr>
@@ -500,6 +502,24 @@ The following is organized in the same categories as in the GMP and MPFR manuals
           mpz_congruent_ui_p</td>       <td>GMP::Z#congruent?<br />
                                             GMP::Z.congruent? (in-place singleton method)</td></tr>
   <tr><td>mpz_congruent_2exp_p</td>     <td><em>not implemented yet</em></td></tr>
+
+  <tr><th colspan="2"><h4>Integer Exponentiation</h4>
+
+  <tr><th colspan="2"><h4>Integer Roots</h4>
+
+  <tr><th colspan="2"><h4>Number Theoretic Functions</h4>
+
+  <tr><th colspan="2"><h4>Integer Comparisons</h4>
+
+  <tr><th colspan="2"><h4>Integer Logic and Bit Fiddling</h4>
+
+  <tr><th colspan="2"><h4>I/O of Integers</h4>
+
+  <tr><th colspan="2"><h4>Integer Random Numbers</h4>
+
+  <tr><th colspan="2"><h4>Integer Import and Export</h4>
+
+  <tr><th colspan="2"><h4>Miscellaneous Integer Functions</h4>
 </table>
 
 Documentation
@@ -513,20 +533,7 @@ Documentation
 Testing
 -------
 
-Tests can be run with:
-
-    cd test
-    ruby unit_tests.rb
-
-If you have the unit\_test gem installed, all tests should pass. Otherwise, one
-test may error. I imagine there is a bug in Ruby's built-in `Test::Unit`
-package that is fixed with the unit_test gem.
-
-You can also use the following shiny new rake tasks:
-
-    rake test
-    rake report
-    MPFR=no-mpfr rake report
+Tests can be run with `rake test`. I like to run tests and print out a quick report of Ruby, GMP, and MPFR versions with `rake report`. You can precede any rake task with `GMP=gmp_install_dir` and `MPFR=mpfr_install_dir` (or `MPFR=--no-mpfr`) to pass `--with-gmp-dir` and `--with-mpfr-dir` options to `extconf.rb` as well.
 
 You can also run tests from an individual file with:
 

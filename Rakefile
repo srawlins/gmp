@@ -14,7 +14,7 @@ task :make => [:extconf] do
 end
 
 task :test => [:make] do
-  sh "cd test && ruby unit_tests.rb"
+  sh "ruby test/unit_tests.rb"
 end
 
 task :report => [:test] do

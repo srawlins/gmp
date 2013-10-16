@@ -1,3 +1,8 @@
+0.6.41
+  * Properly coerce GMP::Q and Float. GMP::Q / Float will now convert both
+    operands into GMP::F
+  * Workaround Ruby 2.0.0 bug in using --with-gmp-dir in extconf.rb (#8047)
+
 0.6.31:
   * Added GMP::Z#rootrem and tests
 
