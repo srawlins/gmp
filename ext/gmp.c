@@ -58,6 +58,37 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
   return Qnil;
 }
 
+int get_base(VALUE base_val) {
+  const char * bin_base = "bin";                            /* binary */
+  const char * oct_base = "oct";                             /* octal */
+  const char * dec_base = "dec";                           /* decimal */
+  const char * hex_base = "hex";                       /* hexadecimal */
+  ID bin_base_id = rb_intern(bin_base);
+  ID oct_base_id = rb_intern(oct_base);
+  ID dec_base_id = rb_intern(dec_base);
+  ID hex_base_id = rb_intern(hex_base);
+  ID base_id;
+  int base = 10;
+
+  if (FIXNUM_P(base_val)) {
+    base = FIX2INT(base_val);
+
+    if ((base >= 2 && base <= 62) || (base >= -36 && base <= -2))
+      return base;
+    else
+      rb_raise(rb_eRangeError, "base must be within [2, 62] or [-36, -2].");
+  } else if (SYMBOL_P(base_val)) {
+    base_id = rb_to_id(base_val);
+    if (base_id == bin_base_id) return 2;
+    else if (base_id == oct_base_id) return 8;
+    else if (base_id == dec_base_id) return 10;
+    else if (base_id == hex_base_id) return 16;
+    else rb_raise(rb_eRangeError, "base must be within [2, 62] or [-36, -2].");
+  } else {
+    rb_raise(rb_eTypeError, "Expected Fixnum or one of :bin, :oct, :dec, :hex");
+  }
+}
+
 VALUE r_gmpsg_sprintf2(VALUE klass, VALUE format, VALUE arg) {
   VALUE res;
   char *buffer;

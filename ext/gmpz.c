@@ -884,51 +884,20 @@ VALUE r_gmpz_to_d(VALUE self)
  * digits and upper-case letters are used; for 37..62, digits, upper-case letters, and
  * lower-case letters (in that significance order) are used.
  */
-VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self)
+VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self_val)
 {
-  MP_INT *self_val;
+  MP_INT *self;
   char *str;
   VALUE res;
-  VALUE base;
-  int base_val = 10;
-  ID base_id;
-  const char * bin_base = "bin";                            /* binary */
-  const char * oct_base = "oct";                             /* octal */
-  const char * dec_base = "dec";                           /* decimal */
-  const char * hex_base = "hex";                       /* hexadecimal */
-  ID bin_base_id = rb_intern(bin_base);
-  ID oct_base_id = rb_intern(oct_base);
-  ID dec_base_id = rb_intern(dec_base);
-  ID hex_base_id = rb_intern(hex_base);
+  VALUE base_val;
+  unsigned int base;
 
-  rb_scan_args(argc, argv, "01", &base);
-  if (NIL_P(base)) { base = INT2FIX(10); }           /* default value */
-  if (FIXNUM_P(base)) {
-    base_val = FIX2INT(base);
-    if ((base_val >=   2 && base_val <= 62) ||
-        (base_val >= -36 && base_val <= -2)) {
-      /* good base */
-    } else {
-      base_val = 10;
-      rb_raise(rb_eRangeError, "base must be within [2, 62] or [-36, -2].");
-    }
-  } else if (SYMBOL_P(base)) {
-    base_id = rb_to_id(base);
-    if (base_id == bin_base_id) {
-      base_val =  2;
-    } else if (base_id == oct_base_id) {
-      base_val =  8;
-    } else if (base_id == dec_base_id) {
-      base_val = 10;
-    } else if (base_id == hex_base_id) {
-      base_val = 16;
-    } else {
-      base_val = 10;  /* should raise an exception here. */
-    }
-  }
+  rb_scan_args(argc, argv, "01", &base_val);
+  if (NIL_P(base_val)) { base = 10; }                /* default value */
+  else { base = get_base(base_val); }
 
-  Data_Get_Struct(self, MP_INT, self_val);
-  str = mpz_get_str(NULL, base_val, self_val);
+  Data_Get_Struct(self_val, MP_INT, self);
+  str = mpz_get_str(NULL, base, self);
   res = rb_str_new2(str);
   free (str);
 

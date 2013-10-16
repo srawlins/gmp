@@ -154,6 +154,8 @@ extern VALUE mGMP, cGMP_Z, cGMP_Q, cGMP_F, cGMP_RandState;
 extern VALUE cGMP_Rnd;
 #endif /* MPFR */
 
+extern int get_base(VALUE base_val);
+
 extern void r_gmpz_free(void *ptr);
 extern void r_gmpq_free(void *ptr);
 extern void r_gmpf_free(void *ptr);

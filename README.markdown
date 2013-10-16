@@ -217,10 +217,11 @@ Methods
       -                        substraction
       *                        multiplication
       /                        division
-      to_s                     convert to string. For GMP::Z, this method takes
-                               one optional argument, a base. The base can be a
-                               Fixnum in the ranges \[2, 62\] or \[-36, -2\] or a
-                               Symbol: :bin, :oct, :dec, or :hex.
+      to_s                     convert to string. For GMP::Z and GMP::F, this
+                               method takes one optional argument, a base. The
+                               base can be a Fixnum in the ranges \[2, 62\] or
+                               \[-36, -2\] or a Symbol: one of :bin, :oct,
+                               :dec, or :hex.
       inspect                  alias for #to_s
       -@                       negation
       neg!                     in-place negation
