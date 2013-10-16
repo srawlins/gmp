@@ -154,7 +154,7 @@ static VALUE r_gmpz_##fname(VALUE self, VALUE arg) \
 static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)        \
 {                                                            \
   MP_INT *arg_val_z, *res_val;                               \
-  unsigned long arg_val_ul;                                  \
+  long arg_val_ul;                                           \
   VALUE res;                                                 \
                                                              \
   (void)klass;                                               \
@@ -165,14 +165,17 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)        \
     mpz_get_struct (arg, arg_val_z);                         \
     if (!mpz_fits_ulong_p (arg_val_z))                       \
       rb_raise (rb_eRangeError, "argument out of range");    \
-    arg_val_ul = mpz_get_ui (arg_val_z);                     \
-    if (arg_val_ul == 0)                                     \
-      rb_raise (rb_eRangeError, "argument out of range");    \
+    arg_val_ul = mpz_get_si (arg_val_z);                     \
   } else {                                                   \
     typeerror_as (ZX, "argument");                           \
   }                                                          \
+                                                             \
+  if (arg_val_ul < 0)                                        \
+    rb_raise (rb_eRangeError, "argument out of range");      \
+                                                             \
   mpz_make_struct_init (res, res_val);                       \
-  mpz_fname (res_val, arg_val_ul);                           \
+  mpz_fname (res_val, (unsigned long)arg_val_ul);            \
+                                                             \
   return res;                                                \
 }
 

@@ -10,7 +10,7 @@ class TC_fib_fac_nextprime < Test::Unit::TestCase
     @z17 = GMP::Z.new(17)
     @z19 = GMP::Z.new(19)
   end
-  
+
   def test_fib
     assert_equal(  1, GMP::Z.fib(   1), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
     assert_equal(  1, GMP::Z.fib(   2), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
@@ -27,8 +27,11 @@ class TC_fib_fac_nextprime < Test::Unit::TestCase
     assert_equal(144, GMP::Z.fib(  12), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
     assert_equal(233, GMP::Z.fib(  13), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
     assert_equal(377, GMP::Z.fib(  14), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
+
+    assert_raise(RangeError) { GMP::Z.fib(-1) }
+    assert_raise(RangeError) { GMP::Z.fib(GMP::Z(-1)) }
   end
-  
+
   def test_fac
     assert_equal(   1, GMP::Z.fac( 0), "GMP::Z::fac(x : Fixnum) should be calculated correctly.")
     assert_equal(   1, GMP::Z.fac( 1), "GMP::Z::fac(x : Fixnum) should be calculated correctly.")
@@ -38,6 +41,9 @@ class TC_fib_fac_nextprime < Test::Unit::TestCase
     assert_equal( 120, GMP::Z.fac( 5), "GMP::Z::fac(x : Fixnum) should be calculated correctly.")
     assert_equal( 720, GMP::Z.fac( 6), "GMP::Z::fac(x : Fixnum) should be calculated correctly.")
     assert_equal(5040, GMP::Z.fac( 7), "GMP::Z::fac(x : Fixnum) should be calculated correctly.")
+
+    assert_raise(RangeError) { GMP::Z.fac(-1) }
+    assert_raise(RangeError) { GMP::Z.fac(GMP::Z(-1)) }
   end
 
   def test_nextprime
