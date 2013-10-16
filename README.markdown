@@ -221,6 +221,7 @@ Methods
                                one optional argument, a base. The base can be a
                                Fixnum in the ranges \[2, 62\] or \[-36, -2\] or a
                                Symbol: :bin, :oct, :dec, or :hex.
+      inspect                  alias for #to_s
       -@                       negation
       neg!                     in-place negation
       abs                      absolute value
@@ -233,8 +234,8 @@ Methods
       2fac(n), double_fac(n)   double factorial of n
       mfac(n)                  m-multi-factorial of n
       primorial(n)             primorial of n
-      fib(n)                   nth fibonacci number
-      fib2(n)                  nth and (n-1)th fibonacci numbers
+      fib(n)                   nth Fibonacci number
+      fib2(n)                  nth and (n-1)th Fibonacci numbers
       pow(n,m)                 n to mth power
     GMP::Z and GMP::Q
       swap                     efficiently swap contents of two objects, there

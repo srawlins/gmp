@@ -50,7 +50,7 @@ class TC_to_i_to_d < Test::Unit::TestCase
     assert_equal(                  "-726746425", @d.to_s(:oct), "GMP::Z should to_s correctly.")
     assert_equal(                  "-123456789", @d.to_s(:dec), "GMP::Z should to_s correctly.")
     assert_equal(                    "-75bcd15", @d.to_s(:hex), "GMP::Z should to_s correctly.")
-    
+
     assert_equal("1",          GMP::Z.new(1).to_s,          "Z(1).to_s should equal '1'")
     assert_equal("-1",         GMP::Z.new(-1).to_s,         "Z(1).to_s should equal '-1'")
     assert_equal("1234567890", GMP::Z.new(1234567890).to_s, "GMP::Z should to_s correctly.")
@@ -65,5 +65,8 @@ class TC_to_i_to_d < Test::Unit::TestCase
     assert_equal("377",        GMP::Z.new(255).to_s(:oct),  "GMP::Z should to_s(:oct) correctly.")
     assert_equal("255",        GMP::Z.new(255).to_s(:dec),  "GMP::Z should to_s(:dec) correctly.")
     assert_equal("ff",         GMP::Z.new(255).to_s(:hex),  "GMP::Z should to_s(:hex) correctly.")
+
+    assert_equal("1",          GMP::Z.new(1).inspect,       "Z(1).inspect should equal '1'")
+    assert_equal("-1",         GMP::Z.new(-1).inspect,      "Z(1).inspect should equal '-1'")
   end
 end

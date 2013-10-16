@@ -807,12 +807,13 @@ void init_gmpq()
   // Initializing Rationals
   rb_define_singleton_method(cGMP_Q, "new", r_gmpqsg_new, -1);
   rb_define_method(cGMP_Q, "swap",  r_gmpq_swap, 1);
-  
+
   // Rational Conversions
   rb_define_method(cGMP_Q, "to_d", r_gmpq_to_d, 0);
   rb_define_alias(cGMP_Q, "to_f", "to_d");
   rb_define_method(cGMP_Q, "to_s", r_gmpq_to_s, 0);
-  
+  rb_define_alias(cGMP_Q, "inspect", "to_s");
+
   // Rational Arithmetic
   rb_define_method(cGMP_Q, "+",    r_gmpq_add, 1);
   rb_define_method(cGMP_Q, "-",    r_gmpq_sub, 1);

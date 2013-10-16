@@ -3094,6 +3094,7 @@ void init_gmpz()
   rb_define_method(cGMP_Z, "to_i", r_gmpz_to_i, 0);
   rb_define_method(cGMP_Z, "to_d", r_gmpz_to_d, 0);
   rb_define_method(cGMP_Z, "to_s", r_gmpz_to_s, -1);
+  rb_define_alias(cGMP_Z, "inspect", "to_s");
 
   // Integer Arithmetic
   rb_define_method(cGMP_Z, "+",       r_gmpz_add, 1);

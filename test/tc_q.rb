@@ -115,5 +115,7 @@ class TC_Q < Test::Unit::TestCase
     assert_equal("0", GMP::Q(0,1).to_s, "GMP::Q should to_s properly.")
     assert_equal("0", GMP::Q(0,2000).to_s, "GMP::Q should to_s properly.")
     assert_equal("0", GMP::Q(0,-2000).to_s, "GMP::Q should to_s properly.")
+
+    assert_equal("1/2", GMP::Q(1,2).inspect, "GMP::Q should inspect properly.")
   end
 end

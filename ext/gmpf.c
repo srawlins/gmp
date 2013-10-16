@@ -1288,6 +1288,7 @@ void init_gmpf()
 
   // Converting Floats
   rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, -1);
+  rb_define_alias(cGMP_F, "inspect", "to_s");
   rb_define_method(cGMP_F, "to_d",  r_gmpf_to_d, 0);
   rb_define_alias(cGMP_F, "to_f", "to_d");
 

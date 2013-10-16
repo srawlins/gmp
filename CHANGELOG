@@ -5,6 +5,8 @@
   * Workaround Ruby 2.0.0 bug in using --with-gmp-dir in extconf.rb (#8047)
   * Fixed bugs for Z#fac, Z#2fac, Z#primorial, Z#fib, and Z#lucnum, where Ruby
     would crash if a negative number was passed in as the argument.
+  * Aliasing #inspect to #to_s for GMP::Z, GMP::Q, and GMP::F, for better
+    usability in Ruby 2.x, where Object#inspect no longer calls #to_s.
 
 0.6.31:
   * Added GMP::Z#rootrem and tests
