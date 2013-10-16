@@ -2,13 +2,18 @@ require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 class TC_fib_fac_nextprime < Test::Unit::TestCase
   def setup
-    @z10 = GMP::Z.new(10)
+     @z0 = GMP::Z.new( 0)
+     @z1 = GMP::Z.new( 1)
+     @z2 = GMP::Z.new( 2)
      @z7 = GMP::Z.new( 7)
      @z8 = GMP::Z.new( 8)
+    @z10 = GMP::Z.new(10)
     @z11 = GMP::Z.new(11)
     @z13 = GMP::Z.new(13)
     @z17 = GMP::Z.new(17)
     @z19 = GMP::Z.new(19)
+    @z34 = GMP::Z.new(34)
+    @z55 = GMP::Z.new(55)
   end
 
   def test_fib
@@ -19,6 +24,7 @@ class TC_fib_fac_nextprime < Test::Unit::TestCase
     assert_equal(  5, GMP::Z.fib(   5), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
     assert_equal(  8, GMP::Z.fib(   6), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
     assert_equal( 13, GMP::Z.fib(   7), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
+    assert_equal( 13, GMP::Z.fib( @z7), "GMP::Z::fib(x : GMP::Z) should be calculated correctly.")
     assert_equal( 21, GMP::Z.fib(   8), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
     assert_equal( 34, GMP::Z.fib(   9), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
     assert_equal( 55, GMP::Z.fib(  10), "GMP::Z::fib(x : Fixnum) should be calculated correctly.")
@@ -30,6 +36,19 @@ class TC_fib_fac_nextprime < Test::Unit::TestCase
 
     assert_raise(RangeError) { GMP::Z.fib(-1) }
     assert_raise(RangeError) { GMP::Z.fib(GMP::Z(-1)) }
+  end
+
+  def test_fib2
+    assert_equal([ @z1, @z0], GMP::Z.fib2(   1), "GMP::Z::fib2(x : Fixnum) should be calculated correctly.")
+    assert_equal([ @z1, @z1], GMP::Z.fib2(   2), "GMP::Z::fib2(x : Fixnum) should be calculated correctly.")
+    assert_equal([ @z2, @z1], GMP::Z.fib2(   3), "GMP::Z::fib2(x : Fixnum) should be calculated correctly.")
+    assert_equal([@z13, @z8], GMP::Z.fib2(   7), "GMP::Z::fib2(x : Fixnum) should be calculated correctly.")
+    assert_equal([@z13, @z8], GMP::Z.fib2( @z7), "GMP::Z::fib2(x : GMP::Z) should be calculated correctly.")
+    assert_equal([@z55,@z34], GMP::Z.fib2(  10), "GMP::Z::fib2(x : Fixnum) should be calculated correctly.")
+    assert_equal([@z55,@z34], GMP::Z.fib2(@z10), "GMP::Z::fib2(x : GMP::Z) should be calculated correctly.")
+
+    assert_raise(RangeError) { GMP::Z.fib2(-1) }
+    assert_raise(RangeError) { GMP::Z.fib2(GMP::Z(-1)) }
   end
 
   def test_fac

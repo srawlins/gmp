@@ -234,6 +234,7 @@ Methods
       mfac(n)                  m-multi-factorial of n
       primorial(n)             primorial of n
       fib(n)                   nth fibonacci number
+      fib2(n)                  nth and (n-1)th fibonacci numbers
       pow(n,m)                 n to mth power
     GMP::Z and GMP::Q
       swap                     efficiently swap contents of two objects, there
@@ -579,7 +580,7 @@ Please see [performance](https://github.com/srawlins/gmp/blob/master/performance
 Todo
 ----
 
-* `GMP::Z#to_d_2exp`, `#kronecker`, `#bin`, `#fib2`, `#lucnum`, `#lucnum2`, `#combit`, `#fits_x?`
+* `GMP::Z#to_d_2exp`, `#kronecker`, `#bin`, `::lucnum2`, `#combit`, `#fits_x?`
 * `GMP::Q#to_s(base)`, `GMP::F#to_s(base)` (test it!)
 * benchmark pi
 * a butt-load of functional mappings. 47-ish sets.

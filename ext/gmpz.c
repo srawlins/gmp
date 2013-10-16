@@ -179,6 +179,36 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)        \
   return res;                                                \
 }
 
+#define DEFUN_INT_SINGLETON_ZZ_UI(fname,mpz_fname)              \
+static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg)           \
+{                                                               \
+  MP_INT *arg_val_z, *res_val_1, *res_val_2;                    \
+  long arg_val_ul;                                              \
+  VALUE res_1, res_2;                                           \
+                                                                \
+  (void)klass;                                                  \
+                                                                \
+  if (FIXNUM_P (arg)) {                                         \
+    arg_val_ul = FIX2NUM (arg);                                 \
+  } else if (GMPZ_P (arg)) {                                    \
+    mpz_get_struct (arg, arg_val_z);                            \
+    if (!mpz_fits_ulong_p (arg_val_z))                          \
+      rb_raise (rb_eRangeError, "argument out of range");       \
+    arg_val_ul = mpz_get_si (arg_val_z);                        \
+  } else {                                                      \
+    typeerror_as (ZX, "argument");                              \
+  }                                                             \
+                                                                \
+  if (arg_val_ul < 0)                                           \
+    rb_raise (rb_eRangeError, "argument out of range");         \
+                                                                \
+  mpz_make_struct_init (res_1, res_val_1);                      \
+  mpz_make_struct_init (res_2, res_val_2);                      \
+  mpz_fname (res_val_1, res_val_2, (unsigned long)arg_val_ul);  \
+                                                                \
+  return rb_assoc_new(res_1, res_2);                            \
+}
+
 #define DEFUN_INT_SINGLETON_UIUI(fname,mpz_fname)                     \
 static VALUE r_gmpzsg_##fname(VALUE klass, VALUE arg1, VALUE arg2)    \
 {                                                                     \
@@ -2354,7 +2384,27 @@ DEFUN_INT_SINGLETON_UI(primorial,  mpz_primorial_ui)
  * * GMP::Z.fib(6)  #=>  8
  * * GMP::Z.fib(7)  #=> 13
  */
-DEFUN_INT_SINGLETON_UI(fib,    mpz_fib_ui)
+DEFUN_INT_SINGLETON_UI(fib, mpz_fib_ui)
+
+/*
+ * Document-method: GMP::Z.fib2
+ *
+ * call-seq:
+ *   GMP::Z.fib2(n)
+ *
+ * Returns [<i>F[n]</i>, <i>F[n-1]</i>], the <i>n</i>th and <i>n-1</i>th Fibonacci numbers.
+ *
+ * Examples:
+ * * GMP::Z.fib2(1)  #=> [ 1, 0]
+ * * GMP::Z.fib2(2)  #=> [ 1, 1]
+ * * GMP::Z.fib2(3)  #=> [ 2, 1]
+ * * GMP::Z.fib2(4)  #=> [ 3, 2]
+ * * GMP::Z.fib2(5)  #=> [ 5, 3]
+ * * GMP::Z.fib2(6)  #=> [ 8, 5]
+ * * GMP::Z.fib2(7)  #=> [13, 8]
+ */
+DEFUN_INT_SINGLETON_ZZ_UI(fib2, mpz_fib2_ui)
+
 DEFUN_INT_SINGLETON_UI(lucnum, mpz_lucnum_ui)
 
 
@@ -3132,6 +3182,7 @@ void init_gmpz()
   rb_define_singleton_method(cGMP_Z, "primorial",     r_gmpzsg_primorial, 1);
 #endif
   rb_define_singleton_method(cGMP_Z, "fib",           r_gmpzsg_fib,       1);
+  rb_define_singleton_method(cGMP_Z, "fib2",          r_gmpzsg_fib2,      1);
   rb_define_singleton_method(cGMP_Z, "lucnum",        r_gmpzsg_lucnum,    1);
   // Functional Mappings
   rb_define_singleton_method(cGMP_Z, "lcm",           r_gmpzsg_lcm,       3);
