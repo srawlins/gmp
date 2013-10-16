@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require '../../ext/gmp'
+require '../../../ext/gmp'
 require './ruby-enhancements'
 
 RSA_EXP = 0x10001

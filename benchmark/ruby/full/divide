@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require '../../ext/gmp'
+require '../../../ext/gmp'
 
 dividend = ARGV[0].to_i
 divisor = ARGV[1].to_i
