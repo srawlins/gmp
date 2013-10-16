@@ -27,7 +27,10 @@ static VALUE r_gmpz_coerce(VALUE self, VALUE arg)
 
 static VALUE r_gmpq_coerce(VALUE self, VALUE arg)
 {
-  return rb_assoc_new(r_gmpqsg_new(1, &arg, cGMP_Q), self);
+  if (FLOAT_P(arg))
+    return rb_assoc_new(r_gmpfsg_new(1, &arg, cGMP_F), r_gmpfsg_new(1, &self, cGMP_F));
+  else
+    return rb_assoc_new(r_gmpqsg_new(1, &arg, cGMP_Q), self);
 }
 
 static VALUE r_gmpf_coerce(VALUE self, VALUE arg)
