@@ -136,6 +136,8 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   }
 
 #else
+  (void)base;
+
   if (prec == 0)
     r_mpf_init (self_val);
   else

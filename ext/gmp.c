@@ -58,15 +58,12 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
   return Qnil;
 }
 
+ID bin_base_id;                                             /* binary */
+ID oct_base_id;                                              /* octal */
+ID dec_base_id;                                            /* decimal */
+ID hex_base_id;                                        /* hexadecimal */
+
 int get_base(VALUE base_val) {
-  const char * bin_base = "bin";                            /* binary */
-  const char * oct_base = "oct";                             /* octal */
-  const char * dec_base = "dec";                           /* decimal */
-  const char * hex_base = "hex";                       /* hexadecimal */
-  ID bin_base_id = rb_intern(bin_base);
-  ID oct_base_id = rb_intern(oct_base);
-  ID dec_base_id = rb_intern(dec_base);
-  ID hex_base_id = rb_intern(hex_base);
   ID base_id;
   int base = 10;
 
@@ -162,6 +159,11 @@ mp_rnd_t r_get_rounding_mode(VALUE rnd)
   rb_define_method(rb_cBignum, ruby_fname, takeover_bignum_##fname, -1);
 
 void Init_gmp() {
+  bin_base_id = rb_intern("bin");
+  oct_base_id = rb_intern("oct");
+  dec_base_id = rb_intern("dec");
+  hex_base_id = rb_intern("hex");
+
   mGMP = rb_define_module("GMP");
   rb_define_const(mGMP, "GMP_VERSION",       rb_str_new2(gmp_version));
   rb_define_const(mGMP, "GMP_CC",            rb_str_new2(__GMP_CC));
