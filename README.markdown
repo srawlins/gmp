@@ -47,8 +47,15 @@ paragraph at [their homepage](http://gmplib.org/#WHAT):
 > contributions, meaning users can safely use GMP. To achieve this, we will ask
 > contributors to sign paperwork where they allow us to distribute their work."
 
-Only GMP 4 or newer is supported. The following environments have been tested
-by me: gmp gem 0.5.47 on:
+GMP 4.3.x and GMP 5.x are each supported against Ruby (MRI) 1.9.x, 2.0.0, and
+2.1.0. GMP 5.1.x is the only version of GMP that has been tested recently.
+Other Ruby platforms (such as Rubinius and JRuby) should be supported, but have not
+been tested recently.
+
+### Previously
+
+Previously, on version 0.5.47, this gem was verified as functioning in the
+following combinations:
 
 <table border="1">
   <tr>

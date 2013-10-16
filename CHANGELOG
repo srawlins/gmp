@@ -7,6 +7,7 @@
     would crash if a negative number was passed in as the argument.
   * Aliasing #inspect to #to_s for GMP::Z, GMP::Q, and GMP::F, for better
     usability in Ruby 2.x, where Object#inspect no longer calls #to_s.
+  * Support now verified for Ruby 2.0.0 and Ruby 2.1.0-preview1
 
 0.6.31:
   * Added GMP::Z#rootrem and tests
