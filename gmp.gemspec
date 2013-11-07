@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.has_rdoc = "yard"
   s.homepage = "http://github.com/srawlins/gmp"
   s.summary = "Provides Ruby bindings to the GMP library."
+  s.license = 'Apache License Version 2.0'
 
   s.required_ruby_version = '>= 1.8.6'
   s.requirements = ["GMP compiled and working properly."]

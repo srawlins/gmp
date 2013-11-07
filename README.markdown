@@ -586,6 +586,11 @@ Benchmarking
 
 Please see [performance](https://github.com/srawlins/gmp/blob/master/performance.md) on GitHub.
 
+License
+-------
+
+This gem is now licensed under the [Apache License Version 2.0](COPYING.md).
+
 Todo
 ----
 

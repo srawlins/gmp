@@ -1,3 +1,7 @@
+0.6.43
+  * Fixed compilation on OS X 10.9 Mavericks, using LLVM 5.0
+  * Added license: Apache v2
+
 0.6.41
   * Added GMP::Z.fib2, with documentation and tests
   * Properly coerce GMP::Q and Float. GMP::Q / Float will now convert both
