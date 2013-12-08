@@ -53,25 +53,29 @@ namespace :dependencies do
 end
 
 def gmp_opt
-  # 5.0.2 is available on Travis today through Ubuntu 12.0.4 repo's
-  version = ENV['GMP'] || (ENV['TRAVIS'] && '5.0.2') || '5.1.0'
+  version = ENV['GMP'] || '5.1.0'
   directory = File.join(DEPENDENCIES_DIR, "gmp-#{version}")
-  if ! File.exist? directory
+  if !File.exist? directory
     puts "========================================"
     puts "==  Warning: target GMP installation directory does not exist: #{directory}"
     puts "========================================"
+  else
+    '--with-gmp-dir=' + directory
   end
-  '--with-gmp-dir='+File.join(DEPENDENCIES_DIR, "gmp-#{version}")
 end
 
 def mpfr_opt
-  # 3.1.0 is available on Travis today through Ubuntu 12.0.4 repo's
-  version = ENV['MPFR'] || (ENV['TRAVIS'] && '3.1.0') || '3.1.1'
+  version = ENV['MPFR'] || '3.1.1'
   if version == 'no-mpfr'
     return '--no-mpfr'
+  end
+
+  directory = File.join(DEPENDENCIES_DIR, "mpfr-#{version}")
+  if !File.exist? directory
+    puts "========================================"
+    puts "==  Warning: target MPFR installation directory does not exist: #{directory}"
+    puts "========================================"
   else
-    return '--with-mpfr-dir='+File.join(DEPENDENCIES_DIR, "mpfr-#{version}")
+    return '--with-mpfr-dir=' + directory
   end
 end
-
-
