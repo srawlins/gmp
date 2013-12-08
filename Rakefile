@@ -17,6 +17,7 @@ task :test => [:make] do
   sh "ruby test/unit_tests.rb"
 end
 
+task :default => [:report]
 task :report => [:test] do
   puts "RUBY:   " + `ruby -v`
   puts "GMP:    " + `ruby -r './lib/gmp' -e "puts GMP::GMP_VERSION"`
@@ -26,6 +27,13 @@ task :report => [:test] do
   else
     puts "MPFR:   --no-mpfr"
   end
+end
+
+task :console do
+  require 'irb'
+  require File.join(File.dirname(__FILE__), 'lib', 'gmp')
+  ARGV.clear
+  IRB.start
 end
 
 namespace :dependencies do
