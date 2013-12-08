@@ -53,7 +53,8 @@ namespace :dependencies do
 end
 
 def gmp_opt
-  version = ENV['GMP'] || '5.1.0'
+  # 5.0.2 is available on Travis today through Ubuntu 12.0.4 repo's
+  version = ENV['GMP'] || (ENV['TRAVIS'] && '5.0.2') || '5.1.0'
   directory = File.join(DEPENDENCIES_DIR, "gmp-#{version}")
   if ! File.exist? directory
     puts "========================================"
@@ -64,7 +65,8 @@ def gmp_opt
 end
 
 def mpfr_opt
-  version = ENV['MPFR'] || '3.1.1'
+  # 3.1.0 is available on Travis today through Ubuntu 12.0.4 repo's
+  version = ENV['MPFR'] || (ENV['TRAVIS'] && '3.1.0') || '3.1.1'
   if version == 'no-mpfr'
     return '--no-mpfr'
   else
