@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/srawlins/gmp.png?branch=master)](https://travis-ci.org/srawlins/gmp)
-
 gmp
 ===
+
+[![Build Status](https://travis-ci.org/srawlins/gmp.png?branch=master)](https://travis-ci.org/srawlins/gmp)
 
 gmp is library providing Ruby bindings to GMP library. Here is the introduction
 paragraph at [their homepage](http://gmplib.org/#WHAT):
@@ -586,7 +586,7 @@ Precision argument, and default_precision will be rounded up to whatever GMP thi
 Benchmarking
 ------------
 
-Please see [performance](https://github.com/srawlins/gmp/blob/master/performance.md) on GitHub.
+Please see [performance](https://github.com/srawlins/gmp/raw/master/performance.2012.pdf) on GitHub.
 
 License
 -------
