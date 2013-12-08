@@ -8,7 +8,7 @@ class GMP_TRoot < Test::Unit::TestCase
     # Travis revealed something weird on Linux. rootrem gives a different result:
     #
     # https://travis-ci.org/srawlins/gmp/jobs/15112258
-    pending if !RUBY_PLATFORM["darwin"]
+    skip if !RUBY_PLATFORM["darwin"]
     root2, rem2 = x2.rootrem(nth)
     temp = root1 ** nth
     temp2 = temp + rem2
