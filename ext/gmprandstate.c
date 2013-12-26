@@ -328,15 +328,15 @@ void init_gmprandstate()
   // Random State Initialization
   rb_define_singleton_method(cGMP_RandState, "new", r_gmprandstatesg_new, -1);
   rb_define_method(cGMP_RandState, "initialize", r_gmprandstate_initialize, -1);
-  
+
   // Random State Seeding
   rb_define_method(cGMP_RandState, "seed", r_gmprandstate_seed, 1);
-  
+
   // Integer Random Numbers
   rb_define_method(cGMP_RandState, "urandomb", r_gmprandstate_urandomb, 1);
   rb_define_method(cGMP_RandState, "urandomm", r_gmprandstate_urandomm, 1);
   rb_define_method(cGMP_RandState, "rrandomb", r_gmprandstate_rrandomb, 1);
-  
+
 #ifdef MPFR
   // Float Random Numbers
   rb_define_method(cGMP_RandState, "mpfr_urandomb", r_gmprandstate_mpfr_urandomb, -1);
