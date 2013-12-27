@@ -15,12 +15,12 @@ class TC_sgn_neg_abs < Test::Unit::TestCase
     @o=GMP::Q.new()
     @p=GMP::Q.new(-10)
   end
-  
+
   def test_sgn
     assert_equal([1, 0, 1, 0], [@a.sgn, @b.sgn, @d.sgn, @e.sgn], "GMP::Z, GMP::Q should calculate sgn correctly")
     assert_equal([-1, -1],     [@c.sgn, @f.sgn],                 "GMP::Z, GMP::Q should calculate sgn correctly")
   end
-  
+
   def test_neg
     assert_equal(-@a, @c,                                        "-(x : GMP::Z) should be calculated correctly.")
     assert_equal(-@c, @a,                                        "-(x : GMP::Z) should be calculated correctly.")
@@ -36,7 +36,7 @@ class TC_sgn_neg_abs < Test::Unit::TestCase
     assert_equal(@o, @e,                                         "(x : GMP::Q).neg! should be calculated correctly.")
     assert_equal(@p, @d,                                         "GMP::Q.new().neg! should equal GMP::Q.new().")
   end
-  
+
   def test_abs
     assert_equal([10, 0, 10], [@a.abs, @b.abs, @c.abs],          "(x : GMP::Z).abs should be calculated correctly.")
     assert_equal([10, 0, 10], [@d.abs, @e.abs, @f.abs],          "(x : GMP::Q).abs should be calculated correctly.")

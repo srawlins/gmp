@@ -1296,8 +1296,6 @@ void init_gmpf()
   rb_define_method(cGMP_F, "rec_sqrt", r_gmpfr_rec_sqrt, -1);
   rb_define_method(cGMP_F, "cbrt",     r_gmpfr_cbrt,     -1);
   // TODO "root", r_gmpfr_root
-  // TODO "neg", r_gmpfr_neg
-  // TODO "abs", r_gmpfr_abs
   // TODO "dim", r_gmpfr_dim
   // TODO "mul_2", r_gmpfr_mul_2
   // TODO "div_2", r_gmpfr_div_2
