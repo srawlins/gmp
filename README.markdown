@@ -395,8 +395,10 @@ Methods
       number?                  |
       regular?                 / (MPFR_VERSION >= "3.0.0")
     GMP::RandState
-      mpfr_urandomb(fixnum)    get uniformly distributed random floating-point
-                               number within 0 <= rop < 1
+      mpfr_urandomb(prec = default)   get uniformly distributed random floating-point
+                                      number within 0 <= rop < 1
+      mpfr_urandom(prec = default)    get uniformly distributed random floating-point
+                                      number (MPFR_VERSION >= "3.0.0")
 
 Functional Mappings
 -------------------

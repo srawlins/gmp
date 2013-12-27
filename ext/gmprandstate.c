@@ -284,37 +284,82 @@ VALUE r_gmprandstate_rrandomb(VALUE self, VALUE arg)
  *
  * Generate a uniformly distributed random float in the interval 0 <= rop < 1.
  */
-VALUE r_gmprandstate_mpfr_urandomb(int argc, VALUE *argv, VALUE self)
+VALUE r_gmprandstate_mpfr_urandomb(int argc, VALUE *argv, VALUE self_val)
 {
-  MP_RANDSTATE *self_val;
-  MP_FLOAT *res_val;
-  VALUE res;
+  MP_RANDSTATE *self;
+  MP_FLOAT *res;
+  VALUE res_val;
   unsigned long prec = 0;
-  
-  if (argc > 1)
-    rb_raise (rb_eArgError, "wrong # of arguments(%d for 0 or 1)", argc);
 
-  mprandstate_get_struct (self,self_val);
-  
+  if (argc > 1)
+    rb_raise (rb_eArgError, "wrong # of arguments (%d for 0 or 1)", argc);
+
+  mprandstate_get_struct (self_val, self);
+
   if (argc == 1) {
     if (FIXNUM_P (argv[0])) {
-      if (FIX2INT (argv[0]) >= 0)
-        prec = FIX2INT (argv[0]);
-      else
-        rb_raise (rb_eRangeError, "prec must be non-negative");
+      if (FIX2INT (argv[0]) < 2)
+        rb_raise (rb_eRangeError, "prec must be at least 2");
+
+      prec = FIX2INT (argv[0]);
     } else {
       rb_raise (rb_eTypeError, "prec must be a Fixnum");
     }
   }
-  
-  mpf_make_struct (res, res_val);
-  if (prec == 0) { mpf_init (res_val); }
-  else           { mpf_init2 (res_val, prec); }
-  
-  mpfr_urandomb (res_val, self_val);
-  
-  return res;
+
+  mpf_make_struct (res_val, res);
+  if (prec == 0) { mpf_init (res); }
+  else           { mpf_init2 (res, prec); }
+
+  mpfr_urandomb (res, self);
+
+  return res_val;
 }
+
+#if MPFR_VERSION_MAJOR > 2
+/*
+ * call-seq:
+ *   rand_state.mpfr_urandom()
+ *
+ * From the MPFR Manual:
+ *
+ * Generate a uniformly distributed random float. The floating-point number rop
+ * can be seen as if a random real number is generated according to the
+ * continuous uniform distribution on the interval [0, 1] and then rounded in
+ * the direction RNDN.
+ */
+VALUE r_gmprandstate_mpfr_urandom(int argc, VALUE *argv, VALUE self_val)
+{
+  MP_RANDSTATE *self;
+  MP_FLOAT *res;
+  VALUE res_val;
+  unsigned long prec = 0;
+
+  if (argc > 1)
+    rb_raise (rb_eArgError, "wrong # of arguments (%d for 0 or 1)", argc);
+
+  mprandstate_get_struct (self_val, self);
+
+  if (argc == 1) {
+    if (FIXNUM_P (argv[0])) {
+      if (FIX2INT (argv[0]) < 2)
+        rb_raise (rb_eRangeError, "prec must be at least 2");
+
+      prec = FIX2INT (argv[0]);
+    } else {
+      rb_raise (rb_eTypeError, "prec must be a Fixnum");
+    }
+  }
+
+  mpf_make_struct (res_val, res);
+  if (prec == 0) { mpf_init (res); }
+  else           { mpf_init2 (res, prec); }
+
+  mpfr_urandom (res, self, __gmp_default_rounding_mode);
+
+  return res_val;
+}
+#endif /* MPFR_VERSION_MAJOR > 2 */
 #endif /* MPFR */
 
 
@@ -340,5 +385,8 @@ void init_gmprandstate()
 #ifdef MPFR
   // Float Random Numbers
   rb_define_method(cGMP_RandState, "mpfr_urandomb", r_gmprandstate_mpfr_urandomb, -1);
+#if MPFR_VERSION_MAJOR > 2
+  rb_define_method(cGMP_RandState, "mpfr_urandom", r_gmprandstate_mpfr_urandom, -1);
+#endif /* MPFR_VERSION_MAJOR > 2 */
 #endif /* MPFR */
 }

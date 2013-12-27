@@ -1278,7 +1278,6 @@ void init_gmpf()
    * mpfr_ai
    * mpfr_set_flt
    * mpfr_get_flt
-   * mpfr_urandom
    * mpfr_set_z_2exp
    */
 
@@ -1299,8 +1298,6 @@ void init_gmpf()
   // TODO "dim", r_gmpfr_dim
   // TODO "mul_2", r_gmpfr_mul_2
   // TODO "div_2", r_gmpfr_div_2
-
-  // TODO rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
 
   // Comparison Functions
   rb_define_method(cGMP_F, "nan?", r_gmpfr_nan_p, 0);

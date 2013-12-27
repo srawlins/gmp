@@ -5,8 +5,8 @@ class TC_MPFR_Random < Test::Unit::TestCase
   end
 
   def test_urandomb
-    @a = GMP::RandState.new
-    @a.seed(577)
+    a = GMP::RandState.new
+    a.seed(577)
     if (GMP::MPFR_VERSION_MAJOR == 3 and GMP::MPFR_VERSION_MINOR < 1) or (GMP::MPFR_VERSION_MAJOR < 3)
       g1 = [
         GMP::F("0.39810885576093713"), GMP::F("0.97212443610368071"), GMP::F("0.23084385480845748"),
@@ -21,7 +21,23 @@ class TC_MPFR_Random < Test::Unit::TestCase
       ]
     end
     g1.size.times do |i|
-      assert_in_delta(g1[i], @a.mpfr_urandomb, 1e-12, "GMP::RandState should mpfr_urandomb predictably.")
+      assert_in_delta(g1[i], a.mpfr_urandomb, 1e-12, "GMP::RandState should mpfr_urandomb predictably.")
+    end
+  end
+
+  def test_urandom
+    return unless GMP::MPFR_VERSION_MAJOR >= 3
+
+    a = GMP::RandState.new
+    a.seed(577)
+
+    g1 = [
+      GMP::F("0.48637900307389631"), GMP::F("0.94659148733322840"), GMP::F("0.27564210151536123"),
+      GMP::F("0.25908603728464119"), GMP::F("0.54208688851416087"), GMP::F("0.45824186569746128e-1"),
+      GMP::F("0.52706696601697367"), GMP::F("0.10260542184139945"), GMP::F("0.38678438390336384")
+    ]
+    g1.size.times do |i|
+      assert_in_delta(g1[i], a.mpfr_urandom, 1e-12, "GMP::RandState should mpfr_urandom predictably.")
     end
   end
 
