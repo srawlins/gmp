@@ -262,77 +262,77 @@ VALUE r_gmpf_to_d(VALUE self)
  *
  * Returns the decimal representation of _x_, as a String.
  */
-VALUE r_gmpf_to_s(int argc, VALUE *argv, VALUE self)
+VALUE r_gmpf_to_s(int argc, VALUE *argv, VALUE self_val)
 {
-  MP_FLOAT *self_val;
+  MP_FLOAT *self;
   char *str, *str2;
-  VALUE res;
+  VALUE res_val;
   mp_exp_t exponent;
   VALUE base_val;
   int base = 10;
 
-  mpf_get_struct(self, self_val);
+  mpf_get_struct (self_val, self);
 
   /* TODO: accept a second optional argument, n_digits */
-  rb_scan_args(argc, argv, "01", &base_val);
-  if (NIL_P(base_val)) { base = 10; }                /* default value */
-  else { base = get_base(base_val); }
+  rb_scan_args (argc, argv, "01", &base_val);
+  if (NIL_P (base_val)) { base = 10; }                /* default value */
+  else { base = get_base (base_val); }
 
-  str = mpfr_get_str(NULL, &exponent, base, 0, self_val, __gmp_default_rounding_mode);
-  if ((strcmp(str,  "NaN") == 0) ||
-      (strcmp(str,  "Inf") == 0) ||
-      (strcmp(str, "-Inf") == 0))
+  str = mpfr_get_str (NULL, &exponent, base, 0, self, __gmp_default_rounding_mode);
+  if ((strcmp (str,  "NaN") == 0) ||
+      (strcmp (str,  "Inf") == 0) ||
+      (strcmp (str, "-Inf") == 0))
   {
-    res = rb_str_new2(str);
+    res_val = rb_str_new2 (str);
   }
   else
   {
     if (str[0] == '-')
-      __gmp_asprintf(&str2, "-0.%se%+ld", str+1, exponent);
+      __gmp_asprintf (&str2, "-0.%se%+ld", str+1, exponent);
     else
-      __gmp_asprintf(&str2, "0.%se%+ld", str, exponent);
+      __gmp_asprintf (&str2, "0.%se%+ld", str, exponent);
 
-    res = rb_str_new2(str2);
-    mpfr_free_str(str2);
+    res_val = rb_str_new2 (str2);
+    mpfr_free_str (str2);
   }
 
-  mpfr_free_str(str);
-  return res;
+  mpfr_free_str (str);
+  return res_val;
 }
-#else
+#else  /* not MPFR */
 /*
  * call-seq:
  *   x.to_s
  *
  * Returns the decimal representation of _x_, as a string.
  */
-VALUE r_gmpf_to_s(VALUE self)
+VALUE r_gmpf_to_s(VALUE self_val)
 {
-  MP_FLOAT *self_val;
+  MP_FLOAT *self;
   char *str, *str2;
-  VALUE res;
+  VALUE res_val;
   mp_exp_t exponent;
 
-  mpf_get_struct(self, self_val);
+  mpf_get_struct (self_val, self);
 
-  str = mpf_get_str(NULL, &exponent, 10, 0, self_val);
-  if ((strcmp(str,  "NaN") == 0) ||
-      (strcmp(str,  "Inf") == 0) ||
-      (strcmp(str, "-Inf") == 0))
+  str = mpf_get_str (NULL, &exponent, 10, 0, self);
+  if ((strcmp (str,  "NaN") == 0) ||
+      (strcmp (str,  "Inf") == 0) ||
+      (strcmp (str, "-Inf") == 0))
   {
-    res = rb_str_new2(str);
+    res_val = rb_str_new2 (str);
   }
   else
   {
     if (str[0] == '-')
-      __gmp_asprintf(&str2, "-0.%se%+ld", str+1, exponent);
+      __gmp_asprintf (&str2, "-0.%se%+ld", str+1, exponent);
     else
-      __gmp_asprintf(&str2, "0.%se%+ld", str, exponent);
-    res = rb_str_new2(str2);
-    free(str2);
+      __gmp_asprintf (&str2, "0.%se%+ld", str, exponent);
+    res_val = rb_str_new2 (str2);
+    free (str2);
   }
-  free(str);
-  return res;
+  free (str);
+  return res_val;
 }
 #endif
 
@@ -1253,7 +1253,11 @@ void init_gmpf()
   rb_define_method(cGMP_F, "prec_raw=", r_gmpf_set_prec_raw, 1);
 
   // Converting Floats
+#ifndef MPFR
+  rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, 0);
+#else
   rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, -1);
+#endif
   rb_define_alias(cGMP_F, "inspect", "to_s");
   rb_define_method(cGMP_F, "to_d",  r_gmpf_to_d, 0);
   rb_define_alias(cGMP_F, "to_f", "to_d");

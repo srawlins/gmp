@@ -10,7 +10,6 @@ class TC_F_to_s < Test::Unit::TestCase
   end
 
   def test_to_s_default_prec
-    return if not GMP.const_defined? :MPFR_VERSION  # I might be able to add this one back in...
     rs = GMP::RandState.new(11213)
     if GMP.const_defined? :MPFR_VERSION
       strings = [
@@ -26,7 +25,7 @@ class TC_F_to_s < Test::Unit::TestCase
       ]
     end
     # In this test, each numerator, n, and denominator, d, pair is generated in
-    # succession from @rs. Each pair is used to create a floating point number.
+    # succession from rs. Each pair is used to create a floating point number.
     # The first pair are uniformly distributed random integers between 0 and
     # 2^100 - 1. The next two are distributed between 0 and 2^110 - 1. The last
     # are distributed between 0 and 2^190 - 1.
