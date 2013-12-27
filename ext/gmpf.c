@@ -1272,7 +1272,7 @@ void init_gmpf()
 
 
 #ifdef MPFR
-  /* To implement; new in MPFR 3.0.0:
+  /* TODO: new in MPFR 3.0.0:
    *
    * mpfr_set_zero
    * mpfr_ai
@@ -1282,7 +1282,7 @@ void init_gmpf()
    * mpfr_set_z_2exp
    */
 
-  /* To implement; new in MPFR 3.1.0:
+  /* TODO: new in MPFR 3.1.0:
    *
    * mpfr_buildopt_gmpinternals_p
    * mpfr_buildopt_tune_case
@@ -1295,14 +1295,14 @@ void init_gmpf()
   rb_define_method(cGMP_F, "sqrt",     r_gmpfr_sqrt,     -1);
   rb_define_method(cGMP_F, "rec_sqrt", r_gmpfr_rec_sqrt, -1);
   rb_define_method(cGMP_F, "cbrt",     r_gmpfr_cbrt,     -1);
-  // "root", r_gmpfr_root
-  // "neg", r_gmpfr_neg
-  // "abs", r_gmpfr_abs
-  // "dim", r_gmpfr_dim
-  // "mul_2", r_gmpfr_mul_2
-  // "div_2", r_gmpfr_div_2
+  // TODO "root", r_gmpfr_root
+  // TODO "neg", r_gmpfr_neg
+  // TODO "abs", r_gmpfr_abs
+  // TODO "dim", r_gmpfr_dim
+  // TODO "mul_2", r_gmpfr_mul_2
+  // TODO "div_2", r_gmpfr_div_2
 
-  //rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
+  // TODO rb_define_method(cGMP_F, "**", r_gmpfr_pow, 1);
 
   // Comparison Functions
   rb_define_method(cGMP_F, "nan?", r_gmpfr_nan_p, 0);
@@ -1313,9 +1313,9 @@ void init_gmpf()
 #if MPFR_VERSION_MAJOR > 2
   rb_define_method(cGMP_F, "regular?", r_gmpfr_regular_p, 0);
 #endif
-  //"sgn", r_gmpfr_sgn
-  //"lessgreater", r_gmpfr_lessgreater_p
-  //"unordered", r_gmpfr_unordered_p
+  /* TODO "sgn", r_gmpfr_sgn */
+  /* TODO "lessgreater", r_gmpfr_lessgreater_p */
+  /* TODO "unordered", r_gmpfr_unordered_p */
 
   // Special Functions
   rb_define_method(cGMP_F, "log",       r_gmpfr_log,     -1);
@@ -1346,7 +1346,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "asinh",     r_gmpfr_asinh,     -1);
   rb_define_method(cGMP_F, "atanh",     r_gmpfr_atanh,     -1);
 
-  // "fac", r_gmpfr_fac
+  /* TODO "fac", r_gmpfr_fac */
 
   rb_define_method(cGMP_F, "log1p",   r_gmpfr_log1p,   -1);
   rb_define_method(cGMP_F, "expm1",   r_gmpfr_expm1,   -1);
@@ -1354,7 +1354,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "li2",     r_gmpfr_li2,     -1);
   rb_define_method(cGMP_F, "gamma",   r_gmpfr_gamma,   -1);
   rb_define_method(cGMP_F, "lngamma", r_gmpfr_lngamma, -1);
-  /*rb_define_method(cGMP_F, "lgamma",  r_gmpfr_lgamma,   -1);*/
+  /* TODO rb_define_method(cGMP_F, "lgamma",  r_gmpfr_lgamma,   -1); */
 #if MPFR_VERSION_MAJOR > 2
   rb_define_method(cGMP_F, "digamma", r_gmpfr_digamma, -1);
 #endif
@@ -1368,11 +1368,11 @@ void init_gmpf()
   rb_define_method(cGMP_F, "y1", r_gmpfr_y1,           -1);
   rb_define_method(cGMP_F, "yn", r_gmpfr_yn,           -1);
 
-  // "fma", r_gmpfr_fma
-  // "fms", r_gmpfr_fms
+  /* TODO "fma", r_gmpfr_fma */
+  /* TODO "fms", r_gmpfr_fms */
   rb_define_method(cGMP_F, "agm",   r_gmpfr_agm,       -1);
   rb_define_method(cGMP_F, "hypot", r_gmpfr_hypot,     -1);
-  // "ai", r_gmpfr_ai  !! 3.0.0
+  /* TODO "ai", r_gmpfr_ai  !! 3.0.0 */
 
   // Formatted Output Functions
   rb_define_singleton_method(cGMP_F, "sprintf2", r_gmpfrsg_sprintf2, 2);
@@ -1383,7 +1383,6 @@ void init_gmpf()
   rb_define_singleton_method(cGMP_F, "const_catalan", r_gmpfrsg_const_catalan, -1);
 
   // Integer and Remainder Related Functions
-  // "integer?", r_gmpfr_integer_p
   rb_define_method(cGMP_F, "integer?", r_gmpfr_integer_p, 0);
 
   // Rounding Related Functions
@@ -1397,6 +1396,4 @@ void init_gmpf()
   rb_define_singleton_method (cGMP_F, "mpfr_buildopt_tls_p", r_gmpfsg_mpfr_buildopt_tls_p, 0);
 #endif /* MPFR > 2 */
 #endif /* MPFR */
-
-  // _unsorted_
 }

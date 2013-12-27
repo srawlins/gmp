@@ -132,6 +132,15 @@ approximately 8,320,000, which is just short of 2^23. Bignum was largely
 re-written in Ruby 2.1 though, so that 2 can be raised to approximately
 32_500_000 (just short of 2^25).
 
+The major change to Ruby's Bignum class in version 2.1 is that Ruby can
+actually use GMP for a few key methods if GMP is available. This decision is
+made at compile-time (pass `--without-gmp` to `configure` to disable). Yes, you
+read that right: Matz's Ruby Interpreter, as of version 2.1, has started to
+take advantage of the GMP library out of the box, without the need for the gmp
+gem. Hopefully, this integration continues, and Ruby's Bignum class (and
+Rational and Float classes) can have all of the functionality and power of GMP.
+Until then, this gem must continue on.
+
 In any case, Ruby 2.0 cannot handle the following benchmark cases:
 
 * `multiply 16777216 512`
