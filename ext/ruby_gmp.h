@@ -282,11 +282,7 @@ extern VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg);
 
 // Converting Floats
 extern VALUE r_gmpf_to_d(VALUE self);
-#ifdef MPFR
 extern VALUE r_gmpf_to_s(int argc, VALUE *argv, VALUE self);
-#else
-extern VALUE r_gmpf_to_s(VALUE self);
-#endif
 
 // Float Arithmetic
 #ifndef MPFR

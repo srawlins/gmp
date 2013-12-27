@@ -1,3 +1,7 @@
+0.6.47
+  * Fixed GMP::F#to_s when MPFR is not present. It now works, and accepts an
+    optional base argument, just like GMP::F#to_s does when MPFR _is_ present.
+
 0.6.43
   * Fixed compilation on OS X 10.9 Mavericks, using LLVM 5.0
   * Added license: Apache v2

@@ -58,20 +58,35 @@ class TC_F_to_s < Test::Unit::TestCase
   end
 
   def test_different_bases
-    return if not GMP.const_defined? :MPFR_VERSION
     f = GMP::F(0.5)
-    assert_equal("0.50000000000000000e+0",                                     f.to_s)
-    assert_equal("0.10000000000000000000000000000000000000000000000000000e+0", f.to_s(2))
-    assert_equal("0.10000000000000000000000000000000000000000000000000000e+0", f.to_s(:bin))
-    assert_equal("0.11111111111111111111111111111111112e+0",                   f.to_s(3))
-    assert_equal("0.200000000000000000000000000e+0",                           f.to_s(4))
-    assert_equal("0.50000000000000000e+0",                                     f.inspect)
-
     g = GMP::F(0.8)
-    assert_equal("0.80000000000000004e+0",                   g.to_s)
-    assert_equal("0.21012101210121012101210121012101220e+0", g.to_s(3))
-    assert_equal("0.400000000000000000000003e+0",            g.to_s(5))
-    assert_equal("0.k00000000002ge+0",                       g.to_s(25))
-    assert_equal("0.80000000000000004e+0",                   g.inspect)
+
+    if GMP.const_defined? :MPFR_VERSION
+      assert_equal("0.50000000000000000e+0",                                     f.to_s)
+      assert_equal("0.10000000000000000000000000000000000000000000000000000e+0", f.to_s(2))
+      assert_equal("0.10000000000000000000000000000000000000000000000000000e+0", f.to_s(:bin))
+      assert_equal("0.11111111111111111111111111111111112e+0",                   f.to_s(3))
+      assert_equal("0.200000000000000000000000000e+0",                           f.to_s(4))
+      assert_equal("0.50000000000000000e+0",                                     f.inspect)
+
+      assert_equal("0.80000000000000004e+0",                   g.to_s)
+      assert_equal("0.21012101210121012101210121012101220e+0", g.to_s(3))
+      assert_equal("0.400000000000000000000003e+0",            g.to_s(5))
+      assert_equal("0.k00000000002ge+0",                       g.to_s(25))
+      assert_equal("0.80000000000000004e+0",                   g.inspect)
+    else
+      assert_equal("0.5e+0",                                          f.to_s)
+      assert_equal("0.1e+0",                                          f.to_s(2))
+      assert_equal("0.1e+0",                                          f.to_s(:bin))
+      assert_equal("0.111111111111111111111111111111111111111111e+0", f.to_s(3))
+      assert_equal("0.2e+0",                                          f.to_s(4))
+      assert_equal("0.5e+0",                                          f.inspect)
+
+      assert_equal("0.800000000000000044409e+0",                     g.to_s)
+      assert_equal("0.21012101210121012101210121012101212211012e+0", g.to_s(3))
+      assert_equal("0.40000000000000000000000231042e+0",             g.to_s(5))
+      assert_equal("0.k00000000002g49e+0",                           g.to_s(25))
+      assert_equal("0.800000000000000044409e+0",                     g.inspect)
+    end
   end
 end
