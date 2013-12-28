@@ -48,7 +48,7 @@ This manual describes how to use the gmp Ruby gem, which provides bindings to
 the GNU multiple precision arithmetic library, version 4.3.x or 5.x.\\
 \\
 Copyright 2009, 2010, 2011, 2012, 2013 Sam Rawlins.\\
-No license yet.
+Apache License, Version 2.0
 \newpage
 
 \tableofcontents
@@ -1507,7 +1507,45 @@ Every method below accepts two additional parameters in addition to any required
 }
 \end{tabular}
 
-\subsection{Floating-point Miscellaneous Functions (MPFR Only)}
+\subsection{Floating-Point Random Numbers (MPFR only)}
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{mpfr\_urandomb} & & $state$.mpfr\_urandomb() $\rightarrow$ $floating-point$ \\
+& & $state$.mprf\_urandomb($prec$) $\rightarrow$ $floating-point$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Generates a uniformly distributed random float in the between $0$ and $1$.
+  More precisely, the number can be seen as a float with a random non-normalized
+  significand and exponent 0, which is then normalized (thus if $e$ denotes the
+  exponent after normalization, then the least $-e$ significant bits of the
+  significand are always 0).
+
+  Optionally pass $prec$, the precision of the resultant GMP::F number.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{mpfr\_urandom} & & $state$.mpfr\_urandom() $\rightarrow$ $integer$ \\
+& & $state$.mprf\_urandom($rnd\_mode$) $\rightarrow$ $floating-point$ \\
+& & $state$.mprf\_urandom($rnd\_mode$, $prec$) $\rightarrow$ $floating-point$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Generate a uniformly distributed random float. The floating-point number
+  can be seen as if a random real number is generated according to the continuous
+  uniform distribution on the interval [0, 1] and then rounded in the direction
+  $rnd$.
+
+  Optionally pass $rnd\_mode$, a rounding mode.
+
+  Also optionally pass $prec$, the precision of the resultant GMP::F number.
+}
+\end{tabular}
+\newline\newline
+
+\subsection{Floating-point Miscellaneous Functions (MPFR only)}
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule
