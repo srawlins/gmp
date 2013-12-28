@@ -332,30 +332,31 @@ VALUE r_gmprandstate_mpfr_urandom(int argc, VALUE *argv, VALUE self_val)
 {
   MP_RANDSTATE *self;
   MP_FLOAT *res;
-  VALUE res_val;
-  unsigned long prec = 0;
-
-  if (argc > 1)
-    rb_raise (rb_eArgError, "wrong # of arguments (%d for 0 or 1)", argc);
+  mp_rnd_t rnd_mode;
+  VALUE res_val, prec_val, rnd_mode_val;
+  unsigned long int prec;
 
   mprandstate_get_struct (self_val, self);
 
-  if (argc == 1) {
-    if (FIXNUM_P (argv[0])) {
-      if (FIX2INT (argv[0]) < 2)
-        rb_raise (rb_eRangeError, "prec must be at least 2");
+  rb_scan_args (argc, argv, "02", &rnd_mode_val, &prec_val);
+  if (NIL_P (rnd_mode_val)) { rnd_mode = __gmp_default_rounding_mode; }
+  else { rnd_mode = r_get_rounding_mode(rnd_mode_val); }
 
-      prec = FIX2INT (argv[0]);
-    } else {
-      rb_raise (rb_eTypeError, "prec must be a Fixnum");
-    }
+  if (NIL_P (prec_val)) {
+    prec = mpfr_get_default_prec();
+  } else if (FIXNUM_P (prec_val)) {
+    if (FIX2INT (prec_val) < 2)
+      rb_raise (rb_eRangeError, "prec must be at least 2");
+
+    prec = FIX2INT (prec_val);
+  } else {
+    rb_raise (rb_eTypeError, "prec must be a Fixnum");
   }
 
   mpf_make_struct (res_val, res);
-  if (prec == 0) { mpf_init (res); }
-  else           { mpf_init2 (res, prec); }
+  mpf_init2 (res, prec);
 
-  mpfr_urandom (res, self, __gmp_default_rounding_mode);
+  mpfr_urandom (res, self, rnd_mode);
 
   return res_val;
 }
