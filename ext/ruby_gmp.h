@@ -274,7 +274,11 @@ extern VALUE r_gmpq_den(VALUE self);
 // Initializing, Assigning Floats
 extern VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass);
 extern VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self);
+#ifndef MPFR
 extern void mpf_set_value(MP_FLOAT *self_val, VALUE arg);
+#else
+extern void mpfr_set_value(MP_FLOAT *self_val, VALUE arg, mpfr_rnd_t rnd_mode_val);
+#endif
 extern VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module);
 extern VALUE r_gmpf_get_prec(VALUE self);
 extern VALUE r_gmpf_set_prec(VALUE self, VALUE arg);

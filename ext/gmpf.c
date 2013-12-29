@@ -75,6 +75,9 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   MP_FLOAT *self_val, *arg_val_f;
   unsigned long prec = 0;
   VALUE arg;
+#ifdef MPFR
+  mp_rnd_t rnd_mode_val;
+#endif
   int base = 10;
 
   mpf_get_struct (self, self_val);
@@ -110,6 +113,8 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
     prec = mpf_get_prec (arg_val_f);
   }
 #ifdef MPFR
+  rnd_mode_val = __gmp_default_rounding_mode;
+
   if (prec == 0)
     mpfr_init (self_val);
   else
@@ -127,22 +132,32 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
         rb_raise(rb_eTypeError, "base must be a Fixnum");
       }
     }
+
     if (argc == 4) {
       // TODO: FIGURE IT OUT. ACCEPT A ROUNDING MODE!
     }
 
     mpf_set_value2 (self_val, arg, base);
     return Qnil;
+  } else { /* not STRING_P(argv[0]) */
+    if (argc == 3)
+      rnd_mode_val = r_get_rounding_mode(argv[2]);
   }
 
-#else
+  if (GMPF_P(arg)) {
+    mpf_get_struct (arg, arg_val_f);
+    mpf_set(self_val, arg_val_f);
+  } else {
+    mpfr_set_value(self_val, arg, rnd_mode_val);
+  }
+
+#else  /* not MPFR */
   (void)base;
 
   if (prec == 0)
     r_mpf_init (self_val);
   else
     r_mpf_init2 (self_val, prec);
-#endif
 
   if (GMPF_P(arg)) {
     mpf_get_struct (arg, arg_val_f);
@@ -150,10 +165,12 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   } else {
     mpf_set_value(self_val, arg);
   }
+#endif
 
   return Qnil;
 }
 
+#ifndef MPFR
 /* don't pass GMP::F here, it should be handled separately */
 void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
 {
@@ -161,29 +178,6 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
   MP_INT *arg_val_z;
   int result;
 
-#ifdef MPFR
-  if (GMPQ_P(arg)) {
-    mpq_get_struct(arg, arg_val_q);
-    r_mpf_set_q(self_val, arg_val_q);
-  } else if (GMPZ_P(arg)) {
-    mpz_get_struct(arg, arg_val_z);
-    r_mpf_set_z(self_val, arg_val_z);
-  } else if (FLOAT_P(arg)) {
-    mpfr_set_d(self_val, NUM2DBL(arg), __gmp_default_rounding_mode);
-  } else if (TYPE (arg) == T_FIXNUM) {
-    mpf_set_si(self_val, FIX2NUM(arg));
-  } else if (STRING_P(arg)) {
-    result = mpfr_set_str(self_val, StringValuePtr(arg), 10, __gmp_default_rounding_mode);
-    if (result == -1) {
-      rb_raise(rb_eRuntimeError, "Badly formatted string");
-    }
-  } else if (BIGNUM_P(arg)) {
-#if 1 /* GMP3 code */
-    mpz_temp_from_bignum(arg_val_z, arg);
-    r_mpf_set_z(self_val, arg_val_z);
-    mpz_temp_free(arg_val_z);
-#endif
-#else
   if (GMPQ_P(arg)) {
     mpq_get_struct(arg, arg_val_q);
     r_mpf_set_q(self_val, arg_val_q);
@@ -204,12 +198,50 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
     mpz_temp_from_bignum(arg_val_z, arg);
     r_mpf_set_z(self_val, arg_val_z);
     mpz_temp_free(arg_val_z);
-#endif
-#endif
+#endif /* GMP3 code */
   } else {
     rb_raise(rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name(rb_class_of(arg)));
   }
 }
+
+#else /* MPFR */
+/* don't pass GMP::F here, it should be handled separately */
+void mpfr_set_value(MP_FLOAT *self_val, VALUE arg, mp_rnd_t rnd_mode_val)
+{
+  MP_RAT *arg_val_q;
+  MP_INT *arg_val_z;
+  int result;
+
+  if (GMPQ_P(arg)) {
+    mpq_get_struct(arg, arg_val_q);
+    /* TODO use rnd_mode_val */
+    r_mpf_set_q(self_val, arg_val_q);
+  } else if (GMPZ_P(arg)) {
+    mpz_get_struct(arg, arg_val_z);
+    /* TODO use rnd_mode_val */
+    r_mpf_set_z(self_val, arg_val_z);
+  } else if (FLOAT_P(arg)) {
+    mpfr_set_d(self_val, NUM2DBL(arg), rnd_mode_val);
+  } else if (TYPE (arg) == T_FIXNUM) {
+    /* TODO use rnd_mode_val */
+    mpf_set_si(self_val, FIX2NUM(arg));
+  } else if (STRING_P(arg)) {
+    result = mpfr_set_str(self_val, StringValuePtr(arg), 10, rnd_mode_val);
+    if (result == -1) {
+      rb_raise(rb_eRuntimeError, "Badly formatted string");
+    }
+  } else if (BIGNUM_P(arg)) {
+#if 1 /* GMP3 code */
+    mpz_temp_from_bignum(arg_val_z, arg);
+    /* TODO use rnd_mode_val */
+    r_mpf_set_z(self_val, arg_val_z);
+    mpz_temp_free(arg_val_z);
+#endif /* GMP3 code */
+  } else {
+    rb_raise(rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name(rb_class_of(arg)));
+  }
+}
+#endif
 
 #ifdef MPFR
 void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
@@ -753,7 +785,11 @@ int mpf_cmp_value(MP_FLOAT *self_val, VALUE arg)
     return r_mpf_cmp (self_val, arg_val);
   } else {
     mpf_temp_init(arg_val, mpf_get_prec (self_val));
+#ifndef MPFR
     mpf_set_value (arg_val, arg);
+#else
+    mpfr_set_value (arg_val, arg, __gmp_default_rounding_mode);
+#endif
     result = r_mpf_cmp (self_val, arg_val);
     mpf_temp_free(arg_val);
     return result;
@@ -933,6 +969,7 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }  \
   else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }     \
   if (NIL_P (prec)) { prec_val = mpfr_get_default_prec(); }  \
+  /* TODO check type */ \
   else { prec_val = FIX2INT (prec); }                        \
   mpf_make_struct_init (res, res_val, prec_val);             \
   mpfr_##name (res_val, rnd_mode_val);                       \
@@ -1004,17 +1041,17 @@ VALUE r_gmpfrsg_sprintf2(VALUE klass, VALUE format, VALUE arg) {
   MP_INT *arg_val_z;
   MP_FLOAT *arg_val_f;
   (void)klass;
-  format_str = StringValuePtr(format);
-  if (GMPZ_P(arg)) {
+  format_str = StringValuePtr (format);
+  if (GMPZ_P (arg)) {
     mpz_get_struct (arg, arg_val_z);
-    mpfr_asprintf(&buffer, format_str, arg_val_z);
-  } else if (GMPF_P(arg)) {
+    mpfr_asprintf (&buffer, format_str, arg_val_z);
+  } else if (GMPF_P (arg)) {
     mpf_get_struct (arg, arg_val_f);
-    mpfr_asprintf(&buffer, format_str, arg_val_f);
+    mpfr_asprintf (&buffer, format_str, arg_val_f);
   }
 
-  res = rb_str_new2(buffer);
-  free(buffer);
+  res = rb_str_new2 (buffer);
+  free (buffer);
   return res;
 }
 
