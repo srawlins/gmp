@@ -3,6 +3,9 @@
     optional base argument, just like GMP::F#to_s does when MPFR _is_ present.
   * Added MPFR method GMP::RandState.mpfr_urandom (mpfr_urandom) and tests
   * Added tests for GMP::F#abs and GMP::F#neg
+  * Added GMP::F.fac(n) (mpfr_fac_ui) and tests
+  * Added new optional rounding mode argument to GMP::F.new(GMP::Z) and
+    GMP::F.new(Bignum)
 
 0.6.43
   * Fixed compilation on OS X 10.9 Mavericks, using LLVM 5.0

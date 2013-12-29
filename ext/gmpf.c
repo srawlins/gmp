@@ -218,8 +218,7 @@ void mpfr_set_value(MP_FLOAT *self_val, VALUE arg, mp_rnd_t rnd_mode_val)
     r_mpf_set_q(self_val, arg_val_q);
   } else if (GMPZ_P(arg)) {
     mpz_get_struct(arg, arg_val_z);
-    /* TODO use rnd_mode_val */
-    r_mpf_set_z(self_val, arg_val_z);
+    r_mpfr_set_z (self_val, arg_val_z, rnd_mode_val);
   } else if (FLOAT_P(arg)) {
     mpfr_set_d(self_val, NUM2DBL(arg), rnd_mode_val);
   } else if (TYPE (arg) == T_FIXNUM) {
@@ -233,8 +232,7 @@ void mpfr_set_value(MP_FLOAT *self_val, VALUE arg, mp_rnd_t rnd_mode_val)
   } else if (BIGNUM_P(arg)) {
 #if 1 /* GMP3 code */
     mpz_temp_from_bignum(arg_val_z, arg);
-    /* TODO use rnd_mode_val */
-    r_mpf_set_z(self_val, arg_val_z);
+    r_mpfr_set_z(self_val, arg_val_z, rnd_mode_val);
     mpz_temp_free(arg_val_z);
 #endif /* GMP3 code */
   } else {
@@ -1032,6 +1030,41 @@ MPFR_SINGLE_LONG_FUNCTION(yn)
 MPFR_SINGLE_MPF_FUNCTION(agm)
 MPFR_SINGLE_MPF_FUNCTION(hypot)
 
+/*
+ * call-seq:
+ *   GMP::F.fac(n)
+ *   GMP::F.fac(n, rounding_mode)
+ *   GMP::F.fac(n, rounding_mode, precision)
+ *
+ * Creates a new GMP::F float, equal to the factorial of n, which must be a
+ * Fixnum. Optionally pass a rounding mode, and precision for the resultant
+ * GMP::F.
+ */
+VALUE r_gmpfrsg_fac(int argc, VALUE *argv, VALUE self_val)
+{
+  MP_FLOAT *res;
+  VALUE arg_val, res_val;
+  VALUE rnd_mode_val, prec_val;
+  mp_rnd_t rnd_mode;
+  mpfr_prec_t prec;
+  unsigned long int arg;
+  (void)self_val;
+
+  rb_scan_args (argc, argv, "12", &arg_val, &rnd_mode_val, &prec_val);
+
+  if (FIXNUM_P (arg_val)) { arg = FIX2INT (arg_val); }
+  else { rb_raise (rb_eTypeError, "operand must be a Fixnum"); }
+  if (NIL_P (rnd_mode_val)) { rnd_mode = __gmp_default_rounding_mode; }
+  else { rnd_mode = r_get_rounding_mode (rnd_mode_val); }
+  if (NIL_P (prec_val)) { prec = mpfr_get_default_prec(); }
+  /* TODO check type */
+  else { prec = FIX2INT (prec_val); }
+  mpf_make_struct_init (res_val, res, prec);
+  mpfr_fac_ui (res, arg, rnd_mode);
+
+  return res_val;
+}
+
 //VALUE r_gmpfrsg_sprintf(int argc, VALUE *argv, VALUE self)
   //rb_scan_args (argc, argv, "1*", &format, &list);
 VALUE r_gmpfrsg_sprintf2(VALUE klass, VALUE format, VALUE arg) {
@@ -1378,7 +1411,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "asinh",     r_gmpfr_asinh,     -1);
   rb_define_method(cGMP_F, "atanh",     r_gmpfr_atanh,     -1);
 
-  /* TODO "fac", r_gmpfr_fac */
+  rb_define_singleton_method(cGMP_F, "fac", r_gmpfrsg_fac, -1);
 
   rb_define_method(cGMP_F, "log1p",   r_gmpfr_log1p,   -1);
   rb_define_method(cGMP_F, "expm1",   r_gmpfr_expm1,   -1);

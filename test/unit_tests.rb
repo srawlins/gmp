@@ -47,6 +47,7 @@ begin
   require File.join(DIR, 'tc_mpfr_functions')
   require File.join(DIR, 'tc_mpfr_rounding')
   require File.join(DIR, 'mpfr_tcbrt')
+  require File.join(DIR, 'mpfr_tfac')
   require File.join(DIR, 'mpfr_tisnan')
   require File.join(DIR, 'mpfr_trec_sqrt')
   require File.join(DIR, 'mpfr_tsqrt')

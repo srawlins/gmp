@@ -160,12 +160,12 @@ as pi, are defined under class methods of GMP::F, listed below.
 * `GMP::GMP_VERSION` - A string like "5.0.1"
 * `GMP::GMP_CC` - The compiler used to compile GMP
 * `GMP::GMP_CFLAGS` - The CFLAGS used to compile GMP
-* `GMP::GMP\_BITS_PER_LIMB` The number of bits per limb
+* `GMP::GMP_BITS_PER_LIMB` The number of bits per limb
 * `GMP::GMP_NUMB_MAX` - The maximum value that can be stored in the number part of a limb
 
 if MPFR is available:
 * `GMP::MPFR_VERSION` - A string like "2.4.2"
-* `GMP::MPFR\_PREC_MIN` - The minimum precision available
+* `GMP::MPFR_PREC_MIN` - The minimum precision available
 * `GMP::MPFR_PREC_MAX` - The maximum precision available
 * `GMP::GMP_RNDN` - The constant representing "round to nearest"
 * `GMP::GMP_RNDZ` - The constant representing "round toward zero"
@@ -201,13 +201,13 @@ Numbers are created by using `new()`. Constructors can take following arguments:
     GMP::Q.new(any GMP::Z initializer)
     GMP::Q.new(any GMP::Z initializer, any GMP::Z initializer)
     GMP::F.new()
-    GMP::F.new(GMP::Z, precision=0)
+    GMP::F.new(GMP::Z, precision=0, rounding_mode=default)
     GMP::F.new(GMP::Q, precision=0)
     GMP::F.new(GMP::F)
     GMP::F.new(GMP::F, precision)
     GMP::F.new(String, precision=0)
     GMP::F.new(Fixnum, precision=0)
-    GMP::F.new(Bignum, precision=0)
+    GMP::F.new(Bignum, precision=0, rounding_mode=default)
     GMP::F.new(Float,  precision=0)
     GMP::RandState.new(\[algorithm\] \[, algorithm_args\])
 
@@ -314,6 +314,7 @@ Methods
     class methods of GMP::F
       default_prec             get default precision
       default_prec=            set default precision
+      fac(n)                   new GMP::F, equal to factorial of n
     GMP::F
       prec                     get precision
       floor,ceil,trunc         nearest integer, GMP::F is returned, not GMP::Z

@@ -105,12 +105,12 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define mpf_temp_free(var) { mpfr_clear(var); free(var); }
 #define r_mpf_init(var1) (mpfr_init(var1))
 #define r_mpf_init2(var1, var2) (mpfr_init2(var1, var2))
-#define r_mpf_set_z(var1, var2) (mpfr_set_z(var1, var2, __gmp_default_rounding_mode))
+#define r_mpfr_set_z(var1, var2, rnd_mode) (mpfr_set_z(var1, var2, rnd_mode))
 #define r_mpf_set_q(var1, var2) (mpfr_set_q(var1, var2, __gmp_default_rounding_mode))
 #define r_mpf_set_d(var1, var2) (mpfr_set_d(var1, var2, __gmp_default_rounding_mode))
 #define r_mpf_set_str(var1, var2, var3) (mpfr_set_str(var1, var2, var3, __gmp_default_rounding_mode))
 #define r_mpf_cmp(var1, var2) (mpfr_cmp(var1, var2))
-#else
+#else /* not MPFR */
 #define mpf_get_struct_prec(ruby_var,c_var,prec) {  \
   mpf_get_struct (ruby_var,c_var);                  \
   prec = mpf_get_prec (c_var);                      \
@@ -128,7 +128,7 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define r_mpf_set_d(var1, var2) (mpf_set_d(var1, var2))
 #define r_mpf_set_str(var1, var2, var3) (mpf_set_str(var1, var2, var3))
 #define r_mpf_cmp(var1, var2) (mpf_cmp(var1, var2))
-#endif
+#endif /* MPFR */
 
 #ifdef FIXNUM_WIDTH       /* RBX check */
 #if (((8*SIZEOF_INTPTR_T) - TAG_FIXNUM_SHIFT -1) > 60) /* 64-bit */
