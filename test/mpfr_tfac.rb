@@ -29,7 +29,6 @@ class MPFR_TFAC < Test::Unit::TestCase
       (GMP::MPFR_PREC_MIN..prec).each do |p|
         [GMP::GMP_RNDN, GMP::GMP_RNDZ, GMP::GMP_RNDU, GMP::GMP_RNDD].each do |r|
           x = GMP::F.fac(n, r, p)
-          # For now, this is the only test of GMP::F(Z, prec, rnd_mode)!!!
           y = GMP::F.new(f, p, r)
           assert_equal(y, x, "fac should be correct for integers")
         end
@@ -41,5 +40,10 @@ class MPFR_TFAC < Test::Unit::TestCase
     special
 
     int
+
+    assert_equal(1, GMP::F.fac(0), "fac(0) should give 1")
+
+    # There are more tests in tfactorial.c, but they rely on return values and
+    # mpfr_can_round... so not yet.
   end
 end
