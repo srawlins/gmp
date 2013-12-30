@@ -3,7 +3,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 class MPFR_TCONST_EULER < Test::Unit::TestCase
   def setup
     @rand_state = GMP::RandState.new
-    
+
     if GMP::MPFR_VERSION >= "3.0.0"
       @rnd_modes = [GMP::MPFR_RNDN, GMP::MPFR_RNDZ, GMP::MPFR_RNDU, GMP::MPFR_RNDD, GMP::MPFR_RNDA]
       @mpfr_rnd_max = 5
@@ -21,17 +21,17 @@ class MPFR_TCONST_EULER < Test::Unit::TestCase
     assert_equal(z, y, "Const Euler to precision 32 should be accurate.")
 
     (2..200).each do |p|
-      z.prec= p
+      z.prec = p
       t = GMP::F(0, p)
-      yprec = p+10
+      yprec = p + 10
 
-      #(0...@mpfr_rnd_max).each do |rnd|  # Can i emulate this?
       (@rnd_modes).each do |rnd|
         y.prec = yprec
         #GMP::F.const_euler(y, rnd)
+        # TODO WTF
         #err = rnd == GMP::GMP_RNDN ? yprec+1 : yprec
         #if y.can_round?(err, rnd, rnd, p)
-        #
+          #
         #end
       end
     end

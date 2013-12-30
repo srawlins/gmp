@@ -102,4 +102,25 @@ class TC_MPFR_New_Rounding < Test::Unit::TestCase
     a = GMP::F(0.01, 4, GMP::GMP_RNDU)
     assert_equal(a, oh107, "GMP::F.new should round with RNDU")
   end
+
+  def test_new_mpfr
+    ohoh977 = GMP::F(-0.977e-2, 4)
+    oh107 = GMP::F(-0.107e-1, 4)
+    one_hundredth = GMP::F(-0.01)
+
+    a = GMP::F(one_hundredth, 4)
+    assert_equal(a, ohoh977, "GMP::F.new should default round with RNDN")
+
+    a = GMP::F(one_hundredth, 4, GMP::GMP_RNDN)
+    assert_equal(a, ohoh977, "GMP::F.new should round with RNDN")
+
+    a = GMP::F(one_hundredth, 4, GMP::GMP_RNDD)
+    assert_equal(a, oh107, "GMP::F.new should round with RNDD")
+
+    a = GMP::F(one_hundredth, 4, GMP::GMP_RNDZ)
+    assert_equal(a, ohoh977, "GMP::F.new should round with RNDZ")
+
+    a = GMP::F(one_hundredth, 4, GMP::GMP_RNDU)
+    assert_equal(a, ohoh977, "GMP::F.new should round with RNDU")
+  end
 end

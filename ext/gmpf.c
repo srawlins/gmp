@@ -169,7 +169,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
 
   if (GMPF_P (arg)) {
     mpf_get_struct (arg, arg_val_f);
-    mpf_set (self_val, arg_val_f);
+    mpfr_set (self_val, arg_val_f, rnd_mode_val);
   } else {
     mpfr_set_value (self_val, arg, rnd_mode_val);
   }
