@@ -1398,7 +1398,6 @@ void init_gmpf()
 #if MPFR_VERSION_MAJOR > 2
   rb_define_method(cGMP_F, "regular?", r_gmpfr_regular_p, 0);
 #endif
-  /* TODO "sgn", r_gmpfr_sgn */
   /* TODO "lessgreater", r_gmpfr_lessgreater_p */
   /* TODO "unordered", r_gmpfr_unordered_p */
 
