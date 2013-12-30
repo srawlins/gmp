@@ -117,17 +117,24 @@ VALUE r_gmpsg_sprintf2(VALUE klass, VALUE format, VALUE arg) {
 mp_rnd_t r_get_rounding_mode(VALUE rnd)
 {
   VALUE mode;
-  
-  if (GMPRND_P(rnd)) {
+  int max_rnd;
+
+#if MPFR_VERSION_MAJOR>2
+  max_rnd = 4;
+#else
+  max_rnd = 3;
+#endif
+
+  if (GMPRND_P (rnd)) {
     mode = rb_funcall (rnd, rb_intern("mode"), 0);
-    if (FIX2INT(mode) < 0 || FIX2INT(mode) > 3) {
-      rb_raise(rb_eRangeError, "rounding mode must be one of the rounding mode constants.");
+    if (FIX2INT (mode) < 0 || FIX2INT (mode) > max_rnd) {
+      rb_raise (rb_eRangeError, "rounding mode must be one of the rounding mode constants.");
     }
   } else {
     rb_raise(rb_eTypeError, "rounding mode must be one of the rounding mode constants.");
   }
-  
-  switch (FIX2INT(mode)) {
+
+  switch (FIX2INT (mode)) {
     case 0:
       return GMP_RNDN;
     case 1:

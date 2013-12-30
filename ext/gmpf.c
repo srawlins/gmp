@@ -985,10 +985,11 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
   rb_scan_args (argc, argv, "02", &rnd_mode, &prec);         \
                                                              \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }  \
-  else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }     \
+  else { rnd_mode_val = r_get_rounding_mode (rnd_mode); }    \
   if (NIL_P (prec)) { prec_val = mpfr_get_default_prec(); }  \
-  /* TODO check type */ \
-  else { prec_val = FIX2INT (prec); }                        \
+  /* TODO check type */                                      \
+  else if (FIXNUM_P (prec)) { prec_val = FIX2INT (prec); }   \
+  else { typeerror_as (Z, "prec"); }                         \
   mpf_make_struct_init (res, res_val, prec_val);             \
   mpfr_##name (res_val, rnd_mode_val);                       \
                                                              \
