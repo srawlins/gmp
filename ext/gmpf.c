@@ -237,8 +237,7 @@ void mpfr_set_value(MP_FLOAT *self_val, VALUE arg, mp_rnd_t rnd_mode_val)
 
   if (GMPQ_P (arg)) {
     mpq_get_struct (arg, arg_val_q);
-    /* TODO use rnd_mode_val */
-    r_mpf_set_q (self_val, arg_val_q);
+    r_mpfr_set_q (self_val, arg_val_q, rnd_mode_val);
   } else if (GMPZ_P (arg)) {
     mpz_get_struct (arg, arg_val_z);
     r_mpfr_set_z (self_val, arg_val_z, rnd_mode_val);
@@ -266,6 +265,7 @@ void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
 {
   int result;
 
+  /* TODO use rnd_mode_val */
   result = mpfr_set_str (self_val, StringValuePtr (arg), base, __gmp_default_rounding_mode);
 
   if (result == -1) {

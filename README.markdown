@@ -202,7 +202,7 @@ Numbers are created by using `new()`. Constructors can take following arguments:
     GMP::Q.new(any GMP::Z initializer, any GMP::Z initializer)
     GMP::F.new()
     GMP::F.new(GMP::Z, precision=0, rounding_mode=default)
-    GMP::F.new(GMP::Q, precision=0)
+    GMP::F.new(GMP::Q, precision=0, rounding_mode=default)
     GMP::F.new(GMP::F)
     GMP::F.new(GMP::F, precision)
     GMP::F.new(String, precision=0)

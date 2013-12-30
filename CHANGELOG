@@ -2,7 +2,8 @@
   * Fixed GMP::F#to_s when MPFR is not present. It now works, and accepts an
     optional base argument, just like GMP::F#to_s does when MPFR _is_ present.
   * Added new optional rounding mode argument to GMP::F.new(Fixnum),
-    GMP::F.new(Bignum), GMP::F.new(GMP::Z), and GMP::F.new(Float), with tests
+    GMP::F.new(Bignum), GMP::F.new(GMP::Z), GMP::F.new(GMP::Q), and
+    GMP::F.new(Float), with tests (MPFR only)
   * Added MPFR method GMP::RandState.mpfr_urandom (mpfr_urandom) and tests
   * Added tests for GMP::F#abs and GMP::F#neg
   * Added GMP::F.fac(n) (mpfr_fac_ui) and tests
