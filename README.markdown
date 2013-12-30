@@ -208,7 +208,7 @@ Numbers are created by using `new()`. Constructors can take following arguments:
     GMP::F.new(String, precision=0)
     GMP::F.new(Fixnum, precision=0, rounding_mode=default)
     GMP::F.new(Bignum, precision=0, rounding_mode=default)
-    GMP::F.new(Float,  precision=0)
+    GMP::F.new(Float,  precision=0, roundung_mode=default)
     GMP::RandState.new(\[algorithm\] \[, algorithm_args\])
 
 You can also call them as:

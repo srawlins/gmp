@@ -50,10 +50,33 @@ static VALUE r_gmpf_cmp_##name(VALUE self, VALUE arg)          \
 
 /*
  * call-seq:
- *   GMP::F.new(arg)
+ *   GMP::F.new(value)
+ *   GMP::F.new(value, precision)
+ *   GMP::F.new(value, precision, rounding_mode) (MPFR only)
+ *   GMP::F.new(string_value, precision, base)
  *
- * Creates a new GMP::F float, with arg as its value, converting where
- * necessary.
+ * Creates a new GMP::F floating-point number, with _value_ as its value,
+ * converting where necessary.  _value_ must be an instance of one of the
+ * following classes:
+ *
+ * * Fixnum
+ * * Bignum
+ * * GMP::Z
+ * * Float
+ * * GMP::Q
+ * * GMP::F
+ * * String
+ *
+ * @example
+ *   GMP::F.new(5)                    #=> 5
+ *   GMP::F(3**41)                    #=> 0.36472996377170788e+20
+ *   GMP::F(3**41, 32)                #=> 0.36472996375e+20
+ *   GMP::F(3**41, 32, GMP::GMP_RNDU) #=> 0.36472996384e+20
+ *   GMP::F.new("20")                 #=> 20
+ *   GMP::F.new("0x20")               #=> 32
+ *   GMP::F("111", 16)                #=> 111
+ *   GMP::F("111", 16, 2)             #=> 7
+ *   GMP::F("111", 16, 16)            #=> 273
  */
 VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
 {
@@ -62,7 +85,7 @@ VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
   (void)klass;
 
   if (argc > 4)
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0, 1 2, 3, or 4)", argc);
+    rb_raise(rb_eArgError, "wrong # of arguments (%d for 0, 1 2, 3, or 4)", argc);
 
   mpf_make_struct (res, res_val);
   rb_obj_call_init(res, argc, argv);
