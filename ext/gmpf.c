@@ -222,8 +222,7 @@ void mpfr_set_value(MP_FLOAT *self_val, VALUE arg, mp_rnd_t rnd_mode_val)
   } else if (FLOAT_P(arg)) {
     mpfr_set_d(self_val, NUM2DBL(arg), rnd_mode_val);
   } else if (TYPE (arg) == T_FIXNUM) {
-    /* TODO use rnd_mode_val */
-    mpf_set_si(self_val, FIX2NUM(arg));
+    mpfr_set_si(self_val, FIX2NUM(arg), rnd_mode_val);
   } else if (STRING_P(arg)) {
     result = mpfr_set_str(self_val, StringValuePtr(arg), 10, rnd_mode_val);
     if (result == -1) {

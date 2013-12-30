@@ -206,7 +206,7 @@ Numbers are created by using `new()`. Constructors can take following arguments:
     GMP::F.new(GMP::F)
     GMP::F.new(GMP::F, precision)
     GMP::F.new(String, precision=0)
-    GMP::F.new(Fixnum, precision=0)
+    GMP::F.new(Fixnum, precision=0, rounding_mode=default)
     GMP::F.new(Bignum, precision=0, rounding_mode=default)
     GMP::F.new(Float,  precision=0)
     GMP::RandState.new(\[algorithm\] \[, algorithm_args\])
@@ -238,7 +238,7 @@ Methods
       abs!                     in-place absolute value
       coerce                   promotion of arguments
       ==                       equality test
-      <=>,>=,>,<=,<            comparisions
+      <=>, >=, >, <=, <        comparisions
     class methods of GMP::Z
       fac(n)                   factorial of n
       2fac(n), double_fac(n)   double factorial of n
