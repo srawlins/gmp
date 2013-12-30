@@ -162,16 +162,16 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
 
     mpf_set_value2 (self_val, arg, base);
     return Qnil;
-  } else { /* not STRING_P(argv[0]) */
+  } else {  /* not STRING_P(argv[0]) */
     if (argc == 3)
-      rnd_mode_val = r_get_rounding_mode(argv[2]);
+      rnd_mode_val = r_get_rounding_mode (argv[2]);
   }
 
-  if (GMPF_P(arg)) {
+  if (GMPF_P (arg)) {
     mpf_get_struct (arg, arg_val_f);
-    mpf_set(self_val, arg_val_f);
+    mpf_set (self_val, arg_val_f);
   } else {
-    mpfr_set_value(self_val, arg, rnd_mode_val);
+    mpfr_set_value (self_val, arg, rnd_mode_val);
   }
 
 #else  /* not MPFR */
@@ -184,9 +184,9 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
 
   if (GMPF_P(arg)) {
     mpf_get_struct (arg, arg_val_f);
-    mpf_set(self_val, arg_val_f);
+    mpf_set (self_val, arg_val_f);
   } else {
-    mpf_set_value(self_val, arg);
+    mpf_set_value (self_val, arg);
   }
 #endif
 
@@ -201,29 +201,29 @@ void mpf_set_value(MP_FLOAT *self_val, VALUE arg)
   MP_INT *arg_val_z;
   int result;
 
-  if (GMPQ_P(arg)) {
-    mpq_get_struct(arg, arg_val_q);
-    r_mpf_set_q(self_val, arg_val_q);
-  } else if (GMPZ_P(arg)) {
-    mpz_get_struct(arg, arg_val_z);
-    r_mpf_set_z(self_val, arg_val_z);
-  } else if (FLOAT_P(arg)) {
-    r_mpf_set_d(self_val, NUM2DBL(arg));
-  } else if (FIXNUM_P(arg)) {
-    mpf_set_si(self_val, FIX2NUM(arg));
-  } else if (STRING_P(arg)) {
-    result = r_mpf_set_str(self_val, StringValuePtr(arg), 10);
+  if (GMPQ_P (arg)) {
+    mpq_get_struct (arg, arg_val_q);
+    r_mpf_set_q (self_val, arg_val_q);
+  } else if (GMPZ_P (arg)) {
+    mpz_get_struct (arg, arg_val_z);
+    r_mpf_set_z (self_val, arg_val_z);
+  } else if (FLOAT_P (arg)) {
+    r_mpf_set_d (self_val, NUM2DBL (arg));
+  } else if (FIXNUM_P (arg)) {
+    mpf_set_si (self_val, FIX2NUM (arg));
+  } else if (STRING_P (arg)) {
+    result = r_mpf_set_str (self_val, StringValuePtr (arg), 10);
     if (result == -1) {
-      rb_raise(rb_eRuntimeError, "Badly formatted string");
+      rb_raise (rb_eRuntimeError, "Badly formatted string");
     }
-  } else if (BIGNUM_P(arg)) {
+  } else if (BIGNUM_P (arg)) {
 #if 1 /* GMP3 code */
-    mpz_temp_from_bignum(arg_val_z, arg);
-    r_mpf_set_z(self_val, arg_val_z);
-    mpz_temp_free(arg_val_z);
+    mpz_temp_from_bignum (arg_val_z, arg);
+    r_mpf_set_z (self_val, arg_val_z);
+    mpz_temp_free (arg_val_z);
 #endif /* GMP3 code */
   } else {
-    rb_raise(rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name(rb_class_of(arg)));
+    rb_raise (rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name (rb_class_of (arg)));
   }
 }
 
@@ -235,46 +235,44 @@ void mpfr_set_value(MP_FLOAT *self_val, VALUE arg, mp_rnd_t rnd_mode_val)
   MP_INT *arg_val_z;
   int result;
 
-  if (GMPQ_P(arg)) {
-    mpq_get_struct(arg, arg_val_q);
+  if (GMPQ_P (arg)) {
+    mpq_get_struct (arg, arg_val_q);
     /* TODO use rnd_mode_val */
-    r_mpf_set_q(self_val, arg_val_q);
-  } else if (GMPZ_P(arg)) {
-    mpz_get_struct(arg, arg_val_z);
+    r_mpf_set_q (self_val, arg_val_q);
+  } else if (GMPZ_P (arg)) {
+    mpz_get_struct (arg, arg_val_z);
     r_mpfr_set_z (self_val, arg_val_z, rnd_mode_val);
-  } else if (FLOAT_P(arg)) {
-    mpfr_set_d(self_val, NUM2DBL(arg), rnd_mode_val);
+  } else if (FLOAT_P (arg)) {
+    mpfr_set_d (self_val, NUM2DBL (arg), rnd_mode_val);
   } else if (TYPE (arg) == T_FIXNUM) {
-    mpfr_set_si(self_val, FIX2NUM(arg), rnd_mode_val);
+    mpfr_set_si (self_val, FIX2NUM (arg), rnd_mode_val);
   } else if (STRING_P(arg)) {
-    result = mpfr_set_str(self_val, StringValuePtr(arg), 10, rnd_mode_val);
+    result = mpfr_set_str (self_val, StringValuePtr (arg), 10, rnd_mode_val);
     if (result == -1) {
       rb_raise(rb_eRuntimeError, "Badly formatted string");
     }
-  } else if (BIGNUM_P(arg)) {
+  } else if (BIGNUM_P (arg)) {
 #if 1 /* GMP3 code */
-    mpz_temp_from_bignum(arg_val_z, arg);
-    r_mpfr_set_z(self_val, arg_val_z, rnd_mode_val);
-    mpz_temp_free(arg_val_z);
+    mpz_temp_from_bignum (arg_val_z, arg);
+    r_mpfr_set_z (self_val, arg_val_z, rnd_mode_val);
+    mpz_temp_free (arg_val_z);
 #endif /* GMP3 code */
   } else {
-    rb_raise(rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name(rb_class_of(arg)));
+    rb_raise (rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name (rb_class_of (arg)));
   }
 }
-#endif
 
-#ifdef MPFR
 void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
 {
   int result;
 
-  result = mpfr_set_str(self_val, StringValuePtr(arg), base, __gmp_default_rounding_mode);
+  result = mpfr_set_str (self_val, StringValuePtr (arg), base, __gmp_default_rounding_mode);
 
   if (result == -1) {
-    rb_raise(rb_eRuntimeError, "Badly formatted string");
+    rb_raise (rb_eRuntimeError, "Badly formatted string");
   }
 }
-#endif
+#endif  /* MPFR */
 
 /*
  * call-seq:
