@@ -82,11 +82,11 @@ VALUE r_gmpqsg_new(int argc, VALUE *argv, VALUE klass)
   (void)klass;
 
   if (argc > 2)
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0, 1 or 2)", argc);
+    rb_raise (rb_eArgError, "wrong # of arguments (%d for 0, 1 or 2)", argc);
 
   mpq_make_struct (res, res_val);
   mpq_init (res_val);
-  rb_obj_call_init(res, argc, argv);
+  rb_obj_call_init (res, argc, argv);
 
   return res;
 }
@@ -116,17 +116,17 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
   MP_RAT *self_val, *arg_val;
 
   if (argc != 0) {
-    mpq_get_struct(self, self_val);
-    if (argc == 1 && GMPQ_P(argv[0])) {
-      mpq_get_struct(argv[0], arg_val);
+    mpq_get_struct (self, self_val);
+    if (argc == 1 && GMPQ_P (argv[0])) {
+      mpq_get_struct (argv[0], arg_val);
       mpq_set (self_val, arg_val);
-    } else if (argc == 1 && STRING_P(argv[0])) {
-      mpq_str_set (self_val, StringValuePtr(argv[0]));
+    } else if (argc == 1 && STRING_P (argv[0])) {
+      mpq_str_set (self_val, StringValuePtr (argv[0]));
     } else {
-      mpz_set_value (mpq_numref(self_val), argv[0], 0); // are these segfaulting?
+      mpz_set_value (mpq_numref (self_val), argv[0], 0); // are these segfaulting?
       if (argc == 2) {
-        mpz_set_value (mpq_denref(self_val), argv[1], 0); // are these segfaulting?
-        mpq_canonicalize(self_val);
+        mpz_set_value (mpq_denref (self_val), argv[1], 0); // are these segfaulting?
+        mpq_canonicalize (self_val);
       } // AND IF ARGC != 2 ?!? WHAT JUST HAPPENED?
     }
   }
@@ -142,7 +142,7 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
 VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
 {
   (void)module;
-  return r_gmpqsg_new(argc, argv, cGMP_Q);
+  return r_gmpqsg_new (argc, argv, cGMP_Q);
 }
 
 /*
@@ -151,17 +151,17 @@ VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
  *
  * Efficiently swaps the contents of _p_ with _q_.
  */
-VALUE r_gmpq_swap(VALUE self, VALUE arg)
+VALUE r_gmpq_swap (VALUE self, VALUE arg)
 {
   MP_RAT *self_val, *arg_val;
 
-  if (!GMPQ_P(arg)) {
-    rb_raise(rb_eTypeError, "Can't swap GMP::Q with object of other class");
+  if (!GMPQ_P (arg)) {
+    rb_raise (rb_eTypeError, "Can't swap GMP::Q with object of other class");
   }
 
-  mpq_get_struct(self, self_val);
-  mpq_get_struct(arg, arg_val);
-  mpq_swap(self_val,arg_val);
+  mpq_get_struct (self, self_val);
+  mpq_get_struct (arg, arg_val);
+  mpq_swap (self_val,arg_val);
 
   return Qnil;
 }
