@@ -27,9 +27,9 @@ class MPFR_TFAC < Test::Unit::TestCase
       f = f * n
       prec = f.size_in_base(2) - f.scan1(0)
       (GMP::MPFR_PREC_MIN..prec).each do |p|
-        [GMP::GMP_RNDN, GMP::GMP_RNDZ, GMP::GMP_RNDU, GMP::GMP_RNDD].each do |r|
-          x = GMP::F.fac(n, r, p)
-          y = GMP::F.new(f, p, r)
+        RND_MODES.each do |rnd|
+          x = GMP::F.fac(n, rnd, p)
+          y = GMP::F.new(f, p, rnd)
           assert_equal(y, x, "fac should be correct for integers")
         end
       end

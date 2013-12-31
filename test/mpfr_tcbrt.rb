@@ -19,7 +19,7 @@ class MPFR_TCBRT < Test::Unit::TestCase
     return 0 if exp < 0
     f.to_s[2..(index_e-1)][0,exp]
   end
-  
+
   def special
     x = @nan.cbrt(GMP::GMP_RNDN)
     assert_true(x.nan?, "@nan.cbrt should be NaN")
@@ -69,12 +69,12 @@ class MPFR_TCBRT < Test::Unit::TestCase
     y = GMP::F("1.0111E-1", 5, 2)
     assert_equal(y, x, "cbrt should be correct")
   end
-  
+
   def test_cbrt
     special
 
     (2..100).each do |p|
-      [GMP::GMP_RNDN, GMP::GMP_RNDZ, GMP::GMP_RNDD, GMP::GMP_RNDU].each do |rnd|
+      RND_MODES.each do |rnd|
         x = GMP::F(1).cbrt(rnd)
         assert_equal(GMP::F(1), x, "1.cbrt should be 1 (prec #{p}) in rounding mode #{rnd}")
         x = GMP::F(-1).cbrt(rnd)

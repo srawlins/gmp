@@ -39,8 +39,7 @@ require File.join(DIR, 'gmp_tlcm')
 require File.join(DIR, 'gmp_tprintf')
 require File.join(DIR, 'gmp_troot')
 
-begin
-  GMP::MPFR_VERSION
+if GMP.const_defined? :MPFR_VERSION
   require File.join(DIR, 'tc_mpfr_constants')
   require File.join(DIR, 'tc_mpfr_integer')
   require File.join(DIR, 'tc_mpfr_random')
@@ -52,6 +51,4 @@ begin
   require File.join(DIR, 'mpfr_tisnan')
   require File.join(DIR, 'mpfr_trec_sqrt')
   require File.join(DIR, 'mpfr_tsqrt')
-rescue
-
 end
