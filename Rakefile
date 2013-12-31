@@ -67,6 +67,8 @@ end
 def mpfr_opt
   if ENV['MPFR'].nil? || ENV['MPFR'].empty?
     version = '3.1.1'
+  else
+    version = ENV['MPFR']
   end
 
   if version == 'no-mpfr'

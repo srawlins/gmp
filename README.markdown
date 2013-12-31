@@ -341,6 +341,7 @@ Methods
       mpfr_buildopt_decimal_p  returns whether MPFR was compiled with decimal
                                float support
     GMP::F
+      frexp                    frexp
       lessgreater?(y)          x < y or y < x?
       unordered?(y)            either x or y is NaN?
       sqrt                     square root of the object

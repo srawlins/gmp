@@ -50,6 +50,9 @@ if GMP.const_defined? :MPFR_VERSION
   require File.join(DIR, 'tc_mpfr_new_rounding')
   require File.join(DIR, 'mpfr_tcbrt')
   require File.join(DIR, 'mpfr_tfac')
+  if GMP::MPFR_VERSION >= "3.1.0"
+    require File.join(DIR, 'mpfr_tfrexp')
+  end
   require File.join(DIR, 'mpfr_tisnan')
   require File.join(DIR, 'mpfr_trec_sqrt')
   require File.join(DIR, 'mpfr_tsqrt')

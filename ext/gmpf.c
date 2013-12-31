@@ -272,19 +272,6 @@ void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
     rb_raise (rb_eRuntimeError, "Badly formatted string");
   }
 }
-#endif  /* MPFR */
-
-/*
- * call-seq:
- *   GMP::F(arg)
- *
- * A convenience method for +GMP::F.new(arg)+.
- */
-VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
-{
-  (void)module;
-  return r_gmpfsg_new(argc, argv, cGMP_F);
-}
 
 /*
  * call-seq:
@@ -356,6 +343,19 @@ VALUE r_gmpfsg_zero(int argc, VALUE *argv, VALUE klass)
   return res_val;
 }
 #endif  /* MPFR_VERSION_MAJOR > 2 */
+#endif  /* MPFR */
+
+/*
+ * call-seq:
+ *   GMP::F(arg)
+ *
+ * A convenience method for +GMP::F.new(arg)+.
+ */
+VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
+{
+  (void)module;
+  return r_gmpfsg_new(argc, argv, cGMP_F);
+}
 
 
 /**********************************************************************
@@ -994,6 +994,7 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)        \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }  \
   else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }       \
   if (NIL_P (res_prec)) { res_prec_value = prec; }             \
+  /* TODO test type */                                         \
   else { res_prec_value = FIX2INT (res_prec); }                \
   mpf_make_struct_init (res, res_val, res_prec_value);         \
   mpfr_##name (res_val, self_val, rnd_mode_val);               \
@@ -1015,8 +1016,10 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)              \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }  \
   else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }             \
   if (NIL_P (sin_prec)) { sin_prec_val = prec; }                     \
+  /* TODO test type */                                               \
   else { sin_prec_val = FIX2INT (sin_prec); }                        \
   if (NIL_P (cos_prec)) { cos_prec_val = sin_prec_val; }             \
+  /* TODO test type */                                               \
   else { cos_prec_val = FIX2INT (cos_prec); }                        \
   mpf_make_struct_init (sinn, sin_val, sin_prec_val);                \
   mpf_make_struct_init (coss, cos_val, cos_prec_val);                \
@@ -1063,6 +1066,7 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)                    \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }    \
   else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }                   \
   if (NIL_P (res_prec)) { res_prec_value = prec; }                         \
+  /* TODO test type */                                                     \
   else { res_prec_value = FIX2INT (res_prec); }                            \
   mpf_make_struct_init (res, res_val, res_prec_value);                     \
   mpfr_##name (res_val, arg1_val, self_val, rnd_mode_val);                 \
@@ -1104,6 +1108,38 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
   mpfr_##name (res_val, rnd_mode_val);                       \
                                                              \
   return res;                                                \
+}
+
+/*
+ * call-seq:
+ *   exp, y = x.frexp(rnd_mode = nil, prec = nil)
+ *
+ * Set _exp_ and _y_ such that
+ * 0.5 <= _abs(y)_ < 1 and _y_ times 2 raised to _exp_ equals _x_ rounded to _prec_, or the precision
+ * of _x_, using the given rounding mode. If _x_ is zero, then _y_ is set to a zero
+ * of the same sign and _exp_ is set to 0. If _x_ is NaN or an infinity, then _y_ is
+ * set to the same value and _exp_ is undefined.
+ */
+VALUE r_gmpfr_frexp(int argc, VALUE *argv, VALUE self_val)
+{
+  MP_FLOAT *self, *res;
+  VALUE rnd_mode_val, res_prec_val, exp_val, res_val;
+  mpfr_prec_t prec, res_prec;
+  mp_rnd_t rnd_mode;
+  mpfr_exp_t exp;
+
+  mpf_get_struct_prec (self_val, self, prec);
+
+  rb_scan_args (argc, argv, "02", &rnd_mode_val, &res_prec_val);
+  if (NIL_P (rnd_mode_val)) { rnd_mode = __gmp_default_rounding_mode; }
+  else { rnd_mode = r_get_rounding_mode (rnd_mode_val); }
+  if (NIL_P (res_prec_val)) { res_prec = prec; }
+  else { res_prec = FIX2INT (res_prec_val); }
+  mpf_make_struct_init (res_val, res, res_prec);
+  mpfr_frexp (&exp, res, self, rnd_mode);
+  exp_val = INT2FIX (exp);
+
+  return rb_assoc_new(exp_val, res_val);
 }
 
 MPFR_SINGLE_FUNCTION(sqrt)
@@ -1483,8 +1519,6 @@ void init_gmpf()
   /* TODO: new in MPFR 3.0.0:
    *
    * mpfr_ai
-   * mpfr_set_flt
-   * mpfr_get_flt
    * mpfr_set_z_2exp
    */
 
@@ -1496,6 +1530,9 @@ void init_gmpf()
    * mpfr_grandom
    * mpfr_z_sub
    */
+#if MPFR_VERSION_MAJOR >= 3 && MPFR_VERSION_MINOR >= 1
+  rb_define_method(cGMP_F, "frexp",    r_gmpfr_frexp,    -1);
+#endif  /* MPFR_VERSION >= 3.1 */
 
   // Basic Arithmetic Functions
   rb_define_method(cGMP_F, "sqrt",     r_gmpfr_sqrt,     -1);

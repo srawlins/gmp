@@ -34,8 +34,8 @@
 \huge{gmp} &\\
 \midrule[3pt]
 \multicolumn{2}{r}{\large{Ruby bindings to the GMP library}}\\
-\multicolumn{2}{r}{\large{Edition 0.6.41}}\\
-\multicolumn{2}{r}{\large{15 October 2013}}
+\multicolumn{2}{r}{\large{Edition 0.6.47}}\\
+\multicolumn{2}{r}{\large{31 December 2013}}
 \end{tabular}
 
 \vfill
@@ -1272,6 +1272,29 @@ There is also a convenience method available, \texttt{GMP::F()}.\\
 & \multicolumn{2}{p{\defnwidth}}{
   Returns zero or -zero, an instance of \gmpfs, based on the sign of
   \textit{sign}, which must be a Fixnum, and defaults to 1.
+}
+\end{tabular}
+\newline\newline
+
+\subsection{Floating-point Conversion Functions}
+
+Every method below accepts two additional parameters in addition to any
+required parameters. These are $rnd\_mode$, the rounding mode to use in
+calculation, which defaults to \textit{GMP::GMP\_RNDN}, and $res\_prec$, the
+precision of the result, which defaults to the \textit{f.prec}, the precision
+of $f$.\\
+
+TONS OF MISSING DOCUMENTATION\\
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{frexp}   & (MPFR 3.1 only) & $f$.frexp(\begin{small}rnd\_mode = GMP\_RNDN, res\_prec=$f$.prec\end{small}) $\rightarrow$ $exp$, $g$ \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Set $exp$ and $y$ such that $0.5 <= abs(y) < 1$ and $y$ times 2 raised to
+  $exp$ equals $x$ rounded to $res\_prec$, using $rnd\_mode$. If $x$ is zero,
+  then $y$ is set to a zero of the same sign and $exp$ is set to 0. If $x$ is
+  NaN or an infinity, then $y$ is set to the same value and $exp$ is undefined.
 }
 \end{tabular}
 \newline\newline
