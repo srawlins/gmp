@@ -816,7 +816,7 @@ int mpf_cmp_value(MP_FLOAT *self_val, VALUE arg)
 
 /*
  * what does really "equal" mean ? it's not obvious
- * Is this a note that I, SRR, put in here? It is now obvious to me...
+ * Is this a note that I, srawlins, put in here? It is not obvious to me...
  */
 VALUE r_gmpf_eq(VALUE self, VALUE arg)
 {
@@ -856,6 +856,40 @@ VALUE r_gmpf_sgn(VALUE self)
   mpf_get_struct (self, self_val);
   return INT2FIX (mpf_sgn (self_val));
 }
+
+#ifdef MPFR
+
+/*
+ * call-seq:
+ *   x.lessgreater?(y)
+ *
+ * Return true if _x_ < _y_ or _x_ > _y_; false otherwise
+ */
+VALUE r_gmpfr_lessgreater_p(VALUE self_val, VALUE arg_val)
+{
+  MP_FLOAT *self, *arg;
+  mpf_get_struct (self_val, self);
+  /* TODO test type */
+  mpf_get_struct (arg_val, arg);
+  return (mpfr_lessgreater_p (self, arg) != 0) ? Qtrue : Qfalse;
+}
+
+/*
+ * call-seq:
+ *   x.unordered?(y)
+ *
+ * Return true if _x_ or _y_ is a NaN; false otherwise
+ */
+VALUE r_gmpfr_unordered_p(VALUE self_val, VALUE arg_val)
+{
+  MP_FLOAT *self, *arg;
+  mpf_get_struct (self_val, self);
+  /* TODO test type */
+  mpf_get_struct (arg_val, arg);
+  return (mpfr_unordered_p (self, arg) != 0) ? Qtrue : Qfalse;
+}
+
+#endif  /* MPFR */
 
 
 /**********************************************************************
@@ -987,7 +1021,6 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }  \
   else { rnd_mode_val = r_get_rounding_mode (rnd_mode); }    \
   if (NIL_P (prec)) { prec_val = mpfr_get_default_prec(); }  \
-  /* TODO check type */                                      \
   else if (FIXNUM_P (prec)) { prec_val = FIX2INT (prec); }   \
   else { typeerror_as (Z, "prec"); }                         \
   mpf_make_struct_init (res, res_val, prec_val);             \
@@ -1399,8 +1432,8 @@ void init_gmpf()
 #if MPFR_VERSION_MAJOR > 2
   rb_define_method(cGMP_F, "regular?", r_gmpfr_regular_p, 0);
 #endif
-  /* TODO "lessgreater", r_gmpfr_lessgreater_p */
-  /* TODO "unordered", r_gmpfr_unordered_p */
+  rb_define_method(cGMP_F, "lessgreater?", r_gmpfr_lessgreater_p, 1);
+  rb_define_method(cGMP_F, "unordered?",   r_gmpfr_unordered_p, 1);
 
   // Special Functions
   rb_define_method(cGMP_F, "log",       r_gmpfr_log,     -1);

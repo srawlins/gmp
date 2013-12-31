@@ -5,6 +5,8 @@
     GMP::F.new(Bignum), GMP::F.new(GMP::Z), GMP::F.new(GMP::Q),
     GMP::F.new(Float), and GMP::F.new(GMP::F) with tests (MPFR only)
   * Added MPFR method GMP::RandState.mpfr_urandom (mpfr_urandom) and tests
+  * Added MPFR methods GMP::F#lessgreater? and GMP::F#unordered?, with sanity
+    tests
   * Added tests for GMP::F#abs and GMP::F#neg
   * Added GMP::F.fac(n) (mpfr_fac_ui) and tests
   * Fixed GMP::MPFR_RNDA
