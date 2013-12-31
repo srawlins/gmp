@@ -42,6 +42,7 @@ require File.join(DIR, 'gmp_troot')
 if GMP.const_defined? :MPFR_VERSION
   require File.join(DIR, 'tc_mpfr_cmp')
   require File.join(DIR, 'tc_mpfr_constants')
+  require File.join(DIR, 'tc_mpfr_inf_nan_zero')
   require File.join(DIR, 'tc_mpfr_integer')
   require File.join(DIR, 'tc_mpfr_random')
   require File.join(DIR, 'tc_mpfr_functions')

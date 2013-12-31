@@ -286,6 +286,18 @@ VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
   return r_gmpfsg_new(argc, argv, cGMP_F);
 }
 
+VALUE r_gmpfsg_nan(VALUE klass)
+{
+  MP_FLOAT *res;
+  VALUE res_val;
+  (void)klass;
+
+  mpf_make_struct_init (res_val, res, mpfr_get_default_prec());
+  mpfr_set_nan (res);
+
+  return res_val;
+}
+
 
 /**********************************************************************
  *    Converting Floats                                               *
@@ -1354,9 +1366,11 @@ void init_gmpf()
   // Initializing, Assigning Floats
   rb_define_singleton_method(cGMP_F, "new", r_gmpfsg_new, -1);
   rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
-  /* TODO rb_define_singleton_method(cGMP_F, "nan", r_gmpfsg_nan, 0); */
+#ifdef MPFR
+  rb_define_singleton_method(cGMP_F, "nan", r_gmpfsg_nan, 0);
   /* TODO rb_define_singleton_method(cGMP_F, "inf", r_gmpfsg_inf, -1); */
   /* TODO rb_define_singleton_method(cGMP_F, "zero", r_gmpfsg_zero, -1); */
+#endif  /* MPFR */
   rb_define_method(cGMP_F, "prec", r_gmpf_get_prec, 0);
   rb_define_method(cGMP_F, "prec=", r_gmpf_set_prec, 1);
   rb_define_method(cGMP_F, "prec_raw=", r_gmpf_set_prec_raw, 1);
