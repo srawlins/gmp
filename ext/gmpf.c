@@ -330,6 +330,33 @@ VALUE r_gmpfsg_inf(int argc, VALUE *argv, VALUE klass)
   return res_val;
 }
 
+#if MPFR_VERSION_MAJOR > 2
+/*
+ * call-seq:
+ *   GMP::F.zero
+ *   GMP::F.zero(sign)
+ *
+ * zero or negative zero, an instance of GMP::F, depending on _sign_, a Fixnum
+ */
+VALUE r_gmpfsg_zero(int argc, VALUE *argv, VALUE klass)
+{
+  MP_FLOAT *res;
+  VALUE sign_val, res_val;
+  int sign;
+  (void)klass;
+
+  rb_scan_args (argc, argv, "01", &sign_val);
+
+  if (NIL_P (sign_val))         { sign = 1; }
+  else if (FIXNUM_P (sign_val)) { sign = FIX2INT (sign_val); }
+  else                          { typeerror_as (X, "sign"); }
+  mpf_make_struct_init (res_val, res, mpfr_get_default_prec());
+  mpfr_set_zero (res, sign);
+
+  return res_val;
+}
+#endif  /* MPFR_VERSION_MAJOR > 2 */
+
 
 /**********************************************************************
  *    Converting Floats                                               *
@@ -1401,7 +1428,9 @@ void init_gmpf()
 #ifdef MPFR
   rb_define_singleton_method(cGMP_F, "nan", r_gmpfsg_nan, 0);
   rb_define_singleton_method(cGMP_F, "inf", r_gmpfsg_inf, -1);
-  /* TODO rb_define_singleton_method(cGMP_F, "zero", r_gmpfsg_zero, -1); */
+#if MPFR_VERSION_MAJOR>2
+  rb_define_singleton_method(cGMP_F, "zero", r_gmpfsg_zero, -1);
+#endif  /* MPFR_VERSION_MAJOR>2 */
 #endif  /* MPFR */
   rb_define_method(cGMP_F, "prec", r_gmpf_get_prec, 0);
   rb_define_method(cGMP_F, "prec=", r_gmpf_set_prec, 1);
@@ -1453,7 +1482,6 @@ void init_gmpf()
 #ifdef MPFR
   /* TODO: new in MPFR 3.0.0:
    *
-   * mpfr_set_zero
    * mpfr_ai
    * mpfr_set_flt
    * mpfr_get_flt

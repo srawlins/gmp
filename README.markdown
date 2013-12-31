@@ -332,6 +332,7 @@ Methods
     class methods of GMP::F
       nan                      returns NaN
       inf(sign = 1)            returns Inf or -Inf
+      zero(sign = 1)           returns zero or -zero
       const_log2               returns the natural log of 2
       const_pi                 returns pi
       const_euler              returns euler

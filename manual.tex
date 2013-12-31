@@ -1265,6 +1265,17 @@ There is also a convenience method available, \texttt{GMP::F()}.\\
 \end{tabular}
 \newline\newline
 
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{zero} & (MPFR only) & GMP::F.zero(\textit{sign} = 1) $\rightarrow$ \textit{zero} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns zero or -zero, an instance of \gmpfs, based on the sign of
+  \textit{sign}, which must be a Fixnum, and defaults to 1.
+}
+\end{tabular}
+\newline\newline
+
 \subsection{Floating-point Special Functions (MPFR Only)}
 
 Every method below accepts two additional parameters in addition to any
