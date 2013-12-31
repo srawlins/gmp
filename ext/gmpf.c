@@ -286,6 +286,12 @@ VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
   return r_gmpfsg_new(argc, argv, cGMP_F);
 }
 
+/*
+ * call-seq:
+ *   GMP::F.nan
+ *
+ * NaN, an instance of GMP::F
+ */
 VALUE r_gmpfsg_nan(VALUE klass)
 {
   MP_FLOAT *res;
@@ -294,6 +300,32 @@ VALUE r_gmpfsg_nan(VALUE klass)
 
   mpf_make_struct_init (res_val, res, mpfr_get_default_prec());
   mpfr_set_nan (res);
+
+  return res_val;
+}
+
+/*
+ * call-seq:
+ *   GMP::F.inf
+ *   GMP::F.inf(sign)
+ *
+ * Inf (positive infinity), an instance of GMP::F, or -Inf (negative infinity),
+ * if a negative Fixnum _sign_ is passed
+ */
+VALUE r_gmpfsg_inf(int argc, VALUE *argv, VALUE klass)
+{
+  MP_FLOAT *res;
+  VALUE sign_val, res_val;
+  int sign;
+  (void)klass;
+
+  rb_scan_args (argc, argv, "01", &sign_val);
+
+  if (NIL_P (sign_val))         { sign = 1; }
+  else if (FIXNUM_P (sign_val)) { sign = FIX2INT (sign_val); }
+  else                          { typeerror_as (X, "sign"); }
+  mpf_make_struct_init (res_val, res, mpfr_get_default_prec());
+  mpfr_set_inf (res, sign);
 
   return res_val;
 }
@@ -1368,7 +1400,7 @@ void init_gmpf()
   rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
 #ifdef MPFR
   rb_define_singleton_method(cGMP_F, "nan", r_gmpfsg_nan, 0);
-  /* TODO rb_define_singleton_method(cGMP_F, "inf", r_gmpfsg_inf, -1); */
+  rb_define_singleton_method(cGMP_F, "inf", r_gmpfsg_inf, -1);
   /* TODO rb_define_singleton_method(cGMP_F, "zero", r_gmpfsg_zero, -1); */
 #endif  /* MPFR */
   rb_define_method(cGMP_F, "prec", r_gmpf_get_prec, 0);

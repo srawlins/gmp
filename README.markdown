@@ -330,6 +330,8 @@ Methods
 
     *only if MPFR is available*
     class methods of GMP::F
+      nan                      returns NaN
+      inf(sign = 1)            returns Inf or -Inf
       const_log2               returns the natural log of 2
       const_pi                 returns pi
       const_euler              returns euler

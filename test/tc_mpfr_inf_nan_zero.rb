@@ -10,4 +10,9 @@ class TC_MPFR_Inf_Nan_Zero < Test::Unit::TestCase
   def test_nan
     assert_equal(@nan, GMP::F.nan, "NaN should be NaN")
   end
+
+  def test_inf
+    assert_equal(@inf, GMP::F.inf, "inf should be inf")
+    assert_equal(@neg_inf, GMP::F.inf(-1), "neg_inf should be neg_inf")
+  end
 end

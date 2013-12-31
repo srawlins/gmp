@@ -1206,9 +1206,72 @@ There is also a convenience method available, \texttt{GMP::Q()}.\\
 
 \subsection{Initializing, Assigning Floats}
 
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{new} & & GMP::F.new $\rightarrow$ \textit{float} \\
+& & GMP::F.new(\textit{numeric}, \begin{small}precision = default, rnd\_mode = GMP\_RNDN\end{small}) $\rightarrow$ \textit{float} \\
+& & GMP::F.new(\textit{str}, \begin{small}base = 0\end{small}) $\rightarrow$ \textit{float} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  This method creates a new \gmpfs float. It typically takes one optional
+  argument for the value of the float. This argument can be one of several
+  classes. Optionally, a precision can be passed.\newline
+
+  If MPFR is available, an optional rounding mode can also be passed.
+  \newline
+
+  If the first argument is a String, then a second argument, the base, may be
+  optionally supplied.  Here are some examples:\newline
+
+  \texttt{GMP::F.new \qqqquad\qqqquad \#=> 0 (default) \newline
+          GMP::F.new(5) \qqqquad\qquad\  \#=> 5 (Ruby Fixnum) \newline
+          GMP::F.new(GMP::Z.new(31))  \#=> 31 (GMP Integer)\newline
+          GMP::F.new(3**41) \qqqquad\  \#=> 0.36472996377170788e+20\newline
+          >\qqqquad\qqqquad\qqqquad\qquad\quad (Ruby Bignum)\newline
+          GMP::F.new(3**41, 32) \qquad\  \#=> 0.36472996375+20\newline
+          >\qqqquad\qqqquad\qqqquad\qquad\quad (Ruby Bignum with precision)\newline
+          GMP::F.new(3**41, 32, GMP::GMP\_RNDU) \#=> 0.36472996375+20\newline
+          >\qqqquad\qqqquad\  (Ruby Bignum with precision and a rounding mode)\newline
+          GMP::F.new("20") \qqqquad\quad \#=> 20 (Ruby String)\newline
+          GMP::F.new("0x20") \qqqquad \#=> 32 (Ruby hexadecimal-format String)\newline
+          GMP::F.new("111", 16) \qquad\  \#=> 111 (Ruby String with precision)\newline
+          GMP::F.new("111", 16, 2) \quad \#=> 7\newline
+          >\qqqquad\qqqquad\qqqquad\quad (Ruby String with precision and a base)}
+}
+\end{tabular}
+\newline\newline
+
+There is also a convenience method available, \texttt{GMP::F()}.\\
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{nan} & (MPFR only) & GMP::F.nan $\rightarrow$ \textit{NaN} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns NaN, an instance of \gmpfs.
+}
+\end{tabular}
+\newline\newline
+
+\begin{tabular}{p{\methwidth} l r}
+\toprule
+\textbf{inf} & (MPFR only) & GMP::F.inf(\textit{sign} = 1) $\rightarrow$ \textit{Inf} \\
+\cmidrule(r){2-3}
+& \multicolumn{2}{p{\defnwidth}}{
+  Returns Inf (positive infinity) or -Inf (negative infinity), an instance of
+  \gmpfs, based on the sign of \textit{sign}, which must be a Fixnum, and
+  defaults to 1.
+}
+\end{tabular}
+\newline\newline
+
 \subsection{Floating-point Special Functions (MPFR Only)}
 
-Every method below accepts two additional parameters in addition to any required parameters. These are $rnd\_mode$, the rounding mode to use in calculation, which defaults to \textit{GMP::GMP\_RNDN}, and $res\_prec$, the precision of the result, which defaults to the \textit{f.prec}, the precision of $f$.\\
+Every method below accepts two additional parameters in addition to any
+required parameters. These are $rnd\_mode$, the rounding mode to use in
+calculation, which defaults to \textit{GMP::GMP\_RNDN}, and $res\_prec$, the
+precision of the result, which defaults to the \textit{f.prec}, the precision
+of $f$.\\
 
 \begin{tabular}{p{\methwidth} l r}
 \toprule

@@ -9,7 +9,7 @@
     tests
   * Added tests for GMP::F#abs and GMP::F#neg
   * Added GMP::F.fac(n) (mpfr_fac_ui) and tests
-  * Added GMP::F.nan and one dumb test
+  * Added GMP::F.nan, GMP::F.inf, documentation, and simple tests
   * Fixed GMP::MPFR_RNDA
 
 0.6.43
