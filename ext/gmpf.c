@@ -16,31 +16,31 @@
  *    Macros                                                          *
  **********************************************************************/
 
-#define DEFUN_FLOAT2FLOAT(fname,mpf_fname)                    \
-static VALUE r_gmpf_##fname(VALUE self)                       \
-{                                                             \
-  MP_FLOAT *self_val, *res_val;                               \
-  VALUE res;                                                  \
-  mpf_get_struct(self, self_val);                             \
-  mpf_make_struct_init(res, res_val, mpf_get_prec(self_val)); \
-  mpf_fname(res_val, self_val);                               \
-  return res;                                                 \
-}                                                             \
-                                                              \
-static VALUE r_gmpf_##fname##_self(VALUE self)                \
-{                                                             \
-  MP_FLOAT *self_val;                                         \
-  mpf_get_struct(self, self_val);                             \
-  mpf_fname(self_val, self_val);                              \
-  return Qnil;                                                \
+#define DEFUN_FLOAT2FLOAT(fname,mpf_fname)                  \
+static VALUE r_gmpf_##fname(VALUE self_val)                 \
+{                                                           \
+  MP_FLOAT *self, *res;                                     \
+  VALUE res_val;                                            \
+  mpf_get_struct (self_val, self);                          \
+  mpf_make_struct_init (res_val, res, mpf_get_prec(self));  \
+  mpf_fname (res, self);                                    \
+  return res_val;                                           \
+}                                                           \
+                                                            \
+static VALUE r_gmpf_##fname##_self(VALUE self)              \
+{                                                           \
+  MP_FLOAT *self_val;                                       \
+  mpf_get_struct (self, self_val);                          \
+  mpf_fname (self_val, self_val);                           \
+  return Qnil;                                              \
 }
 
-#define DEFUN_FLOAT_CMP(name,CMP_OP)                           \
-static VALUE r_gmpf_cmp_##name(VALUE self, VALUE arg)          \
-{                                                              \
-  MP_FLOAT *self_val;                                          \
-  mpf_get_struct(self,self_val);                               \
-  return (mpf_cmp_value(self_val, arg) CMP_OP 0)?Qtrue:Qfalse; \
+#define DEFUN_FLOAT_CMP(name,CMP_OP)                                 \
+static VALUE r_gmpf_cmp_##name(VALUE self_val, VALUE arg_val)        \
+{                                                                    \
+  MP_FLOAT *self;                                                    \
+  mpf_get_struct (self_val, self);                                   \
+  return (mpf_cmp_value (self, arg_val) CMP_OP 0) ? Qtrue : Qfalse;  \
 }
 
 
@@ -1354,6 +1354,9 @@ void init_gmpf()
   // Initializing, Assigning Floats
   rb_define_singleton_method(cGMP_F, "new", r_gmpfsg_new, -1);
   rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
+  /* TODO rb_define_singleton_method(cGMP_F, "nan", r_gmpfsg_nan, 0); */
+  /* TODO rb_define_singleton_method(cGMP_F, "inf", r_gmpfsg_inf, -1); */
+  /* TODO rb_define_singleton_method(cGMP_F, "zero", r_gmpfsg_zero, -1); */
   rb_define_method(cGMP_F, "prec", r_gmpf_get_prec, 0);
   rb_define_method(cGMP_F, "prec=", r_gmpf_set_prec, 1);
   rb_define_method(cGMP_F, "prec_raw=", r_gmpf_set_prec_raw, 1);
