@@ -14,8 +14,16 @@ class TC_MPFR_Cmp < Test::Unit::TestCase
     assert_false(@nan.lessgreater?(@nan), "lessgreater? should work")
   end
 
+  def test_mpfr_lessgreater_types
+    assert_raise(TypeError) { GMP::F(5).lessgreater? 3.14 }
+  end
+
   def test_mpfr_unordered
     assert_true(@nan.unordered?(GMP::F(5)), "unordered? should work")
     assert_false(@neg_inf.unordered?(GMP::F(5)), "unordered? should work")
+  end
+
+  def test_mpfr_unordered_types
+    assert_raise(TypeError) { GMP::F(5).unordered? 3.14 }
   end
 end

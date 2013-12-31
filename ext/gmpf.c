@@ -868,8 +868,11 @@ VALUE r_gmpf_sgn(VALUE self)
 VALUE r_gmpfr_lessgreater_p(VALUE self_val, VALUE arg_val)
 {
   MP_FLOAT *self, *arg;
+
+  if (!GMPF_P (arg_val))
+    typeerror_as (F, "arg");
+
   mpf_get_struct (self_val, self);
-  /* TODO test type */
   mpf_get_struct (arg_val, arg);
   return (mpfr_lessgreater_p (self, arg) != 0) ? Qtrue : Qfalse;
 }
@@ -883,8 +886,11 @@ VALUE r_gmpfr_lessgreater_p(VALUE self_val, VALUE arg_val)
 VALUE r_gmpfr_unordered_p(VALUE self_val, VALUE arg_val)
 {
   MP_FLOAT *self, *arg;
+
+  if (!GMPF_P (arg_val))
+    typeerror_as (F, "arg");
+
   mpf_get_struct (self_val, self);
-  /* TODO test type */
   mpf_get_struct (arg_val, arg);
   return (mpfr_unordered_p (self, arg) != 0) ? Qtrue : Qfalse;
 }
@@ -998,7 +1004,7 @@ static VALUE r_gmpfr_##name(VALUE self)     \
 {                                           \
   MP_FLOAT *self_val;                       \
                                             \
-  mpf_get_struct(self, self_val);           \
+  mpf_get_struct (self, self_val);          \
   if (mpfr_##name (self_val))               \
     return Qtrue;                           \
   else                                      \

@@ -151,6 +151,7 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 #define EXPECTED_ZX "Expected GMP::Z or Fixnum"
 #define EXPECTED_X "Expected Fixnum"
 #define EXPECTED_Z "Expected GMP::Z"
+#define EXPECTED_F "Expected GMP::F"
 #define EXPECTED_FD "Expected GMP::F or Float"
 #define typeerror(expected) rb_raise(rb_eTypeError, EXPECTED_##expected)
 #define typeerror_as(expected, argname) rb_raise(rb_eTypeError, EXPECTED_##expected " as " argname)
