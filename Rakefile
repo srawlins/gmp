@@ -65,7 +65,10 @@ def gmp_opt
 end
 
 def mpfr_opt
-  version = ENV['MPFR'] || '3.1.1'
+  if ENV['MPFR'].nil? || ENV['MPFR'].empty?
+    version = '3.1.1'
+  end
+
   if version == 'no-mpfr'
     return '--no-mpfr'
   end
