@@ -43,6 +43,9 @@ if (begin; JRuby; rescue NameError; end) != nil
 end
 
 
+# This test is actually due to a Clang 3.3 shortcoming, included in OS X 10.9,
+# fixed in Clang 3.4:
+# http://llvm.org/releases/3.4/tools/clang/docs/ReleaseNotes.html#new-compiler-flags
 if try_compile('', '-O6')
   $CFLAGS += ' -Wall -W -O6 -g'
 else
