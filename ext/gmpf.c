@@ -303,7 +303,7 @@ VALUE r_gmpfsg_inf(int argc, VALUE *argv, VALUE klass)
 {
   MP_FLOAT *res;
   VALUE sign_val, res_val;
-  int sign;
+  int sign = 0;
   (void)klass;
 
   rb_scan_args (argc, argv, "01", &sign_val);
@@ -329,7 +329,7 @@ VALUE r_gmpfsg_zero(int argc, VALUE *argv, VALUE klass)
 {
   MP_FLOAT *res;
   VALUE sign_val, res_val;
-  int sign;
+  int sign = 0;
   (void)klass;
 
   rb_scan_args (argc, argv, "01", &sign_val);
@@ -580,7 +580,7 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
   MP_FLOAT *self_val, *res_val, *arg_val_f;
   MP_RAT *arg_val_q;
   MP_INT *arg_val_z;
-  VALUE res;
+  VALUE res = 0;
   mpfr_prec_t prec;
 
   mpf_get_struct_prec (self, self_val, prec);
@@ -638,7 +638,7 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
   MP_FLOAT *self_val, *res_val, *arg_val_f;
   MP_RAT *arg_val_q;
   MP_INT *arg_val_z;
-  VALUE res;
+  VALUE res = 0;
   mpfr_prec_t prec;
 
   mpf_get_struct_prec (self, self_val, prec);
@@ -690,7 +690,7 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
 VALUE r_gmpf_pow(VALUE self, VALUE arg)
 {
   MP_FLOAT *self_val, *res_val;
-  VALUE res;
+  VALUE res = 0;
 
   //unsigned long prec;
   mpfr_prec_t prec;
@@ -728,7 +728,7 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
   MP_FLOAT *self_val, *res_val, *arg_val_f;
   MP_RAT *arg_val_q;
   MP_INT *arg_val_z;
-  VALUE res;
+  VALUE res = 0;
   mpfr_prec_t prec;
 
   mpf_get_struct_prec (self, self_val, prec);
@@ -1094,7 +1094,7 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
   VALUE res;                                                 \
   VALUE rnd_mode, prec;                                      \
   mp_rnd_t rnd_mode_val;                                     \
-  mpfr_prec_t prec_val;                                      \
+  mpfr_prec_t prec_val = 0;                                  \
   (void)self;                                                \
                                                              \
   rb_scan_args (argc, argv, "02", &rnd_mode, &prec);         \
@@ -1214,7 +1214,7 @@ VALUE r_gmpfrsg_fac(int argc, VALUE *argv, VALUE self_val)
   VALUE rnd_mode_val, prec_val;
   mp_rnd_t rnd_mode;
   mpfr_prec_t prec;
-  unsigned long int arg;
+  unsigned long int arg = 0;
   (void)self_val;
 
   rb_scan_args (argc, argv, "12", &arg_val, &rnd_mode_val, &prec_val);
@@ -1342,15 +1342,16 @@ VALUE r_gmpfsg_get_default_rounding_mode(VALUE klass)
 
 VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
 {
-  VALUE mode;
+  VALUE mode = 0;
   (void)klass;
-  if (GMPRND_P(arg)) {
+
+  if (GMPRND_P (arg)) {
     mode = rb_funcall (arg, rb_intern("mode"), 0);
-    if (FIX2INT(mode) < 0 || FIX2INT(mode) > 3) {
-      rb_raise(rb_eRangeError, "rounding mode must be one of the rounding mode constants.");
+    if (FIX2INT (mode) < 0 || FIX2INT (mode) > 3) {
+      rb_raise (rb_eRangeError, "rounding mode must be one of the rounding mode constants.");
     }
   } else {
-    rb_raise(rb_eTypeError, "rounding mode must be one of the rounding mode constants.");
+    rb_raise (rb_eTypeError, "rounding mode must be one of the rounding mode constants.");
   }
 
   switch (FIX2INT(mode)) {
@@ -1374,18 +1375,18 @@ VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
 VALUE r_gmpf_can_round(VALUE self, VALUE err, VALUE rnd1, VALUE rnd2, VALUE prec)
 {
   MP_FLOAT *self_val;
-  mp_exp_t err_val;
+  mp_exp_t err_val = 0;
   mpfr_rnd_t rnd1_val, rnd2_val;
   mpfr_prec_t prec_val;
 
-  mpf_get_struct(self, self_val);
-  if (FIXNUM_P(err)) {
-    err_val = FIX2INT(err);
+  mpf_get_struct (self, self_val);
+  if (FIXNUM_P (err)) {
+    err_val = FIX2INT (err);
   } else {
-    typeerror_as(X, "err");
+    typeerror_as (X, "err");
   }
-  rnd1_val = r_get_rounding_mode(rnd1);
-  rnd2_val = r_get_rounding_mode(rnd2);
+  rnd1_val = r_get_rounding_mode (rnd1);
+  rnd2_val = r_get_rounding_mode (rnd2);
   prec_val = FIX2INT (prec);
 
   if (mpfr_can_round (self_val, err_val, rnd1_val, rnd2_val, prec_val))
@@ -1435,6 +1436,8 @@ VALUE r_gmpf_set_prec(VALUE self, VALUE arg)
   } else {
     typeerror(X);
   }
+
+  return Qnil;  /* should never get here */
 }
 
 VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg)
@@ -1447,6 +1450,8 @@ VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg)
   } else {
     typeerror(X);
   }
+
+  return Qnil;  /* should never get here */
 }
 
 

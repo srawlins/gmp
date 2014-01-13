@@ -94,12 +94,12 @@ typedef __gmp_randstate_struct MP_RANDSTATE;
 
 #if defined(MPFR) && defined(HAVE_MPFR_H)
 #define mpf_get_struct_prec(ruby_var,c_var,prec) {  \
-  mpf_get_struct (ruby_var,c_var);                  \
+  mpf_get_struct (ruby_var, c_var);                 \
   prec = mpfr_get_prec (c_var);                     \
 }
 #define mpf_make_struct_init(ruby_var,c_var,prec) {  \
-  mpf_make_struct (ruby_var,c_var);                  \
-  mpfr_init2 (c_var,prec);                           \
+  mpf_make_struct (ruby_var, c_var);                 \
+  mpfr_init2 (c_var, prec);                          \
 }
 #define mpf_temp_init(var,prec) { mpf_temp_alloc(var); mpfr_init2(var,prec); }
 #define mpf_temp_free(var) { mpfr_clear(var); free(var); }

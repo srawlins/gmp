@@ -43,7 +43,7 @@ VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
   VALUE rs;
   VALUE algorithm, arg2, arg3, arg4;
   ID algorithm_id = rb_intern("default");
-  MP_INT *a_val;
+  MP_INT *a_val = NULL;
   unsigned long c_val, m2exp_val;
   unsigned long size_val;
   int free_a_val = 0;
@@ -188,7 +188,7 @@ VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg)
 {
   MP_RANDSTATE *self_val;
   MP_INT *res_val;
-  VALUE res;
+  VALUE res = 0;
 
   mprandstate_get_struct(self,self_val);
 
@@ -215,7 +215,7 @@ VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg)
 VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg)
 {
   MP_RANDSTATE *self_val;
-  MP_INT *res_val, *arg_val;
+  MP_INT *res_val, *arg_val = NULL;
   int free_arg_val = 0;
   VALUE res;
 
@@ -256,7 +256,7 @@ VALUE r_gmprandstate_rrandomb(VALUE self, VALUE arg)
 {
   MP_RANDSTATE *self_val;
   MP_INT *res_val;
-  VALUE res;
+  VALUE res = 0;
 
   mprandstate_get_struct(self,self_val);
 
@@ -334,7 +334,7 @@ VALUE r_gmprandstate_mpfr_urandom(int argc, VALUE *argv, VALUE self_val)
   MP_FLOAT *res;
   mp_rnd_t rnd_mode;
   VALUE res_val, prec_val, rnd_mode_val;
-  unsigned long int prec;
+  unsigned long int prec = 0;
 
   mprandstate_get_struct (self_val, self);
 
