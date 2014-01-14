@@ -1,12 +1,12 @@
 # Dependencies base directory. I have to figure out how to... not hard code this?
-DEPENDENCIES_DIR = '/usr/local'
+DEPENDENCIES_DIR = ENV["DEPENDENCIES_DIR"] || "/usr/local"
 
 task :clean do
   sh "cd ext && make clean; echo"
 end
 
 task :extconf => [:clean] do
-  sh "cd ext && ruby extconf.rb #{gmp_opt} #{mpfr_opt}"
+  sh "cd ext && ruby extconf.rb #{with_option("gmp")} #{with_option("mpfr")}"
 end
 
 task :make => [:extconf] do
@@ -30,8 +30,8 @@ task :report => [:test] do
 end
 
 task :console do
-  require 'irb'
-  require File.join(File.dirname(__FILE__), 'lib', 'gmp')
+  require "irb"
+  require File.join(File.dirname(__FILE__), "lib", "gmp")
   ARGV.clear
   IRB.start
 end
@@ -52,35 +52,35 @@ namespace :dependencies do
   end
 end
 
-def gmp_opt
-  version = ENV['GMP'] || '5.1.0'
-  directory = File.join(DEPENDENCIES_DIR, "gmp-#{version}")
-  if !File.exist? directory
-    puts "========================================"
-    puts "==  Warning: target GMP installation directory does not exist: #{directory}"
-    puts "========================================"
+def with_option(lib)
+  default_versions = { "gmp" => "5.1.3", "mpfr" => "3.1.2" }
+  if ENV[lib].nil? || ENV[lib].empty?
+    version = default_versions[lib]
   else
-    '--with-gmp-dir=' + directory
-  end
-end
-
-def mpfr_opt
-  if ENV['MPFR'].nil? || ENV['MPFR'].empty?
-    version = '3.1.1'
-  else
-    version = ENV['MPFR']
+    version = ENV[lib.upcase]
   end
 
-  if version == 'no-mpfr'
-    return '--no-mpfr'
+  if version == "no-#{lib}"
+    return "--no-#{lib}"
   end
 
-  directory = File.join(DEPENDENCIES_DIR, "mpfr-#{version}")
-  if !File.exist? directory
-    puts "========================================"
-    puts "==  Warning: target MPFR installation directory does not exist: #{directory}"
-    puts "========================================"
-  else
-    return '--with-mpfr-dir=' + directory
+  directory = File.join(DEPENDENCIES_DIR, "#{lib}-#{version}")
+
+  if File.exist? directory
+    return "--with-#{lib}-dir=" + directory
   end
+
+  # Homebrew directories
+  directory2 = File.join(DEPENDENCIES_DIR, lib, version)
+
+  if File.exist? directory2
+    return "--with-#{lib}-dir=" + directory2
+  end
+
+  puts "========================================"
+  puts "==  Warning: neither target #{lib.upcase} installation directory exists:"
+  puts "==  * #{directory}"
+  puts "==  * #{directory2}"
+  puts "========================================"
+  return nil
 end

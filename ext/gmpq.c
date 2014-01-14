@@ -594,6 +594,8 @@ int mpq_cmp_value(MP_RAT *OP, VALUE arg)
   } else {
     typeerror(ZQFXB);
   }
+
+  return 0;  /* should never get here */
 }
 
 VALUE r_gmpq_eq(VALUE self, VALUE arg)
@@ -714,6 +716,8 @@ static VALUE r_gmpq_cmpabs(VALUE self, VALUE arg)
   } else {
     typeerror (ZQFXB);
   }
+
+  return Qnil;  /* should never get here */
 }
 
 /*

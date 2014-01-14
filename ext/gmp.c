@@ -84,6 +84,8 @@ int get_base(VALUE base_val) {
   } else {
     rb_raise(rb_eTypeError, "Expected Fixnum or one of :bin, :oct, :dec, :hex");
   }
+
+  return 0;  /* should never get here */
 }
 
 VALUE r_gmpsg_sprintf2(VALUE klass, VALUE format, VALUE arg) {
@@ -116,7 +118,7 @@ VALUE r_gmpsg_sprintf2(VALUE klass, VALUE format, VALUE arg) {
 #ifdef MPFR
 mp_rnd_t r_get_rounding_mode(VALUE rnd)
 {
-  VALUE mode;
+  VALUE mode = 0;
   int max_rnd;
 
 #if MPFR_VERSION_MAJOR>2
@@ -126,12 +128,12 @@ mp_rnd_t r_get_rounding_mode(VALUE rnd)
 #endif
 
   if (GMPRND_P (rnd)) {
-    mode = rb_funcall (rnd, rb_intern("mode"), 0);
+    mode = rb_funcall (rnd, rb_intern ("mode"), 0);
     if (FIX2INT (mode) < 0 || FIX2INT (mode) > max_rnd) {
       rb_raise (rb_eRangeError, "rounding mode must be one of the rounding mode constants.");
     }
   } else {
-    rb_raise(rb_eTypeError, "rounding mode must be one of the rounding mode constants.");
+    rb_raise (rb_eTypeError, "rounding mode must be one of the rounding mode constants.");
   }
 
   switch (FIX2INT (mode)) {
