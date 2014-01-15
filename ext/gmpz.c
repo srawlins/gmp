@@ -2024,6 +2024,7 @@ VALUE r_gmpz_gcdext2(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: lcm
  * call-seq:
  *   a.lcm(b)
  *
@@ -2057,6 +2058,7 @@ VALUE r_gmpz_lcm(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: invert
  * call-seq:
  *   a.invert(b)
  *
@@ -2093,6 +2095,7 @@ VALUE r_gmpz_invert(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: jacobi
  * call-seq:
  *   a.jacobi(b)
  *
@@ -2114,6 +2117,7 @@ VALUE r_gmpz_jacobi(VALUE self, VALUE b)
 }
 
 /*
+ * Document-method: GMP::Z.jacobi
  * call-seq:
  *   GMP::Z.jacobi(a, b)
  *
@@ -2177,6 +2181,7 @@ VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
 }
 
 /*
+ * Document-method: legendre
  * call-seq:
  *   a.legendre(p)
  *
@@ -2200,6 +2205,7 @@ VALUE r_gmpz_legendre(VALUE self, VALUE p)
 }
 
 /*
+ * Document-method: remove
  * call-seq:
  *   n.remove(f) #=> r, t
  *
@@ -2250,7 +2256,6 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
 
 /*
  * Document-method: GMP::Z.fac
- *
  * call-seq:
  *   GMP::Z.fac(n)
  *
@@ -2268,7 +2273,6 @@ DEFUN_INT_SINGLETON_UI(fac, mpz_fac_ui)
 
 /*
  * Document-method: GMP::Z.2fac
- *
  * call-seq:
  *   GMP::Z.send(:"2fac", n)
  *   GMP::Z.double_fac(n)
@@ -2294,7 +2298,6 @@ DEFUN_INT_SINGLETON_UI(2fac,       mpz_2fac_ui)
 
 /*
  * Document-method: GMP::Z.mfac
- *
  * call-seq:
  *   GMP::Z.mfac(n, m)
  *
@@ -2319,7 +2322,6 @@ DEFUN_INT_SINGLETON_UIUI(mfac,     mpz_mfac_uiui)
 
 /*
  * Document-method: GMP::Z.primorial
- *
  * call-seq:
  *   GMP::Z.primorial(n)
  *
@@ -2340,7 +2342,6 @@ DEFUN_INT_SINGLETON_UI(primorial,  mpz_primorial_ui)
 
 /*
  * Document-method: GMP::Z.fib
- *
  * call-seq:
  *   GMP::Z.fib(n)
  *
@@ -2359,7 +2360,6 @@ DEFUN_INT_SINGLETON_UI(fib, mpz_fib_ui)
 
 /*
  * Document-method: GMP::Z.fib2
- *
  * call-seq:
  *   GMP::Z.fib2(n)
  *
@@ -2384,6 +2384,7 @@ DEFUN_INT_SINGLETON_UI(lucnum, mpz_lucnum_ui)
  **********************************************************************/
 
 /*
+ * Document-method: ==
  * call-seq:
  *   a == b
  * 
@@ -2453,6 +2454,7 @@ int mpz_cmp_value(MP_INT *OP, VALUE arg)
 }
 
 /*
+ * Document-method: <=>
  * call-seq:
  *   a <=> b
  * 
@@ -2478,7 +2480,6 @@ VALUE r_gmpz_cmp(VALUE self, VALUE arg)
 
 /*
  * Document-method: <
- *
  * call-seq:
  *   a < b
  * 
@@ -2487,7 +2488,6 @@ VALUE r_gmpz_cmp(VALUE self, VALUE arg)
 DEFUN_INT_CMP(lt,<)
 /*
  * Document-method: <=
- *
  * call-seq:
  *   a <= b
  * 
@@ -2496,7 +2496,6 @@ DEFUN_INT_CMP(lt,<)
 DEFUN_INT_CMP(le,<=)
 /*
  * Document-method: >
- *
  * call-seq:
  *   a > b
  * 
@@ -2505,7 +2504,6 @@ DEFUN_INT_CMP(le,<=)
 DEFUN_INT_CMP(gt,>)
 /*
  * Document-method: >=
- *
  * call-seq:
  *   a >= b
  *
@@ -2514,6 +2512,7 @@ DEFUN_INT_CMP(gt,>)
 DEFUN_INT_CMP(ge,>=)
 
 /*
+ * Document-method: cmpabs
  * call-seq:
  *   a.cmpabs(b)
  * 
@@ -2562,6 +2561,7 @@ VALUE r_gmpz_cmpabs(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: sgn
  * call-seq:
  *   a.sgn
  *
@@ -2575,6 +2575,7 @@ VALUE r_gmpz_sgn(VALUE self)
 }
 
 /*
+ * Document-method: eql?
  * call-seq:
  *   a.eql?(b)
  *
@@ -2599,6 +2600,7 @@ VALUE r_gmpz_eql(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: hash
  * call-seq:
  *   a.hash
  *
@@ -2622,7 +2624,6 @@ VALUE r_gmpz_hash(VALUE self)
 
 /*
  * Document-method: &
- *
  * call-seq:
  *   a & b
  *
@@ -2634,7 +2635,6 @@ VALUE r_gmpz_hash(VALUE self)
 DEFUN_INT_LOGIC(and, mpz_and)
 /*
  * Document-method: |
- *
  * call-seq:
  *   a | b
  *
@@ -2646,7 +2646,6 @@ DEFUN_INT_LOGIC(and, mpz_and)
 DEFUN_INT_LOGIC(or, mpz_ior)
 /*
  * Document-method: ^
- *
  * call-seq:
  *   a ^ b
  *
@@ -2659,7 +2658,6 @@ DEFUN_INT_LOGIC(xor, mpz_xor)
 
 /*
  * Document-method: com
- *
  * call-seq:
  *   a.com
  *
@@ -2667,7 +2665,6 @@ DEFUN_INT_LOGIC(xor, mpz_xor)
  */
 /*
  * Document-method: com!
- *
  * call-seq:
  *   a.com!
  *
@@ -2677,7 +2674,6 @@ DEFUN_INT2INT(com, mpz_com)
 
 /*
  * Document-method: popcount
- *
  * call-seq:
  *   a.popcount
  *
@@ -2693,6 +2689,7 @@ VALUE r_gmpz_popcount(VALUE self)
 }
 
 /*
+ * Document-method: hamdist
  * call-seq:
  *   a.hamdist(b)
  *
@@ -2712,6 +2709,7 @@ VALUE r_gmpz_hamdist(VALUE self_val, VALUE b_val)
 }
 
 /*
+ * Document-method: scan0
  * call-seq:
  *   a.scan0(starting_bit)
  *
@@ -2739,6 +2737,7 @@ VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
 }
 
 /*
+ * Document-method: scan1
  * call-seq:
  *   a.scan1(starting_bit)
  *
@@ -2768,6 +2767,7 @@ VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
 }
 
 /*
+ * Document-method: []=
  * call-seq:
  *   a[index] = x
  *
@@ -2798,6 +2798,7 @@ VALUE r_gmpz_setbit(VALUE self, VALUE bitnr, VALUE set_to)
 }
 
 /*
+ * Document-method: []
  * call-seq:
  *   a[index] #=> boolean
  *
@@ -2823,6 +2824,7 @@ VALUE r_gmpz_getbit(VALUE self, VALUE bitnr)
  **********************************************************************/
 
 /*
+ * Document-method: out_raw
  * call-seq:
  *   a.out_raw(stream) #=> Fixnum
  *
@@ -2849,6 +2851,7 @@ VALUE r_gmpz_out_raw(VALUE self, VALUE stream)
 }
 
 /*
+ * Document-method: inp_raw
  * call-seq:
  *   GMP::Z.inp_raw(a, stream) #=> Fixnum
  *
@@ -2880,6 +2883,7 @@ VALUE r_gmpzsg_inp_raw(VALUE klass, VALUE a_val, VALUE stream_val)
  **********************************************************************/
 
 /*
+ * Document-method: import
  * call-seq:
  *   GMP::Z.import(str, order = -1) #=> GMP::Z
  *
@@ -2921,6 +2925,7 @@ VALUE r_gmpzsg_import(int argc, VALUE *argv, VALUE klass)
 }
 
 /*
+ * Document-method: export
  * call-seq:
  *   a.export(order = -1) #=> String
  *
@@ -2971,7 +2976,6 @@ VALUE r_gmpz_export(int argc, VALUE *argv, VALUE self_val)
 
 /*
  * Document-method: even?
- *
  * call-seq:
  *   a.even?
  *
@@ -2980,7 +2984,6 @@ VALUE r_gmpz_export(int argc, VALUE *argv, VALUE self_val)
 DEFUN_INT_COND_P(is_even,mpz_even_p)
 /*
  * Document-method: odd?
- *
  * call-seq:
  *   a.odd?
  *
@@ -2989,6 +2992,7 @@ DEFUN_INT_COND_P(is_even,mpz_even_p)
 DEFUN_INT_COND_P(is_odd,mpz_odd_p)
 
 /*
+ * Document-method: sizeinbase
  * call-seq:
  *   a.sizeinbase
  *   a.size_in_base
@@ -3010,6 +3014,7 @@ VALUE r_gmpz_sizeinbase(VALUE self, VALUE base)
 }
 
 /*
+ * Document-method: size_in_bin
  * call-seq:
  *   a.size_in_bin
  *
@@ -3031,6 +3036,7 @@ VALUE r_gmpz_size_in_bin(VALUE self)
  **********************************************************************/
 
 /*
+ * Document-method: size
  * call-seq:
  *   a.size
  *
