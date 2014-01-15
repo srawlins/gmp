@@ -117,17 +117,19 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
 
   if (argc != 0) {
     mpq_get_struct (self, self_val);
+    /* TODO: use mpq_set_d */
+    /* TODO: use mpq_set_f */
     if (argc == 1 && GMPQ_P (argv[0])) {
       mpq_get_struct (argv[0], arg_val);
       mpq_set (self_val, arg_val);
     } else if (argc == 1 && STRING_P (argv[0])) {
       mpq_str_set (self_val, StringValuePtr (argv[0]));
     } else {
-      mpz_set_value (mpq_numref (self_val), argv[0], 0); // are these segfaulting?
+      mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
       if (argc == 2) {
-        mpz_set_value (mpq_denref (self_val), argv[1], 0); // are these segfaulting?
+        mpz_set_value (mpq_denref (self_val), argv[1], 0); /* are these segfaulting? */
         mpq_canonicalize (self_val);
-      } // AND IF ARGC != 2 ?!? WHAT JUST HAPPENED?
+      } /* TODO: AND IF ARGC != 2 ?!? WHAT JUST HAPPENED? */
     }
   }
   return Qnil;
@@ -146,6 +148,7 @@ VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
 }
 
 /*
+ * Document-method: swap
  * call-seq:
  *   p.swap(q)
  *
@@ -172,6 +175,7 @@ VALUE r_gmpq_swap (VALUE self, VALUE arg)
  **********************************************************************/
 
 /*
+ * Document-method: to_d
  * call-seq:
  *   p.to_d
  *
@@ -193,6 +197,7 @@ VALUE r_gmpq_to_d(VALUE self)
 }
 
 /*
+ * Document-method: to_s
  * call-seq:
  *   p.to_s
  *
@@ -239,6 +244,7 @@ VALUE r_gmpq_to_s(VALUE self)
  **********************************************************************/
 
 /*
+ * Document-method: +
  * call-seq:
  *   p + q
  *
@@ -291,6 +297,7 @@ VALUE r_gmpq_add(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: -
  * call-seq:
  *   p - q
  *
@@ -346,6 +353,7 @@ VALUE r_gmpq_sub(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: *
  * call-seq:
  *   p * q
  *
@@ -418,6 +426,7 @@ VALUE r_gmpq_mul(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: /
  * call-seq:
  *   p / q
  *
@@ -487,7 +496,6 @@ DEFUN_RAT2INT(ceil,mpz_cdiv_q)
 
 /*
  * Document-method: neg
- *
  * call-seq:
  *   a.neg
  *   -a
@@ -496,7 +504,6 @@ DEFUN_RAT2INT(ceil,mpz_cdiv_q)
  */
 /*
  * Document-method: neg!
- *
  * call-seq:
  *   a.neg!
  *
@@ -505,12 +512,14 @@ DEFUN_RAT2INT(ceil,mpz_cdiv_q)
 DEFUN_RAT2RAT(neg, mpq_neg)
 
 /*
+ * Document-method: abs
  * call-seq:
  *   p.abs
  *
  * Returns the absolute value of _p_.
  */
 /*
+ * Document-method: abs!
  * call-seq:
  *   p.abs!
  *
@@ -519,6 +528,7 @@ DEFUN_RAT2RAT(neg, mpq_neg)
 DEFUN_RAT2RAT(abs, mpq_abs)
 
 /*
+ * Document-method: inv
  * call-seq:
  *   p.inv
  *
@@ -539,6 +549,7 @@ VALUE r_gmpq_inv(VALUE self)
 }
 
 /*
+ * Document-method: inv!
  * call-seq:
  *   p.inv!
  *
@@ -598,6 +609,13 @@ int mpq_cmp_value(MP_RAT *OP, VALUE arg)
   return 0;  /* should never get here */
 }
 
+/*
+ * Document-method: ==
+ * call-seq:
+ *   a == b
+ *
+ * Returns true if _a_ is equal to _b_, and false otherwise.
+ */
 VALUE r_gmpq_eq(VALUE self, VALUE arg)
 {
   MP_RAT *self_val, *arg_val_q;
@@ -632,6 +650,17 @@ VALUE r_gmpq_eq(VALUE self, VALUE arg)
   }
 }
 
+/*
+ * Document-method: <=>
+ * call-seq:
+ *   a <=> b
+ *
+ * Returns negative if _a_ is less than _b_.
+ *
+ * Returns 0 if _a_ is equal to _b_.
+ *
+ * Returns positive if _a_ is greater than _b_.
+ */
 VALUE r_gmpq_cmp(VALUE self, VALUE arg)
 {
   MP_RAT *self_val;
@@ -646,11 +675,53 @@ VALUE r_gmpq_cmp(VALUE self, VALUE arg)
     return INT2FIX(-1);
 }
 
+/*
+ * Document-method: <
+ * call-seq:
+ *   a < b
+ *
+ * Returns whether _a_ is strictly less than _b_.
+ */
+
 DEFUN_RAT_CMP(lt,<)
+/*
+ * Document-method: <=
+ * call-seq:
+ *   a <= b
+ *
+ * Returns whether _a_ is less than or equal to _b_.
+ */
 DEFUN_RAT_CMP(le,<=)
+
+/*
+ * Document-method: >
+ * call-seq:
+ *   a > b
+ *
+ * Returns whether _a_ is strictly greater than _b_.
+ */
 DEFUN_RAT_CMP(gt,>)
+
+/*
+ * Document-method: >=
+ * call-seq:
+ *   a >= b
+ *
+ * Returns whether _a_ is greater than or equal to _b_.
+ */
 DEFUN_RAT_CMP(ge,>=)
 
+/*
+ * Document-method: cmpabs
+ * call-seq:
+ *   a.cmpabs(b)
+ *
+ * Returns negative if abs(_a_) is less than abs(_b_).
+ *
+ * Returns 0 if abs(_a_) is equal to abs(_b_).
+ *
+ * Returns positive if abs(_a_) is greater than abs(_b_).
+ */
 static VALUE r_gmpq_cmpabs(VALUE self, VALUE arg)
 {
   MP_RAT *arg_val_q, *self_val;
@@ -721,6 +792,7 @@ static VALUE r_gmpq_cmpabs(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: sgn
  * call-seq:
  *   p.sgn
  *
@@ -734,6 +806,7 @@ VALUE r_gmpq_sgn(VALUE self)
 }
 
 /*
+ * Document-method: eql?
  * call-seq:
  *   a.eql?(b)
  *
@@ -758,6 +831,7 @@ VALUE r_gmpq_eql(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: hash
  * call-seq:
  *   a.hash
  *
@@ -822,7 +896,9 @@ void init_gmpq()
   rb_define_method(cGMP_Q, "+",    r_gmpq_add, 1);
   rb_define_method(cGMP_Q, "-",    r_gmpq_sub, 1);
   rb_define_method(cGMP_Q, "*",    r_gmpq_mul, 1);
+  /* TODO rb_define_method(cGMP_Q, "mul_2exp", r_gmpq_mul_2exp, 1); */
   rb_define_method(cGMP_Q, "/",    r_gmpq_div, 1);
+  /* TODO rb_define_method(cGMP_Q, "div_2exp", r_gmpq_div_2exp, 1); */
   rb_define_method(cGMP_Q, "-@",   r_gmpq_neg, 0);
   rb_define_alias( cGMP_Q, "neg",  "-@");
   rb_define_method(cGMP_Q, "neg!", r_gmpq_neg_self, 0);
