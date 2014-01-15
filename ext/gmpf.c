@@ -157,7 +157,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
     }
 
     if (argc == 4) {
-      // TODO: FIGURE IT OUT. ACCEPT A ROUNDING MODE!
+      /* TODO: FIGURE IT OUT. ACCEPT A ROUNDING MODE! */
     }
 
     mpf_set_value2 (self_val, arg, base);
@@ -188,7 +188,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   } else {
     mpf_set_value (self_val, arg);
   }
-#endif
+#endif /* MPFR */
 
   return Qnil;
 }
@@ -274,6 +274,7 @@ void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
 }
 
 /*
+ * Document-method: nan
  * call-seq:
  *   GMP::F.nan
  *
@@ -292,6 +293,7 @@ VALUE r_gmpfsg_nan(VALUE klass)
 }
 
 /*
+ * Document-method: inf
  * call-seq:
  *   GMP::F.inf
  *   GMP::F.inf(sign)
@@ -319,6 +321,7 @@ VALUE r_gmpfsg_inf(int argc, VALUE *argv, VALUE klass)
 
 #if MPFR_VERSION_MAJOR > 2
 /*
+ * Document-method: zero
  * call-seq:
  *   GMP::F.zero
  *   GMP::F.zero(sign)
@@ -363,6 +366,7 @@ VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
  **********************************************************************/
 
 /*
+ * Document-method: to_d
  * call-seq:
  *   x.to_d
  *
@@ -377,6 +381,7 @@ VALUE r_gmpf_to_d(VALUE self)
 }
 
 /*
+ * Document-method: to_s
  * call-seq:
  *   x.to_s(base = 10)
  *
@@ -440,6 +445,7 @@ VALUE r_gmpf_to_s(int argc, VALUE *argv, VALUE self_val)
 
 #ifndef MPFR
 /*
+ * Document-method: +
  * call-seq:
  *   x + y
  *
@@ -498,6 +504,7 @@ VALUE r_gmpf_add(VALUE self, VALUE arg)
 }
 #else
 /*
+ * Document-method: +
  * call-seq:
  *   x + y
  *
@@ -564,6 +571,7 @@ DEFUN_F_ZQXFBD2F(mul)
 #endif
 
 /*
+ * Document-method: -
  * call-seq:
  *   x - y
  *
@@ -604,7 +612,7 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_d(res_val, NUM2DBL(arg));
     mpf_sub(res_val, self_val, res_val);
-  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+  } else if (FIXNUM_P(arg)) { /* TODO: _ui with sign control instead ? */
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_si(res_val, FIX2NUM(arg));
     mpf_sub(res_val, self_val, res_val);
@@ -622,6 +630,7 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: *
  * call-seq:
  *   x * y
  *
@@ -662,7 +671,7 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_d(res_val, NUM2DBL(arg));
     mpf_mul(res_val, self_val, res_val);
-  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+  } else if (FIXNUM_P(arg)) { /* _ui with sign control instead ? */
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_si(res_val, FIX2NUM(arg));
     mpf_mul(res_val, self_val, res_val);
@@ -680,6 +689,7 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: **
  * call-seq:
  *   x ** y
  *
@@ -712,6 +722,7 @@ VALUE r_gmpf_pow(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: /
  * call-seq:
  *   x / y
  *
@@ -771,6 +782,7 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
 
 #ifdef MPFR
 /*
+ * Document-method: **
  * call-seq:
  *   float ** other
  *
@@ -825,7 +837,6 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
 
 /*
  * Document-method: neg
- *
  * call-seq:
  *   x.neg
  *   -x
@@ -834,16 +845,15 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
  */
 /*
  * Document-method: neg!
- *
  * call-seq:
  *   x.neg!
  *
  * Sets _x_ to -_x_.
  */
 DEFUN_FLOAT2FLOAT(neg,mpf_neg)
+
 /*
  * Document-method: abs
- *
  * call-seq:
  *   x.abs
  *
@@ -851,7 +861,6 @@ DEFUN_FLOAT2FLOAT(neg,mpf_neg)
  */
 /*
  * Document-method: abs!
- *
  * call-seq:
  *   x.abs!
  *
@@ -916,6 +925,7 @@ DEFUN_FLOAT_CMP(gt,>)
 DEFUN_FLOAT_CMP(ge,>=)
 
 /*
+ * Document-method: sgn
  * call-seq:
  *   x.sgn
  *
@@ -931,6 +941,7 @@ VALUE r_gmpf_sgn(VALUE self)
 #ifdef MPFR
 
 /*
+ * Document-method: lessgreater?
  * call-seq:
  *   x.lessgreater?(y)
  *
@@ -949,6 +960,7 @@ VALUE r_gmpfr_lessgreater_p(VALUE self_val, VALUE arg_val)
 }
 
 /*
+ * Document-method: unordered?
  * call-seq:
  *   x.unordered?(y)
  *
@@ -1111,6 +1123,7 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
 }
 
 /*
+ * Document-method: frexp
  * call-seq:
  *   exp, y = x.frexp(rnd_mode = nil, prec = nil)
  *

@@ -2483,6 +2483,7 @@ VALUE r_gmpz_cmp(VALUE self, VALUE arg)
  * Returns whether _a_ is strictly less than _b_.
  */
 DEFUN_INT_CMP(lt,<)
+
 /*
  * Document-method: <=
  * call-seq:
@@ -2491,6 +2492,7 @@ DEFUN_INT_CMP(lt,<)
  * Returns whether _a_ is less than or equal to _b_.
  */
 DEFUN_INT_CMP(le,<=)
+
 /*
  * Document-method: >
  * call-seq:
@@ -2499,6 +2501,7 @@ DEFUN_INT_CMP(le,<=)
  * Returns whether _a_ is strictly greater than _b_.
  */
 DEFUN_INT_CMP(gt,>)
+
 /*
  * Document-method: >=
  * call-seq:
