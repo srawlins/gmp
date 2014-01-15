@@ -1155,17 +1155,147 @@ VALUE r_gmpfr_frexp(int argc, VALUE *argv, VALUE self_val)
   return rb_assoc_new(exp_val, res_val);
 }
 
+/*
+ * Document-method: sqrt
+ * call-seq:
+ *   x.sqrt
+ *   x.sqrt(rounding_mode)
+ *   x.sqrt(rounding_mode, precision)
+ *
+ * Calculate the square root of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(sqrt)
+
+/*
+ * Document-method: rec_sqrt
+ * call-seq:
+ *   x.rec_sqrt
+ *   x.rec_sqrt(rounding_mode)
+ *   x.rec_sqrt(rounding_mode, precision)
+ *
+ * Calculate the reciprocal square root of _x_, rounding according to
+ * `rounding_mode`. The resultant GMP::F float has the same precision that _x_
+ * has, if `precision` was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(rec_sqrt)
+
+/*
+ * Document-method: cbrt
+ * call-seq:
+ *   x.cbrt
+ *   x.cbrt(rounding_mode)
+ *   x.cbrt(rounding_mode, precision)
+ *
+ * Calculate the cubic root of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(cbrt)
 
+/*
+ * Document-method: log
+ * call-seq:
+ *   x.log
+ *   x.log(rounding_mode)
+ *   x.log(rounding_mode, precision)
+ *
+ * Calculate the natural logarithm of _x_, rounding according to
+ * `rounding_mode`. The resultant GMP::F float has the same precision that _x_
+ * has, if `precision` was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(log)
+
+/*
+ * Document-method: log2
+ * call-seq:
+ *   x.log2
+ *   x.log2(rounding_mode)
+ *   x.log2(rounding_mode, precision)
+ *
+ * Calculate the logarithm base 2 of _x_, rounding according to
+ * `rounding_mode`. The resultant GMP::F float has the same precision that _x_
+ * has, if `precision` was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(log2)
+
+/*
+ * Document-method: log10
+ * call-seq:
+ *   x.log10
+ *   x.log10(rounding_mode)
+ *   x.log10(rounding_mode, precision)
+ *
+ * Calculate the logarithm base 10 of _x_, rounding according to
+ * `rounding_mode`. The resultant GMP::F float has the same precision that _x_
+ * has, if `precision` was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(log10)
+
+/*
+ * Document-method: exp
+ * call-seq:
+ *   x.exp
+ *   x.exp(rounding_mode)
+ *   x.exp(rounding_mode, precision)
+ *
+ * Calculate the exponential of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(exp)
+
+/*
+ * Document-method: exp2
+ * call-seq:
+ *   x.exp2
+ *   x.exp2(rounding_mode)
+ *   x.exp2(rounding_mode, precision)
+ *
+ * Calculate the 2 power of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(exp2)
+
+/*
+ * Document-method: exp10
+ * call-seq:
+ *   x.exp10
+ *   x.exp10(rounding_mode)
+ *   x.exp10(rounding_mode, precision)
+ *
+ * Calculate the 10 power of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(exp10)
+
+/*
+ * Document-method: cos
+ * call-seq:
+ *   x.cos
+ *   x.cos(rounding_mode)
+ *   x.cos(rounding_mode, precision)
+ *
+ * Calculate the cosine of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(cos)
+
+/*
+ * Document-method: sin
+ * call-seq:
+ *   x.sin
+ *   x.sin(rounding_mode)
+ *   x.sin(rounding_mode, precision)
+ *
+ * Calculate the sine of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(sin)
 MPFR_SINGLE_FUNCTION(tan)
 MPFR_DOUBLE_FUNCTION(sin_cos)
