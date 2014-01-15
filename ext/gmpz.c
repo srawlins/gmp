@@ -1609,7 +1609,6 @@ static VALUE r_gmpz_congruent(VALUE self_val, VALUE c_val, VALUE d_val)
 
 /*
  * Document-method: **
- *
  * call-seq:
  *   a ** b
  *
@@ -1619,7 +1618,6 @@ DEFUN_INT_F_UL(pow,mpz_pow_ui,"exponent")
 
 /*
  * Document-method: GMP::Z.pow
- *
  * call-seq:
  *   GMP::Z.pow(a, b)
  *
@@ -1644,6 +1642,7 @@ VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
 }
 
 /*
+ * Document-method: powmod
  * call-seq:
  *   a.powmod(b, c)
  *
@@ -1718,7 +1717,6 @@ VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
 
 /*
  * Document-method: root
- *
  * call-seq:
  *   a.root(b)
  *
@@ -1729,7 +1727,6 @@ DEFUN_INT_F_UL(root,mpz_root,"root number")
 
 /*
  * Document-method: rootrem
- *
  * call-seq:
  *   a.rootrem(b)
  *
@@ -1767,7 +1764,6 @@ static VALUE r_gmpz_rootrem(VALUE self_val, VALUE exp_val)
 
 /*
  * Document-method: sqrt
- *
  * call-seq:
  *   a.sqrt
  *
@@ -1775,7 +1771,6 @@ static VALUE r_gmpz_rootrem(VALUE self_val, VALUE exp_val)
  */
 /*
  * Document-method: sqrt!
- *
  * call-seq:
  *   a.sqrt!
  *
@@ -1784,6 +1779,7 @@ static VALUE r_gmpz_rootrem(VALUE self_val, VALUE exp_val)
 DEFUN_INT2INT(sqrt, mpz_sqrt)
 
 /*
+ * Document-method: sqrtrem
  * call-seq:
  *   a.sqrtrem #=> s, r
  *
@@ -1804,7 +1800,6 @@ static VALUE r_gmpz_sqrtrem(VALUE self)
 
 /*
  * Document-method: power?
- *
  * call-seq:
  *   p.power?
  *
@@ -1817,7 +1812,6 @@ static VALUE r_gmpz_sqrtrem(VALUE self)
 DEFUN_INT_COND_P(is_power,mpz_perfect_power_p)
 /*
  * Document-method: square?
- *
  * call-seq:
  *   p.square?
  *
@@ -1832,6 +1826,7 @@ DEFUN_INT_COND_P(is_square,mpz_perfect_square_p)
  **********************************************************************/
 
 /*
+ * Document-method: probab_prime?
  * call-seq:
  *   n.probab_prime?(reps = 5)
  *
@@ -1869,7 +1864,6 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
 
 /*
  * Document-method: nextprime
- *
  * call-seq:
  *   n.nextprime
  *   n.next_prime
@@ -1881,7 +1875,6 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
  */
 /*
  * Document-method: nextprime!
- *
  * call-seq:
  *   n.nextprime!
  *   n.next_prime!
@@ -1894,6 +1887,7 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
 DEFUN_INT2INT(nextprime, mpz_nextprime)
 
 /*
+ * Document-method: gcd
  * call-seq:
  *   a.gcd(b)
  *
@@ -1927,6 +1921,7 @@ VALUE r_gmpz_gcd(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: gcdext
  * call-seq:
  *   a.gcdext(b) #=> g, s, t
  *
@@ -1977,6 +1972,7 @@ VALUE r_gmpz_gcdext(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: gcdext2
  * call-seq:
  *   a.gcdext2(b) #=> g, s
  *
@@ -2117,7 +2113,7 @@ VALUE r_gmpz_jacobi(VALUE self, VALUE b)
 }
 
 /*
- * Document-method: GMP::Z.jacobi
+ * Document-method: jacobi
  * call-seq:
  *   GMP::Z.jacobi(a, b)
  *
@@ -2210,7 +2206,7 @@ VALUE r_gmpz_legendre(VALUE self, VALUE p)
  *   n.remove(f) #=> r, t
  *
  * Remove all occurrences of the factor _f_ from _n_, returning the result as _r_. _t_,
- * how many such occurrences were removed, is also returned.
+ * the number of occurrences that were removed, is also returned.
  */
 VALUE r_gmpz_remove(VALUE self, VALUE arg)
 {
@@ -2255,124 +2251,123 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
 }
 
 /*
- * Document-method: GMP::Z.fac
+ * Document-method: fac
  * call-seq:
  *   GMP::Z.fac(n)
  *
  * Returns <i>n!</i>, the factorial of _n_.
  *
- * Examples:
- * * GMP::Z.fac(0)  #=>  1
- * * GMP::Z.fac(1)  #=>  1
- * * GMP::Z.fac(2)  #=>  2
- * * GMP::Z.fac(3)  #=>  6
- * * GMP::Z.fac(4)  #=> 24
+ * @example
+ *   GMP::Z.fac(0)  #=>  1
+ *   GMP::Z.fac(1)  #=>  1
+ *   GMP::Z.fac(2)  #=>  2
+ *   GMP::Z.fac(3)  #=>  6
+ *   GMP::Z.fac(4)  #=> 24
  */
 DEFUN_INT_SINGLETON_UI(fac, mpz_fac_ui)
 #if __GNU_MP_VERSION >= 5 && __GNU_MP_VERSION_MINOR >= 1  // 5.1.0 and newer
 
 /*
- * Document-method: GMP::Z.2fac
+ * Document-method: double_fac
  * call-seq:
- *   GMP::Z.send(:"2fac", n)
  *   GMP::Z.double_fac(n)
+ *   GMP::Z.send(:"2fac", n)
  *
  * Returns <i>n!!</i>, the double factorial of _n_.
  *
- * Examples:
- * * GMP::Z.double_fac(  0)  #=>    1
- * * GMP::Z.double_fac(  1)  #=>    1
- * * GMP::Z.double_fac(  2)  #=>    2
- * * GMP::Z.double_fac(  3)  #=>    3
- * * GMP::Z.double_fac(  4)  #=>    8
- * * GMP::Z.double_fac(  5)  #=>   15
- * * GMP::Z.double_fac(  6)  #=>   48
- * * GMP::Z.double_fac(  7)  #=>  105
- * * GMP::Z.double_fac(  8)  #=>  384
- * * GMP::Z.double_fac(  9)  #=>  945
- * * GMP::Z.double_fac( 10)  #=> 3840
- * * GMP::Z.double_fac(100)
- *     #=> 34243224702511976248246432895208185975118675053719198827915654463488000000000000
+ * @example
+ *   GMP::Z.double_fac(  0)  #=>    1
+ *   GMP::Z.double_fac(  1)  #=>    1
+ *   GMP::Z.double_fac(  2)  #=>    2
+ *   GMP::Z.double_fac(  3)  #=>    3
+ *   GMP::Z.double_fac(  4)  #=>    8
+ *   GMP::Z.double_fac(  5)  #=>   15
+ *   GMP::Z.double_fac(  6)  #=>   48
+ *   GMP::Z.double_fac(  7)  #=>  105
+ *   GMP::Z.double_fac(  8)  #=>  384
+ *   GMP::Z.double_fac(  9)  #=>  945
+ *   GMP::Z.double_fac( 10)  #=> 3840
+ *   GMP::Z.double_fac(100)  #=> 34243224702511976248246432895208185975118675053719198827915654463488000000000000
  */
 DEFUN_INT_SINGLETON_UI(2fac,       mpz_2fac_ui)
 
 /*
- * Document-method: GMP::Z.mfac
+ * Document-method: mfac
  * call-seq:
  *   GMP::Z.mfac(n, m)
  *
  * Returns <i>n!^(m)</i>, the m-multi-factorial of _n_.
  *
- * Examples:
- * * GMP::Z.mfac(0,   3)  #=>    1
- * * GMP::Z.mfac(1,   3)  #=>    1
- * * GMP::Z.mfac(2,   3)  #=>    2
- * * GMP::Z.mfac(3,   3)  #=>    3
- * * GMP::Z.mfac(4,   3)  #=>    4
- * * GMP::Z.mfac(5,   3)  #=>   10
- * * GMP::Z.mfac(6,   3)  #=>   18
- * * GMP::Z.mfac(7,   3)  #=>   28
- * * GMP::Z.mfac(8,   3)  #=>   80
- * * GMP::Z.mfac(9,   3)  #=>  162
- * * GMP::Z.mfac(10,  3)  #=>  280
- * * GMP::Z.mfac(11,  3)  #=>  880
- * * GMP::Z.mfac(12,  3)  #=> 1944
+ * @example
+ *   GMP::Z.mfac(0,   3)  #=>    1
+ *   GMP::Z.mfac(1,   3)  #=>    1
+ *   GMP::Z.mfac(2,   3)  #=>    2
+ *   GMP::Z.mfac(3,   3)  #=>    3
+ *   GMP::Z.mfac(4,   3)  #=>    4
+ *   GMP::Z.mfac(5,   3)  #=>   10
+ *   GMP::Z.mfac(6,   3)  #=>   18
+ *   GMP::Z.mfac(7,   3)  #=>   28
+ *   GMP::Z.mfac(8,   3)  #=>   80
+ *   GMP::Z.mfac(9,   3)  #=>  162
+ *   GMP::Z.mfac(10,  3)  #=>  280
+ *   GMP::Z.mfac(11,  3)  #=>  880
+ *   GMP::Z.mfac(12,  3)  #=> 1944
  */
 DEFUN_INT_SINGLETON_UIUI(mfac,     mpz_mfac_uiui)
 
 /*
- * Document-method: GMP::Z.primorial
+ * Document-method: primorial
  * call-seq:
  *   GMP::Z.primorial(n)
  *
  * Returns the primorial of _n_.
  *
- * Examples:
- * * GMP::Z.primorial(0)  #=>   1
- * * GMP::Z.primorial(1)  #=>   1
- * * GMP::Z.primorial(2)  #=>   2
- * * GMP::Z.primorial(3)  #=>   6
- * * GMP::Z.primorial(4)  #=>   6
- * * GMP::Z.primorial(5)  #=>  30
- * * GMP::Z.primorial(6)  #=>  30
- * * GMP::Z.primorial(7)  #=> 210
+ * @example
+ *   GMP::Z.primorial(0)  #=>   1
+ *   GMP::Z.primorial(1)  #=>   1
+ *   GMP::Z.primorial(2)  #=>   2
+ *   GMP::Z.primorial(3)  #=>   6
+ *   GMP::Z.primorial(4)  #=>   6
+ *   GMP::Z.primorial(5)  #=>  30
+ *   GMP::Z.primorial(6)  #=>  30
+ *   GMP::Z.primorial(7)  #=> 210
  */
 DEFUN_INT_SINGLETON_UI(primorial,  mpz_primorial_ui)
 #endif
 
 /*
- * Document-method: GMP::Z.fib
+ * Document-method: fib
  * call-seq:
  *   GMP::Z.fib(n)
  *
  * Returns <i>F[n]</i>, the <i>n</i>th Fibonacci number.
  *
- * Examples:
- * * GMP::Z.fib(1)  #=>  1
- * * GMP::Z.fib(2)  #=>  1
- * * GMP::Z.fib(3)  #=>  2
- * * GMP::Z.fib(4)  #=>  3
- * * GMP::Z.fib(5)  #=>  5
- * * GMP::Z.fib(6)  #=>  8
- * * GMP::Z.fib(7)  #=> 13
+ * @example
+ *   GMP::Z.fib(1)  #=>  1
+ *   GMP::Z.fib(2)  #=>  1
+ *   GMP::Z.fib(3)  #=>  2
+ *   GMP::Z.fib(4)  #=>  3
+ *   GMP::Z.fib(5)  #=>  5
+ *   GMP::Z.fib(6)  #=>  8
+ *   GMP::Z.fib(7)  #=> 13
  */
 DEFUN_INT_SINGLETON_UI(fib, mpz_fib_ui)
 
 /*
- * Document-method: GMP::Z.fib2
+ * Document-method: fib2
  * call-seq:
  *   GMP::Z.fib2(n)
  *
  * Returns [<i>F[n]</i>, <i>F[n-1]</i>], the <i>n</i>th and <i>n-1</i>th Fibonacci numbers.
  *
- * Examples:
- * * GMP::Z.fib2(1)  #=> [ 1, 0]
- * * GMP::Z.fib2(2)  #=> [ 1, 1]
- * * GMP::Z.fib2(3)  #=> [ 2, 1]
- * * GMP::Z.fib2(4)  #=> [ 3, 2]
- * * GMP::Z.fib2(5)  #=> [ 5, 3]
- * * GMP::Z.fib2(6)  #=> [ 8, 5]
- * * GMP::Z.fib2(7)  #=> [13, 8]
+ * @example
+ *   GMP::Z.fib2(1)  #=> [ 1, 0]
+ *   GMP::Z.fib2(2)  #=> [ 1, 1]
+ *   GMP::Z.fib2(3)  #=> [ 2, 1]
+ *   GMP::Z.fib2(4)  #=> [ 3, 2]
+ *   GMP::Z.fib2(5)  #=> [ 5, 3]
+ *   GMP::Z.fib2(6)  #=> [ 8, 5]
+ *   GMP::Z.fib2(7)  #=> [13, 8]
  */
 DEFUN_INT_SINGLETON_ZZ_UI(fib2, mpz_fib2_ui)
 
