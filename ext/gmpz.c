@@ -496,8 +496,8 @@ FUNC_MAP__Z_BITCNT__TO__Z__RETURNS__VOID(tdiv_r_2exp,mpz_tdiv_r_2exp)
  *
  * TODO: Accept Fixnum, Bignum as op1 and just convert to GMP::Z.
  */
-#define FUNC_MAP__Z__TO__Z__RETURNS__VOID(fname,mpz_fname)   \
-static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1)  \
+#define FUNC_MAP__Z__TO__Z__RETURNS__VOID(fname,mpz_fname)          \
+static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1)    \
 {                                                                   \
   MP_INT *rop_val, *op1_val;                                        \
   (void)klass;                                                      \
@@ -512,7 +512,7 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1)  \
   }                                                                 \
   mpz_get_struct (op1, op1_val);                                    \
                                                                     \
-  mpz_fname (rop_val, op1_val);                            \
+  mpz_fname (rop_val, op1_val);                                     \
                                                                     \
   return Qnil;                                                      \
 }
@@ -638,6 +638,7 @@ FUNC_MAP__Z_ZXB_ZXB__TO__VOID__RETURNS__BOOL(congruent,mpz_congruent)
  **********************************************************************/
 
 /*
+ * Document-method: GMP::Z.new
  * call-seq:
  *   GMP::Z.new(value = 0)
  *
@@ -781,6 +782,7 @@ VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module)
 }
 
 /*
+ * Document-method: swap
  * call-seq:
  *   a.swap(b)
  *
@@ -806,6 +808,7 @@ VALUE r_gmpz_swap(VALUE self, VALUE arg)
  **********************************************************************/
 
 /*
+ * Document-method: to_i
  * call-seq:
  *   a.to_i
  *
@@ -842,6 +845,7 @@ VALUE r_gmpz_to_i(VALUE self)
 }
 
 /*
+ * Document-method: to_d
  * call-seq:
  *   a.to_d
  *
@@ -865,7 +869,6 @@ VALUE r_gmpz_to_d(VALUE self)
 
 /*
  * Document-method: to_s
- *
  * call-seq:
  *   a.to_s(base = 10)
  *   a.to_s(:bin)
@@ -911,6 +914,7 @@ VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self_val)
  **********************************************************************/
 
 /*
+ * Document-method: +
  * call-seq:
  *   a + b
  *
@@ -958,6 +962,7 @@ VALUE r_gmpz_add(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: add!
  * call-seq:
  *   a.add!(_b_)
  *
@@ -993,6 +998,7 @@ VALUE r_gmpz_add_self(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: -
  * call-seq:
  *   a - b
  *
@@ -1045,6 +1051,7 @@ VALUE r_gmpz_sub(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: sub!
  * call-seq:
  *   a.sub!(b)
  *
@@ -1081,6 +1088,7 @@ VALUE r_gmpz_sub_self(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: *
  * call-seq:
  *   a * b
  *
@@ -1125,6 +1133,7 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: addmul!
  * call-seq:
  *   a.addmul!(b, c)
  *
@@ -1179,6 +1188,7 @@ static VALUE r_gmpz_addmul_self(VALUE self, VALUE b, VALUE c)
 }
 
 /*
+ * Document-method: submul!
  * call-seq:
  *   a.submul!(b, c)
  *
@@ -1225,7 +1235,7 @@ static VALUE r_gmpz_submul_self(VALUE self, VALUE b, VALUE c)
   } else {
     if (free_b_val)
       mpz_temp_free (b_val);
-  //  rb_raise (rb_eTypeError, "base must be a Fixnum between 2 and 62, not a %s.", rb_class2name (rb_class_of (c)));
+  /*rb_raise (rb_eTypeError, "base must be a Fixnum between 2 and 62, not a %s.", rb_class2name (rb_class_of (c)));*/
     typeerror_as (ZXB, "multiplicand");
   }
   if (free_b_val)
@@ -1235,7 +1245,6 @@ static VALUE r_gmpz_submul_self(VALUE self, VALUE b, VALUE c)
 
 /*
  * Document-method: <<
- *
  * call-seq:
  *   a << n
  *
@@ -1246,7 +1255,6 @@ DEFUN_INT_F_UL(shl,mpz_mul_2exp,"shift size")
 
 /*
  * Document-method: neg
- *
  * call-seq:
  *   a.neg
  *   -a
@@ -1255,7 +1263,6 @@ DEFUN_INT_F_UL(shl,mpz_mul_2exp,"shift size")
  */
 /*
  * Document-method: neg!
- *
  * call-seq:
  *   a.neg!
  *
@@ -1267,12 +1274,10 @@ DEFUN_INT2INT(neg, mpz_neg)
  *
  * call-seq:
  *   a.abs
- *
  * Returns the absolute value of _a_.
  */
 /*
  * Document-method: abs!
- *
  * call-seq:
  *   a.abs!
  *
@@ -1286,6 +1291,7 @@ DEFUN_INT2INT(abs, mpz_abs)
  **********************************************************************/
 
 /*
+ * Document-method: /
  * call-seq:
  *   a / b
  *
@@ -1364,7 +1370,6 @@ VALUE r_gmpz_div(VALUE self, VALUE arg)
 
 /*
  * Document-method: tdiv
- *
  * call-seq:
  *   n.tdiv(d)
  * 
@@ -1378,7 +1383,6 @@ VALUE r_gmpz_div(VALUE self, VALUE arg)
 DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
 /*
  * Document-method: tmod
- *
  * call-seq:
  *   n.tmod(d)
  * 
@@ -1395,7 +1399,6 @@ DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
 DEFUN_INT_DIV(tmod, mpz_tdiv_r)
 /*
  * Document-method: tshr
- *
  * call-seq:
  *   n.tshr(d)
  * 
@@ -1411,7 +1414,6 @@ DEFUN_INT_F_UL(tshrm,mpz_tdiv_r_2exp,"mark size")
 
 /*
  * Document-method: fdiv
- *
  * call-seq:
  *   n.fdiv(d)
  *
@@ -1425,7 +1427,6 @@ DEFUN_INT_F_UL(tshrm,mpz_tdiv_r_2exp,"mark size")
 DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
 /*
  * Document-method: fmod
- *
  * call-seq:
  *   n.fmod(d)
  *
@@ -1440,12 +1441,11 @@ DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
  * remainder.
  */
 DEFUN_INT_DIV(fmod, mpz_fdiv_r)
-DEFUN_INT_F_UL(fshr,mpz_fdiv_q_2exp,"shift size")
-DEFUN_INT_F_UL(fshrm,mpz_fdiv_r_2exp,"mark size")
+DEFUN_INT_F_UL(fshr, mpz_fdiv_q_2exp, "shift size")
+DEFUN_INT_F_UL(fshrm, mpz_fdiv_r_2exp, "mark size")
 
 /*
  * Document-method: cdiv
- *
  * call-seq:
  *   n.cdiv(d)
  *
@@ -1459,7 +1459,6 @@ DEFUN_INT_F_UL(fshrm,mpz_fdiv_r_2exp,"mark size")
 DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
 /*
  * Document-method: cmod
- *
  * call-seq:
  *   n.cmod(d)
  *
@@ -1473,6 +1472,7 @@ DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
 DEFUN_INT_DIV(cmod, mpz_cdiv_r)
 
 /*
+ * Document-method: %
  * call-seq:
  *   a % b
  *
@@ -1508,6 +1508,7 @@ VALUE r_gmpz_mod(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: divisible?
  * call-seq:
  *   a.divisible?(b)
  *
@@ -1549,6 +1550,7 @@ static VALUE r_gmpz_divisible(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: congruent?
  * call-seq:
  *   n.congruent?(c, d)
  *
