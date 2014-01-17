@@ -26,23 +26,23 @@
  * exactly (0) the return argument and (1) self. The second is the same
  * destructive method.
  */
-#define DEFUN_INT2INT(fname,mpz_fname)         \
-static VALUE r_gmpz_##fname(VALUE self)        \
-{                                              \
-  MP_INT *self_val, *res_val;                  \
-  VALUE res;                                   \
-  mpz_get_struct(self, self_val);              \
-  mpz_make_struct_init(res, res_val);          \
-  mpz_fname(res_val, self_val);                \
-  return res;                                  \
-}                                              \
-                                               \
-static VALUE r_gmpz_##fname##_self(VALUE self) \
-{                                              \
-  MP_INT *self_val;                            \
-  mpz_get_struct(self, self_val);              \
-  mpz_fname(self_val, self_val);               \
-  return self;                                 \
+#define DEFUN_INT2INT(fname,mpz_fname)             \
+static VALUE r_gmpz_##fname(VALUE self_val)        \
+{                                                  \
+  MP_INT *self, *res;                              \
+  VALUE res_val;                                   \
+  mpz_get_struct(self_val, self);                  \
+  mpz_make_struct_init(res_val, res);              \
+  mpz_fname(res, self);                            \
+  return res_val;                                  \
+}                                                  \
+                                                   \
+static VALUE r_gmpz_##fname##_self(VALUE self_val) \
+{                                                  \
+  MP_INT *self;                                    \
+  mpz_get_struct(self_val, self);                  \
+  mpz_fname(self, self);                           \
+  return self_val;                                 \
 }
 
 /*
@@ -51,41 +51,41 @@ static VALUE r_gmpz_##fname##_self(VALUE self) \
  * mpz_t, whose arguments are (0) the return argument, (1) self, and
  * (2) exp_value. exp must fit into a ulong.
  */
-#define DEFUN_INT_F_UL(fname,mpz_fname,argname)           \
-static VALUE r_gmpz_##fname(VALUE self, VALUE exp)        \
-{                                                         \
-  MP_INT *self_val, *res_val;                             \
-  VALUE res;                                              \
-  unsigned long exp_val = 0;                              \
-                                                          \
-  if (FIXNUM_P (exp)) {                                   \
-    if (FIX2NUM (exp) < 0)                                \
-      rb_raise (rb_eRangeError, argname " out of range"); \
-    exp_val = FIX2NUM (exp);                              \
-  } else if (GMPZ_P (exp)) {                              \
-    mpz_get_struct (exp, res_val);                        \
-    if (!mpz_fits_ulong_p (res_val))                      \
-      rb_raise (rb_eRangeError, argname " out of range"); \
-    exp_val = mpz_get_ui (res_val);                       \
-    if (exp_val == 0)                                     \
-      rb_raise (rb_eRangeError, argname " out of range"); \
-  } else {                                                \
-    typeerror_as (ZX, argname);                           \
-  }                                                       \
-                                                          \
-  mpz_make_struct_init (res, res_val);                    \
-  mpz_get_struct (self, self_val);                        \
-  mpz_fname (res_val, self_val, exp_val);                 \
-                                                          \
-  return res;                                             \
+#define DEFUN_INT_F_UL(fname,mpz_fname,argname)            \
+static VALUE r_gmpz_##fname(VALUE self_val, VALUE exp_val) \
+{                                                          \
+  MP_INT *self, *res;                                      \
+  VALUE res_val;                                           \
+  unsigned long exp = 0;                                   \
+                                                           \
+  if (FIXNUM_P (exp_val)) {                                \
+    if (FIX2NUM (exp_val) < 0)                             \
+      rb_raise (rb_eRangeError, argname " out of range");  \
+    exp = FIX2NUM (exp_val);                               \
+  } else if (GMPZ_P (exp_val)) {                           \
+    mpz_get_struct (exp_val, res);                         \
+    if (!mpz_fits_ulong_p (res))                           \
+      rb_raise (rb_eRangeError, argname " out of range");  \
+    exp = mpz_get_ui (res);                                \
+    if (exp == 0)                                          \
+      rb_raise (rb_eRangeError, argname " out of range");  \
+  } else {                                                 \
+    typeerror_as (ZX, argname);                            \
+  }                                                        \
+                                                           \
+  mpz_make_struct_init (res_val, res);                     \
+  mpz_get_struct (self_val, self);                         \
+  mpz_fname (res, self, exp);                              \
+                                                           \
+  return res_val;                                          \
 }
 
-#define DEFUN_INT_CMP(name,CMP_OP)                             \
-static VALUE r_gmpz_cmp_##name(VALUE self, VALUE arg)          \
-{                                                              \
-  MP_INT *self_val;                                            \
-  mpz_get_struct(self,self_val);                               \
-  return (mpz_cmp_value(self_val, arg) CMP_OP 0)?Qtrue:Qfalse; \
+#define DEFUN_INT_CMP(name,CMP_OP)                                  \
+static VALUE r_gmpz_cmp_##name(VALUE self_val, VALUE arg_val)       \
+{                                                                   \
+  MP_INT *self;                                                     \
+  mpz_get_struct (self_val, self);                                  \
+  return (mpz_cmp_value (self, arg_val) CMP_OP 0) ? Qtrue : Qfalse; \
 }
 
 #define DEFUN_INT_DIV(fname,gmp_fname)                \
@@ -718,20 +718,20 @@ VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
   return Qnil;
 }
 
-static VALUE r_gmpz_initialize_copy(VALUE copy, VALUE orig) {
-  MP_INT *orig_z, *copy_z;
+static VALUE r_gmpz_initialize_copy(VALUE copy_val, VALUE orig_val) {
+  MP_INT *orig, *copy;
 
-  if (copy == orig) return copy;
+  if (copy_val == orig_val) return copy_val;
 
-  if (TYPE(orig) != T_DATA) {
+  if (TYPE(orig_val) != T_DATA) {
     rb_raise(rb_eTypeError, "wrong argument type");
   }
 
-  mpz_get_struct (orig, orig_z);
-  mpz_get_struct (copy, copy_z);
-  mpz_set (copy_z, orig_z);
+  mpz_get_struct (orig_val, orig);
+  mpz_get_struct (copy_val, copy);
+  mpz_set (copy, orig);
 
-  return copy;
+  return copy_val;
 }
 
 /*
@@ -785,15 +785,16 @@ VALUE r_gmpmod_z(int argc, VALUE *argv, VALUE module)
  *
  * Efficiently swaps the contents of _a_ with _b_. _b_ must be an instance of GMP::Z.
  */
-VALUE r_gmpz_swap(VALUE self, VALUE arg)
+VALUE r_gmpz_swap(VALUE self_val, VALUE arg_val)
 {
-  MP_INT *self_val, *arg_val;
-  if (!GMPZ_P(arg)) {
+  MP_INT *self, *arg;
+
+  if (!GMPZ_P(arg_val))
     rb_raise(rb_eTypeError, "Can't swap GMP::Z with object of other class");
-  }
-  mpz_get_struct(self, self_val);
-  mpz_get_struct(arg, arg_val);
-  mpz_swap(self_val,arg_val);
+
+  mpz_get_struct(self_val, self);
+  mpz_get_struct(arg_val, arg);
+  mpz_swap(self, arg);
   return Qnil;
 }
 
