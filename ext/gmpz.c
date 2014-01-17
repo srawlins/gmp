@@ -11,8 +11,8 @@
  *
  * GMP Multiple Precision Integer.
  *
- * Instances of this class can store variables of the type mpz_t. This class
- * also contains many methods that act as the functions for mpz_t variables,
+ * Instances of this class can store variables of the type `mpz_t`. This class
+ * also contains many methods that act as the functions for `mpz_t` variables,
  * as well as a few methods that attempt to make this library more Ruby-ish.
  */
 
@@ -306,7 +306,7 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE rop, VALUE op1, VALUE op2)  \
  * call-seq:
  *   GMP::Z.add(rop, op1, op2)
  *
- * ...
+ * @todo Document this
  */
 FUNC_MAP__Z_ZUI__TO__Z__RETURNS__VOID(add,mpz_add)
 FUNC_MAP__Z_ZUI__TO__Z__RETURNS__VOID(addmul,mpz_addmul)
@@ -642,8 +642,8 @@ FUNC_MAP__Z_ZXB_ZXB__TO__VOID__RETURNS__BOOL(congruent,mpz_congruent)
  * call-seq:
  *   GMP::Z.new(value = 0)
  *
- * Creates a new GMP::Z integer, with _value_ as its value, converting where necessary.
- * _value_ must be an instance of one of the following classes:
+ * Creates a new GMP::Z integer, with `value` as its value, converting where necessary.
+ * `value` must be an instance of one of the following classes:
  *
  * * GMP::Z
  * * Fixnum
@@ -684,8 +684,8 @@ static VALUE r_gmpz_alloc(VALUE klass) {
   //mpz_init(z);
   //obj = Data_Make_Struct(klass, MP_INT, 0, r_gmpz_free, z);
   //obj = Data_Wrap_Struct(klass, 0, r_gmpz_free, z);
-//  mpz_make_struct_init (z, obj);
- // mpz_make_struct_init (obj, z);
+  //mpz_make_struct_init (z, obj);
+  //mpz_make_struct_init (obj, z);
   obj = Data_Make_Struct(klass, MP_INT, 0, r_gmpz_free, z);
   mpz_init (z);
 
@@ -819,8 +819,8 @@ VALUE r_gmpz_swap(VALUE self, VALUE arg)
  * Otherwise returns the least significant part of _a_, with the same sign as _a_.
  *
  * If _a_ is too big to fit in a Fixnum, the returned result is probably not very useful.
- * To find out if the value will fit, use the function +mpz_fits_slong_p+
- * (<b>Unimplemented</b>).
+ * To find out if the value will fit, use the function `mpz_fits_slong_p`
+ * (**Unimplemented**).
  */
 VALUE r_gmpz_to_i(VALUE self)
 {
@@ -856,8 +856,8 @@ VALUE r_gmpz_to_i(VALUE self)
  * Otherwise returns the least significant part of _a_, with the same sign as _a_.
  *
  * If _a_ is too big to fit in a Float, the returned result is probably not very useful.
- * To find out if the value will fit, use the function +mpz_fits_slong_p+
- * (<b>Unimplemented</b>).
+ * To find out if the value will fit, use the function `mpz_fits_slong_p`
+ * (**Unimplemented**).
  */
 VALUE r_gmpz_to_d(VALUE self)
 {
@@ -876,17 +876,18 @@ VALUE r_gmpz_to_d(VALUE self)
  *   a.to_s(:dec)
  *   a.to_s(:hex)
  *
- * Returns _a_, as a String. If _base_ is not provided, then the decimal
+ * Returns _a_, as a String. If `base` is not provided, then the decimal
  * representation will be returned.
  *
  * From the GMP Manual:
  *
- * Convert _a_ to a string of digits in base _base_. The _base_ argument may vary from 2
- * to 62 or from -2 to -36.
+ * Convert _a_ to a string of digits in base `base`. The `base` argument may
+ * vary from 2 to 62 or from -2 to -36.
  *
- * For _base_ in the range 2..36, digits and lower-case letters are used; for -2..-36,
- * digits and upper-case letters are used; for 37..62, digits, upper-case letters, and
- * lower-case letters (in that significance order) are used.
+ * For `base` in the range 2..36, digits and lower-case letters are used; for
+ * -2..-36, digits and upper-case letters are used; for 37..62, digits,
+ * upper-case letters, and lower-case letters (in that significance order) are
+ * used.
  */
 VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self_val)
 {
@@ -919,6 +920,7 @@ VALUE r_gmpz_to_s(int argc, VALUE *argv, VALUE self_val)
  *   a + b
  *
  * Adds _a_ to _b_. _b_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -967,6 +969,7 @@ VALUE r_gmpz_add(VALUE self, VALUE arg)
  *   a.add!(_b_)
  *
  * Adds _a_ to _b_ in-place, setting _a_ to the sum. _b_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -1003,6 +1006,7 @@ VALUE r_gmpz_add_self(VALUE self, VALUE arg)
  *   a - b
  *
  * Subtracts _b_ from _a_. _b_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -1057,6 +1061,7 @@ VALUE r_gmpz_sub(VALUE self, VALUE arg)
  *
  * Subtracts _b_ from _a_ in-place, setting _a_ to the difference. _b_ must be an
  * instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -1093,6 +1098,7 @@ VALUE r_gmpz_sub_self(VALUE self, VALUE arg)
  *   a * b
  *
  * Multiplies _a_ with _b_. _a_ must be an instance of one of
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -1139,7 +1145,9 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
  *
  * @since 0.4.19
  *
- * Sets _a_ to _a_ plus _b_ times _c_. _b_ and _c_ must each be an instance of one of
+ * Sets _a_ to _a_ plus _b_ times _c_. _b_ and _c_ must each be an instance of
+ * one of
+ *
  * * GMP::Z
  * * Fixnum
  * * Bignum
@@ -1248,8 +1256,8 @@ static VALUE r_gmpz_submul_self(VALUE self, VALUE b, VALUE c)
  * call-seq:
  *   a << n
  *
- * Returns _a_ times 2 raised to _n_. This operation can also be defined as a left shift
- * by _n_ bits.
+ * Returns _a_ times 2 raised to _n_. This operation can also be defined as a
+ * left shift by _n_ bits.
  */
 DEFUN_INT_F_UL(shl,mpz_mul_2exp,"shift size")
 
@@ -1274,6 +1282,7 @@ DEFUN_INT2INT(neg, mpz_neg)
  *
  * call-seq:
  *   a.abs
+ *
  * Returns the absolute value of _a_.
  */
 /*
@@ -1295,9 +1304,11 @@ DEFUN_INT2INT(abs, mpz_abs)
  * call-seq:
  *   a / b
  *
- * Divides _a_ by _b_. Combines the different GMP division functions to provide what one
- * is hopefully looking for. The result will either be an instance of GMP::Q or GMP::F,
- * depending on _b_. _b_ must be an instance of one of the following:
+ * Divides _a_ by _b_. Combines the different GMP division functions to provide
+ * what one is hopefully looking for. The result will either be an instance of
+ * GMP::Q or GMP::F, depending on _b_. _b_ must be an instance of one of the
+ * following:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -1373,39 +1384,41 @@ VALUE r_gmpz_div(VALUE self, VALUE arg)
  * call-seq:
  *   n.tdiv(d)
  * 
- * Divides _n_ by _d_, forming a quotient _q_. tdiv rounds _q_ towards zero. The _t_
- * stands for "truncate".
+ * Divides _n_ by _d_, forming a quotient _q_. tdiv rounds _q_ towards zero.
+ * The _t_ stands for "truncate".
  *
- * _q_ will satisfy <i>n=q*d+r</i>, and _r_ will satisfy <i>0 <= abs( r ) < abs( d )</i>.
+ * _q_ will satisfy _n=q*d+r_, and _r_ will satisfy _0 <= abs(r ) < abs(d)_.
  *
  * This function calculates only the quotient.
  */
 DEFUN_INT_DIV(tdiv, mpz_tdiv_q)
+
 /*
  * Document-method: tmod
  * call-seq:
  *   n.tmod(d)
  * 
- * Divides _n_ by _d_, forming a remainder _r_. _r_ will have the same sign as _n_. The
- * _t_ stands for "truncate". 
+ * Divides _n_ by _d_, forming a remainder _r_. _r_ will have the same sign as
+ * _n_. The _t_ stands for "truncate".
  *
- * _r_ will satisfy <i>n=q*d+r</i>, and _r_ will satisfy <i>0 <= abs( r ) < abs( d )</i>.
+ * _r_ will satisfy _n=q*d+r_, and _r_ will satisfy _0 <= abs(r ) < abs(d)_.
  *
  * This function calculates only the remainder.
  *
- * The remainder can be negative, so the return value is the absolute value of the
- * remainder.
+ * The remainder can be negative, so the return value is the absolute value of
+ * the remainder.
  */
 DEFUN_INT_DIV(tmod, mpz_tdiv_r)
+
 /*
  * Document-method: tshr
  * call-seq:
  *   n.tshr(d)
  * 
- * Divides _n_ by 2^<i>d</i>, forming a quotient _q_. tshr rounds _q_ towards zero. The
- * _t_ stands for "truncate". 
+ * Divides _n_ by _2^d_, forming a quotient _q_. tshr rounds _q_ towards zero.
+ * The _t_ stands for "truncate".
  *
- * _q_ will satisfy <i>n=q*d+r</i>, and _r_ will satisfy <i>0 <= abs( r ) < abs( d )</i>.
+ * _q_ will satisfy _n=q*d+r_, and _r_ will satisfy _0 <= abs(r ) < abs(d)_.
  *
  * This function calculates only the quotient.
  */
@@ -1417,10 +1430,10 @@ DEFUN_INT_F_UL(tshrm,mpz_tdiv_r_2exp,"mark size")
  * call-seq:
  *   n.fdiv(d)
  *
- * Divide _n_ by _d_, forming a quotient _q_. fdiv rounds _q_ down towards -infinity.
- * The f stands for "floor".
+ * Divide _n_ by _d_, forming a quotient _q_. fdiv rounds _q_ down towards
+ * -infinity.  The f stands for "floor".
  *
- * _q_ will satisfy <i>n=q*d+r</i>.
+ * _q_ will satisfy _n=q*d+r_.
  *
  * This function calculates only the quotient.
  */
@@ -1430,15 +1443,15 @@ DEFUN_INT_DIV(fdiv, mpz_fdiv_q)
  * call-seq:
  *   n.fmod(d)
  *
- * Divides _n_ by _d_, forming a remainder _r_. _r_ will have the same sign as _d_. The
- * _f_ stands for "floor". 
+ * Divides _n_ by _d_, forming a remainder _r_. _r_ will have the same sign as
+ * _d_. The _f_ stands for "floor".
  *
- * _r_ will satisfy <i>n=q*d+r</i>, and _r_ will satisfy <i>0 <= abs( r ) < abs( d )</i>.
+ * _r_ will satisfy _n=q*d+r_, and _r_ will satisfy _0 <= abs(r ) < abs(d)_.
  *
  * This function calculates only the remainder.
  *
- * The remainder can be negative, so the return value is the absolute value of the
- * remainder.
+ * The remainder can be negative, so the return value is the absolute value of
+ * the remainder.
  */
 DEFUN_INT_DIV(fmod, mpz_fdiv_r)
 DEFUN_INT_F_UL(fshr, mpz_fdiv_q_2exp, "shift size")
@@ -1452,7 +1465,7 @@ DEFUN_INT_F_UL(fshrm, mpz_fdiv_r_2exp, "mark size")
  * Divide _n_ by _d_, forming a quotient _q_. cdiv rounds _q_ up towards
  * _+infinity_. The c stands for "ceil".
  *
- * _q_ will satisfy <i>n=q*d+r</i>.
+ * _q_ will satisfy _n=q*d+r_.
  *
  * This function calculates only the quotient.
  */
@@ -1462,10 +1475,10 @@ DEFUN_INT_DIV(cdiv, mpz_cdiv_q)
  * call-seq:
  *   n.cmod(d)
  *
- * Divides _n_ by _d_, forming a remainder _r_. _r_ will have the opposite sign of _d_.
- * The c stands for "ceil".
+ * Divides _n_ by _d_, forming a remainder _r_. _r_ will have the opposite sign
+ * of _d_.  The c stands for "ceil".
  *
- * _r_ will satisfy <i>n=q*d+r</i>, and _r_ will satisfy <i>0 <= abs( r ) < abs( d )</i>.
+ * _r_ will satisfy _n=q*d+r_, and _r_ will satisfy _0 <= abs(r ) < abs(d)_.
  *
  * This function calculates only the remainder.
  */
@@ -1479,6 +1492,7 @@ DEFUN_INT_DIV(cmod, mpz_cdiv_r)
  * @since 0.2.10
  *
  * Returns _a_ mod _b_. _b_ can be an instance any of the following:
+ *
  * * GMP::Z
  * * Fixnum
  * * Bignum
@@ -1514,7 +1528,9 @@ VALUE r_gmpz_mod(VALUE self, VALUE arg)
  *
  * @since 0.5.23
  *
- * Returns true if _a_ is divisible by _b_. _b_ can be an instance any of the following:
+ * Returns true if _a_ is divisible by _b_. _b_ can be an instance any of the
+ * following:
+ *
  * * GMP::Z
  * * Fixnum
  * * Bignum
@@ -1556,7 +1572,9 @@ static VALUE r_gmpz_divisible(VALUE self, VALUE arg)
  *
  * @since 0.6.19
  *
- * Returns true if _n_ is congruent to _c_ modulo _d_. _c_ and _d_ can be an instance any of the following:
+ * Returns true if _n_ is congruent to _c_ modulo _d_. _c_ and _d_ can be an
+ * instance any of the following:
+ *
  * * GMP::Z
  * * Fixnum
  * * Bignum
@@ -1650,7 +1668,7 @@ VALUE r_gmpzsg_pow(VALUE klass, VALUE base, VALUE exp)
  *
  * Returns _a_ raised to _b_ modulo _c_.
  *
- * Negative _b_ is supported if an inverse <i>a^-1</i> mod _c_ exists. If an inverse
+ * Negative _b_ is supported if an inverse _a^-1_ mod _c_ exists. If an inverse
  * doesn't exist then a divide by zero is raised.
  */
 VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
@@ -1722,7 +1740,7 @@ VALUE r_gmpz_powm(VALUE self, VALUE exp, VALUE mod)
  * call-seq:
  *   a.root(b)
  *
- * Returns the truncated integer part of the <i>b</i>th root of _a_.
+ * Returns the truncated integer part of the _b_th root of _a_.
  */
 DEFUN_INT_F_UL(root,mpz_root,"root number")
 
@@ -1732,7 +1750,8 @@ DEFUN_INT_F_UL(root,mpz_root,"root number")
  * call-seq:
  *   a.rootrem(b)
  *
- * Returns the truncated integer part of the <i>b</i>th root of _a_, and the remainder, _a - root**b_.
+ * Returns the truncated integer part of the _b_th root of _a_, and the
+ * remainder, _a - root**b_.
  */
 static VALUE r_gmpz_rootrem(VALUE self_val, VALUE exp_val)
 {
@@ -1785,8 +1804,8 @@ DEFUN_INT2INT(sqrt, mpz_sqrt)
  * call-seq:
  *   a.sqrtrem #=> s, r
  *
- * Returns the truncated integer part of the square root of _a_ as _s_ and the remainder
- * <i>a - s * s</i> as _r_, which will be zero if _a_ is a perfect square.
+ * Returns the truncated integer part of the square root of _a_ as _s_ and the
+ * remainder _a - s * s_ as _r_, which will be zero if _a_ is a perfect square.
  */
 static VALUE r_gmpz_sqrtrem(VALUE self)
 {
@@ -1805,11 +1824,12 @@ static VALUE r_gmpz_sqrtrem(VALUE self)
  * call-seq:
  *   p.power?
  *
- * Returns true if _p_ is a perfect power, i.e., if there exist integers _a_ and _b_,
- * with <i>b > 1</i>, such that _p_ equals _a_ raised to the power _b_.
+ * Returns true if _p_ is a perfect power, i.e., if there exist integers _a_
+ * and _b_, with _b > 1_, such that _p_ equals _a_ raised to the power _b_.
  *
- * Under this definition both 0 and 1 are considered to be perfect powers. Negative
- * values of integers are accepted, but of course can only be odd perfect powers.
+ * Under this definition both 0 and 1 are considered to be perfect powers.
+ * Negative values of integers are accepted, but of course can only be odd
+ * perfect powers.
  */
 DEFUN_INT_COND_P(is_power,mpz_perfect_power_p)
 /*
@@ -1817,8 +1837,9 @@ DEFUN_INT_COND_P(is_power,mpz_perfect_power_p)
  * call-seq:
  *   p.square?
  *
- * Returns true if _p_ is a perfect square, i.e., if the square root of _p_ is an
- * integer. Under this definition both 0 and 1 are considered to be perfect squares.
+ * Returns true if _p_ is a perfect square, i.e., if the square root of _p_ is
+ * an integer. Under this definition both 0 and 1 are considered to be perfect
+ * squares.
  */
 DEFUN_INT_COND_P(is_square,mpz_perfect_square_p)
 
@@ -1832,19 +1853,19 @@ DEFUN_INT_COND_P(is_square,mpz_perfect_square_p)
  * call-seq:
  *   n.probab_prime?(reps = 5)
  *
- * Determine whether _n_ is prime. Returns 2 if _n_ is definitely prime, returns 1 if _n_
- * is probably prime (without being certain), or returns 0 if _n_ is definitely
- * composite.
+ * Determine whether _n_ is prime. Returns 2 if _n_ is definitely prime,
+ * returns 1 if _n_ is probably prime (without being certain), or returns 0 if
+ * _n_ is definitely composite.
  *
- * This function does some trial divisions, then some Miller-Rabin probabilistic
- * primality tests. +reps+ controls how many such tests are done, 5 to 10 is a reasonable
- * number, more will reduce the chances of a composite being returned as "probably
- * prime".
+ * This function does some trial divisions, then some Miller-Rabin
+ * probabilistic primality tests. `reps` controls how many such tests are done,
+ * 5 to 10 is a reasonable number, more will reduce the chances of a composite
+ * being returned as "probably prime".
  *
- * Miller-Rabin and similar tests can be more properly called compositeness tests.
- * Numbers which fail are known to be composite but those which pass might be prime or
- * might be composite. Only a few composites pass, hence those which pass are considered
- * probably prime.
+ * Miller-Rabin and similar tests can be more properly called compositeness
+ * tests. Numbers which fail are known to be composite but those which pass
+ * might be prime or might be composite. Only a few composites pass, hence
+ * those which pass are considered probably prime.
  */
 VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
 {
@@ -1872,8 +1893,9 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
  *
  * Returns the next prime greater than _n_.
  *
- * This function uses a probabilistic algorithm to identify primes. For practical
- * purposes it's adequate, the chance of a composite passing will be extremely small.
+ * This function uses a probabilistic algorithm to identify primes. For
+ * practical purposes it's adequate, the chance of a composite passing will be
+ * extremely small.
  */
 /*
  * Document-method: nextprime!
@@ -1883,8 +1905,9 @@ VALUE r_gmpz_is_probab_prime(int argc, VALUE* argv, VALUE self)
  *
  * Sets _n_ to the next prime greater than _n_.
  *
- * This function uses a probabilistic algorithm to identify primes. For practical
- * purposes it's adequate, the chance of a composite passing will be extremely small.
+ * This function uses a probabilistic algorithm to identify primes. For
+ * practical purposes it's adequate, the chance of a composite passing will be
+ * extremely small.
  */
 DEFUN_INT2INT(nextprime, mpz_nextprime)
 
@@ -1895,8 +1918,8 @@ DEFUN_INT2INT(nextprime, mpz_nextprime)
  *
  * @since 0.2.11
  *
- * Returns the greatest common divisor of a and b. The result is always positive even if
- * one or both of _a_ or _b_ are negative.
+ * Returns the greatest common divisor of _a_ and _b_. The result is always
+ * positive even if one or both of _a_ or _b_ are negative.
  */
 VALUE r_gmpz_gcd(VALUE self, VALUE arg)
 {
@@ -1929,10 +1952,10 @@ VALUE r_gmpz_gcd(VALUE self, VALUE arg)
  *
  * @since 0.5.23
  *
- * Returns the greatest common divisor of _a_ and _b_, in addition to _s_ and _t_, the
- * coefficients satisfying <i>a*s + b*t = g</i>. _g_ is always positive, even if one or
- * both of _a_ and _b_ are negative. _s_ and _t_ are chosen such that
- * <i>abs(s) <= abs(b)</i> and <i>abs(t) <= abs(a)</i>.
+ * Returns the greatest common divisor of _a_ and _b_, in addition to _s_ and
+ * _t_, the coefficients satisfying _a*s + b*t = g_. _g_ is always positive,
+ * even if one or both of _a_ and _b_ are negative. _s_ and _t_ are chosen such
+ * that _abs(s) <= abs(b)_ and _abs(t) <= abs(a)_.
  */
 VALUE r_gmpz_gcdext(VALUE self, VALUE arg)
 {
@@ -1981,9 +2004,9 @@ VALUE r_gmpz_gcdext(VALUE self, VALUE arg)
  * @since 0.5.x
  *
  * Returns the greatest common divisor of _a_ and _b_, in addition to _s_, the
- * coefficient satisfying <i>a*s + b*t = g</i>. _g_ is always positive, even if one or
- * both of _a_ and _b_ are negative. _s_ and _t_ are chosen such that
- * <i>abs(s) <= abs(b)</i> and <i>abs(t) <= abs(a)</i>.
+ * coefficient satisfying _a*s + b*t = g_. _g_ is always positive, even if one
+ * or both of _a_ and _b_ are negative. _s_ and _t_ are chosen such that
+ * _abs(s) <= abs(b)_ and _abs(t) <= abs(a)_.
  */
 VALUE r_gmpz_gcdext2(VALUE self, VALUE arg)
 {
@@ -2028,8 +2051,8 @@ VALUE r_gmpz_gcdext2(VALUE self, VALUE arg)
  *
  * @since 0.2.11
  *
- * Returns the least common multiple of a and b. The result is always positive even if
- * one or both of _a_ or _b_ are negative.
+ * Returns the least common multiple of _a_ and _b_. The result is always
+ * positive even if one or both of _a_ or _b_ are negative.
  */
 VALUE r_gmpz_lcm(VALUE self, VALUE arg)
 {
@@ -2062,9 +2085,9 @@ VALUE r_gmpz_lcm(VALUE self, VALUE arg)
  *
  * @since 0.2.11
  *
- * Returns the inverse of _a_ modulo _b_. If the inverse exists, the return value is
- * non-zero and the result will be non-negative and less than _b_. If an inverse doesn't
- * exist, the result is undefined.
+ * Returns the inverse of _a_ modulo _b_. If the inverse exists, the return
+ * value is non-zero and the result will be non-negative and less than _b_. If
+ * an inverse doesn't exist, the result is undefined.
  */
 VALUE r_gmpz_invert(VALUE self, VALUE arg)
 {
@@ -2097,7 +2120,7 @@ VALUE r_gmpz_invert(VALUE self, VALUE arg)
  * call-seq:
  *   a.jacobi(b)
  *
- * Calculate the Jacobi symbol <i>(a/b)</i>. This is defined only for _b_ odd and
+ * Calculate the Jacobi symbol _(a/b)_. This is defined only for _b_ odd and
  * positive.
  */
 VALUE r_gmpz_jacobi(VALUE self, VALUE b)
@@ -2119,7 +2142,7 @@ VALUE r_gmpz_jacobi(VALUE self, VALUE b)
  * call-seq:
  *   GMP::Z.jacobi(a, b)
  *
- * Calculate the Jacobi symbol <i>(a/b)</i>. This is defined only for _b_ odd and
+ * Calculate the Jacobi symbol _(a/b)_. This is defined only for _b_ odd and
  * positive.
  */
 VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
@@ -2183,7 +2206,7 @@ VALUE r_gmpzsg_jacobi(VALUE klass, VALUE a, VALUE b)
  * call-seq:
  *   a.legendre(p)
  *
- * Calculate the Legendre symbol <i>(a/p)</i>. This is defined only for _p_ an odd
+ * Calculate the Legendre symbol _(a/p)_. This is defined only for _p_ an odd
  * positive prime, and for such _p_ it's identical to the Jacobi symbol. 
  */
 VALUE r_gmpz_legendre(VALUE self, VALUE p)
@@ -2207,8 +2230,8 @@ VALUE r_gmpz_legendre(VALUE self, VALUE p)
  * call-seq:
  *   n.remove(f) #=> r, t
  *
- * Remove all occurrences of the factor _f_ from _n_, returning the result as _r_. _t_,
- * the number of occurrences that were removed, is also returned.
+ * Remove all occurrences of the factor _f_ from _n_, returning the result as
+ * _r_. _t_, the number of occurrences that were removed, is also returned.
  */
 VALUE r_gmpz_remove(VALUE self, VALUE arg)
 {
@@ -2257,7 +2280,7 @@ VALUE r_gmpz_remove(VALUE self, VALUE arg)
  * call-seq:
  *   GMP::Z.fac(n)
  *
- * Returns <i>n!</i>, the factorial of _n_.
+ * Returns _n!_, the factorial of _n_.
  *
  * @example
  *   GMP::Z.fac(0)  #=>  1
@@ -2275,7 +2298,7 @@ DEFUN_INT_SINGLETON_UI(fac, mpz_fac_ui)
  *   GMP::Z.double_fac(n)
  *   GMP::Z.send(:"2fac", n)
  *
- * Returns <i>n!!</i>, the double factorial of _n_.
+ * Returns _n!!_, the double factorial of _n_.
  *
  * @example
  *   GMP::Z.double_fac(  0)  #=>    1
@@ -2298,7 +2321,7 @@ DEFUN_INT_SINGLETON_UI(2fac,       mpz_2fac_ui)
  * call-seq:
  *   GMP::Z.mfac(n, m)
  *
- * Returns <i>n!^(m)</i>, the m-multi-factorial of _n_.
+ * Returns _n!^(m)_, the m-multi-factorial of _n_.
  *
  * @example
  *   GMP::Z.mfac(0,   3)  #=>    1
@@ -2342,7 +2365,7 @@ DEFUN_INT_SINGLETON_UI(primorial,  mpz_primorial_ui)
  * call-seq:
  *   GMP::Z.fib(n)
  *
- * Returns <i>F[n]</i>, the <i>n</i>th Fibonacci number.
+ * Returns _F [n]_, the _nth_ Fibonacci number.
  *
  * @example
  *   GMP::Z.fib(1)  #=>  1
@@ -2360,7 +2383,7 @@ DEFUN_INT_SINGLETON_UI(fib, mpz_fib_ui)
  * call-seq:
  *   GMP::Z.fib2(n)
  *
- * Returns [<i>F[n]</i>, <i>F[n-1]</i>], the <i>n</i>th and <i>n-1</i>th Fibonacci numbers.
+ * Returns [_F [n]_, _F [n-1]_], the _nth_ and _n-1th_ Fibonacci numbers.
  *
  * @example
  *   GMP::Z.fib2(1)  #=> [ 1, 0]
@@ -2516,11 +2539,11 @@ DEFUN_INT_CMP(ge,>=)
  * call-seq:
  *   a.cmpabs(b)
  * 
- * Returns negative if abs(_a_) is less than abs(_b_).
+ * Returns negative if _abs(a)_ is less than _abs(b)_.
  *
- * Returns 0 if abs(_a_) is equal to abs(_b_).
+ * Returns 0 if _abs(a)_ is equal to _abs(b)_.
  *
- * Returns positive if abs(_a_) is greater than abs(_b_).
+ * Returns positive if _abs(a)_ is greater than _abs(b)_.
  */
 VALUE r_gmpz_cmpabs(VALUE self, VALUE arg)
 {
@@ -2581,9 +2604,9 @@ VALUE r_gmpz_sgn(VALUE self)
  *
  * @since 0.4.7
  *
- * Returns true if _a_ is equal to _b_. _a_ and _b_ must then be equal in cardinality,
- * and both be instances of GMP::Z. Otherwise, returns false. a.eql?(b) if and only if
- * b.class == GMP::Z, and a.hash == b.hash.
+ * Returns true if _a_ is equal to _b_. _a_ and _b_ must then be equal in
+ * cardinality, and both be instances of GMP::Z. Otherwise, returns false.
+ * `a.eql?(b)` if and only if `b.class == GMP::Z`, and `a.hash == b.hash`.
  */
 VALUE r_gmpz_eql(VALUE self, VALUE arg)
 {
@@ -2606,9 +2629,10 @@ VALUE r_gmpz_eql(VALUE self, VALUE arg)
  *
  * @since 0.4.7
  *
- * Returns the computed hash value of _a_. This method first converts _a_ into a String
- * (base 10), then calls String#hash on the result, returning the hash value. a.eql?(b)
- * if and only if b.class == GMP::Z, and a.hash == b.hash.
+ * Returns the computed hash value of _a_. This method first converts _a_ into
+ * a String (base 10), then calls String#hash on the result, returning the hash
+ * value. `a.eql?(b)` if and only if `b.class == GMP::Z`, and
+ * `a.hash == b.hash`.
  */
 VALUE r_gmpz_hash(VALUE self)
 {
@@ -2627,7 +2651,9 @@ VALUE r_gmpz_hash(VALUE self)
  * call-seq:
  *   a & b
  *
- * Returns _a_ bitwise-and _b_. _b_ must be an instance of one of the following:
+ * Returns _a_ bitwise-and _b_. _b_ must be an instance of one of the
+ * following:
+ *
  * * GMP::Z
  * * Fixnum
  * * Bignum
@@ -2638,7 +2664,9 @@ DEFUN_INT_LOGIC(and, mpz_and)
  * call-seq:
  *   a | b
  *
- * Returns _a_ bitwise inclusive-or _b_. _b_ must be an instance of one of the following:
+ * Returns _a_ bitwise inclusive-or _b_. _b_ must be an instance of one of the
+ * following:
+ *
  * * GMP::Z
  * * Fixnum
  * * Bignum
@@ -2649,7 +2677,9 @@ DEFUN_INT_LOGIC(or, mpz_ior)
  * call-seq:
  *   a ^ b
  *
- * Returns _a_ bitwise exclusive-or _b_. _b_ must be an instance of one of the following:
+ * Returns _a_ bitwise exclusive-or _b_. _b_ must be an instance of one of the
+ * following:
+ *
  * * GMP::Z
  * * Fixnum
  * * Bignum
@@ -2677,9 +2707,10 @@ DEFUN_INT2INT(com, mpz_com)
  * call-seq:
  *   a.popcount
  *
- * If _a_ >= 0, return the population count of _a_, which is the number of 1 bits in the
- * binary representation. If _a_ < 0, the number of 1s is infinite, and the return value
- * is INT2FIX(ULONG_MAX), the largest possible unsigned long.
+ * If _a_ >= 0, return the population count of _a_, which is the number of 1
+ * bits in the binary representation. If _a_ < 0, the number of 1s is infinite,
+ * and the return value is `INT2FIX(ULONG_MAX)`, the largest possible unsigned
+ * long.
  */
 VALUE r_gmpz_popcount(VALUE self)
 {
@@ -2693,8 +2724,9 @@ VALUE r_gmpz_popcount(VALUE self)
  * call-seq:
  *   a.hamdist(b)
  *
- * If _a_ and _b_ are both >= 0 or both < 0, calculate the hamming distance between _a_ and _b_. If one operand is >= 0 and the other is less than 0, then return "infinity" (the largest possible `mp_bitcnt_t`.
- * positive.
+ * If _a_ and _b_ are both >= 0 or both < 0, calculate the hamming distance
+ * between _a_ and _b_. If one operand is >= 0 and the other is less than 0,
+ * then return "infinity" (the largest possible `mp_bitcnt_t`).
  */
 VALUE r_gmpz_hamdist(VALUE self_val, VALUE b_val)
 {
@@ -2713,14 +2745,14 @@ VALUE r_gmpz_hamdist(VALUE self_val, VALUE b_val)
  * call-seq:
  *   a.scan0(starting_bit)
  *
- * Scan _a_, starting from bit _starting_bit_, towards more significant bits, until the
- * first 0 bit is found. Return the index of the found bit.
+ * Scan _a_, starting from bit _starting_bit_, towards more significant bits,
+ * until the first 0 bit is found. Return the index of the found bit.
  *
- * If the bit at _starting_bit_ is already what's sought, then _starting_bit_ is
- * returned.
+ * If the bit at _starting_bit_ is already what's sought, then _starting_bit_
+ * is returned.
  * 
- * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will happen in
- * scan0 past the end of a negative number.
+ * If there's no bit found, then `INT2FIX(ULONG_MAX)` is returned. This will
+ * happen in #scan0 past the end of a negative number.
  */
 VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
 {
@@ -2741,14 +2773,14 @@ VALUE r_gmpz_scan0(VALUE self, VALUE bitnr)
  * call-seq:
  *   a.scan1(starting_bit)
  *
- * Scan _a_, starting from bit _starting_bit_, towards more significant bits, until the
- * first 1 bit is found. Return the index of the found bit.
+ * Scan _a_, starting from bit _starting_bit_, towards more significant bits,
+ * until the first 1 bit is found. Return the index of the found bit.
  * 
- * If the bit at _starting_bit_ is already what's sought, then _starting_bit_ is
- * returned.
+ * If the bit at _starting_bit_ is already what's sought, then _starting_bit_
+ * is returned.
  *
- * If there's no bit found, then INT2FIX(ULONG_MAX) is returned. This will happen in
- * scan1 past the end of a nonnegative number.
+ * If there's no bit found, then `INT2FIX(ULONG_MAX)` is returned. This will
+ * happen in scan1 past the end of a nonnegative number.
  */
 VALUE r_gmpz_scan1(VALUE self, VALUE bitnr)
 {
@@ -2889,9 +2921,12 @@ VALUE r_gmpzsg_inp_raw(VALUE klass, VALUE a_val, VALUE stream_val)
  *
  * Return a GMP::Z from a String, `str`.
  *
- * `order` can be 1 for most significant word first or -1 for least significant first.
+ * `order` can be 1 for most significant word first or -1 for least significant
+ * first.
  *
- * There is no sign taken from the data, the result will simply be a positive integer. An application can handle any sign itself, and apply it for instance with `GMP::Z#neg`.
+ * There is no sign taken from the data, the result will simply be a positive
+ * integer. An application can handle any sign itself, and apply it for
+ * instance with `GMP::Z#neg`.
  */
 VALUE r_gmpzsg_import(int argc, VALUE *argv, VALUE klass)
 {
@@ -2994,15 +3029,15 @@ DEFUN_INT_COND_P(is_odd,mpz_odd_p)
 /*
  * Document-method: sizeinbase
  * call-seq:
- *   a.sizeinbase
- *   a.size_in_base
+ *   a.sizeinbase(base)
+ *   a.size_in_base(base)
  *
  * @since 0.2.11
  *
- * Return the size of _a_ measured in number of digits in the given base. base can vary
- * from 2 to 62. The sign of _a_ is ignored, just the absolute value is used. The result
- * will be either exact or 1 too big. If base is a power of 2, the result is always
- * exact. If _a_ is zero the return value is always 1.
+ * Return the size of _a_ measured in number of digits in `base`. `base` can
+ * vary from 2 to 62. The sign of _a_ is ignored, just the absolute value is
+ * used. The result will be either exact or 1 too big. If `base` is a power of
+ * 2, the result is always exact. If _a_ is zero the return value is always 1.
  */
 VALUE r_gmpz_sizeinbase(VALUE self, VALUE base)
 {
@@ -3020,8 +3055,9 @@ VALUE r_gmpz_sizeinbase(VALUE self, VALUE base)
  *
  * @since 0.2.11
  *
- * Return the size of _a_ measured in number of digits in binary. The sign of _a_ is
- * ignored, just the absolute value is used. If _a_ is zero the return value is 1.
+ * Return the size of _a_ measured in number of digits in binary. The sign of
+ * _a_ is ignored, just the absolute value is used. If _a_ is zero the return
+ * value is 1.
  */
 VALUE r_gmpz_size_in_bin(VALUE self)
 {
@@ -3042,8 +3078,8 @@ VALUE r_gmpz_size_in_bin(VALUE self)
  *
  * @since 0.4.19
  *
- * Return the size of _a_ measured in number of limbs. If _a_ is zero, the returned
- * value will be zero. 
+ * Return the size of _a_ measured in number of limbs. If _a_ is zero, the
+ * returned value will be zero.
  */
 VALUE r_gmpz_size(VALUE self)
 {
