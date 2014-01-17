@@ -1297,6 +1297,18 @@ MPFR_SINGLE_FUNCTION(cos)
  * was not passed in.
  */
 MPFR_SINGLE_FUNCTION(sin)
+
+/*
+ * Document-method: tan
+ * call-seq:
+ *   x.tan
+ *   x.tan(rounding_mode)
+ *   x.tan(rounding_mode, precision)
+ *
+ * Calculate the tangent of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(tan)
 MPFR_DOUBLE_FUNCTION(sin_cos)
 MPFR_SINGLE_FUNCTION(sec)
