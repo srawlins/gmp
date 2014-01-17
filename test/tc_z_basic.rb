@@ -27,7 +27,8 @@ class TC_Z_Basic < Test::Unit::TestCase
 
   def test_mul
     assert_equal(@a * @b, 100   * 200,   "GMP::Z should multiply correctly")
-    assert_equal(@a * 2,  100   * 2,     "GMP::Z should multiply correctly")
+    assert_equal(@a *  2, 100   *  2,    "GMP::Z should multiply correctly")
+    assert_equal(@a * -2, 100   * -2,    "GMP::Z should multiply correctly")
     assert_equal(@a * @c, 100   * 2**32, "GMP::Z should multiply correctly")
     assert_equal( 2 * @a, 2     * 100,   "GMP::Z should multiply correctly")
     assert_equal(@c * @a, 2**32 * 100,   "GMP::Z should multiply correctly")

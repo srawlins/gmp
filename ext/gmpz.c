@@ -591,13 +591,12 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE op1, VALUE op2, VALUE op3)  \
   mpz_get_struct (op1, op1_val);                                    \
                                                                     \
   if (FIXNUM_P (op2)) {                                             \
-    if (FIX2NUM (op2) >= 0) {                                       \
-      if (FIXNUM_P (op3) && FIX2NUM (op3) >= 0) {                   \
-        res = mpz_fname##_ui_p (op1_val, FIX2NUM (op2), FIX2NUM (op3));  \
-        return (res ? Qtrue : Qfalse);                              \
-      }                                                             \
-    }                                                               \
-    /* TODO raise range error */                                    \
+    if (FIX2NUM (op2) >= 0 && FIXNUM_P (op3) && FIX2NUM (op3) >= 0) {  \
+      /* short circuit and use ..._ui_p */                             \
+      res = mpz_fname##_ui_p (op1_val, FIX2NUM (op2), FIX2NUM (op3));  \
+      return (res ? Qtrue : Qfalse);                                   \
+    }                                                                  \
+	                                                               \
     mpz_temp_alloc (op2_val);                                       \
     mpz_init_set_si (op2_val, FIX2NUM (op2));                       \
     free_op2_val = 1;                                               \
@@ -611,9 +610,9 @@ static VALUE r_gmpzsg_##fname(VALUE klass, VALUE op1, VALUE op2, VALUE op3)  \
   }                                                                 \
                                                                     \
   if (FIXNUM_P (op3)) {                                             \
-      mpz_temp_alloc (op3_val);                                     \
-      mpz_init_set_si (op3_val, FIX2NUM (op3));                     \
-      free_op3_val = 1;                                             \
+    mpz_temp_alloc (op3_val);                                     \
+    mpz_init_set_si (op3_val, FIX2NUM (op3));                     \
+    free_op3_val = 1;                                             \
   } else if (BIGNUM_P (op3)) {                                      \
     mpz_temp_from_bignum (op3_val, op3);                            \
     free_op3_val = 1;                                               \
@@ -1114,8 +1113,10 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
     mpz_mul(res_val, self_val, arg_val);
   } else if (FIXNUM_P(arg)) {
     mpz_make_struct_init(res, res_val);
-    /* TODO: use mpz_mul_ui */
-    mpz_mul_si(res_val, self_val, FIX2NUM(arg));
+    if (FIX2NUM (arg) >= 0)
+      mpz_mul_ui (res_val, self_val, FIX2NUM (arg));
+    else
+      mpz_mul_si (res_val, self_val, FIX2NUM (arg));
   } else if (GMPQ_P(arg)) {
     return r_gmpq_mul(arg, self);
   } else if (GMPF_P(arg)) {
