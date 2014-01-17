@@ -192,9 +192,9 @@ VALUE r_gmpq_swap (VALUE self, VALUE arg)
 VALUE r_gmpq_to_d(VALUE self)
 {
   MP_RAT *self_val;
-  mpq_get_struct(self, self_val);
+  mpq_get_struct (self, self_val);
 
-  return rb_float_new(mpq_get_d(self_val));
+  return rb_float_new (mpq_get_d (self_val));
 }
 
 /*
@@ -213,8 +213,7 @@ VALUE r_gmpq_to_s(VALUE self)
   size_t sizeinbase;
   size_t offset;
 
-  //Data_Get_Struct (self, MP_RAT, self_val);
-  mpq_get_struct(self, self_val)
+  mpq_get_struct (self, self_val)
 
   if (mpz_cmp_ui (mpq_denref (self_val), 1) == 0) {
     str = mpz_get_str (NULL, 10, mpq_numref (self_val));
@@ -233,7 +232,7 @@ VALUE r_gmpq_to_s(VALUE self)
   offset = strlen (str);
   str[offset] = '/';
   mpz_get_str (str + offset + 1, 10, self_val_den);
-  res = rb_str_new2(str);
+  res = rb_str_new2 (str);
   free (str);
 
   return res;
@@ -263,37 +262,37 @@ VALUE r_gmpq_add(VALUE self, VALUE arg)
   MP_INT *arg_val_z, *res_val_num;
   VALUE res;
 
-  mpq_get_struct(self, self_val);
-  mpq_make_struct_init(res, res_val);
+  mpq_get_struct (self, self_val);
+  mpq_make_struct_init (res, res_val);
 
-  if (GMPQ_P(arg)) {
-    mpq_get_struct(arg,arg_val_q);
-    mpq_add(res_val, self_val, arg_val_q);
-  } else if (GMPZ_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
-    mpz_get_struct(arg, arg_val_z);
-    mpz_mul(res_val_num, mpq_denref(self_val), arg_val_z);
-    mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
-  } else if (FIXNUM_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
-    mpz_mul_si(res_val_num, mpq_denref(self_val), FIX2NUM(arg));
-    mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
-  } else if (GMPF_P(arg)) {
+  if (GMPQ_P (arg)) {
+    mpq_get_struct (arg,arg_val_q);
+    mpq_add (res_val, self_val, arg_val_q);
+  } else if (GMPZ_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_get_struct (arg, arg_val_z);
+    mpz_mul (res_val_num, mpq_denref (self_val), arg_val_z);
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
+  } else if (FIXNUM_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_mul_si (res_val_num, mpq_denref (self_val), FIX2NUM (arg));
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
+  } else if (GMPF_P (arg)) {
 #ifndef MPFR
-    return r_gmpf_add(arg,self);
+    return r_gmpf_add (arg,self);
 #else
-    return rb_funcall(arg, rb_intern("+"), 1, self);
+    return rb_funcall (arg, rb_intern ("+"), 1, self);
 #endif
-  } else if (BIGNUM_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
-    mpz_set_bignum(res_val_num, arg);
-    mpz_mul(res_val_num, res_val_num, mpq_denref(self_val));
-    mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
+  } else if (BIGNUM_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_set_bignum (res_val_num, arg);
+    mpz_mul (res_val_num, res_val_num, mpq_denref (self_val));
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
   } else {
-    typeerror(ZQFXB);
+    typeerror (ZQFXB);
   }
   return res;
 }
@@ -319,36 +318,36 @@ VALUE r_gmpq_sub(VALUE self, VALUE arg)
   VALUE res;
   mpfr_prec_t prec;
 
-  mpq_get_struct(self, self_val);
-  mpq_make_struct_init(res, res_val);
+  mpq_get_struct (self, self_val);
+  mpq_make_struct_init (res, res_val);
 
-  if (GMPQ_P(arg)) {
-    mpq_get_struct(arg,arg_val_q);
+  if (GMPQ_P (arg)) {
+    mpq_get_struct (arg,arg_val_q);
     mpq_sub (res_val, self_val, arg_val_q);
-  } else if (GMPZ_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
-    mpz_get_struct(arg, arg_val_z);
-    mpz_mul (res_val_num, mpq_denref(self_val), arg_val_z);
+  } else if (GMPZ_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_get_struct (arg, arg_val_z);
+    mpz_mul (res_val_num, mpq_denref (self_val), arg_val_z);
     mpz_neg (res_val_num, res_val_num);
-    mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
-  } else if (FIXNUM_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
-    mpz_mul_si (res_val_num, mpq_denref(self_val), -FIX2NUM(arg));
-    mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
-  } else if (GMPF_P(arg)) {
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
+  } else if (FIXNUM_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_mul_si (res_val_num, mpq_denref (self_val), -FIX2NUM (arg));
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
+  } else if (GMPF_P (arg)) {
     mpf_get_struct_prec (arg, arg_val_f, prec);
-    mpf_make_struct_init(res, res_val_f, prec);
+    mpf_make_struct_init (res, res_val_f, prec);
     mpf_set_q (res_val_f, self_val);
     mpf_sub (res_val_f, res_val_f, arg_val_f);
-  } else if (BIGNUM_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
+  } else if (BIGNUM_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
     mpz_set_bignum (res_val_num, arg);
-    mpz_mul (res_val_num, res_val_num, mpq_denref(self_val));
+    mpz_mul (res_val_num, res_val_num, mpq_denref (self_val));
     mpz_neg (res_val_num, res_val_num);
-    mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
   } else {
     typeerror (ZQFXB);
   }
