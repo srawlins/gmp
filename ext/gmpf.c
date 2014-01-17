@@ -279,6 +279,8 @@ void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
  *   GMP::F.nan
  *
  * `NaN`, an instance of GMP::F
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfsg_nan(VALUE klass)
 {
@@ -300,6 +302,8 @@ VALUE r_gmpfsg_nan(VALUE klass)
  *
  * `Inf` (positive infinity), an instance of GMP::F, or `-Inf` (negative
  * infinity), if a negative Fixnum _sign_ is passed
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfsg_inf(int argc, VALUE *argv, VALUE klass)
 {
@@ -327,6 +331,8 @@ VALUE r_gmpfsg_inf(int argc, VALUE *argv, VALUE klass)
  *   GMP::F.zero(sign)
  *
  * zero or negative zero, an instance of GMP::F, depending on _sign_, a Fixnum
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfsg_zero(int argc, VALUE *argv, VALUE klass)
 {
@@ -953,6 +959,8 @@ VALUE r_gmpf_sgn(VALUE self)
  *   x.lessgreater?(y)
  *
  * Return true if _x_ < _y_ or _x_ > _y_, false otherwise
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfr_lessgreater_p(VALUE self_val, VALUE arg_val)
 {
@@ -972,6 +980,8 @@ VALUE r_gmpfr_lessgreater_p(VALUE self_val, VALUE arg_val)
  *   x.unordered?(y)
  *
  * Return true if _x_ or _y_ is a `NaN`, false otherwise
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfr_unordered_p(VALUE self_val, VALUE arg_val)
 {
@@ -1139,6 +1149,8 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
  * rounding mode. If _x_ is zero, then _y_ is set to a zero of the same sign
  * and _exp_ is set to 0. If _x_ is `NaN` or an infinity, then _y_ is set to
  * the same value and _exp_ is undefined.
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfr_frexp(int argc, VALUE *argv, VALUE self_val)
 {
@@ -1368,6 +1380,8 @@ MPFR_SINGLE_MPF_FUNCTION(hypot)
  * Creates a new GMP::F float, equal to the factorial of n, which must be a
  * Fixnum. Optionally pass a rounding mode, and precision for the resultant
  * GMP::F.
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfrsg_fac(int argc, VALUE *argv, VALUE self_val)
 {

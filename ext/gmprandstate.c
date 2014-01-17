@@ -329,6 +329,8 @@ VALUE r_gmprandstate_mpfr_urandomb(int argc, VALUE *argv, VALUE self_val)
  * > `rop` can be seen as if a random real number is generated according to the
  * > continuous uniform distribution on the interval [0, 1] and then rounded in
  * > the direction `RNDN`.
+ *
+ * @since 0.6.47
  */
 VALUE r_gmprandstate_mpfr_urandom(int argc, VALUE *argv, VALUE self_val)
 {

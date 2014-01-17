@@ -681,11 +681,6 @@ static VALUE r_gmpz_alloc(VALUE klass) {
   MP_INT *z;
   VALUE obj;
 
-  //mpz_init(z);
-  //obj = Data_Make_Struct(klass, MP_INT, 0, r_gmpz_free, z);
-  //obj = Data_Wrap_Struct(klass, 0, r_gmpz_free, z);
-  //mpz_make_struct_init (z, obj);
-  //mpz_make_struct_init (obj, z);
   obj = Data_Make_Struct(klass, MP_INT, 0, r_gmpz_free, z);
   mpz_init (z);
 
@@ -697,10 +692,10 @@ VALUE r_gmpz_initialize(int argc, VALUE *argv, VALUE self)
   MP_INT *self_val;
   int base = 0;
 
-  // Set up the base if 2 arguments are passed
-  if (argc == 2) { // only ok if String, Fixnum
-    if (STRING_P(argv[0])) {  // first arg must be a String
-      if (FIXNUM_P(argv[1])) {  //  second arg must be a Fixnum
+  /* Set up the base if 2 arguments are passed */
+  if (argc == 2) {                              /* only ok if String, Fixnum */
+    if (STRING_P(argv[0])) {                   /* first arg must be a String */
+      if (FIXNUM_P(argv[1])) {                /* second arg must be a Fixnum */
         base = FIX2INT(argv[1]);
         if ( base != 0 && ( base < 2 || base > 62) )
           rb_raise (rb_eRangeError, "base must be either 0 or between 2 and 62");
@@ -2384,6 +2379,8 @@ DEFUN_INT_SINGLETON_UI(fib, mpz_fib_ui)
  *   GMP::Z.fib2(n)
  *
  * Returns [_F [n]_, _F [n-1]_], the _nth_ and _n-1th_ Fibonacci numbers.
+ *
+ * @since 0.6.41
  *
  * @example
  *   GMP::Z.fib2(1)  #=> [ 1, 0]
