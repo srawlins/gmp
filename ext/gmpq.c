@@ -7,9 +7,9 @@
  *
  * GMP Multiple Precision Rational Number.
  *
- * Instances of this class can store variables of the type mpq_t. This class also
- * contains many methods that act as the functions for mpq_t variables, as well as a few
- * methods that attempt to make this library more Ruby-ish.
+ * Instances of this class can store variables of the type `mpq_t`. This class
+ * also contains many methods that act as the functions for `mpq_t` variables,
+ * as well as a few methods that attempt to make this library more Ruby-ish.
  */
 
 /**********************************************************************
@@ -38,9 +38,9 @@ static VALUE r_gmpq_##fname(VALUE self)                           \
 }
 
 /*
- * DEFUN_RAT2RAT defines two functions. The first takes a GMP::Q as self, calls mpq_fname
- * on the contained mpq_t, whose arguments are exactly (0) the return argument and (1)
- * self. The second is the same destructive method.
+ * DEFUN_RAT2RAT defines two functions. The first takes a GMP::Q as self, calls
+ * mpq_fname on the contained mpq_t, whose arguments are exactly (0) the return
+ * argument and (1) self. The second is the same destructive method.
  */
 #define DEFUN_RAT2RAT(fname,mpq_fname)         \
 static VALUE r_gmpq_##fname(VALUE self)        \
@@ -181,12 +181,13 @@ VALUE r_gmpq_swap (VALUE self, VALUE arg)
  *
  * Returns _p_ as an Float if _p_ fits in a Float.
  *
- * Otherwise returns the least significant part of _p_, with the same sign as _p_.
+ * Otherwise returns the least significant part of _p_, with the same sign as
+ * _p_.
  *
- * If the exponent from the conversion is too big or too small to fit a double then the
- * result is system dependent. For too big an infinity is returned when available. For
- * too small 0.0 is normally returned. Hardware overflow, underflow and denorm traps may
- * or may not occur.
+ * If the exponent from the conversion is too big or too small to fit a double
+ * then the result is system dependent. For too big an infinity is returned
+ * when available. For too small 0.0 is normally returned. Hardware overflow,
+ * underflow and denorm traps may or may not occur.
  */
 VALUE r_gmpq_to_d(VALUE self)
 {
@@ -249,6 +250,7 @@ VALUE r_gmpq_to_s(VALUE self)
  *   p + q
  *
  * Adds _p_ to _q_. _q_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -302,6 +304,7 @@ VALUE r_gmpq_add(VALUE self, VALUE arg)
  *   p - q
  *
  * Subtracts _p_ from _q_. _q_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -358,6 +361,7 @@ VALUE r_gmpq_sub(VALUE self, VALUE arg)
  *   p * q
  *
  * Multiplies _p_ with _q_. _q_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -431,6 +435,7 @@ VALUE r_gmpq_mul(VALUE self, VALUE arg)
  *   p / q
  *
  * Divides _p_ by _q_. _q_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -532,7 +537,7 @@ DEFUN_RAT2RAT(abs, mpq_abs)
  * call-seq:
  *   p.inv
  *
- * Returns 1/<i>p</i>.
+ * Returns _1/p_.
  */
 VALUE r_gmpq_inv(VALUE self)
 {
@@ -553,7 +558,7 @@ VALUE r_gmpq_inv(VALUE self)
  * call-seq:
  *   p.inv!
  *
- * Sets _p_ to 1/<i>p</i>.
+ * Sets _p_ to _1/p_.
  */
 VALUE r_gmpq_inv_self(VALUE self)
 {
@@ -716,11 +721,11 @@ DEFUN_RAT_CMP(ge,>=)
  * call-seq:
  *   a.cmpabs(b)
  *
- * Returns negative if abs(_a_) is less than abs(_b_).
+ * Returns negative if _abs(a)_ is less than _abs(b)_.
  *
- * Returns 0 if abs(_a_) is equal to abs(_b_).
+ * Returns 0 if _abs(a)_ is equal to _abs(b)_.
  *
- * Returns positive if abs(_a_) is greater than abs(_b_).
+ * Returns positive if _abs(a)_ is greater than _abs(b)_.
  */
 static VALUE r_gmpq_cmpabs(VALUE self, VALUE arg)
 {
@@ -812,9 +817,9 @@ VALUE r_gmpq_sgn(VALUE self)
  *
  * @since 0.5.47
  *
- * Returns true if _a_ is equal to _b_. _a_ and _b_ must then be equal in cardinality,
- * and both be instances of GMP::Q. Otherwise, returns false. a.eql?(b) if and only if
- * b.class == GMP::Q, and a.hash == b.hash.
+ * Returns true if _a_ is equal to _b_. _a_ and _b_ must then be equal in
+ * cardinality, and both be instances of GMP::Q. Otherwise, returns false.
+ * `a.eql?(b)` if and only if `b.class == GMP::Q`, and `a.hash == b.hash`.
  */
 VALUE r_gmpq_eql(VALUE self, VALUE arg)
 {
@@ -837,9 +842,10 @@ VALUE r_gmpq_eql(VALUE self, VALUE arg)
  *
  * @since 0.5.47
  *
- * Returns the computed hash value of _a_. This method first converts _a_ into a String
- * (base 10), then calls String#hash on the result, returning the hash value. a.eql?(b)
- * if and only if b.class == GMP::Q, and a.hash == b.hash.
+ * Returns the computed hash value of _a_. This method first converts _a_ into
+ * a String (base 10), then calls String#hash on the result, returning the hash
+ * value. `a.eql?(b)` if and only if `b.class == GMP::Q`, and
+ * `a.hash == b.hash`.
  */
 VALUE r_gmpq_hash(VALUE self)
 {
