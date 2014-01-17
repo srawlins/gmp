@@ -6,13 +6,13 @@ class TC_Q < Test::Unit::TestCase
   end
 
   def test_init_fixnum
-    assert_equal(GMP::Q.new(1), 1, "GMP::Q.new(x : Fixnum) should initialize to 0")
+    assert_equal(GMP::Q.new(  1),   1, "GMP::Q.new(x) should accept a Fixnum")
+    assert_equal(GMP::Q.new(-11), -11, "GMP::Q.new(x) should accept a negative Fixnum")
   end
 
-  def test_init_fixnum2
-    assert_equal(GMP::Q.new(1, 2).to_s, "1/2", "GMP::Q.new(num : Fixnum, den : Fixnum) should initialize to num/den")
-    assert_equal(GMP::Q.new(1, 3).to_s, "1/3", "GMP::Q.new(num : Fixnum, den : Fixnum) should initialize to num/den")
-    assert_equal(GMP::Q.new(2, 4).to_s, "1/2", "GMP::Q.new(num : Fixnum, den : Fixnum) should initialize to num/den")
+  def test_init_z
+    assert_equal(GMP::Q.new(GMP::Z(  1)),   1, "GMP::Q.new(x) should accept a GMP::Z")
+    assert_equal(GMP::Q.new(GMP::Z(-11)), -11, "GMP::Q.new(x) should accept a negative GMP::Z")
   end
 
   def test_init_string
@@ -23,6 +23,12 @@ class TC_Q < Test::Unit::TestCase
   def test_init_q
     a = GMP::Q.new(1,2)
     assert_equal(GMP::Q.new(a), a, "GMP::Q.new(x : Q) should initialize to x")
+  end
+
+  def test_init_fixnum_pair
+    assert_equal(GMP::Q.new(1, 2).to_s, "1/2", "GMP::Q.new(num : Fixnum, den : Fixnum) should initialize to num/den")
+    assert_equal(GMP::Q.new(1, 3).to_s, "1/3", "GMP::Q.new(num : Fixnum, den : Fixnum) should initialize to num/den")
+    assert_equal(GMP::Q.new(2, 4).to_s, "1/2", "GMP::Q.new(num : Fixnum, den : Fixnum) should initialize to num/den")
   end
   
   def test_neg

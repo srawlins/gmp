@@ -264,8 +264,8 @@ extern int mpq_cmp_value(MP_RAT *OP, VALUE arg);
 extern VALUE r_gmpq_sgn(VALUE self);
 
 // Applying Integer Functions
-extern VALUE r_gmpq_num(VALUE self);
-extern VALUE r_gmpq_den(VALUE self);
+extern VALUE r_gmpq_get_num(VALUE self);
+extern VALUE r_gmpq_get_den(VALUE self);
 
 // _unsorted_
 

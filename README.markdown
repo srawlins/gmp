@@ -196,6 +196,8 @@ Numbers are created by using `new()`. Constructors can take following arguments:
     GMP::Z.new(Bignum)
     GMP::Z.new(String)
     GMP::Q.new()
+    GMP::Q.new(Fixnum)
+    GMP::Q.new(GMP::Z)
     GMP::Q.new(GMP::Q)
     GMP::Q.new(String)
     GMP::Q.new(any GMP::Z initializer)

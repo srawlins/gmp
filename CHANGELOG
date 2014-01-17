@@ -1,3 +1,7 @@
+0.x.xx
+  * GMP::Q.new can now accept a GMP::Z more intelligently, and can accept a
+    Float, and is tested better.
+
 0.6.47
   * Fixed GMP::F#to_s when MPFR is not present. It now works, and accepts an
     optional base argument, just like GMP::F#to_s does when MPFR _is_ present.
@@ -9,7 +13,8 @@
     tests
   * Added tests for GMP::F#abs and GMP::F#neg
   * Added GMP::F.fac(n) (mpfr_fac_ui) and tests
-  * Added GMP::F.nan, GMP::F.inf, GMP::F.zero (MPFR >= 3.0.0), documentation, and simple tests
+  * Added GMP::F.nan, GMP::F.inf, GMP::F.zero (MPFR >= 3.0.0), documentation,
+    and simple tests
   * Added GMP::F#frexp, documentation, and tests
   * Fixed GMP::MPFR_RNDA
 

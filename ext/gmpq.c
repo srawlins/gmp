@@ -113,24 +113,35 @@ static void mpq_str_set(MP_RAT *ROP, char *str)
 
 VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
 {
-  MP_RAT *self_val, *arg_val;
+  MP_RAT *self_val, *arg_val_q;
+  MP_INT *arg_z;
 
   if (argc != 0) {
     mpq_get_struct (self, self_val);
-    /* TODO: use mpq_set_d */
+    /* TODO: use mpq_set_si */
+    /* TODO: use mpq_set_ui */
     /* TODO: use mpq_set_f */
-    if (argc == 1 && GMPQ_P (argv[0])) {
-      mpq_get_struct (argv[0], arg_val);
-      mpq_set (self_val, arg_val);
-    } else if (argc == 1 && STRING_P (argv[0])) {
-      mpq_str_set (self_val, StringValuePtr (argv[0]));
-    } else {
-      mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
-      if (argc == 2) {
-        mpz_set_value (mpq_denref (self_val), argv[1], 0); /* are these segfaulting? */
-        mpq_canonicalize (self_val);
-      } /* TODO: AND IF ARGC != 2 ?!? WHAT JUST HAPPENED? */
+    if (argc == 1) {
+      if (GMPZ_P (argv[0])) {
+        mpz_get_struct (argv[0], arg_z);
+        mpq_set_z (self_val, arg_z);
+      } else if (FLOAT_P (argv[0])) {
+        mpq_set_d (self_val, NUM2DBL (argv[0]));
+      } else if (GMPQ_P (argv[0])) {
+        mpq_get_struct (argv[0], arg_val_q);
+        mpq_set (self_val, arg_val_q);
+      } else if (STRING_P (argv[0])) {
+        mpq_str_set (self_val, StringValuePtr (argv[0]));
+      } else {
+        mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
+      }
     }
+
+    if (argc == 2) {
+      mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
+      mpz_set_value (mpq_denref (self_val), argv[1], 0); /* are these segfaulting? */
+      mpq_canonicalize (self_val);
+    } /* TODO: AND IF ARGC != 2 ?!? WHAT JUST HAPPENED? */
   }
   return Qnil;
 }
@@ -637,7 +648,7 @@ VALUE r_gmpq_eq(VALUE self, VALUE arg)
   } else if (FIXNUM_P(arg)) {
     if (mpz_cmp_ui(mpq_denref(self_val), 1) != 0)
       return Qfalse;
-    return (mpz_cmp_ui(mpq_numref(self_val),FIX2INT(arg))==0)?Qtrue:Qfalse;
+    return (mpz_cmp_si (mpq_numref (self_val), FIX2INT (arg)) == 0) ? Qtrue : Qfalse;
   } else if (BIGNUM_P(arg)) {
     if (mpz_cmp_ui(mpq_denref(self_val), 1) != 0)
       return Qfalse;
@@ -816,9 +827,9 @@ VALUE r_gmpq_sgn(VALUE self)
  *
  * @since 0.5.47
  *
- * Returns true if _a_ is equal to _b_. _a_ and _b_ must then be equal in
- * cardinality, and both be instances of GMP::Q. Otherwise, returns false.
- * `a.eql?(b)` if and only if `b.class == GMP::Q`, and `a.hash == b.hash`.
+ * Returns whether if _a_ is equal to _b_. _a_ and _b_ must be equal in
+ * cardinality, and both be instances of GMP::Q to return true.  `a.eql?(b)` if
+ * and only if `b.class == GMP::Q`, and `a.hash == b.hash`.
  */
 VALUE r_gmpq_eql(VALUE self, VALUE arg)
 {
@@ -857,7 +868,7 @@ VALUE r_gmpq_hash(VALUE self)
  *    Applying Integer Functions                                      *
  **********************************************************************/
 
-VALUE r_gmpq_num(VALUE self)
+VALUE r_gmpq_get_num(VALUE self)
 {
   MP_RAT *self_val;
   MP_INT *res_val;
@@ -868,7 +879,7 @@ VALUE r_gmpq_num(VALUE self)
   return res;
 }
 
-VALUE r_gmpq_den(VALUE self)
+VALUE r_gmpq_get_den(VALUE self)
 {
   MP_RAT *self_val;
   MP_INT *res_val;
@@ -924,6 +935,12 @@ void init_gmpq()
   
   rb_define_method(cGMP_Q, "eql?",    r_gmpq_eql, 1);
   rb_define_method(cGMP_Q, "hash",    r_gmpq_hash, 0);
+
+  // Applying Integer Functions to Rationals
+  rb_define_method(cGMP_Q, "num", r_gmpq_get_num, 0);
+  rb_define_method(cGMP_Q, "den", r_gmpq_get_den, 0);
+  /* TODO rb_define_method(cGMP_Q, "num=", r_gmpq_set_num, 0); */
+  /* TODO rb_define_method(cGMP_Q, "den=", r_gmpq_set_den, 0); */
   
   // _unsorted_
   rb_define_method(cGMP_Q, "floor",  r_gmpq_floor, 0);
