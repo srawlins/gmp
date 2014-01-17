@@ -1105,32 +1105,32 @@ VALUE r_gmpz_mul(VALUE self, VALUE arg)
   MP_INT *self_val, *arg_val, *res_val;
   VALUE res = 0;
 
-  mpz_get_struct(self,self_val);
+  mpz_get_struct (self, self_val);
 
-  if (GMPZ_P(arg)) {
-    mpz_make_struct_init(res, res_val);
-    mpz_get_struct(arg,arg_val);
-    mpz_mul(res_val, self_val, arg_val);
-  } else if (FIXNUM_P(arg)) {
-    mpz_make_struct_init(res, res_val);
+  if (GMPZ_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_get_struct (arg,arg_val);
+    mpz_mul (res_val, self_val, arg_val);
+  } else if (FIXNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
     if (FIX2NUM (arg) >= 0)
       mpz_mul_ui (res_val, self_val, FIX2NUM (arg));
     else
       mpz_mul_si (res_val, self_val, FIX2NUM (arg));
-  } else if (GMPQ_P(arg)) {
-    return r_gmpq_mul(arg, self);
-  } else if (GMPF_P(arg)) {
+  } else if (GMPQ_P (arg)) {
+    return r_gmpq_mul (arg, self);
+  } else if (GMPF_P (arg)) {
 #ifndef MPFR
-    return r_gmpf_mul(arg, self);
+    return r_gmpf_mul (arg, self);
 #else
-    return rb_funcall(arg, rb_intern("*"), 1, self);
+    return rb_funcall (arg, rb_intern ("*"), 1, self);
 #endif
-  } else if (BIGNUM_P(arg)) {
-    mpz_make_struct_init(res, res_val);
-    mpz_set_bignum(res_val, arg);
-    mpz_mul(res_val, res_val, self_val);
+  } else if (BIGNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_set_bignum (res_val, arg);
+    mpz_mul (res_val, res_val, self_val);
   } else {
-    typeerror(ZQFXB);
+    typeerror (ZQFXB);
   }
   return res;
 }
@@ -1209,19 +1209,19 @@ static VALUE r_gmpz_submul_self(VALUE self, VALUE b, VALUE c)
   MP_INT *self_val, *b_val, *c_val;
   int free_b_val = 0;
 
-  if (GMPZ_P(b)) {
-    mpz_get_struct(b, b_val);
-  } else if (FIXNUM_P(b)) {
-    mpz_temp_alloc(b_val);
-    mpz_init_set_si(b_val, FIX2NUM(b));
+  if (GMPZ_P (b)) {
+    mpz_get_struct (b, b_val);
+  } else if (FIXNUM_P (b)) {
+    mpz_temp_alloc (b_val);
+    mpz_init_set_si (b_val, FIX2NUM (b));
     free_b_val = 1;
-  } else if (BIGNUM_P(b)) {
-    mpz_temp_from_bignum(b_val, b);
+  } else if (BIGNUM_P (b)) {
+    mpz_temp_from_bignum (b_val, b);
     free_b_val = 1;
   } else {
-    typeerror_as(ZXB, "addend");
+    typeerror_as (ZXB, "addend");
   }
-  mpz_get_struct(self, self_val);
+  mpz_get_struct (self, self_val);
 
   if (GMPZ_P (c)) {
     mpz_get_struct (c, c_val);
@@ -1240,7 +1240,7 @@ static VALUE r_gmpz_submul_self(VALUE self, VALUE b, VALUE c)
   } else {
     if (free_b_val)
       mpz_temp_free (b_val);
-  /*rb_raise (rb_eTypeError, "base must be a Fixnum between 2 and 62, not a %s.", rb_class2name (rb_class_of (c)));*/
+  /* TODO: rb_raise (rb_eTypeError, "base must be a Fixnum between 2 and 62, not a %s.", rb_class2name (rb_class_of (c)));*/
     typeerror_as (ZXB, "multiplicand");
   }
   if (free_b_val)
@@ -1499,21 +1499,21 @@ VALUE r_gmpz_mod(VALUE self, VALUE arg)
   MP_INT *self_val, *arg_val, *res_val;
   VALUE res = 0;
 
-  mpz_get_struct(self,self_val);
+  mpz_get_struct (self,self_val);
 
-  if (GMPZ_P(arg)) {
-    mpz_make_struct_init(res, res_val);
-    mpz_get_struct(arg, arg_val);
-    mpz_mod(res_val, self_val, arg_val);
-  } else if (FIXNUM_P(arg)) {
-    mpz_make_struct_init(res, res_val);
-    mpz_mod_ui(res_val, self_val, FIX2NUM(arg));
-  } else if (BIGNUM_P(arg)) {
-    mpz_make_struct_init(res, res_val);
-    mpz_set_bignum(res_val, arg);
-    mpz_mod(res_val, res_val, self_val);
+  if (GMPZ_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_get_struct (arg, arg_val);
+    mpz_mod (res_val, self_val, arg_val);
+  } else if (FIXNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_mod_ui (res_val, self_val, FIX2NUM (arg));
+  } else if (BIGNUM_P (arg)) {
+    mpz_make_struct_init (res, res_val);
+    mpz_set_bignum (res_val, arg);
+    mpz_mod (res_val, res_val, self_val);
   } else {
-    typeerror(ZXB);
+    typeerror (ZXB);
   }
   return res;
 }
