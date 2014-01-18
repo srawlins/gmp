@@ -1,7 +1,8 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_precision < Test::Unit::TestCase
+class TcFloatPrecision < Test::Unit::TestCase
   def setup
+    # TODO: um... what?
     begin
       GMP::MPFR_VERSION
       @initial_default_prec = GMP::F.default_prec

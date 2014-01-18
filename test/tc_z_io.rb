@@ -5,7 +5,8 @@ if (RUBY_DESCRIPTION =~ /rubinius/i and RUBY_VERSION =~ /^1.8/) ||
    (RUBY_DESCRIPTION =~ /jruby/i)
   # Sorry charlie
 else
-class TC_Z_IO < Test::Unit::TestCase
+
+class TcIntegerIo < Test::Unit::TestCase
   def setup
     @two_pow_100   = GMP::Z.pow(GMP::Z(2), 100)
     @three_pow_100 = GMP::Z.pow(GMP::Z(3), 100)

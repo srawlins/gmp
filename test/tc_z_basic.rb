@@ -2,7 +2,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 # Tested: [Z op Z, Z op FixNum, Z op BigNum, FixNum op Z, BigNum op Z]
 # Things are tested both ways because the implementation is asymetrical
-class TC_Z_Basic < Test::Unit::TestCase
+class TcIntegerBasic < Test::Unit::TestCase
   def setup
     @a=GMP::Z.new(100)
     @b=GMP::Z.new(200)

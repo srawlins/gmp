@@ -1,9 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_Random < Test::Unit::TestCase
-  def setup
-  end
-
+class TcRandom < Test::Unit::TestCase
   def test_urandomb
     @a = GMP::RandState.new
     @a.seed(13579)

@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_Q < Test::Unit::TestCase
+class TcRational < Test::Unit::TestCase
   def setup
     @z_1 = GMP::Z(1)
     @z_2 = GMP::Z(2)
@@ -127,16 +127,16 @@ class TC_Q < Test::Unit::TestCase
   end
   
   def test_to_s
-    assert_equal("1/2", GMP::Q(1,2).to_s, "GMP::Q should to_s properly.")
-    assert_equal("1/4294967296", GMP::Q(1,2**32).to_s, "GMP::Q should to_s properly.")
-    assert_equal("1/4294967296", GMP::Q(1,2**32).to_s, "GMP::Q should to_s properly.")
-    assert_equal("-22/7", GMP::Q(-22,7).to_s, "GMP::Q should to_s properly.")
-    assert_equal("-22/7", GMP::Q(22,-7).to_s, "GMP::Q should to_s properly.")
-    assert_equal("22/7", GMP::Q(-22,-7).to_s, "GMP::Q should to_s properly.")
-    assert_equal("0", GMP::Q(0,1).to_s, "GMP::Q should to_s properly.")
-    assert_equal("0", GMP::Q(0,2000).to_s, "GMP::Q should to_s properly.")
-    assert_equal("0", GMP::Q(0,-2000).to_s, "GMP::Q should to_s properly.")
+    assert_equal("1/2", GMP::Q(1, 2).to_s, "GMP::Q should to_s properly.")
+    assert_equal("1/4294967296", GMP::Q(1, 2**32).to_s, "GMP::Q should to_s properly.")
+    assert_equal("1/4294967296", GMP::Q(1, 2**32).to_s, "GMP::Q should to_s properly.")
+    assert_equal("-22/7", GMP::Q(-22, 7).to_s, "GMP::Q should to_s properly.")
+    assert_equal("-22/7", GMP::Q(22, -7).to_s, "GMP::Q should to_s properly.")
+    assert_equal("22/7", GMP::Q(-22, -7).to_s, "GMP::Q should to_s properly.")
+    assert_equal("0", GMP::Q(0, 1).to_s, "GMP::Q should to_s properly.")
+    assert_equal("0", GMP::Q(0, 2000).to_s, "GMP::Q should to_s properly.")
+    assert_equal("0", GMP::Q(0, -2000).to_s, "GMP::Q should to_s properly.")
 
-    assert_equal("1/2", GMP::Q(1,2).inspect, "GMP::Q should inspect properly.")
+    assert_equal("1/2", GMP::Q(1, 2).inspect, "GMP::Q should inspect properly.")
   end
 end

@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_Z_Exponentiation < Test::Unit::TestCase
+class TcIntegerExponentiation < Test::Unit::TestCase
   def setup
     @a = GMP::Z.new(100)
     @b = GMP::Z.new(16)
@@ -14,9 +14,9 @@ class TC_Z_Exponentiation < Test::Unit::TestCase
   end
   
   def test_powmod
-    assert_equal(GMP::Z(16), @a.powmod(2,256),  "(a : GMP::Z).powmod((b : Fixnum), (c : Fixnum)) should work correctly")
-    assert_equal(GMP::Z(76), @b.powmod(10,@a),  "(a : GMP::Z).powmod((b : Fixnum), (c : GMP::Z)) should work correctly")
-    assert_equal(GMP::Z(0), @a.powmod(@b,256),  "(a : GMP::Z).powmod((b : GMP::Z), (c : Fixnum)) should work correctly")
-    assert_equal(GMP::Z(0), @a.powmod(@b,@c), "(a : GMP::Z).powmod((b : GMP::Z), (c : GMP::Z)) should work correctly")
+    assert_equal(GMP::Z(16), @a.powmod(2,256),  "GMP::Z#powmod((b : Fixnum), (c : Fixnum)) should work correctly")
+    assert_equal(GMP::Z(76), @b.powmod(10,@a),  "GMP::Z#powmod((b : Fixnum), (c : GMP::Z)) should work correctly")
+    assert_equal(GMP::Z(0), @a.powmod(@b,256),  "GMP::Z#powmod((b : GMP::Z), (c : Fixnum)) should work correctly")
+    assert_equal(GMP::Z(0), @a.powmod(@b,@c), "GMP::Z#powmod((b : GMP::Z), (c : GMP::Z)) should work correctly")
   end
 end

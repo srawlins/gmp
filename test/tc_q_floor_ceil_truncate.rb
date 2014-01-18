@@ -1,12 +1,12 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_floor_ceil_truncate < Test::Unit::TestCase
+class TcRationalFloorCeilTruncate < Test::Unit::TestCase
   def setup
     @a = GMP::Q.new(200,11)
     @b = -@a
     @c = GMP::Q.new(70,10)
   end
-  
+
   def test_floor_ceil_truncate
     assert_equal(@a.floor, 18, "GMP::Q should floor.")
     assert_equal(@a.ceil, 19, "GMP::Q should ceil.")

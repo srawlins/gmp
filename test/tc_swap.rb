@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_swap < Test::Unit::TestCase
+class TcSwap < Test::Unit::TestCase
   def setup
     @a=GMP::Z.new(100)
     @b=GMP::Z.new(200)

@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_Constants < Test::Unit::TestCase
+class TcConstants < Test::Unit::TestCase
   def test_constants
     assert_instance_of(String, GMP::GMP_VERSION,       "GMP::GMP_VERSION should be a String")
     assert_instance_of(String, GMP::GMP_CC,            "GMP::GMP_CC should be a String")
