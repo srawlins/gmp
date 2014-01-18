@@ -118,11 +118,14 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
 
   if (argc != 0) {
     mpq_get_struct (self, self_val);
-    /* TODO: use mpq_set_si */
-    /* TODO: use mpq_set_ui */
     /* TODO: use mpq_set_f */
     if (argc == 1) {
-      if (GMPZ_P (argv[0])) {
+      if (FIXNUM_P (argv[0])) {
+        if (FIX2NUM (argv[0]) >= 0)
+          mpq_set_ui (self_val, FIX2NUM (argv[0]), 1);
+	else
+          mpq_set_si (self_val, FIX2NUM (argv[0]), 1);
+      } else if (GMPZ_P (argv[0])) {
         mpz_get_struct (argv[0], arg_z);
         mpq_set_z (self_val, arg_z);
       } else if (FLOAT_P (argv[0])) {
@@ -135,13 +138,18 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
       } else {
         mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
       }
-    }
+    } else if (argc == 2) {
+      if (FIXNUM_P (argv[0]) && FIXNUM_P (argv[1])) {
+        mpq_set_si (self_val, FIX2NUM (argv[0]), FIX2NUM (argv[1]));
+      } else {
+        mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
+        mpz_set_value (mpq_denref (self_val), argv[1], 0); /* are these segfaulting? */
+      }
 
-    if (argc == 2) {
-      mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
-      mpz_set_value (mpq_denref (self_val), argv[1], 0); /* are these segfaulting? */
       mpq_canonicalize (self_val);
-    } /* TODO: AND IF ARGC != 2 ?!? WHAT JUST HAPPENED? */
+    } else {
+      rb_raise (rb_eArgError, "wrong # of arguments (%d for 0, 1, or 2)", argc);
+    }
   }
   return Qnil;
 }

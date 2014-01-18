@@ -759,7 +759,7 @@ void mpz_set_value(MP_INT *target, VALUE source, int base)
   } else if (BIGNUM_P (source)) {
     mpz_set_bignum (target, source);
   } else {
-    rb_raise (rb_eTypeError, "Don't know how to convert %s into GMP_Z", rb_class2name (rb_class_of (source)));
+    rb_raise (rb_eTypeError, "Don't know how to convert %s into GMP::Z", rb_class2name (rb_class_of (source)));
   }
 }
 

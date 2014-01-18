@@ -201,6 +201,7 @@ Numbers are created by using `new()`. Constructors can take following arguments:
     GMP::Q.new(GMP::Q)
     GMP::Q.new(String)
     GMP::Q.new(any GMP::Z initializer)
+    GMP::Q.new(Fixnum, Fixnum)
     GMP::Q.new(any GMP::Z initializer, any GMP::Z initializer)
     GMP::F.new()
     GMP::F.new(GMP::Z, precision=0, rounding_mode=default)

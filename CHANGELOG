@@ -1,6 +1,6 @@
 0.x.xx
-  * GMP::Q.new can now accept a GMP::Z more intelligently, and can accept a
-    Float, and is tested better.
+  * GMP::Q.new can now accept a GMP::Z or Fixnum more intelligently, and can
+  * accept a Float, and is tested better.
 
 0.6.47
   * Fixed GMP::F#to_s when MPFR is not present. It now works, and accepts an
