@@ -143,24 +143,24 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   else
     mpfr_init2 (self_val, prec);
 
-  if (STRING_P(argv[0])) {
+  if (STRING_P (argv[0])) {
     if (argc >= 3) {
-      if (FIXNUM_P(argv[2])) {
-        if (FIX2INT(argv[2]) >= 2 && FIX2INT(argv[2]) <= 36)
-          base = FIX2INT(argv[2]);
-        else
-          rb_raise(rb_eRangeError, "base must be between 2 and 36");
-      }
-      else {
+      if (! FIXNUM_P (argv[2]))
         rb_raise(rb_eTypeError, "base must be a Fixnum");
-      }
+
+      if (FIX2INT (argv[2]) >= 2 && FIX2INT (argv[2]) <= 36)
+        base = FIX2INT (argv[2]);
+      else
+        rb_raise (rb_eRangeError, "base must be between 2 and 36");
+
+      if (argc == 4)
+        rnd_mode_val = r_get_rounding_mode (argv[3]);
+      else
+        rnd_mode_val = __gmp_default_rounding_mode;
     }
 
-    if (argc == 4) {
-      /* TODO: FIGURE IT OUT. ACCEPT A ROUNDING MODE! */
-    }
 
-    mpf_set_value2 (self_val, arg, base);
+    mpf_set_value2 (self_val, arg, base, rnd_mode_val);
     return Qnil;
   } else {  /* not STRING_P(argv[0]) */
     if (argc == 3)
@@ -261,12 +261,11 @@ void mpfr_set_value(MP_FLOAT *self_val, VALUE arg, mp_rnd_t rnd_mode_val)
   }
 }
 
-void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
+void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base, mp_rnd_t rnd_mode_val)
 {
   int result;
 
-  /* TODO use rnd_mode_val */
-  result = mpfr_set_str (self_val, StringValuePtr (arg), base, __gmp_default_rounding_mode);
+  result = mpfr_set_str (self_val, StringValuePtr (arg), base, rnd_mode_val);
 
   if (result == -1) {
     rb_raise (rb_eRuntimeError, "Badly formatted string");

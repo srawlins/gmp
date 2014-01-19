@@ -1240,7 +1240,7 @@ static VALUE r_gmpz_submul_self(VALUE self, VALUE b, VALUE c)
   } else {
     if (free_b_val)
       mpz_temp_free (b_val);
-  /* TODO: rb_raise (rb_eTypeError, "base must be a Fixnum between 2 and 62, not a %s.", rb_class2name (rb_class_of (c)));*/
+  /* TODO?: rb_raise (rb_eTypeError, "base must be a Fixnum between 2 and 62, not a %s.", rb_class2name (rb_class_of (c)));*/
     typeerror_as (ZXB, "multiplicand");
   }
   if (free_b_val)

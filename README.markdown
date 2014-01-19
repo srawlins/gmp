@@ -208,6 +208,8 @@ Numbers are created by using `new()`. Constructors can take following arguments:
     GMP::F.new(GMP::Q, precision=0, rounding_mode=default)
     GMP::F.new(GMP::F, precision=0, rounding_mode=default)
     GMP::F.new(String, precision=0)
+    GMP::F.new(String, precision=0, base=10)
+    GMP::F.new(String, precision=0, base=10, rounding_mode=default)
     GMP::F.new(Fixnum, precision=0, rounding_mode=default)
     GMP::F.new(Bignum, precision=0, rounding_mode=default)
     GMP::F.new(Float,  precision=0, roundung_mode=default)

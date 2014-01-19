@@ -57,7 +57,7 @@ end
 def with_option(lib)
   default_versions = { "gmp" => "5.1.3", "mpfr" => "3.1.2" }
 
-  if ENV[lib].nil? || ENV[lib].empty?
+  if ENV[lib.upcase].nil? || ENV[lib.upcase].empty?
     version = default_versions[lib]
   else
     version = ENV[lib.upcase]

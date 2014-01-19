@@ -1,6 +1,10 @@
 0.x.xx
   * GMP::Q.new can now accept a GMP::Z or Fixnum more intelligently, and can
-  * accept a Float, and is tested better.
+    accept a Float, and is tested better.
+  * GMP::F.new can now accept a rounding mode after the base, when a String is
+    passed in.
+  * Rakefile is much more robust with various dependencies.
+  * Yardoc documentation is less completely broken.
 
 0.6.47
   * Fixed GMP::F#to_s when MPFR is not present. It now works, and accepts an

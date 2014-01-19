@@ -307,7 +307,7 @@ extern int mpf_cmp_value(MP_FLOAT *OP, VALUE arg);
 
 // MPFR
 #ifdef MPFR
-  extern void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base);
+  extern void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base, mp_rnd_t rnd_mode_val);
 
   extern VALUE r_gmpfr_sqrt(int argc, VALUE *argv, VALUE self);
   extern VALUE r_gmpfr_rec_sqrt(int argc, VALUE *argv, VALUE self);
