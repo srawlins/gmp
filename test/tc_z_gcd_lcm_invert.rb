@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_Z_GCD_LCM_Invert < Test::Unit::TestCase
+class TcIntegerGcdLcmInvert < Test::Unit::TestCase
   def setup
     @a = GMP::Z( 24)  # 2^3 * 3
     @b = GMP::Z(  8)  # 2^3

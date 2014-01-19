@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_Cmp < Test::Unit::TestCase
+class TcCmp < Test::Unit::TestCase
   def setup
     @_64bit = 1_000_000_000_000.is_a? Fixnum
     @a=GMP::Z.new(180)

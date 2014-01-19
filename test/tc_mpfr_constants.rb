@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_MPFR_Constants < Test::Unit::TestCase
+class TcMpfrConstants < Test::Unit::TestCase
   def test_mpfr_constants
     assert_instance_of(String,   GMP::MPFR_VERSION,  "GMP::MPFR_VERSION should be a String")
     assert_instance_of(Fixnum,   GMP::MPFR_PREC_MIN, "GMP::MPFR_PREC_MIN should be a Fixnum")

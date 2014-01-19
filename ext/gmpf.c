@@ -7,8 +7,8 @@
  *
  * GMP Multiple Precision floating point numbers.
  *
- * Instances of this class can store variables of the type mpf_t. This class
- * also contains many methods that act as the functions for mpf_t variables,
+ * Instances of this class can store variables of the type `mpf_t`. This class
+ * also contains many methods that act as the functions for `mpf_t` variables,
  * as well as a few methods that attempt to make this library more Ruby-ish.
  */
 
@@ -118,7 +118,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
 
   arg = argv[0];
 
-  //argc >= 2 ==> argv[0] is value, argv[1] is prec
+  /* argc >= 2 ==> argv[0] is value, argv[1] is prec */
   if (argc >= 2) {
     if (FIXNUM_P(argv[1])) {
       if (FIX2INT(argv[1]) >= 0)
@@ -157,7 +157,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
     }
 
     if (argc == 4) {
-      // TODO: FIGURE IT OUT. ACCEPT A ROUNDING MODE!
+      /* TODO: FIGURE IT OUT. ACCEPT A ROUNDING MODE! */
     }
 
     mpf_set_value2 (self_val, arg, base);
@@ -188,7 +188,7 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
   } else {
     mpf_set_value (self_val, arg);
   }
-#endif
+#endif /* MPFR */
 
   return Qnil;
 }
@@ -274,10 +274,13 @@ void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base)
 }
 
 /*
+ * Document-method: nan
  * call-seq:
  *   GMP::F.nan
  *
- * NaN, an instance of GMP::F
+ * `NaN`, an instance of GMP::F
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfsg_nan(VALUE klass)
 {
@@ -292,12 +295,15 @@ VALUE r_gmpfsg_nan(VALUE klass)
 }
 
 /*
+ * Document-method: inf
  * call-seq:
  *   GMP::F.inf
  *   GMP::F.inf(sign)
  *
- * Inf (positive infinity), an instance of GMP::F, or -Inf (negative infinity),
- * if a negative Fixnum _sign_ is passed
+ * `Inf` (positive infinity), an instance of GMP::F, or `-Inf` (negative
+ * infinity), if a negative Fixnum _sign_ is passed
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfsg_inf(int argc, VALUE *argv, VALUE klass)
 {
@@ -319,11 +325,14 @@ VALUE r_gmpfsg_inf(int argc, VALUE *argv, VALUE klass)
 
 #if MPFR_VERSION_MAJOR > 2
 /*
+ * Document-method: zero
  * call-seq:
  *   GMP::F.zero
  *   GMP::F.zero(sign)
  *
  * zero or negative zero, an instance of GMP::F, depending on _sign_, a Fixnum
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfsg_zero(int argc, VALUE *argv, VALUE klass)
 {
@@ -349,7 +358,7 @@ VALUE r_gmpfsg_zero(int argc, VALUE *argv, VALUE klass)
  * call-seq:
  *   GMP::F(arg)
  *
- * A convenience method for +GMP::F.new(arg)+.
+ * A convenience method for GMP::F.new(arg).
  */
 VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
 {
@@ -363,6 +372,7 @@ VALUE r_gmpmod_f(int argc, VALUE *argv, VALUE module)
  **********************************************************************/
 
 /*
+ * Document-method: to_d
  * call-seq:
  *   x.to_d
  *
@@ -377,6 +387,7 @@ VALUE r_gmpf_to_d(VALUE self)
 }
 
 /*
+ * Document-method: to_s
  * call-seq:
  *   x.to_s(base = 10)
  *
@@ -440,10 +451,12 @@ VALUE r_gmpf_to_s(int argc, VALUE *argv, VALUE self_val)
 
 #ifndef MPFR
 /*
+ * Document-method: +
  * call-seq:
  *   x + y
  *
  * Returns the sum of _x_ and _y_. _y_ must be an instance of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -480,7 +493,7 @@ VALUE r_gmpf_add(VALUE self, VALUE arg)
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_d (res_val, NUM2DBL(arg));
     mpf_add (res_val, res_val, self_val);
-  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+  } else if (FIXNUM_P(arg)) { /* TODO: _ui with sign control instead */
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_si (res_val, FIX2NUM(arg));
     mpf_add (res_val, res_val, self_val);
@@ -498,10 +511,12 @@ VALUE r_gmpf_add(VALUE self, VALUE arg)
 }
 #else
 /*
+ * Document-method: +
  * call-seq:
  *   x + y
  *
  * Returns the sum of _x_ and _y_. _y_ must be an instance of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -564,10 +579,12 @@ DEFUN_F_ZQXFBD2F(mul)
 #endif
 
 /*
+ * Document-method: -
  * call-seq:
  *   x - y
  *
  * Subtracts _y_ from _x_. _y_ must be an instance of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -604,7 +621,7 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_d(res_val, NUM2DBL(arg));
     mpf_sub(res_val, self_val, res_val);
-  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+  } else if (FIXNUM_P(arg)) { /* TODO: _ui with sign control instead ? */
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_si(res_val, FIX2NUM(arg));
     mpf_sub(res_val, self_val, res_val);
@@ -622,10 +639,12 @@ VALUE r_gmpf_sub(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: *
  * call-seq:
  *   x * y
  *
- * Returns the product of _x_ and _y_. _y_ can be
+ * Returns the product of _x_ and _y_. _y_ can be one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -662,7 +681,7 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_d(res_val, NUM2DBL(arg));
     mpf_mul(res_val, self_val, res_val);
-  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+  } else if (FIXNUM_P(arg)) { /* _ui with sign control instead ? */
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_si(res_val, FIX2NUM(arg));
     mpf_mul(res_val, self_val, res_val);
@@ -680,10 +699,12 @@ VALUE r_gmpf_mul(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: **
  * call-seq:
  *   x ** y
  *
  * Returns _x_ raised to the _y_ power. _y_ must be
+ *
  * * an instance of Fixnum or Bignum
  * * non-negative
  */
@@ -712,10 +733,12 @@ VALUE r_gmpf_pow(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: /
  * call-seq:
  *   x / y
  *
  * Divides _x_ by _y_. _y_ can be
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -752,7 +775,7 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_d(res_val, NUM2DBL(arg));
     mpf_div(res_val, self_val, res_val);
-  } else if (FIXNUM_P(arg)) { // _ui with sign control instead ?
+  } else if (FIXNUM_P(arg)) { /* TODO: _ui with sign control instead */
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_si(res_val, FIX2NUM(arg));
     mpf_div(res_val, self_val, res_val);
@@ -771,10 +794,12 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
 
 #ifdef MPFR
 /*
+ * Document-method: **
  * call-seq:
  *   float ** other
  *
- * Returns _x_ raised to the _y_ power. _y_ must be an instance of
+ * Returns _x_ raised to the _y_ power. _y_ must be an instance of:
+ *
  * * Fixnum
  * * Bignum
  * * Float
@@ -825,7 +850,6 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
 
 /*
  * Document-method: neg
- *
  * call-seq:
  *   x.neg
  *   -x
@@ -834,16 +858,15 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
  */
 /*
  * Document-method: neg!
- *
  * call-seq:
  *   x.neg!
  *
  * Sets _x_ to -_x_.
  */
 DEFUN_FLOAT2FLOAT(neg,mpf_neg)
+
 /*
  * Document-method: abs
- *
  * call-seq:
  *   x.abs
  *
@@ -851,7 +874,6 @@ DEFUN_FLOAT2FLOAT(neg,mpf_neg)
  */
 /*
  * Document-method: abs!
- *
  * call-seq:
  *   x.abs!
  *
@@ -916,6 +938,7 @@ DEFUN_FLOAT_CMP(gt,>)
 DEFUN_FLOAT_CMP(ge,>=)
 
 /*
+ * Document-method: sgn
  * call-seq:
  *   x.sgn
  *
@@ -931,10 +954,13 @@ VALUE r_gmpf_sgn(VALUE self)
 #ifdef MPFR
 
 /*
+ * Document-method: lessgreater?
  * call-seq:
  *   x.lessgreater?(y)
  *
- * Return true if _x_ < _y_ or _x_ > _y_; false otherwise
+ * Return true if _x_ < _y_ or _x_ > _y_, false otherwise
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfr_lessgreater_p(VALUE self_val, VALUE arg_val)
 {
@@ -949,10 +975,13 @@ VALUE r_gmpfr_lessgreater_p(VALUE self_val, VALUE arg_val)
 }
 
 /*
+ * Document-method: unordered?
  * call-seq:
  *   x.unordered?(y)
  *
- * Return true if _x_ or _y_ is a NaN; false otherwise
+ * Return true if _x_ or _y_ is a `NaN`, false otherwise
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfr_unordered_p(VALUE self_val, VALUE arg_val)
 {
@@ -1111,14 +1140,17 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
 }
 
 /*
+ * Document-method: frexp
  * call-seq:
  *   exp, y = x.frexp(rnd_mode = nil, prec = nil)
  *
- * Set _exp_ and _y_ such that
- * 0.5 <= _abs(y)_ < 1 and _y_ times 2 raised to _exp_ equals _x_ rounded to _prec_, or the precision
- * of _x_, using the given rounding mode. If _x_ is zero, then _y_ is set to a zero
- * of the same sign and _exp_ is set to 0. If _x_ is NaN or an infinity, then _y_ is
- * set to the same value and _exp_ is undefined.
+ * Set _exp_ and _y_ such that 0.5 <= _abs(y)_ < 1 and _y_ times 2 raised to
+ * _exp_ equals _x_ rounded to _prec_, or the precision of _x_, using the given
+ * rounding mode. If _x_ is zero, then _y_ is set to a zero of the same sign
+ * and _exp_ is set to 0. If _x_ is `NaN` or an infinity, then _y_ is set to
+ * the same value and _exp_ is undefined.
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfr_frexp(int argc, VALUE *argv, VALUE self_val)
 {
@@ -1142,18 +1174,160 @@ VALUE r_gmpfr_frexp(int argc, VALUE *argv, VALUE self_val)
   return rb_assoc_new(exp_val, res_val);
 }
 
+/*
+ * Document-method: sqrt
+ * call-seq:
+ *   x.sqrt
+ *   x.sqrt(rounding_mode)
+ *   x.sqrt(rounding_mode, precision)
+ *
+ * Calculate the square root of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(sqrt)
+
+/*
+ * Document-method: rec_sqrt
+ * call-seq:
+ *   x.rec_sqrt
+ *   x.rec_sqrt(rounding_mode)
+ *   x.rec_sqrt(rounding_mode, precision)
+ *
+ * Calculate the reciprocal square root of _x_, rounding according to
+ * `rounding_mode`. The resultant GMP::F float has the same precision that _x_
+ * has, if `precision` was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(rec_sqrt)
+
+/*
+ * Document-method: cbrt
+ * call-seq:
+ *   x.cbrt
+ *   x.cbrt(rounding_mode)
+ *   x.cbrt(rounding_mode, precision)
+ *
+ * Calculate the cubic root of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(cbrt)
 
+/*
+ * Document-method: log
+ * call-seq:
+ *   x.log
+ *   x.log(rounding_mode)
+ *   x.log(rounding_mode, precision)
+ *
+ * Calculate the natural logarithm of _x_, rounding according to
+ * `rounding_mode`. The resultant GMP::F float has the same precision that _x_
+ * has, if `precision` was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(log)
+
+/*
+ * Document-method: log2
+ * call-seq:
+ *   x.log2
+ *   x.log2(rounding_mode)
+ *   x.log2(rounding_mode, precision)
+ *
+ * Calculate the logarithm base 2 of _x_, rounding according to
+ * `rounding_mode`. The resultant GMP::F float has the same precision that _x_
+ * has, if `precision` was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(log2)
+
+/*
+ * Document-method: log10
+ * call-seq:
+ *   x.log10
+ *   x.log10(rounding_mode)
+ *   x.log10(rounding_mode, precision)
+ *
+ * Calculate the logarithm base 10 of _x_, rounding according to
+ * `rounding_mode`. The resultant GMP::F float has the same precision that _x_
+ * has, if `precision` was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(log10)
+
+/*
+ * Document-method: exp
+ * call-seq:
+ *   x.exp
+ *   x.exp(rounding_mode)
+ *   x.exp(rounding_mode, precision)
+ *
+ * Calculate the exponential of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(exp)
+
+/*
+ * Document-method: exp2
+ * call-seq:
+ *   x.exp2
+ *   x.exp2(rounding_mode)
+ *   x.exp2(rounding_mode, precision)
+ *
+ * Calculate the 2 power of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(exp2)
+
+/*
+ * Document-method: exp10
+ * call-seq:
+ *   x.exp10
+ *   x.exp10(rounding_mode)
+ *   x.exp10(rounding_mode, precision)
+ *
+ * Calculate the 10 power of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(exp10)
+
+/*
+ * Document-method: cos
+ * call-seq:
+ *   x.cos
+ *   x.cos(rounding_mode)
+ *   x.cos(rounding_mode, precision)
+ *
+ * Calculate the cosine of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(cos)
+
+/*
+ * Document-method: sin
+ * call-seq:
+ *   x.sin
+ *   x.sin(rounding_mode)
+ *   x.sin(rounding_mode, precision)
+ *
+ * Calculate the sine of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(sin)
+
+/*
+ * Document-method: tan
+ * call-seq:
+ *   x.tan
+ *   x.tan(rounding_mode)
+ *   x.tan(rounding_mode, precision)
+ *
+ * Calculate the tangent of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(tan)
 MPFR_DOUBLE_FUNCTION(sin_cos)
 MPFR_SINGLE_FUNCTION(sec)
@@ -1206,6 +1380,8 @@ MPFR_SINGLE_MPF_FUNCTION(hypot)
  * Creates a new GMP::F float, equal to the factorial of n, which must be a
  * Fixnum. Optionally pass a rounding mode, and precision for the resultant
  * GMP::F.
+ *
+ * @since 0.6.47
  */
 VALUE r_gmpfrsg_fac(int argc, VALUE *argv, VALUE self_val)
 {

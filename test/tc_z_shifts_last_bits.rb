@@ -1,9 +1,9 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_shifts_last_bits < Test::Unit::TestCase
+class TcIntegerShiftsLastBits < Test::Unit::TestCase
   def setup
     @a = GMP::Z.new(100)  # 01100100
-    @b =- @a              # 10011100
+    @b = -@a              # 10011100
   end
   
   def test_shifts

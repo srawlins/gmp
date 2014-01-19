@@ -1,10 +1,10 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_Z_Functional_Mappings < Test::Unit::TestCase
+class TcIntegerFunctionalMappings < Test::Unit::TestCase
   def setup
     @_64bit = 1_000_000_000_000.is_a? Fixnum
     @xp1 = 7
-    @xp2 = 2**30 -1
+    @xp2 = 2**30 - 1
     @xn1 = -5
     @b1 = 2**70
     # TODO: Add edge cases along Fixnum/Bignum border!!

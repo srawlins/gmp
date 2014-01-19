@@ -7,19 +7,19 @@
  *
  * GMP Multiple Precision Integer.
  *
- * Instances of this class can store variables of the type gmp_randstate_t.
+ * Instances of this class can store variables of the type `gmp_randstate_t`.
  * This class also contains many methods that act as the functions for
- * gmp_randstate_t variables, as well as a few methods that attempt to make
+ * `gmp_randstate_t` variables, as well as a few methods that attempt to make
  * this library more Ruby-ish.
  *
  * The following list is just a simple checklist for me, really. A better
  * reference should be found in the rdocs.
  *
- *   Ruby method    C Extension function     GMP function
- *   new            r_gmprandstatesg_new     gmp_randinit_default
- *   seed           r_gmprandstate_seed      gmp_randseed
- *   \---           \------------------      gmp_randseed_ui
- *   urandomb       r_gmprandstate_urandomb  mpz_urandomb
+ *     Ruby method    C Extension function     GMP function
+ *     new            r_gmprandstatesg_new     gmp_randinit_default
+ *     seed           r_gmprandstate_seed      gmp_randseed
+ *     \---           \------------------      gmp_randseed_ui
+ *     urandomb       r_gmprandstate_urandomb  mpz_urandomb
  */
 
 /**********************************************************************
@@ -34,8 +34,8 @@
  *   GMP::RandState.new(:lc_2exp_size, size) #=> uses gmp_randinit_lc_2exp_size
  *
  * Initializes a new Random State object. Multiple GMP::RandState objects can
- * be instantiated. They may use different generators and the states
- * are kept separate.
+ * be instantiated. They may use different generators and the states are kept
+ * separate.
  */
 VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
 {
@@ -113,7 +113,7 @@ VALUE r_gmprandstate_initialize(int argc, VALUE *argv, VALUE self)
  * call-seq:
  *   GMP::RandState(arg)
  *
- * A convenience method for +GMP::RandState.new(arg)+.
+ * A convenience method for GMP::RandState.new(arg).
  */
 VALUE r_gmpmod_randstate(int argc, VALUE *argv, VALUE module)
 {
@@ -132,22 +132,22 @@ VALUE r_gmpmod_randstate(int argc, VALUE *argv, VALUE module)
  *
  * From the GMP Manual:
  *
- * Set an initial seed value into state.
+ * > Set an initial seed value into state.
  *
- * The size of a seed determines how many different sequences of random numbers
- * that it's possible to generate. The “quality” of the seed is the randomness
- * of a given seed compared to the previous seed used, and this affects the
- * randomness of separate number sequences. The method for choosing a seed is
- * critical if the generated numbers are to be used for important applications,
- * such as generating cryptographic keys.
+ * > The size of a seed determines how many different sequences of random
+ * > numbers that it's possible to generate. The "quality" of the seed is the
+ * > randomness of a given seed compared to the previous seed used, and this
+ * > affects the randomness of separate number sequences. The method for
+ * > choosing a seed is critical if the generated numbers are to be used for
+ * > important applications, such as generating cryptographic keys.
  *
- * Traditionally the system time has been used to seed, but care needs to be
- * taken with this. If an application seeds often and the resolution of the
- * system clock is low, then the same sequence of numbers might be repeated.
- * Also, the system time is quite easy to guess, so if unpredictability is
- * required then it should definitely not be the only source for the seed
- * value. On some systems there's a special device /dev/random which provides
- * random data better suited for use as a seed.
+ * > Traditionally the system time has been used to seed, but care needs to be
+ * > taken with this. If an application seeds often and the resolution of the
+ * > system clock is low, then the same sequence of numbers might be repeated.
+ * > Also, the system time is quite easy to guess, so if unpredictability is
+ * > required then it should definitely not be the only source for the seed
+ * > value. On some systems there's a special device `/dev/random` which
+ * > provides random data better suited for use as a seed.
  */
 VALUE r_gmprandstate_seed(VALUE self, VALUE arg)
 {
@@ -177,12 +177,12 @@ VALUE r_gmprandstate_seed(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   rand_state.urandomb(fixnum)
+ *   rand_state.urandomb(Fixnum)
  *
  * From the GMP Manual:
  *
- * Generate a uniformly distributed random integer in the range 0 to
- * 2^fixnum-1, inclusive. 
+ * > Generate a uniformly distributed random integer in the range 0 to
+ * > _2^fixnum-1_, inclusive.
  */
 VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg)
 {
@@ -208,9 +208,9 @@ VALUE r_gmprandstate_urandomb(VALUE self, VALUE arg)
  *
  * From the GMP Manual:
  *
- * Generate a uniformly distributed random integer in the range 0 to
- * _integer-1_, inclusive. _integer_ can be an instance of GMP::Z,
- *  Fixnum, or Bignum
+ * > Generate a uniformly distributed random integer in the range 0 to
+ * > _integer-1_, inclusive. _integer_ can be an instance of GMP::Z, Fixnum, or
+ * > Bignum
  */
 VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg)
 {
@@ -243,14 +243,15 @@ VALUE r_gmprandstate_urandomm(VALUE self, VALUE arg)
 
 /*
  * call-seq:
- *   rand_state.rrandomb(fixnum)
+ *   rand_state.rrandomb(Fixnum)
  *
  * From the GMP Manual:
  *
- * Generate a random integer with long strings of zeros and ones in the binary
- * representation. Useful for testing functions and algorithms, since this kind
- * of random numbers have proven to be more likely to trigger corner-case bugs.
- * The random number will be in the range 0 to 2^n-1, inclusive. 
+ * > Generate a random integer with long strings of zeros and ones in the
+ * > binary representation. Useful for testing functions and algorithms, since
+ * > this kind of random numbers have proven to be more likely to trigger
+ * > corner-case bugs. The random number will be in the range 0 to _2^n-1_,
+ * > inclusive. 
  */
 VALUE r_gmprandstate_rrandomb(VALUE self, VALUE arg)
 {
@@ -282,7 +283,8 @@ VALUE r_gmprandstate_rrandomb(VALUE self, VALUE arg)
  *
  * From the MPFR Manual:
  *
- * Generate a uniformly distributed random float in the interval 0 <= rop < 1.
+ * > Generate a uniformly distributed random float in the interval
+ * > _0 <= rop < 1_.
  */
 VALUE r_gmprandstate_mpfr_urandomb(int argc, VALUE *argv, VALUE self_val)
 {
@@ -323,10 +325,12 @@ VALUE r_gmprandstate_mpfr_urandomb(int argc, VALUE *argv, VALUE self_val)
  *
  * From the MPFR Manual:
  *
- * Generate a uniformly distributed random float. The floating-point number rop
- * can be seen as if a random real number is generated according to the
- * continuous uniform distribution on the interval [0, 1] and then rounded in
- * the direction RNDN.
+ * > Generate a uniformly distributed random float. The floating-point number
+ * > `rop` can be seen as if a random real number is generated according to the
+ * > continuous uniform distribution on the interval [0, 1] and then rounded in
+ * > the direction `RNDN`.
+ *
+ * @since 0.6.47
  */
 VALUE r_gmprandstate_mpfr_urandom(int argc, VALUE *argv, VALUE self_val)
 {

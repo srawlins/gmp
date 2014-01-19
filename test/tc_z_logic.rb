@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_Z_Logic < Test::Unit::TestCase
+class TcIntegerLogic < Test::Unit::TestCase
   def setup
     @a=GMP::Z.new(0xffff00000000ffff)
     @b=GMP::Z.new(0xffff0000ffff0000)

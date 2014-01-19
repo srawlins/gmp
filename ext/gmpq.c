@@ -7,9 +7,9 @@
  *
  * GMP Multiple Precision Rational Number.
  *
- * Instances of this class can store variables of the type mpq_t. This class also
- * contains many methods that act as the functions for mpq_t variables, as well as a few
- * methods that attempt to make this library more Ruby-ish.
+ * Instances of this class can store variables of the type `mpq_t`. This class
+ * also contains many methods that act as the functions for `mpq_t` variables,
+ * as well as a few methods that attempt to make this library more Ruby-ish.
  */
 
 /**********************************************************************
@@ -38,9 +38,9 @@ static VALUE r_gmpq_##fname(VALUE self)                           \
 }
 
 /*
- * DEFUN_RAT2RAT defines two functions. The first takes a GMP::Q as self, calls mpq_fname
- * on the contained mpq_t, whose arguments are exactly (0) the return argument and (1)
- * self. The second is the same destructive method.
+ * DEFUN_RAT2RAT defines two functions. The first takes a GMP::Q as self, calls
+ * mpq_fname on the contained mpq_t, whose arguments are exactly (0) the return
+ * argument and (1) self. The second is the same destructive method.
  */
 #define DEFUN_RAT2RAT(fname,mpq_fname)         \
 static VALUE r_gmpq_##fname(VALUE self)        \
@@ -113,21 +113,45 @@ static void mpq_str_set(MP_RAT *ROP, char *str)
 
 VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
 {
-  MP_RAT *self_val, *arg_val;
+  MP_RAT *self_val, *arg_val_q;
+  MP_INT *arg_z;
 
   if (argc != 0) {
     mpq_get_struct (self, self_val);
-    if (argc == 1 && GMPQ_P (argv[0])) {
-      mpq_get_struct (argv[0], arg_val);
-      mpq_set (self_val, arg_val);
-    } else if (argc == 1 && STRING_P (argv[0])) {
-      mpq_str_set (self_val, StringValuePtr (argv[0]));
+    /* TODO: use mpq_set_f */
+    if (argc == 1) {
+      if (FIXNUM_P (argv[0])) {
+        if (FIX2NUM (argv[0]) >= 0)
+          mpq_set_ui (self_val, FIX2NUM (argv[0]), 1);
+	else
+          mpq_set_si (self_val, FIX2NUM (argv[0]), 1);
+      } else if (GMPZ_P (argv[0])) {
+        mpz_get_struct (argv[0], arg_z);
+        mpq_set_z (self_val, arg_z);
+      } else if (FLOAT_P (argv[0])) {
+        mpq_set_d (self_val, NUM2DBL (argv[0]));
+      } else if (GMPQ_P (argv[0])) {
+        mpq_get_struct (argv[0], arg_val_q);
+        mpq_set (self_val, arg_val_q);
+      } else if (STRING_P (argv[0])) {
+        mpq_str_set (self_val, StringValuePtr (argv[0]));
+      } else {
+        mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
+      }
+    } else if (argc == 2) {
+      if (FIXNUM_P (argv[0]) && FIXNUM_P (argv[1]) && FIX2NUM (argv[1]) >= 0) {
+        if (FIX2NUM (argv[0] >= 0))
+          mpq_set_ui (self_val, FIX2NUM (argv[0]), FIX2NUM (argv[1]));
+	else
+          mpq_set_si (self_val, FIX2NUM (argv[0]), FIX2NUM (argv[1]));
+      } else {
+        mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
+        mpz_set_value (mpq_denref (self_val), argv[1], 0); /* are these segfaulting? */
+      }
+
+      mpq_canonicalize (self_val);
     } else {
-      mpz_set_value (mpq_numref (self_val), argv[0], 0); // are these segfaulting?
-      if (argc == 2) {
-        mpz_set_value (mpq_denref (self_val), argv[1], 0); // are these segfaulting?
-        mpq_canonicalize (self_val);
-      } // AND IF ARGC != 2 ?!? WHAT JUST HAPPENED?
+      rb_raise (rb_eArgError, "wrong # of arguments (%d for 0, 1, or 2)", argc);
     }
   }
   return Qnil;
@@ -146,6 +170,7 @@ VALUE r_gmpmod_q(int argc, VALUE *argv, VALUE module)
 }
 
 /*
+ * Document-method: swap
  * call-seq:
  *   p.swap(q)
  *
@@ -172,27 +197,30 @@ VALUE r_gmpq_swap (VALUE self, VALUE arg)
  **********************************************************************/
 
 /*
+ * Document-method: to_d
  * call-seq:
  *   p.to_d
  *
  * Returns _p_ as an Float if _p_ fits in a Float.
  *
- * Otherwise returns the least significant part of _p_, with the same sign as _p_.
+ * Otherwise returns the least significant part of _p_, with the same sign as
+ * _p_.
  *
- * If the exponent from the conversion is too big or too small to fit a double then the
- * result is system dependent. For too big an infinity is returned when available. For
- * too small 0.0 is normally returned. Hardware overflow, underflow and denorm traps may
- * or may not occur.
+ * If the exponent from the conversion is too big or too small to fit a double
+ * then the result is system dependent. For too big an infinity is returned
+ * when available. For too small 0.0 is normally returned. Hardware overflow,
+ * underflow and denorm traps may or may not occur.
  */
 VALUE r_gmpq_to_d(VALUE self)
 {
   MP_RAT *self_val;
-  mpq_get_struct(self, self_val);
+  mpq_get_struct (self, self_val);
 
-  return rb_float_new(mpq_get_d(self_val));
+  return rb_float_new (mpq_get_d (self_val));
 }
 
 /*
+ * Document-method: to_s
  * call-seq:
  *   p.to_s
  *
@@ -207,8 +235,7 @@ VALUE r_gmpq_to_s(VALUE self)
   size_t sizeinbase;
   size_t offset;
 
-  //Data_Get_Struct (self, MP_RAT, self_val);
-  mpq_get_struct(self, self_val)
+  mpq_get_struct (self, self_val)
 
   if (mpz_cmp_ui (mpq_denref (self_val), 1) == 0) {
     str = mpz_get_str (NULL, 10, mpq_numref (self_val));
@@ -227,7 +254,7 @@ VALUE r_gmpq_to_s(VALUE self)
   offset = strlen (str);
   str[offset] = '/';
   mpz_get_str (str + offset + 1, 10, self_val_den);
-  res = rb_str_new2(str);
+  res = rb_str_new2 (str);
   free (str);
 
   return res;
@@ -239,10 +266,12 @@ VALUE r_gmpq_to_s(VALUE self)
  **********************************************************************/
 
 /*
+ * Document-method: +
  * call-seq:
  *   p + q
  *
  * Adds _p_ to _q_. _q_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -255,46 +284,48 @@ VALUE r_gmpq_add(VALUE self, VALUE arg)
   MP_INT *arg_val_z, *res_val_num;
   VALUE res;
 
-  mpq_get_struct(self, self_val);
-  mpq_make_struct_init(res, res_val);
+  mpq_get_struct (self, self_val);
+  mpq_make_struct_init (res, res_val);
 
-  if (GMPQ_P(arg)) {
-    mpq_get_struct(arg,arg_val_q);
-    mpq_add(res_val, self_val, arg_val_q);
-  } else if (GMPZ_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
-    mpz_get_struct(arg, arg_val_z);
-    mpz_mul(res_val_num, mpq_denref(self_val), arg_val_z);
-    mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
-  } else if (FIXNUM_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
-    mpz_mul_si(res_val_num, mpq_denref(self_val), FIX2NUM(arg));
-    mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
-  } else if (GMPF_P(arg)) {
+  if (GMPQ_P (arg)) {
+    mpq_get_struct (arg,arg_val_q);
+    mpq_add (res_val, self_val, arg_val_q);
+  } else if (GMPZ_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_get_struct (arg, arg_val_z);
+    mpz_mul (res_val_num, mpq_denref (self_val), arg_val_z);
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
+  } else if (FIXNUM_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_mul_si (res_val_num, mpq_denref (self_val), FIX2NUM (arg));
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
+  } else if (GMPF_P (arg)) {
 #ifndef MPFR
-    return r_gmpf_add(arg,self);
+    return r_gmpf_add (arg,self);
 #else
-    return rb_funcall(arg, rb_intern("+"), 1, self);
+    return rb_funcall (arg, rb_intern ("+"), 1, self);
 #endif
-  } else if (BIGNUM_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set(mpq_denref(res_val), mpq_denref(self_val));
-    mpz_set_bignum(res_val_num, arg);
-    mpz_mul(res_val_num, res_val_num, mpq_denref(self_val));
-    mpz_add(res_val_num, res_val_num, mpq_numref(self_val));
+  } else if (BIGNUM_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_set_bignum (res_val_num, arg);
+    mpz_mul (res_val_num, res_val_num, mpq_denref (self_val));
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
   } else {
-    typeerror(ZQFXB);
+    typeerror (ZQFXB);
   }
   return res;
 }
 
 /*
+ * Document-method: -
  * call-seq:
  *   p - q
  *
  * Subtracts _p_ from _q_. _q_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -309,36 +340,36 @@ VALUE r_gmpq_sub(VALUE self, VALUE arg)
   VALUE res;
   mpfr_prec_t prec;
 
-  mpq_get_struct(self, self_val);
-  mpq_make_struct_init(res, res_val);
+  mpq_get_struct (self, self_val);
+  mpq_make_struct_init (res, res_val);
 
-  if (GMPQ_P(arg)) {
-    mpq_get_struct(arg,arg_val_q);
+  if (GMPQ_P (arg)) {
+    mpq_get_struct (arg,arg_val_q);
     mpq_sub (res_val, self_val, arg_val_q);
-  } else if (GMPZ_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
-    mpz_get_struct(arg, arg_val_z);
-    mpz_mul (res_val_num, mpq_denref(self_val), arg_val_z);
+  } else if (GMPZ_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_get_struct (arg, arg_val_z);
+    mpz_mul (res_val_num, mpq_denref (self_val), arg_val_z);
     mpz_neg (res_val_num, res_val_num);
-    mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
-  } else if (FIXNUM_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
-    mpz_mul_si (res_val_num, mpq_denref(self_val), -FIX2NUM(arg));
-    mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
-  } else if (GMPF_P(arg)) {
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
+  } else if (FIXNUM_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
+    mpz_mul_si (res_val_num, mpq_denref (self_val), -FIX2NUM (arg));
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
+  } else if (GMPF_P (arg)) {
     mpf_get_struct_prec (arg, arg_val_f, prec);
-    mpf_make_struct_init(res, res_val_f, prec);
+    mpf_make_struct_init (res, res_val_f, prec);
     mpf_set_q (res_val_f, self_val);
     mpf_sub (res_val_f, res_val_f, arg_val_f);
-  } else if (BIGNUM_P(arg)) {
-    res_val_num = mpq_numref(res_val);
-    mpz_set (mpq_denref(res_val), mpq_denref(self_val));
+  } else if (BIGNUM_P (arg)) {
+    res_val_num = mpq_numref (res_val);
+    mpz_set (mpq_denref (res_val), mpq_denref (self_val));
     mpz_set_bignum (res_val_num, arg);
-    mpz_mul (res_val_num, res_val_num, mpq_denref(self_val));
+    mpz_mul (res_val_num, res_val_num, mpq_denref (self_val));
     mpz_neg (res_val_num, res_val_num);
-    mpz_add (res_val_num, res_val_num, mpq_numref(self_val));
+    mpz_add (res_val_num, res_val_num, mpq_numref (self_val));
   } else {
     typeerror (ZQFXB);
   }
@@ -346,10 +377,12 @@ VALUE r_gmpq_sub(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: *
  * call-seq:
  *   p * q
  *
  * Multiplies _p_ with _q_. _q_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -418,10 +451,12 @@ VALUE r_gmpq_mul(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: /
  * call-seq:
  *   p / q
  *
  * Divides _p_ by _q_. _q_ must be an instance of one of:
+ *
  * * GMP::Z
  * * Fixnum
  * * GMP::Q
@@ -487,7 +522,6 @@ DEFUN_RAT2INT(ceil,mpz_cdiv_q)
 
 /*
  * Document-method: neg
- *
  * call-seq:
  *   a.neg
  *   -a
@@ -496,7 +530,6 @@ DEFUN_RAT2INT(ceil,mpz_cdiv_q)
  */
 /*
  * Document-method: neg!
- *
  * call-seq:
  *   a.neg!
  *
@@ -505,12 +538,14 @@ DEFUN_RAT2INT(ceil,mpz_cdiv_q)
 DEFUN_RAT2RAT(neg, mpq_neg)
 
 /*
+ * Document-method: abs
  * call-seq:
  *   p.abs
  *
  * Returns the absolute value of _p_.
  */
 /*
+ * Document-method: abs!
  * call-seq:
  *   p.abs!
  *
@@ -519,10 +554,11 @@ DEFUN_RAT2RAT(neg, mpq_neg)
 DEFUN_RAT2RAT(abs, mpq_abs)
 
 /*
+ * Document-method: inv
  * call-seq:
  *   p.inv
  *
- * Returns 1/<i>p</i>.
+ * Returns _1/p_.
  */
 VALUE r_gmpq_inv(VALUE self)
 {
@@ -539,10 +575,11 @@ VALUE r_gmpq_inv(VALUE self)
 }
 
 /*
+ * Document-method: inv!
  * call-seq:
  *   p.inv!
  *
- * Sets _p_ to 1/<i>p</i>.
+ * Sets _p_ to _1/p_.
  */
 VALUE r_gmpq_inv_self(VALUE self)
 {
@@ -598,6 +635,13 @@ int mpq_cmp_value(MP_RAT *OP, VALUE arg)
   return 0;  /* should never get here */
 }
 
+/*
+ * Document-method: ==
+ * call-seq:
+ *   a == b
+ *
+ * Returns true if _a_ is equal to _b_, and false otherwise.
+ */
 VALUE r_gmpq_eq(VALUE self, VALUE arg)
 {
   MP_RAT *self_val, *arg_val_q;
@@ -615,7 +659,7 @@ VALUE r_gmpq_eq(VALUE self, VALUE arg)
   } else if (FIXNUM_P(arg)) {
     if (mpz_cmp_ui(mpq_denref(self_val), 1) != 0)
       return Qfalse;
-    return (mpz_cmp_ui(mpq_numref(self_val),FIX2INT(arg))==0)?Qtrue:Qfalse;
+    return (mpz_cmp_si (mpq_numref (self_val), FIX2INT (arg)) == 0) ? Qtrue : Qfalse;
   } else if (BIGNUM_P(arg)) {
     if (mpz_cmp_ui(mpq_denref(self_val), 1) != 0)
       return Qfalse;
@@ -632,6 +676,17 @@ VALUE r_gmpq_eq(VALUE self, VALUE arg)
   }
 }
 
+/*
+ * Document-method: <=>
+ * call-seq:
+ *   a <=> b
+ *
+ * Returns negative if _a_ is less than _b_.
+ *
+ * Returns 0 if _a_ is equal to _b_.
+ *
+ * Returns positive if _a_ is greater than _b_.
+ */
 VALUE r_gmpq_cmp(VALUE self, VALUE arg)
 {
   MP_RAT *self_val;
@@ -646,11 +701,53 @@ VALUE r_gmpq_cmp(VALUE self, VALUE arg)
     return INT2FIX(-1);
 }
 
+/*
+ * Document-method: <
+ * call-seq:
+ *   a < b
+ *
+ * Returns whether _a_ is strictly less than _b_.
+ */
+
 DEFUN_RAT_CMP(lt,<)
+/*
+ * Document-method: <=
+ * call-seq:
+ *   a <= b
+ *
+ * Returns whether _a_ is less than or equal to _b_.
+ */
 DEFUN_RAT_CMP(le,<=)
+
+/*
+ * Document-method: >
+ * call-seq:
+ *   a > b
+ *
+ * Returns whether _a_ is strictly greater than _b_.
+ */
 DEFUN_RAT_CMP(gt,>)
+
+/*
+ * Document-method: >=
+ * call-seq:
+ *   a >= b
+ *
+ * Returns whether _a_ is greater than or equal to _b_.
+ */
 DEFUN_RAT_CMP(ge,>=)
 
+/*
+ * Document-method: cmpabs
+ * call-seq:
+ *   a.cmpabs(b)
+ *
+ * Returns negative if _abs(a)_ is less than _abs(b)_.
+ *
+ * Returns 0 if _abs(a)_ is equal to _abs(b)_.
+ *
+ * Returns positive if _abs(a)_ is greater than _abs(b)_.
+ */
 static VALUE r_gmpq_cmpabs(VALUE self, VALUE arg)
 {
   MP_RAT *arg_val_q, *self_val;
@@ -721,6 +818,7 @@ static VALUE r_gmpq_cmpabs(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: sgn
  * call-seq:
  *   p.sgn
  *
@@ -734,14 +832,15 @@ VALUE r_gmpq_sgn(VALUE self)
 }
 
 /*
+ * Document-method: eql?
  * call-seq:
  *   a.eql?(b)
  *
  * @since 0.5.47
  *
- * Returns true if _a_ is equal to _b_. _a_ and _b_ must then be equal in cardinality,
- * and both be instances of GMP::Q. Otherwise, returns false. a.eql?(b) if and only if
- * b.class == GMP::Q, and a.hash == b.hash.
+ * Returns whether if _a_ is equal to _b_. _a_ and _b_ must be equal in
+ * cardinality, and both be instances of GMP::Q to return true.  `a.eql?(b)` if
+ * and only if `b.class == GMP::Q`, and `a.hash == b.hash`.
  */
 VALUE r_gmpq_eql(VALUE self, VALUE arg)
 {
@@ -758,14 +857,16 @@ VALUE r_gmpq_eql(VALUE self, VALUE arg)
 }
 
 /*
+ * Document-method: hash
  * call-seq:
  *   a.hash
  *
  * @since 0.5.47
  *
- * Returns the computed hash value of _a_. This method first converts _a_ into a String
- * (base 10), then calls String#hash on the result, returning the hash value. a.eql?(b)
- * if and only if b.class == GMP::Q, and a.hash == b.hash.
+ * Returns the computed hash value of _a_. This method first converts _a_ into
+ * a String (base 10), then calls String#hash on the result, returning the hash
+ * value. `a.eql?(b)` if and only if `b.class == GMP::Q`, and
+ * `a.hash == b.hash`.
  */
 VALUE r_gmpq_hash(VALUE self)
 {
@@ -778,7 +879,7 @@ VALUE r_gmpq_hash(VALUE self)
  *    Applying Integer Functions                                      *
  **********************************************************************/
 
-VALUE r_gmpq_num(VALUE self)
+VALUE r_gmpq_get_num(VALUE self)
 {
   MP_RAT *self_val;
   MP_INT *res_val;
@@ -789,7 +890,7 @@ VALUE r_gmpq_num(VALUE self)
   return res;
 }
 
-VALUE r_gmpq_den(VALUE self)
+VALUE r_gmpq_get_den(VALUE self)
 {
   MP_RAT *self_val;
   MP_INT *res_val;
@@ -822,7 +923,9 @@ void init_gmpq()
   rb_define_method(cGMP_Q, "+",    r_gmpq_add, 1);
   rb_define_method(cGMP_Q, "-",    r_gmpq_sub, 1);
   rb_define_method(cGMP_Q, "*",    r_gmpq_mul, 1);
+  /* TODO rb_define_method(cGMP_Q, "mul_2exp", r_gmpq_mul_2exp, 1); */
   rb_define_method(cGMP_Q, "/",    r_gmpq_div, 1);
+  /* TODO rb_define_method(cGMP_Q, "div_2exp", r_gmpq_div_2exp, 1); */
   rb_define_method(cGMP_Q, "-@",   r_gmpq_neg, 0);
   rb_define_alias( cGMP_Q, "neg",  "-@");
   rb_define_method(cGMP_Q, "neg!", r_gmpq_neg_self, 0);
@@ -843,6 +946,12 @@ void init_gmpq()
   
   rb_define_method(cGMP_Q, "eql?",    r_gmpq_eql, 1);
   rb_define_method(cGMP_Q, "hash",    r_gmpq_hash, 0);
+
+  // Applying Integer Functions to Rationals
+  rb_define_method(cGMP_Q, "num", r_gmpq_get_num, 0);
+  rb_define_method(cGMP_Q, "den", r_gmpq_get_den, 0);
+  /* TODO rb_define_method(cGMP_Q, "num=", r_gmpq_set_num, 0); */
+  /* TODO rb_define_method(cGMP_Q, "den=", r_gmpq_set_den, 0); */
   
   // _unsorted_
   rb_define_method(cGMP_Q, "floor",  r_gmpq_floor, 0);

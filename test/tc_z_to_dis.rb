@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_to_i_to_d < Test::Unit::TestCase
+class TcIntegerToDis < Test::Unit::TestCase
   def setup
     @a = GMP::Z.new(100)
     @b = GMP::Z.pow(2,32)

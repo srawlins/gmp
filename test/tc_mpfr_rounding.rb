@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_MPFR_Rounding < Test::Unit::TestCase
+class TcMpfrRounding < Test::Unit::TestCase
   def setup
     if GMP::MPFR_VERSION < "3.0.0"
       @prefix = "GMP"

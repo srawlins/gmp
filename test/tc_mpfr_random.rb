@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_MPFR_Random < Test::Unit::TestCase
+class TcMpfrRandom < Test::Unit::TestCase
   def setup
   end
 

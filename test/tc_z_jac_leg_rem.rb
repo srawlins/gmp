@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_Z_Jacobi_Legendre_Remove < Test::Unit::TestCase
+class TcIntegerJacobiLegendreRemove < Test::Unit::TestCase
   def setup
     @one         = GMP::Z(1)
     @two         = GMP::Z(2)

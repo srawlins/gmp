@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TC_division < Test::Unit::TestCase
+class TcDivision < Test::Unit::TestCase
   def setup
     @a = GMP::Z.new(5)
     @b = GMP::Z.new(7)

@@ -199,8 +199,6 @@ void Init_gmp() {
   init_gmpq ();
   rb_define_method(cGMP_Q, "initialize", r_gmpq_initialize, -1);
   rb_define_method(cGMP_Q, "coerce", r_gmpq_coerce, 1);
-  rb_define_method(cGMP_Q, "num", r_gmpq_num, 0);
-  rb_define_method(cGMP_Q, "den", r_gmpq_den, 0);
 
   cGMP_F = rb_define_class_under (mGMP, "F", rb_cNumeric);
   init_gmpf ();
