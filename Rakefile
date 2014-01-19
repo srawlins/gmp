@@ -38,22 +38,25 @@ end
 
 namespace :dependencies do
   task :list do
-    suffix = (DEPENDENCIES_DIR.size+1)..-1
-    puts "GMP packages installed into #{DEPENDENCIES_DIR}:"
-    Dir.glob(File.join(DEPENDENCIES_DIR, 'gmp') + '*').each do |dir|
-      puts dir[suffix]
-    end
+    print_possible_dependencies("gmp")
     puts ""
-
-    puts "MPFR packages installed #{DEPENDENCIES_DIR}:"
-    Dir.glob(File.join(DEPENDENCIES_DIR, 'mpfr') + '*').each do |dir|
-      puts dir[suffix]
-    end
+    print_possible_dependencies("mpfr")
   end
+end
+
+def print_possible_dependencies(lib)
+  puts "#{lib.upcase} packages installed in #{DEPENDENCIES_DIR}:"
+  suffix = (DEPENDENCIES_DIR.size+1)..-1
+  possible_dependencies("gmp").each { |pd| puts "  #{pd[suffix]}" }
+end
+
+def possible_dependencies(lib)
+  Dir.glob(File.join(DEPENDENCIES_DIR, lib) + "*")
 end
 
 def with_option(lib)
   default_versions = { "gmp" => "5.1.3", "mpfr" => "3.1.2" }
+
   if ENV[lib].nil? || ENV[lib].empty?
     version = default_versions[lib]
   else
@@ -81,6 +84,14 @@ def with_option(lib)
   puts "==  Warning: neither target #{lib.upcase} installation directory exists:"
   puts "==  * #{directory}"
   puts "==  * #{directory2}"
-  puts "========================================"
-  return nil
+
+  latest = possible_dependencies(lib)[-1]
+  if latest.nil?
+    puts "========================================"
+    return nil
+  else
+    puts "==  but #{latest} exists; we'll try that."
+    puts "========================================"
+    return "--with-#{lib}-dir=" + latest
+  end
 end
