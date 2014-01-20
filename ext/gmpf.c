@@ -1521,10 +1521,8 @@ static VALUE r_gmpfr_pow(VALUE self_val, VALUE arg_val)
     mpf_make_struct_init (res_val, res, prec);
 
     if (GMPZ_P (arg_val)) {
-      /* TODO: fix this to use mpfr_pow_z */
       mpz_get_struct (arg_val, arg_z);
-      mpf_set_z (res, arg_z);
-      mpfr_pow (res, self, res, __gmp_default_rounding_mode);
+      mpfr_pow_z (res, self, arg_z, __gmp_default_rounding_mode);
     } else if (GMPQ_P (arg_val)) {
       mpq_get_struct (arg_val, arg_q);
       mpf_set_q (res, arg_q);
@@ -1533,8 +1531,10 @@ static VALUE r_gmpfr_pow(VALUE self_val, VALUE arg_val)
       mpf_set_d (res, NUM2DBL (arg_val));
       mpfr_pow (res, self, res, __gmp_default_rounding_mode);
     } else if (FIXNUM_P (arg_val)) {
-      /* TODO: break out to use mpfr_pow_si and mpfr_pow_ui */
-      mpfr_pow_si(res, self, FIX2INT (arg_val), __gmp_default_rounding_mode);
+      if (FIX2NUM (arg_val) >= 0)
+        mpfr_pow_ui (res, self, FIX2NUM (arg_val), __gmp_default_rounding_mode);
+      else
+        mpfr_pow_si (res, self, FIX2NUM (arg_val), __gmp_default_rounding_mode);
     } else if (BIGNUM_P (arg_val)) {
       mpz_temp_from_bignum (arg_z, arg_val);
       mpf_set_z (res, arg_z);

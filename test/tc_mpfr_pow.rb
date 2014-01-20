@@ -8,7 +8,9 @@ class TcMpfrPow < Test::Unit::TestCase
   def test_mpfr_pow
     assert_equal(@a ** 2,            0.0625, "GMP::F#pow(x : Fixnum) calculates correctly.")
     assert_equal(@a ** -2,          16,      "GMP::F#pow(x : Fixnum) calculates correctly.")
+    assert_equal(@a ** 0,            1,      "GMP::F#pow(x : Fixnum) calculates correctly.")
     assert_equal(@a ** 0.5,          0.5,    "GMP::F#pow(x : Float) calculates correctly.")
+    assert_equal(@a ** 0.0,          1,      "GMP::F#pow(x : Float) calculates correctly.")
     assert_equal(@a ** GMP::Z(2),    0.0625, "GMP::F#pow(x : GMP::Z) calculates correctly.")
     assert_equal(@a ** GMP::Q(1, 2), 0.5,    "GMP::F#pow(x : GMP::Q) calculates correctly.")
   end
