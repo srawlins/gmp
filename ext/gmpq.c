@@ -123,7 +123,7 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
       if (FIXNUM_P (argv[0])) {
         if (FIX2NUM (argv[0]) >= 0)
           mpq_set_ui (self_val, FIX2NUM (argv[0]), 1);
-	else
+        else
           mpq_set_si (self_val, FIX2NUM (argv[0]), 1);
       } else if (GMPZ_P (argv[0])) {
         mpz_get_struct (argv[0], arg_z);
@@ -142,7 +142,7 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
       if (FIXNUM_P (argv[0]) && FIXNUM_P (argv[1]) && FIX2NUM (argv[1]) >= 0) {
         if (FIX2NUM (argv[0] >= 0))
           mpq_set_ui (self_val, FIX2NUM (argv[0]), FIX2NUM (argv[1]));
-	else
+        else
           mpq_set_si (self_val, FIX2NUM (argv[0]), FIX2NUM (argv[1]));
       } else {
         mpz_set_value (mpq_numref (self_val), argv[0], 0); /* are these segfaulting? */
@@ -879,6 +879,13 @@ VALUE r_gmpq_hash(VALUE self)
  *    Applying Integer Functions                                      *
  **********************************************************************/
 
+/*
+ * Document-method: num
+ * call-seq:
+ *   a.num
+ *
+ * Returns the numerator of _a_.
+ */
 VALUE r_gmpq_get_num(VALUE self)
 {
   MP_RAT *self_val;
@@ -890,6 +897,14 @@ VALUE r_gmpq_get_num(VALUE self)
   return res;
 }
 
+
+/*
+ * Document-method: den
+ * call-seq:
+ *   a.den
+ *
+ * Returns the denominator of _a_.
+ */
 VALUE r_gmpq_get_den(VALUE self)
 {
   MP_RAT *self_val;
