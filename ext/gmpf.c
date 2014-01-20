@@ -1022,8 +1022,8 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self_val)              \
   if (NIL_P (rnd_mode_val)) { rnd_mode = __gmp_default_rounding_mode; }  \
   else { rnd_mode = r_get_rounding_mode(rnd_mode_val); }                 \
   if (NIL_P (res_prec_val)) { res_prec = prec; }                         \
-  /* TODO test type */                                                   \
-  else { res_prec = FIX2INT (res_prec_val); }                            \
+  else if (FIXNUM_P (res_prec_val)) { res_prec = FIX2INT (res_prec_val); } \
+  else { typeerror_as (X, "precision"); }                                \
   mpf_make_struct_init (res_val, res, res_prec);                         \
   mpfr_##name (res, self, rnd_mode);                                     \
                                                                          \
@@ -1089,7 +1089,7 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)                    \
   rb_scan_args (argc, argv, "12", &arg1, &rnd_mode, &res_prec);            \
                                                                            \
   mpf_get_struct_prec (self, self_val, prec);                              \
-  if (!GMPF_P (arg1)) { typeerror(FD); }                                   \
+  if (!GMPF_P (arg1)) { typeerror (FD); }                                  \
   mpf_get_struct_prec (arg1, arg1_val, arg1_prec);                         \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }    \
   else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }                   \
@@ -1131,7 +1131,7 @@ VALUE r_gmpfrsg_##name(int argc, VALUE *argv, VALUE self)    \
   else { rnd_mode_val = r_get_rounding_mode (rnd_mode); }    \
   if (NIL_P (prec)) { prec_val = mpfr_get_default_prec(); }  \
   else if (FIXNUM_P (prec)) { prec_val = FIX2INT (prec); }   \
-  else { typeerror_as (Z, "prec"); }                         \
+  else { typeerror_as (X, "precision"); }                    \
   mpf_make_struct_init (res, res_val, prec_val);             \
   mpfr_##name (res_val, rnd_mode_val);                       \
                                                              \
@@ -1491,7 +1491,7 @@ static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
       mpz_temp_free(arg_val_z);
       mpfr_pow(res_val, self_val, res_val, __gmp_default_rounding_mode);
     } else {
-      typeerror(ZQFXBD);
+      typeerror (ZQFXBD);
     }
   }
 
@@ -1555,11 +1555,8 @@ VALUE r_gmpf_can_round(VALUE self, VALUE err, VALUE rnd1, VALUE rnd2, VALUE prec
   mpfr_prec_t prec_val;
 
   mpf_get_struct (self, self_val);
-  if (FIXNUM_P (err)) {
-    err_val = FIX2INT (err);
-  } else {
-    typeerror_as (X, "err");
-  }
+  if (FIXNUM_P (err)) { err_val = FIX2INT (err); }
+  else { typeerror_as (X, "err"); }
   rnd1_val = r_get_rounding_mode (rnd1);
   rnd2_val = r_get_rounding_mode (rnd2);
   prec_val = FIX2INT (prec);
