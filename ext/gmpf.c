@@ -1502,50 +1502,50 @@ MPFR_SINGLE_BOOLEAN_FUNCTION(zero_p)
 MPFR_SINGLE_BOOLEAN_FUNCTION(regular_p)
 #endif
 
-static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
+static VALUE r_gmpfr_pow(VALUE self_val, VALUE arg_val)
 {
-  MP_FLOAT *self_val, *res_val, *arg_val_f;
-  MP_RAT *arg_val_q;
-  MP_INT *arg_val_z;
+  MP_FLOAT *self, *res, *arg_f;
+  MP_RAT *arg_q;
+  MP_INT *arg_z;
   mpfr_prec_t prec;
-  VALUE res;
+  VALUE res_val;
 
-  mpf_get_struct_prec (self, self_val, prec);
+  mpf_get_struct_prec (self_val, self, prec);
 
-  if (GMPF_P (arg)) {
-    mpf_get_struct (arg, arg_val_f);
-    prec_max (prec, arg_val_f);
-    mpf_make_struct_init (res, res_val, prec);
-    mpfr_pow (res_val, self_val, arg_val_f, __gmp_default_rounding_mode);
+  if (GMPF_P (arg_val)) {
+    mpf_get_struct (arg_val, arg_f);
+    prec_max (prec, arg_f);
+    mpf_make_struct_init (res_val, res, prec);
+    mpfr_pow (res, self, arg_f, __gmp_default_rounding_mode);
   } else {
-    mpf_make_struct_init (res, res_val, prec);
+    mpf_make_struct_init (res_val, res, prec);
 
-    if (GMPZ_P (arg)) {
+    if (GMPZ_P (arg_val)) {
       /* TODO: fix this to use mpfr_pow_z */
-      mpz_get_struct (arg, arg_val_z);
-      mpf_set_z (res_val, arg_val_z);
-      mpfr_pow (res_val, self_val, res_val, __gmp_default_rounding_mode);
-    } else if (GMPQ_P (arg)) {
-      mpq_get_struct (arg, arg_val_q);
-      mpf_set_q (res_val, arg_val_q);
-      mpfr_pow (res_val, self_val, res_val, __gmp_default_rounding_mode);
-    } else if (FLOAT_P (arg)) {
-      mpf_set_d (res_val, NUM2DBL (arg));
-      mpfr_pow (res_val, self_val, res_val, __gmp_default_rounding_mode);
-    } else if (FIXNUM_P (arg)) {
+      mpz_get_struct (arg_val, arg_z);
+      mpf_set_z (res, arg_z);
+      mpfr_pow (res, self, res, __gmp_default_rounding_mode);
+    } else if (GMPQ_P (arg_val)) {
+      mpq_get_struct (arg_val, arg_q);
+      mpf_set_q (res, arg_q);
+      mpfr_pow (res, self, res, __gmp_default_rounding_mode);
+    } else if (FLOAT_P (arg_val)) {
+      mpf_set_d (res, NUM2DBL (arg_val));
+      mpfr_pow (res, self, res, __gmp_default_rounding_mode);
+    } else if (FIXNUM_P (arg_val)) {
       /* TODO: break out to use mpfr_pow_si and mpfr_pow_ui */
-      mpfr_pow_si(res_val, self_val, FIX2INT (arg), __gmp_default_rounding_mode);
-    } else if (BIGNUM_P (arg)) {
-      mpz_temp_from_bignum (arg_val_z, arg);
-      mpf_set_z (res_val, arg_val_z);
-      mpz_temp_free (arg_val_z);
-      mpfr_pow (res_val, self_val, res_val, __gmp_default_rounding_mode);
+      mpfr_pow_si(res, self, FIX2INT (arg_val), __gmp_default_rounding_mode);
+    } else if (BIGNUM_P (arg_val)) {
+      mpz_temp_from_bignum (arg_z, arg_val);
+      mpf_set_z (res, arg_z);
+      mpz_temp_free (arg_z);
+      mpfr_pow (res, self, res, __gmp_default_rounding_mode);
     } else {
       typeerror (ZQFXBD);
     }
   }
 
-  return res;
+  return res_val;
 }
 
 /**********************************************************************
