@@ -1,4 +1,0 @@
-To compile:
-$ ./extconf.rb
-$ make
-$ make install
