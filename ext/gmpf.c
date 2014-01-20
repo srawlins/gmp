@@ -782,7 +782,7 @@ VALUE r_gmpf_div(VALUE self, VALUE arg)
     mpz_temp_from_bignum(arg_val_z, arg);
     mpf_make_struct_init(res, res_val, prec);
     mpf_set_z(res_val, arg_val_z);
-    mpf_div(res_val, self_val, res_val);	
+    mpf_div(res_val, self_val, res_val);
     mpz_temp_free(arg_val_z);
   } else {
     typeerror(ZQFXBD);
@@ -910,19 +910,19 @@ int mpf_cmp_value(MP_FLOAT *self_val, VALUE arg)
  * what does really "equal" mean ? it's not obvious
  * Is this a note that I, srawlins, put in here? It is not obvious to me...
  */
-VALUE r_gmpf_eq(VALUE self, VALUE arg)
+VALUE r_gmpf_eq(VALUE self_val, VALUE arg_val)
 {
-  MP_FLOAT *self_val;
-  mpf_get_struct (self,self_val);
-  return (mpf_cmp_value(self_val, arg) == 0) ? Qtrue : Qfalse;
+  MP_FLOAT *self;
+  mpf_get_struct (self_val, self);
+  return (mpf_cmp_value (self, arg_val) == 0) ? Qtrue : Qfalse;
 }
 
-VALUE r_gmpf_cmp(VALUE self, VALUE arg)
+VALUE r_gmpf_cmp(VALUE self_val, VALUE arg_val)
 {
-  MP_FLOAT *self_val;
+  MP_FLOAT *self;
   int res;
-  mpf_get_struct (self, self_val);
-  res = mpf_cmp_value (self_val, arg);
+  mpf_get_struct (self_val, self);
+  res = mpf_cmp_value (self, arg_val);
   if (res > 0)
     return INT2FIX(1);
   else if (res == 0)
@@ -943,11 +943,11 @@ DEFUN_FLOAT_CMP(ge,>=)
  *
  * Returns +1 if _x_ > 0, 0 if _x_ == 0, and -1 if _x_ < 0.
  */
-VALUE r_gmpf_sgn(VALUE self)
+VALUE r_gmpf_sgn(VALUE self_val)
 {
-  MP_FLOAT *self_val;
-  mpf_get_struct (self, self_val);
-  return INT2FIX (mpf_sgn (self_val));
+  MP_FLOAT *self;
+  mpf_get_struct (self_val, self);
+  return INT2FIX (mpf_sgn (self));
 }
 
 #ifdef MPFR
@@ -1008,26 +1008,26 @@ DEFUN_FLOAT2FLOAT(ceil,mpf_ceil)
 
 #ifdef MPFR
 
-#define MPFR_SINGLE_FUNCTION(name)                             \
-VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)        \
-{                                                              \
-  MP_FLOAT *self_val, *res_val;                                \
-  VALUE rnd_mode, res_prec, res;                               \
-  mpfr_prec_t prec, res_prec_value;                            \
-  mp_rnd_t rnd_mode_val;                                       \
-                                                               \
-  mpf_get_struct_prec (self, self_val, prec);                  \
-                                                               \
-  rb_scan_args (argc, argv, "02", &rnd_mode, &res_prec);       \
-  if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }  \
-  else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }       \
-  if (NIL_P (res_prec)) { res_prec_value = prec; }             \
-  /* TODO test type */                                         \
-  else { res_prec_value = FIX2INT (res_prec); }                \
-  mpf_make_struct_init (res, res_val, res_prec_value);         \
-  mpfr_##name (res_val, self_val, rnd_mode_val);               \
-                                                               \
-  return res;                                                  \
+#define MPFR_SINGLE_FUNCTION(name)                                       \
+VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self_val)              \
+{                                                                        \
+  MP_FLOAT *self, *res;                                                  \
+  VALUE rnd_mode_val, res_prec_val, res_val;                             \
+  mpfr_prec_t prec, res_prec;                                            \
+  mp_rnd_t rnd_mode;                                                     \
+                                                                         \
+  mpf_get_struct_prec (self_val, self, prec);                            \
+                                                                         \
+  rb_scan_args (argc, argv, "02", &rnd_mode_val, &res_prec_val);         \
+  if (NIL_P (rnd_mode_val)) { rnd_mode = __gmp_default_rounding_mode; }  \
+  else { rnd_mode = r_get_rounding_mode(rnd_mode_val); }                 \
+  if (NIL_P (res_prec_val)) { res_prec = prec; }                         \
+  /* TODO test type */                                                   \
+  else { res_prec = FIX2INT (res_prec_val); }                            \
+  mpf_make_struct_init (res_val, res, res_prec);                         \
+  mpfr_##name (res, self, rnd_mode);                                     \
+                                                                         \
+  return res_val;                                                        \
 }
 
 #define MPFR_DOUBLE_FUNCTION(name)                                   \
