@@ -1328,9 +1328,57 @@ MPFR_SINGLE_FUNCTION(sin)
  * was not passed in.
  */
 MPFR_SINGLE_FUNCTION(tan)
+
+/*
+ * Document-method: sin_cos
+ * call-seq:
+ *   x.sin_cos
+ *   x.sin_cos(rounding_mode)
+ *   x.sin_cos(rounding_mode, precision)
+ *
+ * Simultaneously calculate the sine and cosine of _x_, rounding according to
+ * `rounding_mode`, returning both numbers. The resultant GMP::F floats have
+ * the same precision that _x_ has, if `precision` was not passed in.
+ */
 MPFR_DOUBLE_FUNCTION(sin_cos)
+
+/*
+ * Document-method: secant
+ * call-seq:
+ *   x.secant
+ *   x.secant(rounding_mode)
+ *   x.secant(rounding_mode, precision)
+ *
+ * Calculate the secant of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(sec)
+
+/*
+ * Document-method: csc
+ * call-seq:
+ *   x.csc
+ *   x.csc(rounding_mode)
+ *   x.csc(rounding_mode, precision)
+ *
+ * Calculate the cosecant of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(csc)
+
+/*
+ * Document-method: cot
+ * call-seq:
+ *   x.cot
+ *   x.cot(rounding_mode)
+ *   x.cot(rounding_mode, precision)
+ *
+ * Calculate the cotangent of _x_, rounding according to `rounding_mode`. The
+ * resultant GMP::F float has the same precision that _x_ has, if `precision`
+ * was not passed in.
+ */
 MPFR_SINGLE_FUNCTION(cot)
 MPFR_SINGLE_FUNCTION(acos)
 MPFR_SINGLE_FUNCTION(asin)
@@ -1462,34 +1510,36 @@ static VALUE r_gmpfr_pow(VALUE self, VALUE arg)
   mpfr_prec_t prec;
   VALUE res;
 
-  mpf_get_struct_prec(self, self_val, prec);
+  mpf_get_struct_prec (self, self_val, prec);
 
-  if (GMPF_P(arg)) {
-    mpf_get_struct(arg, arg_val_f);
-    prec_max(prec, arg_val_f);
-    mpf_make_struct_init(res, res_val, prec);
-    mpfr_pow(res_val, self_val, arg_val_f, __gmp_default_rounding_mode);
+  if (GMPF_P (arg)) {
+    mpf_get_struct (arg, arg_val_f);
+    prec_max (prec, arg_val_f);
+    mpf_make_struct_init (res, res_val, prec);
+    mpfr_pow (res_val, self_val, arg_val_f, __gmp_default_rounding_mode);
   } else {
-    mpf_make_struct_init(res, res_val, prec);
+    mpf_make_struct_init (res, res_val, prec);
 
-    if (GMPZ_P(arg)) {
-      mpz_get_struct(arg, arg_val_z);
-      mpf_set_z(res_val, arg_val_z);
-      mpfr_pow(res_val, self_val, res_val, __gmp_default_rounding_mode);
-    } else if (GMPQ_P(arg)) {
-      mpq_get_struct(arg, arg_val_q);
-      mpf_set_q(res_val, arg_val_q);
-      mpfr_pow(res_val, self_val, res_val, __gmp_default_rounding_mode);
-    } else if (FLOAT_P(arg)) {
-      mpf_set_d(res_val, NUM2DBL(arg));
-      mpfr_pow(res_val, self_val, res_val, __gmp_default_rounding_mode);
-    } else if (FIXNUM_P(arg)) {
-      mpfr_pow_si(res_val, self_val, FIX2INT(arg), __gmp_default_rounding_mode);
-    } else if (BIGNUM_P(arg)) {
-      mpz_temp_from_bignum(arg_val_z, arg);
-      mpf_set_z(res_val, arg_val_z);
-      mpz_temp_free(arg_val_z);
-      mpfr_pow(res_val, self_val, res_val, __gmp_default_rounding_mode);
+    if (GMPZ_P (arg)) {
+      /* TODO: fix this to use mpfr_pow_z */
+      mpz_get_struct (arg, arg_val_z);
+      mpf_set_z (res_val, arg_val_z);
+      mpfr_pow (res_val, self_val, res_val, __gmp_default_rounding_mode);
+    } else if (GMPQ_P (arg)) {
+      mpq_get_struct (arg, arg_val_q);
+      mpf_set_q (res_val, arg_val_q);
+      mpfr_pow (res_val, self_val, res_val, __gmp_default_rounding_mode);
+    } else if (FLOAT_P (arg)) {
+      mpf_set_d (res_val, NUM2DBL (arg));
+      mpfr_pow (res_val, self_val, res_val, __gmp_default_rounding_mode);
+    } else if (FIXNUM_P (arg)) {
+      /* TODO: break out to use mpfr_pow_si and mpfr_pow_ui */
+      mpfr_pow_si(res_val, self_val, FIX2INT (arg), __gmp_default_rounding_mode);
+    } else if (BIGNUM_P (arg)) {
+      mpz_temp_from_bignum (arg_val_z, arg);
+      mpf_set_z (res_val, arg_val_z);
+      mpz_temp_free (arg_val_z);
+      mpfr_pow (res_val, self_val, res_val, __gmp_default_rounding_mode);
     } else {
       typeerror (ZQFXBD);
     }
