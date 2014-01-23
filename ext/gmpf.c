@@ -85,7 +85,7 @@ VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
   (void)klass;
 
   if (argc > 4)
-    rb_raise(rb_eArgError, "wrong # of arguments (%d for 0, 1 2, 3, or 4)", argc);
+    rb_raise(rb_eArgError, "wrong number of arguments (%d for 0, 1 2, 3, or 4)", argc);
 
   mpf_make_struct (res, res_val);
   rb_obj_call_init(res, argc, argv);
@@ -125,11 +125,11 @@ VALUE r_gmpf_initialize(int argc, VALUE *argv, VALUE self)
         prec = FIX2INT(argv[1]);
       else {
         r_mpf_init (self_val);
-        rb_raise(rb_eRangeError, "prec must be non-negative");
+        rb_raise(rb_eRangeError, "precision must be non-negative");
       }
     } else {
       r_mpf_init (self_val);
-      rb_raise(rb_eTypeError, "prec must be a Fixnum");
+      rb_raise(rb_eTypeError, "precision must be a Fixnum");
     }
   } else if (GMPF_P(arg)) {
     mpf_get_struct (arg, arg_val_f);
