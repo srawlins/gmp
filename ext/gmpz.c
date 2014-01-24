@@ -667,7 +667,7 @@ VALUE r_gmpzsg_new(int argc, VALUE *argv, VALUE klass)
   (void)klass;
 
   if (argc > 2)
-    rb_raise(rb_eArgError, "wrong # of arguments (%d for 0, 1, or 2)", argc);
+    rb_raise(rb_eArgError, "wrong number of arguments (%d for 0, 1, or 2)", argc);
 
   mpz_make_struct(res, res_val);
   mpz_init(res_val);

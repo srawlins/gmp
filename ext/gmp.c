@@ -49,11 +49,11 @@ static VALUE r_gmpfsg_set_default_prec(VALUE klass, VALUE arg)
   (void)klass;
   if (FIXNUM_P(arg)) {
     if (FIX2NUM(arg) <= 0) {
-      rb_raise(rb_eRangeError, "prec must be positive");
+      rb_raise(rb_eRangeError, "precision must be positive");
     }
     mpf_set_default_prec (FIX2NUM(arg));
   } else {
-    rb_raise(rb_eTypeError, "prec must be FixNum");
+    rb_raise(rb_eTypeError, "precision must be Fixnum");
   }
   return Qnil;
 }

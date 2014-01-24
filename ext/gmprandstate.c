@@ -62,11 +62,11 @@ VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
   if (algorithm_id == default_algorithm ||
       algorithm_id == mt_algorithm) {
     if (argc > 1)
-      rb_raise(rb_eArgError, "wrong # of arguments (%d for 0 or 1)", argc);
+      rb_raise(rb_eArgError, "wrong number of arguments (%d for 0 or 1)", argc);
     gmp_randinit_default(rs_val);
   } else if (algorithm_id == lc_2exp_algorithm) {
     if (argc != 4)
-      rb_raise(rb_eArgError, "wrong # of arguments (%d for 4)", argc);
+      rb_raise(rb_eArgError, "wrong number of arguments (%d for 4)", argc);
     if (GMPZ_P(arg2)) {
       mpz_get_struct(arg2, a_val);
     } else if (FIXNUM_P(arg2)) {
@@ -84,7 +84,7 @@ VALUE r_gmprandstatesg_new(int argc, VALUE *argv, VALUE klass)
     gmp_randinit_lc_2exp(rs_val, a_val, c_val, m2exp_val);
   } else if (algorithm_id == lc_2exp_size_algorithm) {
     if (argc != 2)
-      rb_raise(rb_eArgError, "wrong # of arguments (%d for 2)", argc);
+      rb_raise(rb_eArgError, "wrong number of arguments (%d for 2)", argc);
     size_val = NUM2LONG(arg2);
     if (size_val > 128)
       rb_raise(rb_eArgError, "size must be within [0..128]");
@@ -294,18 +294,18 @@ VALUE r_gmprandstate_mpfr_urandomb(int argc, VALUE *argv, VALUE self_val)
   unsigned long prec = 0;
 
   if (argc > 1)
-    rb_raise (rb_eArgError, "wrong # of arguments (%d for 0 or 1)", argc);
+    rb_raise (rb_eArgError, "wrong number of arguments (%d for 0 or 1)", argc);
 
   mprandstate_get_struct (self_val, self);
 
   if (argc == 1) {
     if (FIXNUM_P (argv[0])) {
       if (FIX2INT (argv[0]) < 2)
-        rb_raise (rb_eRangeError, "prec must be at least 2");
+        rb_raise (rb_eRangeError, "precision must be at least 2");
 
       prec = FIX2INT (argv[0]);
     } else {
-      rb_raise (rb_eTypeError, "prec must be a Fixnum");
+      rb_raise (rb_eTypeError, "precision must be a Fixnum");
     }
   }
 
@@ -350,11 +350,11 @@ VALUE r_gmprandstate_mpfr_urandom(int argc, VALUE *argv, VALUE self_val)
     prec = mpfr_get_default_prec();
   } else if (FIXNUM_P (prec_val)) {
     if (FIX2INT (prec_val) < 2)
-      rb_raise (rb_eRangeError, "prec must be at least 2");
+      rb_raise (rb_eRangeError, "precision must be at least 2");
 
     prec = FIX2INT (prec_val);
   } else {
-    rb_raise (rb_eTypeError, "prec must be a Fixnum");
+    rb_raise (rb_eTypeError, "precision must be a Fixnum");
   }
 
   mpf_make_struct (res_val, res);

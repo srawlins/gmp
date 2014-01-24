@@ -82,7 +82,7 @@ VALUE r_gmpqsg_new(int argc, VALUE *argv, VALUE klass)
   (void)klass;
 
   if (argc > 2)
-    rb_raise (rb_eArgError, "wrong # of arguments (%d for 0, 1 or 2)", argc);
+    rb_raise (rb_eArgError, "wrong number of arguments (%d for 0, 1 or 2)", argc);
 
   mpq_make_struct (res, res_val);
   mpq_init (res_val);
@@ -151,7 +151,7 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
 
       mpq_canonicalize (self_val);
     } else {
-      rb_raise (rb_eArgError, "wrong # of arguments (%d for 0, 1, or 2)", argc);
+      rb_raise (rb_eArgError, "wrong number of arguments (%d for 0, 1, or 2)", argc);
     }
   }
   return Qnil;
