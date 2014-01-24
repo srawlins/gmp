@@ -1,4 +1,6 @@
-# Dependencies base directory. I have to figure out how to... not hard code this?
+require "yard"
+
+# Dependencies base directory.
 DEPENDENCIES_DIR = ENV["DEPENDENCIES_DIR"] || "/usr/local"
 
 task :clean do
@@ -95,3 +97,5 @@ def with_option(lib)
     return "--with-#{lib}-dir=" + latest
   end
 end
+
+YARD::Rake::YardocTask.new
