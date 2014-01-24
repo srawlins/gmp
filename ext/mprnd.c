@@ -79,15 +79,25 @@ void init_gmprnd()
   rb_define_attr (cGMP_Rnd, "name",    1, 0);
   rb_define_attr (cGMP_Rnd, "ieee754", 1, 0);
 
+  /* GMP_RNDN: MPFR rounding mode roundTiesToEven for MPFR < 3.0 */
   rb_define_const(mGMP, "GMP_RNDN", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(0)));
+  /* GMP_RNDZ: MPFR rounding mode roundTowardZero for MPFR < 3.0 */
   rb_define_const(mGMP, "GMP_RNDZ", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(1)));
+  /* GMP_RNDU: MPFR rounding mode roundTowardPositive for MPFR < 3.0 */
   rb_define_const(mGMP, "GMP_RNDU", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(2)));
+  /* GMP_RNDD: MPFR rounding mode roundTowardNegative for MPFR < 3.0 */
   rb_define_const(mGMP, "GMP_RNDD", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(3)));
+
   /* MPFR 3.0.0 */
+  /* MPFR_RNDN: MPFR rounding mode roundTiesToEven */
   rb_define_const(mGMP, "MPFR_RNDN", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(0)));
+  /* MPFR_RNDZ: MPFR rounding mode roundTowardZero */
   rb_define_const(mGMP, "MPFR_RNDZ", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(1)));
+  /* MPFR_RNDU: MPFR rounding mode roundTowardPositive */
   rb_define_const(mGMP, "MPFR_RNDU", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(2)));
+  /* MPFR_RNDU: MPFR rounding mode roundTowardNegative */
   rb_define_const(mGMP, "MPFR_RNDD", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(3)));
+  /* MPFR_RNDA: MPFR rounding mode roundAwayFromZero */
   rb_define_const(mGMP, "MPFR_RNDA", rb_funcall (cGMP_Rnd, new_id, 1, INT2FIX(4)));
   /* end MPFR 3.0.0 */
 }
