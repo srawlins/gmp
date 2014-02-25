@@ -55,6 +55,11 @@ end
 if ok
   create_makefile('gmp')
 else
+  $stderr.puts "*********************************************************************"
+  $stderr.puts "Your compiler was unable to link to GMP while installing the gmp gem."
+  $stderr.puts "Please install GMP before installing the gmp gem."
+  $stderr.puts "*********************************************************************"
+
   raise "Unable to build, correct above errors and rerun"
 end
 
