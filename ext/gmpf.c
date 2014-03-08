@@ -1097,7 +1097,7 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)                    \
   /* TODO test type */                                                     \
   else { res_prec_value = FIX2INT (res_prec); }                            \
   mpf_make_struct_init (res, res_val, res_prec_value);                     \
-  mpfr_##name (res_val, arg1_val, self_val, rnd_mode_val);                 \
+  mpfr_##name (res_val, self_val, arg1_val, rnd_mode_val);                 \
                                                                            \
   return res;                                                              \
 }

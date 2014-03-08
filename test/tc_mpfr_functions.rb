@@ -103,6 +103,11 @@ class TcMpfrFunctions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.hypot should be callable.") { @a.hypot(@b) }
   end
 
+  def test_atan2
+    assert_in_delta @a.atan2(@b), Math.atan2(@a.to_f, @b.to_f), 0.0001
+    assert_in_delta (-@a).atan2((-@b)), Math.atan2((-@a).to_f, (-@b).to_f), 0.0001
+  end
+
   def test_function_parameters
     single_functions = [:sqrt, :rec_sqrt, :cbrt,
                         :log, :log2, :log10, :exp, :exp2, :exp10,
