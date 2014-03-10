@@ -1089,15 +1089,24 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)                    \
   rb_scan_args (argc, argv, "12", &arg1, &rnd_mode, &res_prec);            \
                                                                            \
   mpf_get_struct_prec (self, self_val, prec);                              \
-  if (!GMPF_P (arg1)) { typeerror (FD); }                                  \
-  mpf_get_struct_prec (arg1, arg1_val, arg1_prec);                         \
+  if (GMPF_P (arg1)) {                                                     \
+    mpf_get_struct_prec (arg1, arg1_val, arg1_prec);                       \
+  } else if (FLOAT_P (arg1)) {                                             \
+    mpf_temp_init(arg1_val, mpf_get_prec (self_val));                      \
+    mpfr_set_d (arg1_val, NUM2DBL (arg1), __gmp_default_rounding_mode);    \
+  } else {                                                                 \
+    typeerror (FD);                                                        \
+  }                                                                        \
   if (NIL_P (rnd_mode)) { rnd_mode_val = __gmp_default_rounding_mode; }    \
   else { rnd_mode_val = r_get_rounding_mode(rnd_mode); }                   \
   if (NIL_P (res_prec)) { res_prec_value = prec; }                         \
   /* TODO test type */                                                     \
   else { res_prec_value = FIX2INT (res_prec); }                            \
   mpf_make_struct_init (res, res_val, res_prec_value);                     \
-  mpfr_##name (res_val, arg1_val, self_val, rnd_mode_val);                 \
+  mpfr_##name (res_val, self_val, arg1_val, rnd_mode_val);                 \
+  if (FLOAT_P (arg1)) {                                                    \
+    mpf_temp_free(arg1_val);                                               \
+  }                                                                        \
                                                                            \
   return res;                                                              \
 }

@@ -140,7 +140,7 @@ VALUE r_gmpq_initialize(int argc, VALUE *argv, VALUE self)
       }
     } else if (argc == 2) {
       if (FIXNUM_P (argv[0]) && FIXNUM_P (argv[1]) && FIX2NUM (argv[1]) >= 0) {
-        if (FIX2NUM (argv[0] >= 0))
+        if (FIX2NUM (argv[0]) >= 0)
           mpq_set_ui (self_val, FIX2NUM (argv[0]), FIX2NUM (argv[1]));
         else
           mpq_set_si (self_val, FIX2NUM (argv[0]), FIX2NUM (argv[1]));

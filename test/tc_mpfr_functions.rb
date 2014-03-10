@@ -61,6 +61,7 @@ class TcMpfrFunctions < Test::Unit::TestCase
     assert_nothing_raised("GMP::F.asin should be callable.") { @a.asin }
     assert_nothing_raised("GMP::F.atan should be callable.") { @a.atan }
     assert_nothing_raised("GMP::F.atan2 should be callable.") { @a.atan2(@b) }
+    assert_nothing_raised("GMP::F.atan2 should be callable with float arg") { @a.atan2(2.0) }
 
     assert_nothing_raised("GMP::F.cosh should be callable.") { @a.cosh }
     assert_nothing_raised("GMP::F.sinh should be callable.") { @a.sinh }
@@ -101,6 +102,12 @@ class TcMpfrFunctions < Test::Unit::TestCase
 
     assert_nothing_raised("GMP::F.agm should be callable.") { @a.agm(@b) }
     assert_nothing_raised("GMP::F.hypot should be callable.") { @a.hypot(@b) }
+  end
+
+  def test_atan2
+    assert_in_delta @a.atan2(@b), Math.atan2(@a.to_f, @b.to_f), 0.0001
+    assert_in_delta (-@a).atan2((-@b)), Math.atan2((-@a).to_f, (-@b).to_f), 0.0001
+    assert_in_delta @a.atan2(3.0), Math.atan2(@a.to_f, 3.0), 0.0001
   end
 
   def test_function_parameters
