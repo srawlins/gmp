@@ -1091,9 +1091,9 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)                    \
   mpf_get_struct_prec (self, self_val, prec);                              \
   if (GMPF_P (arg1)) {                                                     \
     mpf_get_struct_prec (arg1, arg1_val, arg1_prec);                       \
-  } else if (FIXNUM_P (arg1)) {                                            \
+  } else if (FLOAT_P (arg1)) {                                             \
     mpf_temp_init(arg1_val, mpf_get_prec (self_val));                      \
-    mpfr_set_value(arg1_val, arg1, __gmp_default_rounding_mode);           \
+    mpfr_set_d (arg1_val, NUM2DBL (arg1), __gmp_default_rounding_mode);    \
   } else {                                                                 \
     typeerror (FD);                                                        \
   }                                                                        \
@@ -1104,7 +1104,7 @@ VALUE r_gmpfr_##name(int argc, VALUE *argv, VALUE self)                    \
   else { res_prec_value = FIX2INT (res_prec); }                            \
   mpf_make_struct_init (res, res_val, res_prec_value);                     \
   mpfr_##name (res_val, self_val, arg1_val, rnd_mode_val);                 \
-  if (FIXNUM_P (arg1)) {                                                   \
+  if (FLOAT_P (arg1)) {                                                    \
     mpf_temp_free(arg1_val);                                               \
   }                                                                        \
                                                                            \
