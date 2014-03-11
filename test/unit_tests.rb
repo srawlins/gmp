@@ -65,6 +65,7 @@ if GMP.const_defined? :MPFR_VERSION
   if GMP::MPFR_VERSION >= "3.1.0"
     require File.join(DIR, 'mpfr_tfrexp')
   end
+  require File.join(DIR, 'mpfr_thypot')
   require File.join(DIR, 'mpfr_tisnan')
   require File.join(DIR, 'mpfr_trec_sqrt')
   require File.join(DIR, 'mpfr_tsqrt')

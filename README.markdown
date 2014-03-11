@@ -3,8 +3,9 @@ gmp
 
 [![Build Status](https://travis-ci.org/srawlins/gmp.png?branch=master)](https://travis-ci.org/srawlins/gmp)
 
-gmp is library providing Ruby bindings to GMP library. Here is the introduction
-paragraph at [their homepage](http://gmplib.org/#WHAT):
+gmp is a Rubygem providing Ruby bindings to the [GMP](https://gmplib.org/)
+library, and to the [MPFR](http://www.mpfr.org/) library (optional). Here is the
+introduction paragraph at [GMP's homepage](http://gmplib.org/#WHAT):
 
 > GMP is a free library for arbitrary precision arithmetic, operating on
 > signed integers, rational numbers, and floating point numbers. There is no
@@ -49,17 +50,20 @@ paragraph at [their homepage](http://gmplib.org/#WHAT):
 > contributions, meaning users can safely use GMP. To achieve this, we will ask
 > contributors to sign paperwork where they allow us to distribute their work."
 
-GMP 4.3.x and GMP 5.x are each supported against Ruby (MRI) 1.9.x, 2.0.0, and
-2.1.0. GMP 5.1.x is the only version of GMP that has been tested recently.
-Other Ruby platforms (such as Rubinius and JRuby) should be supported, but have not
-been tested recently.
+### Support
 
-### Previously
+* GMP 4.3.x and GMP 5.x are each supported against Ruby (MRI) 1.9.x, 2.0.0, and
+  2.1.0. GMP 5.1.x is the only version of GMP that has been tested recently.
+* MPFR 3.x is supported.
+* Other Ruby platforms (such as Rubinius and JRuby) should be supported, but
+  have not been tested recently.
+
+#### Previously
 
 Previously, on version 0.5.47, this gem was verified as functioning in the
 following combinations:
 
-<table border="1">
+<table border="0">
   <tr>
     <th>Platform</th>
     <th>Ruby</th>
@@ -163,7 +167,7 @@ as pi, are defined under class methods of GMP::F, listed below.
 * `GMP::GMP_BITS_PER_LIMB` The number of bits per limb
 * `GMP::GMP_NUMB_MAX` - The maximum value that can be stored in the number part of a limb
 
-if MPFR is available:
+If MPFR is available:
 * `GMP::MPFR_VERSION` - A string like "2.4.2"
 * `GMP::MPFR_PREC_MIN` - The minimum precision available
 * `GMP::MPFR_PREC_MAX` - The maximum precision available

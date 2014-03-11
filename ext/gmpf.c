@@ -1698,11 +1698,13 @@ void init_gmpf()
   rb_define_singleton_method(cGMP_F, "new", r_gmpfsg_new, -1);
   rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
 #ifdef MPFR
+  /* rb_define_singleton_method(cGMP_F, "new_2exp", r_gmpfsg_new_2exp, -1); */
   rb_define_singleton_method(cGMP_F, "nan", r_gmpfsg_nan, 0);
   rb_define_singleton_method(cGMP_F, "inf", r_gmpfsg_inf, -1);
 #if MPFR_VERSION_MAJOR>2
   rb_define_singleton_method(cGMP_F, "zero", r_gmpfsg_zero, -1);
 #endif  /* MPFR_VERSION_MAJOR>2 */
+  /* rb_define_singleton_method(cGMP_F, "emin", r_gmpfsg_zero, 0); */
 #endif  /* MPFR */
   rb_define_method(cGMP_F, "prec", r_gmpf_get_prec, 0);
   rb_define_method(cGMP_F, "prec=", r_gmpf_set_prec, 1);

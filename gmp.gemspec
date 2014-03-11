@@ -3,14 +3,14 @@ Gem::Specification.new do |s|
   s.version = "0.6.47"
   s.authors = ["Tomasz Wegrzanowski", "srawlins"]
   s.date = "2013-12-31"
-  s.description = "gmp - providing Ruby bindings to the GMP library."
+  s.description = "gmp - providing Ruby bindings to the GMP and MPFR libraries."
   s.email = ["Tomasz.Wegrzanowski@gmail.com", "sam.rawlins@gmail.com"]
 
   s.extensions = ["ext/extconf.rb"]
 
   s.has_rdoc = "yard"
   s.homepage = "http://github.com/srawlins/gmp"
-  s.summary = "Provides Ruby bindings to the GMP library."
+  s.summary = "Provides Ruby bindings to the GMP and MPFR libraries."
   s.license = 'Apache License Version 2.0'
 
   s.required_ruby_version = '>= 1.8.6'

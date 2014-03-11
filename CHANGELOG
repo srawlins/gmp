@@ -7,6 +7,10 @@
   * Yardoc documentation is less completely broken.
   * GMP::F#** is now slightly more efficient when the argument is a Fixnum or
     GMP::Z, and is now tested.
+  * Bigger error message when GMP can't be found. Fixes #4.
+  * Rearrange args for GMP::F#atan2, #agm, and #hypot; contributed by @timpeters
+  * Allow Float for args to GMP::F#atan2, #agm, and #hypot; contributed by @timpeters
+  * Sanity checks for GMP::F#hypot
 
 0.6.47
   * Fixed GMP::F#to_s when MPFR is not present. It now works, and accepts an
