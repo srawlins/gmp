@@ -1561,6 +1561,12 @@ static VALUE r_gmpfr_pow(VALUE self_val, VALUE arg_val)
  *    Rounding Related Functions                                      *
  **********************************************************************/
 
+/*
+ * call-seq:
+ *   GMP::F.default_rounding_mode
+ *
+ * Get the default rounding mode.
+ */
 VALUE r_gmpfsg_get_default_rounding_mode(VALUE klass)
 {
   const char *rounding_string_val;
@@ -1574,6 +1580,13 @@ VALUE r_gmpfsg_get_default_rounding_mode(VALUE klass)
   }
 }
 
+/*
+ * call-seq:
+ *   GMP::F.default_rounding_mode=(rnd)
+ *
+ * Set the default rounding mode to _rnd_. The default rounding mode is to
+ * nearest initially.
+ */
 VALUE r_gmpfsg_set_default_rounding_mode(VALUE klass, VALUE arg)
 {
   VALUE mode = 0;
@@ -1628,15 +1641,32 @@ VALUE r_gmpf_can_round(VALUE self, VALUE err, VALUE rnd1, VALUE rnd2, VALUE prec
 
 
 /**********************************************************************
- *    Rounding Related Functions                                      *
+ *    _unsorted_                                                      *
  **********************************************************************/
 
+/*
+ * call-seq:
+ *   GMP::F.mpfr_buildopt_tls_p
+ *
+ * Return a non-zero value if MPFR was compiled as thread safe using
+ * compiler-level Thread Local Storage (that is, MPFR was built with the
+ * --enable-thread-safe configure option, see INSTALL file), return zero
+ *  otherwise.
+ */
 VALUE r_gmpfsg_mpfr_buildopt_tls_p(VALUE klass)
 {
   (void)klass;
   return INT2FIX (mpfr_buildopt_tls_p());
 }
 
+/*
+ * call-seq:
+ *   GMP::F.mpfr_buildopt_decimal_p
+ *
+ * Return a non-zero value if MPFR was compiled with decimal float support
+ * (that is, MPFR was built with the --enable-decimal-float configure option),
+ * return zero otherwise.
+ */
 VALUE r_gmpfsg_mpfr_buildopt_decimal_p(VALUE klass)
 {
   (void)klass;
@@ -1650,6 +1680,14 @@ VALUE r_gmpfsg_mpfr_buildopt_decimal_p(VALUE klass)
  *    _unsorted_                                                      *
  **********************************************************************/
 
+/*
+ * Document-method: prec
+ * call-seq:
+ *   x.prec
+ *
+ * Return the precision of _x_, i.e. the number of bits used to store its
+ * significand.
+ */
 VALUE r_gmpf_get_prec(VALUE self)
 {
   MP_FLOAT *self_val;
@@ -1657,6 +1695,16 @@ VALUE r_gmpf_get_prec(VALUE self)
   return INT2NUM (mpf_get_prec (self_val));
 }
 
+/*
+ * Document-method: prec=
+ * call-seq:
+ *   x.prec=(p)
+ *
+ * Reset the precision of _x_ to be exactly _p_ bits, and set its value to
+ * NaN. The previous value stored in _x_ is lost.
+ * The precision prec can be any integer between
+ * `MPFR_PREC_MIN` and `MPFR_PREC_MAX`.
+ */
 VALUE r_gmpf_set_prec(VALUE self, VALUE arg)
 {
   MP_FLOAT *self_val;
@@ -1685,6 +1733,39 @@ VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg)
   return Qnil;  /* should never get here */
 }
 
+/*
+ * call-seq:
+ *   GMP::F.emin
+ *
+ * Return the (current) smallest exponent allowed for a
+ * floating-point variable. The smallest positive value of a floating-point
+ * variable is one half times 2 raised to the smallest exponent.
+ *
+ * @since 0.X.XX
+ */
+VALUE r_gmpfsg_get_emin(VALUE klass)
+{
+  (void)klass;
+  return INT2NUM (mpfr_get_emin ());
+}
+
+/*
+ * call-seq:
+ *   GMP::F.emax
+ *
+ * Return the (current) largest exponent allowed for a floating-point variable.
+ * The largest floating-point value has the form (1 - epsilon) times 2 raised
+ * to the largest exponent, where epsilon depends on the precision of the
+ * considered variable.
+ *
+ * @since 0.X.XX
+ */
+VALUE r_gmpfsg_get_emax(VALUE klass)
+{
+  (void)klass;
+  return INT2NUM (mpfr_get_emax ());
+}
+
 
 void init_gmpf()
 {
@@ -1704,11 +1785,15 @@ void init_gmpf()
 #if MPFR_VERSION_MAJOR>2
   rb_define_singleton_method(cGMP_F, "zero", r_gmpfsg_zero, -1);
 #endif  /* MPFR_VERSION_MAJOR>2 */
-  /* rb_define_singleton_method(cGMP_F, "emin", r_gmpfsg_zero, 0); */
 #endif  /* MPFR */
   rb_define_method(cGMP_F, "prec", r_gmpf_get_prec, 0);
   rb_define_method(cGMP_F, "prec=", r_gmpf_set_prec, 1);
   rb_define_method(cGMP_F, "prec_raw=", r_gmpf_set_prec_raw, 1);
+
+#ifdef MPFR
+  rb_define_singleton_method(cGMP_F, "emin", r_gmpfsg_get_emin, 0);
+  rb_define_singleton_method(cGMP_F, "emax", r_gmpfsg_get_emax, 0);
+#endif  /* MPFR */
 
   // Converting Floats
   rb_define_method(cGMP_F, "to_s", r_gmpf_to_s, -1);

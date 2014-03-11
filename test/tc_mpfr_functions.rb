@@ -110,6 +110,11 @@ class TcMpfrFunctions < Test::Unit::TestCase
     assert_in_delta @a.atan2(3.0), Math.atan2(@a.to_f, 3.0), 0.0001
   end
 
+  def test_class_methods
+    assert_true(GMP::F.emin.is_a?(Integer), "GMP::F.emin is callable")
+    assert_true(GMP::F.emax.is_a?(Integer), "GMP::F.emax is callable")
+  end
+
   def test_function_parameters
     single_functions = [:sqrt, :rec_sqrt, :cbrt,
                         :log, :log2, :log10, :exp, :exp2, :exp10,

@@ -11,6 +11,7 @@
   * Rearrange args for GMP::F#atan2, #agm, and #hypot; contributed by @timpeters
   * Allow Float for args to GMP::F#atan2, #agm, and #hypot; contributed by @timpeters
   * Sanity checks for GMP::F#hypot
+  * Added new MPFR class methods: GMP::F.emin and GMP::F.emax
 
 0.6.47
   * Fixed GMP::F#to_s when MPFR is not present. It now works, and accepts an
