@@ -85,7 +85,7 @@ VALUE r_gmpfsg_new(int argc, VALUE *argv, VALUE klass)
   (void)klass;
 
   if (argc > 4)
-    rb_raise(rb_eArgError, "wrong number of arguments (%d for 0, 1 2, 3, or 4)", argc);
+    rb_raise(rb_eArgError, "wrong number of arguments (%d for 0, 1, 2, 3, or 4)", argc);
 
   mpf_make_struct (res, res_val);
   rb_obj_call_init(res, argc, argv);
@@ -271,6 +271,62 @@ void mpf_set_value2(MP_FLOAT *self_val, VALUE arg, int base, mp_rnd_t rnd_mode_v
     rb_raise (rb_eRuntimeError, "Badly formatted string");
   }
 }
+
+#if MPFR_VERSION_MAJOR > 2
+VALUE r_gmpfsg_new_2exp(int argc, VALUE *argv, VALUE klass)
+{
+  MP_FLOAT *res;
+  MP_INT *arg_z;
+  VALUE res_val, arg_val, exp_val, prec_val, rnd_mode_val;
+  mp_rnd_t rnd_mode;
+  (void)klass;
+
+  rb_scan_args (argc, argv, "22", &arg_val, &exp_val, &prec_val, &rnd_mode_val);
+  mpf_make_struct (res_val, res);
+
+  if (!FIXNUM_P (exp_val)) {
+    mpfr_init (res);
+    rb_raise(rb_eTypeError, "exp must be a Fixnum");
+  }
+
+  if (NIL_P (prec_val))
+    mpfr_init (res);
+  else if (FIXNUM_P (prec_val)) {
+    if (FIX2INT (prec_val) >= 0) {
+      mpfr_init2 (res, FIX2INT (prec_val));
+    } else {
+      mpfr_init (res);
+      rb_raise(rb_eRangeError, "precision must be non-negative");
+    }
+  } else {
+    mpfr_init (res);
+    rb_raise(rb_eTypeError, "precision must be a Fixnum");
+  }
+
+  if (NIL_P (rnd_mode_val))
+    rnd_mode = __gmp_default_rounding_mode;
+  else
+    rnd_mode = r_get_rounding_mode (rnd_mode_val);
+
+  if (GMPZ_P (arg_val)) {
+    mpz_get_struct (arg_val, arg_z);
+    mpfr_set_z_2exp (res, arg_z, FIX2NUM (exp_val), rnd_mode);
+  } else if (FIXNUM_P (arg_val)) {
+    mpfr_set_si_2exp (res, FIX2NUM (arg_val), FIX2NUM (exp_val), rnd_mode);
+  } else if (BIGNUM_P (arg_val)) {
+#if 1 /* GMP3 code */
+    mpz_temp_from_bignum (arg_z, arg_val);
+    mpfr_set_z_2exp (res, arg_z, FIX2NUM (exp_val), rnd_mode);
+    mpz_temp_free (arg_z);
+#endif /* GMP3 code */
+  } else {
+    rb_raise (rb_eTypeError, "Don't know how to convert %s into GMP::F", rb_class2name (rb_class_of (arg_val)));
+    typeerror_as (ZXB, "value");
+  }
+
+  return res_val;
+}
+#endif /* MPFR_VERSION_MAJOR > 2 */
 
 /*
  * Document-method: nan
@@ -1868,7 +1924,7 @@ void init_gmpf()
   rb_define_singleton_method(cGMP_F, "new", r_gmpfsg_new, -1);
   rb_define_method(cGMP_F, "initialize", r_gmpf_initialize, -1);
 #ifdef MPFR
-  /* rb_define_singleton_method(cGMP_F, "new_2exp", r_gmpfsg_new_2exp, -1); */
+  rb_define_singleton_method(cGMP_F, "new_2exp", r_gmpfsg_new_2exp, -1);
   rb_define_singleton_method(cGMP_F, "nan", r_gmpfsg_nan, 0);
   rb_define_singleton_method(cGMP_F, "inf", r_gmpfsg_inf, -1);
 #if MPFR_VERSION_MAJOR>2
@@ -1937,7 +1993,6 @@ void init_gmpf()
   /* TODO: new in MPFR 3.0.0:
    *
    * mpfr_ai
-   * mpfr_set_z_2exp
    */
 
   /* TODO: new in MPFR 3.1.0:

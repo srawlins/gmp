@@ -15,6 +15,7 @@
   * Added new MPFR class methods: GMP::F.emin, GMP::F.emax, GMP::F.emin=,
     GMP::F.emax=, GMP::F.emin_min, GMP::F.emin_max, GMP::F.emax_min, and
     GMP::F.emax_max; also minimal tests, and documentation
+  * Added new MPFR constructor method: GMP::F.new_2exp, not really tested :)
 
 0.6.47
   * Fixed GMP::F#to_s when MPFR is not present. It now works, and accepts an
