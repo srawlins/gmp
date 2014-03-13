@@ -113,6 +113,10 @@ class TcMpfrFunctions < Test::Unit::TestCase
   def test_class_methods
     assert_true(GMP::F.emin.is_a?(Integer), "GMP::F.emin is callable")
     assert_true(GMP::F.emax.is_a?(Integer), "GMP::F.emax is callable")
+    assert_true(GMP::F.emin_min.is_a?(Integer), "GMP::F.emin_min is callable")
+    assert_true(GMP::F.emin_max.is_a?(Integer), "GMP::F.emin_max is callable")
+    assert_true(GMP::F.emax_min.is_a?(Integer), "GMP::F.emax_min is callable")
+    assert_true(GMP::F.emax_max.is_a?(Integer), "GMP::F.emax_max is callable")
   end
 
   def test_emin

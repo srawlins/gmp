@@ -1735,6 +1735,13 @@ VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg)
 
 #ifdef MPFR
 
+#define DEFUN_FR_CLASS_M(fname,mpfr_fname)      \
+static VALUE r_gmpfrsg_get_##fname(VALUE klass) \
+{                                               \
+  (void)klass;                                  \
+  return INT2NUM (mpfr_fname ());               \
+}
+
 /*
  * call-seq:
  *   GMP::F.emin
@@ -1745,11 +1752,60 @@ VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg)
  *
  * @since 0.X.XX
  */
-VALUE r_gmpfrsg_get_emin(VALUE klass)
-{
-  (void)klass;
-  return INT2NUM (mpfr_get_emin ());
-}
+DEFUN_FR_CLASS_M(emin,mpfr_get_emin)
+
+/*
+ * call-seq:
+ *   GMP::F.emax
+ *
+ * Return the (current) largest exponent allowed for a floating-point variable.
+ * The largest floating-point value has the form (1 - epsilon) times 2 raised
+ * to the largest exponent, where epsilon depends on the precision of the
+ * considered variable.
+ *
+ * @since 0.X.XX
+ */
+DEFUN_FR_CLASS_M(emax,mpfr_get_emax)
+
+/*
+ * call-seq:
+ *   GMP::F.emin_min
+ *
+ * Return the minimum exponent allowed for GMP::F.emin=
+ *
+ * @since 0.X.XX
+ */
+DEFUN_FR_CLASS_M(emin_min,mpfr_get_emin_min)
+
+/*
+ * call-seq:
+ *   GMP::F.emin_max
+ *
+ * Return the maximum exponent allowed for GMP::F.emin=
+ *
+ * @since 0.X.XX
+ */
+DEFUN_FR_CLASS_M(emin_max,mpfr_get_emin_max)
+
+/*
+ * call-seq:
+ *   GMP::F.emax_min
+ *
+ * Return the minimum exponent allowed for GMP::F.emax=
+ *
+ * @since 0.X.XX
+ */
+DEFUN_FR_CLASS_M(emax_min,mpfr_get_emax_min)
+
+/*
+ * call-seq:
+ *   GMP::F.emax_max
+ *
+ * Return the maximum exponent allowed for GMP::F.emax=
+ *
+ * @since 0.X.XX
+ */
+DEFUN_FR_CLASS_M(emax_max,mpfr_get_emax_max)
 
 /*
  * call-seq:
@@ -1772,23 +1828,6 @@ VALUE r_gmpfrsg_set_emin(VALUE klass, VALUE arg_val)
       rb_raise(rb_eRangeError, "exp must be in-range");*/
 
   return Qnil;
-}
-
-/*
- * call-seq:
- *   GMP::F.emax
- *
- * Return the (current) largest exponent allowed for a floating-point variable.
- * The largest floating-point value has the form (1 - epsilon) times 2 raised
- * to the largest exponent, where epsilon depends on the precision of the
- * considered variable.
- *
- * @since 0.X.XX
- */
-VALUE r_gmpfrsg_get_emax(VALUE klass)
-{
-  (void)klass;
-  return INT2NUM (mpfr_get_emax ());
 }
 
 /*
@@ -1845,6 +1884,10 @@ void init_gmpf()
   rb_define_singleton_method(cGMP_F, "emax", r_gmpfrsg_get_emax, 0);
   rb_define_singleton_method(cGMP_F, "emin=", r_gmpfrsg_set_emin, 1);
   rb_define_singleton_method(cGMP_F, "emax=", r_gmpfrsg_set_emax, 1);
+  rb_define_singleton_method(cGMP_F, "emin_min", r_gmpfrsg_get_emin_min, 0);
+  rb_define_singleton_method(cGMP_F, "emin_max", r_gmpfrsg_get_emin_max, 0);
+  rb_define_singleton_method(cGMP_F, "emax_min", r_gmpfrsg_get_emax_min, 0);
+  rb_define_singleton_method(cGMP_F, "emax_max", r_gmpfrsg_get_emax_max, 0);
 #endif  /* MPFR */
 
   // Converting Floats

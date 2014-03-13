@@ -350,6 +350,10 @@ Methods
       emax                     returns the largest allowed exponent
       emin=(exp)               sets the smallest allowed exponent
       emax=(exp)               sets the largest allowed exponent
+      emin_min                 returns the smallest exponent allowed for GMP::F.emin=
+      emin_max                 returns the largest exponent allowed for GMP::F.emin=
+      emax_min                 returns the smallest exponent allowed for GMP::F.emax=
+      emax_max                 returns the largest exponent allowed for GMP::F.emax=
       mpfr_buildopt_tls_p      returns whether MPFR was built as thread safe
       mpfr_buildopt_decimal_p  returns whether MPFR was compiled with decimal
                                float support
