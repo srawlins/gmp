@@ -1673,7 +1673,7 @@ VALUE r_gmpfsg_mpfr_buildopt_decimal_p(VALUE klass)
   return INT2FIX (mpfr_buildopt_decimal_p());
 }
 
-#endif
+#endif  /* MPFR */
 
 
 /**********************************************************************
@@ -1733,6 +1733,8 @@ VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg)
   return Qnil;  /* should never get here */
 }
 
+#ifdef MPFR
+
 /*
  * call-seq:
  *   GMP::F.emin
@@ -1743,10 +1745,33 @@ VALUE r_gmpf_set_prec_raw(VALUE self, VALUE arg)
  *
  * @since 0.X.XX
  */
-VALUE r_gmpfsg_get_emin(VALUE klass)
+VALUE r_gmpfrsg_get_emin(VALUE klass)
 {
   (void)klass;
   return INT2NUM (mpfr_get_emin ());
+}
+
+/*
+ * call-seq:
+ *   GMP::F.emin=
+ *
+ * Set the smallest exponent allowed for a floating-point variable.
+ *
+ * @since 0.X.XX
+ */
+VALUE r_gmpfrsg_set_emin(VALUE klass, VALUE arg_val)
+{
+  (void)klass;
+
+  if (! FIXNUM_P (arg_val))
+    typeerror_as (X, "exp");
+
+  mpfr_set_emin (FIX2NUM (arg_val));
+  /* TODO: figure out a way to generate this RangeError:
+    if (success != 0)
+      rb_raise(rb_eRangeError, "exp must be in-range");*/
+
+  return Qnil;
 }
 
 /*
@@ -1760,11 +1785,36 @@ VALUE r_gmpfsg_get_emin(VALUE klass)
  *
  * @since 0.X.XX
  */
-VALUE r_gmpfsg_get_emax(VALUE klass)
+VALUE r_gmpfrsg_get_emax(VALUE klass)
 {
   (void)klass;
   return INT2NUM (mpfr_get_emax ());
 }
+
+/*
+ * call-seq:
+ *   GMP::F.emax=
+ *
+ * Set the largest exponent allowed for a floating-point variable.
+ *
+ * @since 0.X.XX
+ */
+VALUE r_gmpfrsg_set_emax(VALUE klass, VALUE arg_val)
+{
+  (void)klass;
+
+  if (! FIXNUM_P (arg_val))
+    typeerror_as (X, "exp");
+
+  mpfr_set_emax (FIX2NUM (arg_val));
+  /* TODO: figure out a way to generate this RangeError:
+    if (success != 0)
+      rb_raise(rb_eRangeError, "exp must be in-range");*/
+
+  return Qnil;
+}
+
+#endif  /* MPFR */
 
 
 void init_gmpf()
@@ -1791,8 +1841,10 @@ void init_gmpf()
   rb_define_method(cGMP_F, "prec_raw=", r_gmpf_set_prec_raw, 1);
 
 #ifdef MPFR
-  rb_define_singleton_method(cGMP_F, "emin", r_gmpfsg_get_emin, 0);
-  rb_define_singleton_method(cGMP_F, "emax", r_gmpfsg_get_emax, 0);
+  rb_define_singleton_method(cGMP_F, "emin", r_gmpfrsg_get_emin, 0);
+  rb_define_singleton_method(cGMP_F, "emax", r_gmpfrsg_get_emax, 0);
+  rb_define_singleton_method(cGMP_F, "emin=", r_gmpfrsg_set_emin, 1);
+  rb_define_singleton_method(cGMP_F, "emax=", r_gmpfrsg_set_emax, 1);
 #endif  /* MPFR */
 
   // Converting Floats

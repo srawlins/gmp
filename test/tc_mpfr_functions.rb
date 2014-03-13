@@ -115,6 +115,20 @@ class TcMpfrFunctions < Test::Unit::TestCase
     assert_true(GMP::F.emax.is_a?(Integer), "GMP::F.emax is callable")
   end
 
+  def test_emin
+    emin = GMP::F.emin
+    assert_nothing_raised("GMP::F.emin= works with good exp") { GMP::F.emin = emin/2 }
+    assert_equal(emin/2, GMP::F.emin, "GMP::F.emin= sets emin")
+    assert_raise(TypeError) { GMP::F.emin = :not_a_number }
+  end
+
+  def test_emax
+    emax = GMP::F.emax
+    assert_nothing_raised("GMP::F.emax= works with good exp") { GMP::F.emax = emax/2 }
+    assert_equal(emax/2, GMP::F.emax, "GMP::F.emax= sets emax")
+    assert_raise(TypeError) { GMP::F.emax = :not_a_number }
+  end
+
   def test_function_parameters
     single_functions = [:sqrt, :rec_sqrt, :cbrt,
                         :log, :log2, :log10, :exp, :exp2, :exp10,

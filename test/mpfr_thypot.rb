@@ -24,8 +24,8 @@ class MpfrTHypot < Test::Unit::TestCase
   end
 
   def test_small
-    # TODO: need GMP::F.new_2exp, GMP::F.emin
-    #x = mpfr_set_si_2exp(1, mpfr_get_emin()-1, MPFR_RNDN)
+    # TODO: need GMP::F.new_2exp
+    #x = mpfr_set_si_2exp(1, GMP::F.emin - 1, MPFR_RNDN)
   end
 
   def test_large_small
@@ -33,6 +33,8 @@ class MpfrTHypot < Test::Unit::TestCase
   end
 
   def test_hypot
-    # TODO: need GMP::F.emin and GMP::F.emin=
+    emin = GMP::F.emin
+    emax = GMP::F.emax
+    # TODO: need GMP::F.emin_min, GMP::F.emax_max
   end
 end

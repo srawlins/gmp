@@ -346,6 +346,10 @@ Methods
       const_pi                 returns pi
       const_euler              returns euler
       const_catalan            returns catalan
+      emin                     returns the smallest allowed exponent
+      emax                     returns the largest allowed exponent
+      emin=(exp)               sets the smallest allowed exponent
+      emax=(exp)               sets the largest allowed exponent
       mpfr_buildopt_tls_p      returns whether MPFR was built as thread safe
       mpfr_buildopt_decimal_p  returns whether MPFR was compiled with decimal
                                float support
