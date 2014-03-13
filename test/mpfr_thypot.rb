@@ -23,18 +23,38 @@ class MpfrTHypot < Test::Unit::TestCase
     # TODO: need mpfr_mul_2ui!!!
   end
 
-  def test_small
-    # TODO: need GMP::F.new_2exp
-    #x = mpfr_set_si_2exp(1, GMP::F.emin - 1, MPFR_RNDN)
+  def small_tests
+    x = GMP::F.new_2exp(1, GMP::F.emin-1, 8)
+    y = GMP::F.new_2exp(1, GMP::F.emin-1, 8)
+    z1 = GMP::F.new(2, 8)
+    z1 = z1.sqrt * x
+    z2 = x.hypot(y)
+
+    assert_equal(z1, z2, "x.hypot(y) should == sqrt(2) * x")
   end
 
-  def test_large_small
-    # TODO: need GMP::F.new_2exp
+  def large_small_tests
+    x = GMP::F.new_2exp(1, GMP::F.emax/2, 3)
+    y = GMP::F.new_2exp(1, -1, 2)
+    z = x.hypot(y)
+
+    assert_equal(x, z, "hypot... something abount large_small")
   end
 
   def test_hypot
+    small_tests
+    large_small_tests
+
     emin = GMP::F.emin
     emax = GMP::F.emax
-    # TODO: need GMP::F.emin_min, GMP::F.emax_max
+    GMP::F.emin = GMP::F.emin_min
+    GMP::F.emax = GMP::F.emax_max
+
+    if GMP::F.emin != emin || GMP::F.emax != emax
+      small_tests
+      large_small_tests
+      GMP::F.emin = emin
+      GMP::F.emax = emax
+    end
   end
 end
