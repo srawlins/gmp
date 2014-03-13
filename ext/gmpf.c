@@ -1799,6 +1799,7 @@ static VALUE r_gmpfrsg_get_##fname(VALUE klass) \
 }
 
 /*
+ * Document-method: GMP::F.emin
  * call-seq:
  *   GMP::F.emin
  *
@@ -1806,11 +1807,12 @@ static VALUE r_gmpfrsg_get_##fname(VALUE klass) \
  * floating-point variable. The smallest positive value of a floating-point
  * variable is one half times 2 raised to the smallest exponent.
  *
- * @since 0.X.XX
+ * @since 0.7.19
  */
 DEFUN_FR_CLASS_M(emin,mpfr_get_emin)
 
 /*
+ * Document-method: GMP::F.emax
  * call-seq:
  *   GMP::F.emax
  *
@@ -1819,57 +1821,62 @@ DEFUN_FR_CLASS_M(emin,mpfr_get_emin)
  * to the largest exponent, where epsilon depends on the precision of the
  * considered variable.
  *
- * @since 0.X.XX
+ * @since 0.7.19
  */
 DEFUN_FR_CLASS_M(emax,mpfr_get_emax)
 
 /*
+ * Document-method: GMP::F.emin_min
  * call-seq:
  *   GMP::F.emin_min
  *
- * Return the minimum exponent allowed for GMP::F.emin=
+ * Return the minimum exponent allowed for GMP::F.emin=()
  *
- * @since 0.X.XX
+ * @since 0.7.19
  */
 DEFUN_FR_CLASS_M(emin_min,mpfr_get_emin_min)
 
 /*
+ * Document-method: GMP::F.emin_max
  * call-seq:
  *   GMP::F.emin_max
  *
- * Return the maximum exponent allowed for GMP::F.emin=
+ * Return the maximum exponent allowed for GMP::F.emin=()
  *
- * @since 0.X.XX
+ * @since 0.7.19
  */
 DEFUN_FR_CLASS_M(emin_max,mpfr_get_emin_max)
 
 /*
+ * Document-method: GMP::F.emax_min
  * call-seq:
  *   GMP::F.emax_min
  *
- * Return the minimum exponent allowed for GMP::F.emax=
+ * Return the minimum exponent allowed for GMP::F.emax=()
  *
- * @since 0.X.XX
+ * @since 0.7.19
  */
 DEFUN_FR_CLASS_M(emax_min,mpfr_get_emax_min)
 
 /*
+ * Document-method: GMP::F.emax_max
  * call-seq:
  *   GMP::F.emax_max
  *
- * Return the maximum exponent allowed for GMP::F.emax=
+ * Return the maximum exponent allowed for GMP::F.emax=()
  *
- * @since 0.X.XX
+ * @since 0.7.19
  */
 DEFUN_FR_CLASS_M(emax_max,mpfr_get_emax_max)
 
 /*
+ * Document-method: GMP::F.emin=
  * call-seq:
- *   GMP::F.emin=
+ *   GMP::F.emin=(exp)
  *
  * Set the smallest exponent allowed for a floating-point variable.
  *
- * @since 0.X.XX
+ * @since 0.7.19
  */
 VALUE r_gmpfrsg_set_emin(VALUE klass, VALUE arg_val)
 {
@@ -1887,12 +1894,13 @@ VALUE r_gmpfrsg_set_emin(VALUE klass, VALUE arg_val)
 }
 
 /*
+ * Document-method: GMP::F.emax=
  * call-seq:
- *   GMP::F.emax=
+ *   GMP::F.emax=(exp)
  *
  * Set the largest exponent allowed for a floating-point variable.
  *
- * @since 0.X.XX
+ * @since 0.7.19
  */
 VALUE r_gmpfrsg_set_emax(VALUE klass, VALUE arg_val)
 {
