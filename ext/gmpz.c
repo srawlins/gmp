@@ -745,21 +745,27 @@ static VALUE r_gmpz_initialize_copy(VALUE copy_val, VALUE orig_val) {
  * * String
  * * Bignum
  */
-void mpz_set_value(MP_INT *target, VALUE source, int base)
+void mpz_set_value(MP_INT *target, VALUE source_val, int base)
 {
-  MP_INT *source_val;
+  MP_INT *source_z;
+  MP_FLOAT *source_f;
 
-  if (GMPZ_P (source)) {
-    mpz_get_struct (source, source_val);
-    mpz_set (target, source_val);
-  } else if (TYPE (source) == T_FIXNUM) {
-    mpz_set_si (target, FIX2NUM (source));
-  } else if (STRING_P (source)) {
-    mpz_set_str (target, StringValuePtr (source), base);
-  } else if (BIGNUM_P (source)) {
-    mpz_set_bignum (target, source);
+  if (GMPZ_P (source_val)) {
+    mpz_get_struct (source_val, source_z);
+    mpz_set (target, source_z);
+  } else if (TYPE (source_val) == T_FIXNUM) {
+    mpz_set_si (target, FIX2NUM (source_val));
+  } else if (STRING_P (source_val)) {
+    mpz_set_str (target, StringValuePtr (source_val), base);
+  } else if (BIGNUM_P (source_val)) {
+    mpz_set_bignum (target, source_val);
+  } else if (FLOAT_P (source_val)) {
+    mpz_set_d (target, NUM2DBL (source_val));
+  } else if (GMPF_P (source_val)) {
+    mpf_get_struct (source_val, source_f);
+    mpz_set_f (target, source_f);
   } else {
-    rb_raise (rb_eTypeError, "Don't know how to convert %s into GMP::Z", rb_class2name (rb_class_of (source)));
+    rb_raise (rb_eTypeError, "Don't know how to convert %s into GMP::Z", rb_class2name (rb_class_of (source_val)));
   }
 }
 

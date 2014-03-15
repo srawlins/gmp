@@ -1,3 +1,7 @@
+0.7.xx
+  * GMP::Z can now be initialized from a Float or GMP::F, as well as the existing
+    Fixnum, Bignum, GMP::Z, and String.
+
 0.7.19
   * GMP::Q.new can now accept a GMP::Z or Fixnum more intelligently, and can
     accept a Float, and is tested better.

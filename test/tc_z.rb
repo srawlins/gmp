@@ -55,6 +55,16 @@ class TcInteger < Test::Unit::TestCase
     assert_equal(2**32, GMP::Z.new(2**32), "GMP::Z.new(x : Bignum) should initialize to x")
   end
 
+  def test_init_float
+    assert_equal(3, GMP::Z.new(3.14), "GMP::Z.new(x : Float) should initialize to x")
+    assert_equal(3, GMP::Z.new(3.99), "GMP::Z.new(x : Float) should initialize to x")
+  end
+
+  def test_init_gmpf
+    assert_equal(3, GMP::Z.new(GMP::F(3.14)), "GMP::Z.new(x : GMP::F) should initialize to x")
+    assert_equal(577, GMP::Z.new(GMP::F.const_euler*1000), "GMP::Z.new(x : GMP::F) should initialize to x")
+  end
+
   def test_cmp_z
     a = GMP::Z.new(2)
     b = GMP::Z.new(1)

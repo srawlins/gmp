@@ -195,9 +195,11 @@ The GMP module is provided with following classes:
 Numbers are created by using `new()`. Constructors can take following arguments:
 
     GMP::Z.new()
-    GMP::Z.new(GMP::Z)
     GMP::Z.new(Fixnum)
     GMP::Z.new(Bignum)
+    GMP::Z.new(GMP::Z)
+    GMP::Z.new(Float)
+    GMP::Z.new(GMP::F)
     GMP::Z.new(String)
     GMP::Q.new()
     GMP::Q.new(Fixnum)

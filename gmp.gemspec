@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.files += Dir["test/*.rb"] + ["test/README"] + Dir["test/test_unit/*.rb"]
   s.files += Dir["benchmark/*"]
-  s.files += ["CHANGELOG", "COPYING.md", "INSTALL", "README.html", "README.markdown",
+  s.files += ["CHANGELOG", "COPYING.md", "README.html", "README.markdown",
               "manual.pdf", "manual.tex", "FEATURES.html",
               "performance.2012.md", "performance.2012.html", "performance.2012.pdf"]
 end
