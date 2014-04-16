@@ -62,7 +62,7 @@ class TcInteger < Test::Unit::TestCase
 
   def test_init_gmpf
     assert_equal(3, GMP::Z.new(GMP::F(3.14)), "GMP::Z.new(x : GMP::F) should initialize to x")
-    assert_equal(577, GMP::Z.new(GMP::F.const_euler*1000), "GMP::Z.new(x : GMP::F) should initialize to x")
+    assert_equal(577, GMP::Z.new(GMP::F("0.57721566")*1000), "GMP::Z.new(x : GMP::F) should initialize to x")
   end
 
   def test_cmp_z
