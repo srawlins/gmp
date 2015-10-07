@@ -251,7 +251,7 @@ Methods
       abs!                     in-place absolute value
       coerce                   promotion of arguments
       ==                       equality test
-      <=>, >=, >, <=, <        comparisions
+      <=>, >=, >, <=, <        comparisons
     class methods of GMP::Z
       fac(n)                   factorial of n
       2fac(n), double_fac(n)   double factorial of n
