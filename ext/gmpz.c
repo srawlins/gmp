@@ -1177,14 +1177,9 @@ static VALUE r_gmpz_addmul_self(VALUE self, VALUE b, VALUE c)
   if (GMPZ_P (c)) {
     mpz_get_struct (c, c_val);
     mpz_addmul (self_val, b_val, c_val);
-  } else if (TYPE (c) == T_FIXNUM) {
-    if (FIX2NUM (c) < 0)
-    {
-      if (free_b_val) { mpz_temp_free (b_val); }
-      rb_raise (rb_eRangeError, "multiplicand (Fixnum) must be nonnegative");
-    }
+  } else if (FIXNUM_P (c) && FIX2NUM (c) >= 0) {
     mpz_addmul_ui (self_val, b_val, FIX2NUM (c));
-  } else if (BIGNUM_P (c)) {
+  } else if (FIXNUM_P (c) || BIGNUM_P (c)) {
     mpz_temp_from_bignum (c_val, c);
     mpz_addmul (self_val, b_val, c_val);
     mpz_temp_free (c_val);
@@ -1232,14 +1227,9 @@ static VALUE r_gmpz_submul_self(VALUE self, VALUE b, VALUE c)
   if (GMPZ_P (c)) {
     mpz_get_struct (c, c_val);
     mpz_submul (self_val, b_val, c_val);
-  } else if (TYPE (c) == T_FIXNUM) {
-    if (FIX2NUM (c) < 0)
-    {
-      if (free_b_val) { mpz_temp_free (b_val); }
-      rb_raise (rb_eRangeError, "multiplicand (Fixnum) must be nonnegative");
-    }
+  } else if (FIXNUM_P (c) && FIX2NUM (c) >= 0) {
     mpz_submul_ui (self_val, b_val, FIX2NUM (c));
-  } else if (BIGNUM_P (c)) {
+  } else if (FIXNUM_P (c) || BIGNUM_P (c)) {
     mpz_temp_from_bignum (c_val, c);
     mpz_submul (self_val, b_val, c_val);
     mpz_temp_free (c_val);

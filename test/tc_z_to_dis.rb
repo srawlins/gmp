@@ -10,7 +10,7 @@ class TcIntegerToDis < MiniTest::Test
   
   def test_to_i
     assert_equal(@a.to_i, 100, "GMP::Z should to_i correctly.")
-    assert_equal(@a.to_i.class, Fixnum, "GMP::Z.to_i should be a Fixnum.")
+    assert_equal(@a.to_i.class, 0.class, "GMP::Z.to_i should be a Fixnum.")
     assert_equal(@b.to_i, 2**32, "GMP::Z (Bignum) should to_i correctly.")
   end
   
