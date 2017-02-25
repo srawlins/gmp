@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcRationalDenNum < Test::Unit::TestCase
+class TcRationalDenNum < MiniTest::Test
   def setup
     @p = GMP::Q.new(22, 7)
     @q = GMP::Q.new(-0.625)

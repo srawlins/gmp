@@ -1,4 +1,4 @@
-require 'test/unit'
+require 'minitest/autorun'
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_unit', 'assertions'))
 #require './test_unit/assertions'  # Monkey patch
 require 'rbconfig'

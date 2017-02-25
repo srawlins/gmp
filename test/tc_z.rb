@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcInteger < Test::Unit::TestCase
+class TcInteger < MiniTest::Test
   def test_init_null
     assert_equal(GMP::Z.new(), 0, "GMP::Z.new() should initialize to 0")
   end

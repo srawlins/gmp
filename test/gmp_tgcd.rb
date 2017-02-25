@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class GMP_TGCD < Test::Unit::TestCase
+class GMP_TGCD < MiniTest::Test
   def setup
     @rand_state = GMP::RandState.new
     @min_operand_bitsize = 1

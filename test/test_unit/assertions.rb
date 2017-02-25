@@ -1,4 +1,4 @@
-module Test::Unit::Assertions
+module Minitest::Assertions
   def assert_less_than(expected, actual, message=nil)
     assert_true(actual < expected, message)
   end
@@ -27,5 +27,11 @@ module Test::Unit::Assertions
 
   def assert_false(actual, message=nil)
     assert(!actual, message)
+  end
+
+  # backwards compatibility with Test::Unit
+  alias assert_raise assert_raises
+  def assert_nothing_raised(e=nil)
+    yield
   end
 end

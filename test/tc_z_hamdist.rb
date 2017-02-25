@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcIntegerHamdist < Test::Unit::TestCase
+class TcIntegerHamdist < MiniTest::Test
   def setup
     @z32 = GMP::Z(32)  # 100000
     @z33 = GMP::Z(33)  # 100001

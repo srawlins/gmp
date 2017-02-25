@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcMpfrNewRounding < Test::Unit::TestCase
+class TcMpfrNewRounding < MiniTest::Test
   def test_new_fixnum
     ninety_six = GMP::F(96, 4)
     one_hundred_four = GMP::F(104, 4)

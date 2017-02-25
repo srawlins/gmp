@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcRational < Test::Unit::TestCase
+class TcRational < MiniTest::Test
   def setup
     @z_1 = GMP::Z(1)
     @z_2 = GMP::Z(2)

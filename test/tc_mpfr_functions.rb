@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcMpfrFunctions < Test::Unit::TestCase
+class TcMpfrFunctions < MiniTest::Test
   def setup
     @a = GMP::F(1)
     @b = GMP::F(2)

@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class GMP_TCong < Test::Unit::TestCase
+class GMP_TCong < MiniTest::Test
   Data = [
     # strict equality mod 0
     [ "0",  "0", "0", true],

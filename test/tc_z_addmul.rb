@@ -4,7 +4,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 #          Z op (Fixnum,Z), Z op (Fixnum,Fixnum), Z op (Fixnum,Bignum)
 #          Z op (Bignum,Z), Z op (Bignum,Bignum), Z op (Bignum,Fixnum)]
 # Things are tested both ways because the implementation is asymetrical
-class TcIntegerAddmul < Test::Unit::TestCase
+class TcIntegerAddmul < MiniTest::Test
   def setup
     @_64bit = 1_000_000_000_000.is_a? Fixnum
   end

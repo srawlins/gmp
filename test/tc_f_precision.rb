@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcFloatPrecision < Test::Unit::TestCase
+class TcFloatPrecision < MiniTest::Test
   def setup
     # TODO: um... what?
     begin
