@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcSgnNegAbs < Test::Unit::TestCase
+class TcSgnNegAbs < MiniTest::Test
   def setup
     @a=GMP::Z.new(10)
     @b=GMP::Z.new()

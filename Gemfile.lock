@@ -1,6 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    minitest (5.10.1)
     rake (10.1.1)
     yard (0.8.7.3)
 
@@ -8,5 +9,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  minitest (~> 5.10.1)
   rake
   yard
+
+BUNDLED WITH
+   1.14.5

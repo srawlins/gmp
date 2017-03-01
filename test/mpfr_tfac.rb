@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class MPFR_TFAC < Test::Unit::TestCase
+class MPFR_TFAC < MiniTest::Test
   def setup
     @one = GMP::F(1)
     @zero = GMP::F(0)

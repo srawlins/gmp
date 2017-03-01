@@ -161,11 +161,17 @@ mp_rnd_t r_get_rounding_mode(VALUE rnd)
 /* #include "gmpz.h" */
 #include "takeover.h"
 
+#ifdef RUBY_INTEGER_UNIFICATION
+#define REGISTER_TAKEOVER(fname, ruby_fname, old_fname) \
+  rb_define_alias(rb_cInteger, old_fname, ruby_fname); \
+  rb_define_method(rb_cInteger, ruby_fname, takeover_integer_##fname, -1);
+#else
 #define REGISTER_TAKEOVER(fname, ruby_fname, old_fname) \
   rb_define_alias(rb_cFixnum, old_fname, ruby_fname); \
   rb_define_method(rb_cFixnum, ruby_fname, takeover_fixnum_##fname, -1); \
   rb_define_alias(rb_cBignum, old_fname, ruby_fname); \
   rb_define_method(rb_cBignum, ruby_fname, takeover_bignum_##fname, -1);
+#endif /* RUBY_INTEGER_UNIFICATION */
 
 void Init_gmp() {
   bin_base_id = rb_intern("bin");

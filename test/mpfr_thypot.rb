@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class MpfrTHypot < Test::Unit::TestCase
+class MpfrTHypot < MiniTest::Test
   def test_special
     x = GMP::F.nan
     y = GMP::F.new

@@ -1,7 +1,7 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
 unless RUBY_VERSION =~ /^1.8/
-  class GMP_TPRINTF < Test::Unit::TestCase
+  class GMP_TPRINTF < MiniTest::Test
     MAX_OUTPUT = 1024
     def setup
     end

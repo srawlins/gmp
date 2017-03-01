@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcRationalFloorCeilTruncate < Test::Unit::TestCase
+class TcRationalFloorCeilTruncate < MiniTest::Test
   def setup
     @a = GMP::Q.new(200,11)
     @b = -@a

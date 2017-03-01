@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcIntegerToDis < Test::Unit::TestCase
+class TcIntegerToDis < MiniTest::Test
   def setup
     @a = GMP::Z.new(100)
     @b = GMP::Z.pow(2,32)
@@ -10,7 +10,7 @@ class TcIntegerToDis < Test::Unit::TestCase
   
   def test_to_i
     assert_equal(@a.to_i, 100, "GMP::Z should to_i correctly.")
-    assert_equal(@a.to_i.class, Fixnum, "GMP::Z.to_i should be a Fixnum.")
+    assert_equal(@a.to_i.class, 0.class, "GMP::Z.to_i should be a Fixnum.")
     assert_equal(@b.to_i, 2**32, "GMP::Z (Bignum) should to_i correctly.")
   end
   

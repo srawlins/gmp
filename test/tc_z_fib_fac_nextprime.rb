@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcFibFacNextprime < Test::Unit::TestCase
+class TcFibFacNextprime < MiniTest::Test
   def setup
      @z0 = GMP::Z.new( 0)
      @z1 = GMP::Z.new( 1)

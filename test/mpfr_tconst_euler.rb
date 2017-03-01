@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class MPFR_TCONST_EULER < Test::Unit::TestCase
+class MPFR_TCONST_EULER < MiniTest::Test
   def test_const_euler
     prec = 53
 

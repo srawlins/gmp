@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcIntegerExportImport < Test::Unit::TestCase
+class TcIntegerExportImport < MiniTest::Test
   def setup
     @a = GMP::Z.new(3)**40
   end

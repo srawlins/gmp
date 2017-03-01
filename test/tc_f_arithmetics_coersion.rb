@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcFloatArithmeticsCoersion < Test::Unit::TestCase
+class TcFloatArithmeticsCoersion < MiniTest::Test
   def setup
     @a = GMP::F.new(3.14, 100)
     @b = GMP::F.new(2.71, 200)

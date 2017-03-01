@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class MPFR_TFrexp < Test::Unit::TestCase
+class MPFR_TFrexp < MiniTest::Test
   def setup
   end
 

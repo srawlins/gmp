@@ -1,8 +1,7 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcIntegerFunctionalMappings < Test::Unit::TestCase
+class TcIntegerFunctionalMappings < MiniTest::Test
   def setup
-    @_64bit = 1_000_000_000_000.is_a? Fixnum
     @xp1 = 7
     @xp2 = 2**30 - 1
     @xn1 = -5

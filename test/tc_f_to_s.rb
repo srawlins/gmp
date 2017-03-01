@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcFloatToS < Test::Unit::TestCase
+class TcFloatToS < MiniTest::Test
   def setup
     @initial_default_prec = GMP::F.default_prec
   end

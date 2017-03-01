@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class GMP_TRoot < Test::Unit::TestCase
+class GMP_TRoot < MiniTest::Test
   RS = GMP::RandState.new(11213)
   Reps = 500
 

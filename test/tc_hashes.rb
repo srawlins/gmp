@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcHashes < Test::Unit::TestCase
+class TcHashes < MiniTest::Test
   def test_z_hashes
     h = {}
     h[GMP::Z(131)] = [GMP::Z(41), GMP::Z(43), GMP::Z(47)]

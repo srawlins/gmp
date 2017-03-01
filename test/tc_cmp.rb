@@ -1,17 +1,12 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcCmp < Test::Unit::TestCase
+class TcCmp < MiniTest::Test
   def setup
-    @_64bit = 1_000_000_000_000.is_a? Fixnum
     @a=GMP::Z.new(180)
     @c=GMP::Q.new(2000,11) # ~181.82
     @d=GMP::Q.new(3000,17) # ~176.47
     @e=700
-    if @_64bit
-      @f=2**64
-    else
-      @f=2**32
-    end
+    @f=2**64
     @g=GMP::Q(360,2)
   end
 

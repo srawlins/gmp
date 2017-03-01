@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class TcMpfrInfNanZero < Test::Unit::TestCase
+class TcMpfrInfNanZero < MiniTest::Test
   def setup
     @neg_inf = GMP::F(0).log  # -Inf
     @inf = -@neg_inf          # Inf

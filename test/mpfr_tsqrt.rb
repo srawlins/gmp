@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
 
-class MPFR_TSQRT < Test::Unit::TestCase
+class MPFR_TSQRT < MiniTest::Test
   def setup
     @rand_state = GMP::RandState.new
   end
